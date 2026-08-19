@@ -1,0 +1,139 @@
+{
+  "atualizado": "18 de agosto de 2026",
+  "disciplinas": [
+    {
+      "id": "coding",
+      "nome": "Coding: Linguagens e Técnicas",
+      "periodo": "2026.2",
+      "dia": "Terças-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como as linguagens de programação funcionam por dentro e como se constrói software com orientação a objetos. Ao longo de 16 encontros, cada equipe leva um produto do núcleo em objetos até uma aplicação full-stack publicada.",
+      "materiais": [
+        {
+          "tipo": "Cronograma",
+          "titulo": "Cronograma do semestre 2026.2",
+          "descricao": "As 16 aulas com tema, foco do laboratório, entregável e datas das avaliações. Uma página.",
+          "arquivo": "assets/materiais/coding/cronograma-coding-2026-2.pdf",
+          "data": "18/08/2026",
+          "tags": "calendario planejamento avaliacao"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "O que a disciplina constrói, competências desenvolvidas, método de trabalho e forma de avaliação.",
+          "arquivo": "assets/materiais/coding/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao plano"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Vídeos e textos comentados sobre linguagens e paradigmas, com a atividade de mapa mental.",
+          "arquivo": "assets/materiais/coding/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video estudo dirigido"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 1: Por que existem tantas linguagens",
+          "descricao": "Panorama do mercado segundo TIOBE, Octoverse e Stack Overflow, os três eixos em visão geral e o critério para escolher uma linguagem.",
+          "arquivo": "assets/materiais/coding/aula-01-por-que-tantas-linguagens.pdf",
+          "data": "11/08/2026",
+          "tags": "slides tiobe octoverse mercado cobol historia"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 1: Ambiente, Git e o primeiro commit",
+          "descricao": "Instalação de Python, VS Code e Git, criação do repositório da equipe e escolha do domínio do projeto. Passo a passo com saídas esperadas.",
+          "arquivo": "assets/materiais/coding/roteiro-01-ambiente-git-primeiro-commit.pdf",
+          "data": "11/08/2026",
+          "tags": "laboratorio pratica git github python instalacao"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 2: Paradigmas de programação",
+          "descricao": "Imperativo, funcional e orientado a objetos aplicados ao mesmo relatório de vendas, mais o estilo declarativo do SQL.",
+          "arquivo": "assets/materiais/coding/aula-02-paradigmas-de-programacao.pdf",
+          "data": "18/08/2026",
+          "tags": "slides funcional imperativo objetos map filter reduce blub"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 2: Refatorando um relatório de vendas",
+          "descricao": "Do procedural ao funcional com testes escritos antes da mudança. Inclui pytest, ambiente virtual e uma alteração de requisito para provar o ganho.",
+          "arquivo": "assets/materiais/coding/roteiro-02-refatoracao-procedural-funcional.pdf",
+          "data": "18/08/2026",
+          "tags": "laboratorio pratica python pytest refatoracao pipeline"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Tipagem, execução e memória",
+          "descricao": "Os três eixos em profundidade, com Ariane 5, Mars Climate Orbiter, o erro de um bilhão de dólares e vazamento de memória com coletor ligado.",
+          "arquivo": "assets/materiais/coding/aula-03-tipagem-execucao-memoria.pdf",
+          "data": "25/08/2026",
+          "tags": "slides tipos ponto flutuante garbage collector rust"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 3: Medindo linguagens na prática",
+          "descricao": "Comparação cronometrada entre Python e JavaScript, mais experimentos de dinheiro em ponto flutuante, acentuação quebrada e vazamento de memória.",
+          "arquivo": "assets/materiais/coding/roteiro-03-medindo-linguagens.pdf",
+          "data": "25/08/2026",
+          "tags": "laboratorio pratica benchmark decimal utf-8 encoding"
+        }
+      ]
+    },
+    {
+      "id": "cloud",
+      "nome": "Cloud Computing: Setup e Desenvolvimento",
+      "periodo": "2026.2",
+      "dia": "Quintas-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como colocar uma aplicação para funcionar na infraestrutura de um provedor de nuvem, e que decisões isso obriga a tomar. Laboratórios na AWS dentro do nível gratuito.",
+      "materiais": [
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "O que é computação em nuvem, o que a disciplina desenvolve e como funciona a avaliação.",
+          "arquivo": "assets/materiais/cloud/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao aws nist"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Introdução ao tema, vídeos e textos comentados, incluindo o treinamento oficial da AWS em português, com a atividade de mapa mental.",
+          "arquivo": "assets/materiais/cloud/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video aws cloud practitioner nist responsabilidade compartilhada"
+        }
+      ]
+    },
+    {
+      "id": "requisitos",
+      "nome": "Engenharia de Requisitos",
+      "periodo": "2026.2",
+      "dia": "Quintas-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como descobrir o que um sistema precisa fazer antes de escrever código, e como registrar isso de um jeito que outra pessoa consiga verificar. Cada equipe produz um Documento de Definição de Requisitos completo.",
+      "materiais": [
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "Por que projetos falham por requisitos, o que a disciplina desenvolve e como funciona a avaliação.",
+          "arquivo": "assets/materiais/requisitos/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao ddr elicitacao"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Introdução ao tema, vídeos e textos comentados, com a atividade de mapa mental sobre requisitos.",
+          "arquivo": "assets/materiais/requisitos/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video requisito funcional nao funcional volere user stories"
+        }
+      ]
+    }
+  ]
+}

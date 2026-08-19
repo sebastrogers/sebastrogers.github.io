@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Materiais didáticos das disciplinas ministradas por Sebastião Rogério: slides das aulas, roteiros práticos e cronogramas."
+    />
+    <title>Materiais didáticos | Sebastião Rogério</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Estilos específicos desta página. O resto vem do styles.css do site. */
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 26px;
+        border-bottom: 1px solid var(--line);
+      }
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 15px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .chip:hover,
+      .chip:focus-visible {
+        border-color: var(--coral);
+        color: var(--teal-dark);
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+
+      .discipline {
+        padding-top: 54px;
+      }
+      .discipline-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .discipline-head h2 {
+        font-size: clamp(1.6rem, 3vw, 2.3rem);
+      }
+      .discipline-meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .discipline-lead {
+        max-width: 760px;
+        margin: 0 0 26px;
+        color: var(--muted);
+      }
+
+      .material-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .material-card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 22px;
+      }
+      .material-card h3 {
+        font-size: 1.05rem;
+      }
+      .material-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .material-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .tag {
+        width: fit-content;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .tag-aula { background: #fff2df; color: #7b4b00; }
+      .tag-roteiro { background: #e9f3ef; color: #0b4f4a; }
+      .tag-cronograma { background: #eceaff; color: #3c3a8c; }
+      .tag-apoio { background: #fdecea; color: #963826; }
+      body[data-theme="dark"] .tag-aula { background: #4a3410; color: #f2c46d; }
+      body[data-theme="dark"] .tag-roteiro { background: #123f3a; color: #5eead4; }
+      body[data-theme="dark"] .tag-cronograma { background: #2b2a56; color: #bdbaf5; }
+      body[data-theme="dark"] .tag-apoio { background: #4d2018; color: #f08a6f; }
+
+      .material-date {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .material-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 4px;
+      }
+      .material-actions a {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--teal-dark);
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+      .material-actions a.strong {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+      .material-actions a:hover,
+      .material-actions a:focus-visible {
+        border-color: var(--coral);
+      }
+      .material-card[hidden],
+      .discipline[hidden] { display: none; }
+
+      .empty-state,
+      .load-error {
+        padding: 26px;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        text-align: center;
+        font-weight: 700;
+      }
+
+      @media (max-width: 860px) {
+        .material-grid { grid-template-columns: 1fr; }
+        .filters { flex-direction: column; align-items: stretch; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" id="topo">
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="brand" href="index.html" aria-label="Ir para a página inicial">
+          <span class="brand-mark">SR</span>
+          <span>Sebastião Rogério</span>
+        </a>
+        <div class="menu" id="menu">
+          <a href="sobre.html">Sobre</a>
+          <a href="materiais.html">Materiais</a>
+          <a href="blog.html">Blog</a>
+          <a href="publicacoes.html">Publicações</a>
+          <a href="contato.html">Contato</a>
+        </div>
+        <div class="nav-tools">
+          <a class="lang-switch" href="en/index.html" aria-label="View English version">EN</a>
+          <button class="theme-toggle" type="button" aria-label="Alternar tema claro ou escuro">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+          <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section page-hero">
+        <p class="eyebrow">Ensino</p>
+        <h1>Materiais didáticos</h1>
+        <p class="page-lead">
+          Slides das aulas, roteiros práticos de laboratório e cronogramas das disciplinas
+          que ministro. O material é aberto: alunos, colegas docentes e qualquer pessoa
+          interessada podem baixar e reutilizar, citando a fonte.
+        </p>
+        <p class="page-lead" id="ultimaAtualizacao"></p>
+      </section>
+
+      <section class="section" style="padding-top: 0" aria-label="Filtros e lista de materiais">
+        <div class="filters">
+          <div>
+            <p class="eyebrow" style="margin-bottom: 8px">Filtrar por tipo</p>
+            <div class="chip-row" id="tipoFiltros" role="group" aria-label="Filtrar por tipo de material"></div>
+          </div>
+          <label class="search">
+            <span>Buscar</span>
+            <input
+              type="search"
+              id="materialSearch"
+              placeholder="Disciplina, tema ou número da aula"
+              autocomplete="off"
+            />
+          </label>
+        </div>
+
+        <div id="listaMateriais"></div>
+
+        <p class="empty-state" id="semResultado" hidden>
+          Nenhum material encontrado com esse filtro.
+        </p>
+        <p class="load-error" id="erroCarga" hidden>
+          Não foi possível carregar a lista de materiais. Se você abriu este arquivo
+          diretamente do computador, publique no GitHub Pages ou use um servidor local.
+        </p>
+      </section>
+
+      <section class="section content-band">
+        <div class="section-heading">
+          <p class="eyebrow">Uso e licença</p>
+          <h2>Pode usar</h2>
+        </div>
+        <div class="two-column">
+          <p>
+            Este material é disponibilizado para uso educacional. Fique à vontade para
+            baixar, imprimir, adaptar para a sua turma e compartilhar com colegas.
+          </p>
+          <p>
+            Ao reutilizar em outra disciplina ou instituição, cite a autoria e o endereço
+            desta página. Correções, sugestões e relatos de uso são bem-vindos pelo contato.
+          </p>
+        </div>
+        <a class="section-link inverted" href="contato.html">Enviar sugestão ou correção</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Sebastião Rogério. Feito para GitHub Pages.</p>
+      <a href="index.html">Início</a>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="materiais.js"></script>
+  </body>
+</html>
