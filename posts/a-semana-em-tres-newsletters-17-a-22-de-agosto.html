@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A semana em três newsletters: 17 a 22 de agosto | Sebastião Rogério</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header" id="topo">
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="brand" href="../index.html"><span class="brand-mark">SR</span><span>Sebastião Rogério</span></a>
+        <div class="menu" id="menu">
+          <a href="../sobre.html">Sobre</a><a href="../materiais.html">Materiais</a><a href="../blog.html">Blog</a><a href="../publicacoes.html">Publicações</a><a href="../contato.html">Contato</a>
+        </div>
+        <div class="nav-tools">
+          <a class="lang-switch" href="../en/blog.html" aria-label="View English version">EN</a>
+          <button class="theme-toggle" type="button" aria-label="Alternar tema claro ou escuro"><span class="theme-icon" aria-hidden="true">☾</span></button>
+          <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+        </div>
+      </nav>
+    </header>
+    <main class="post-shell">
+      <article>
+        <header class="post-header">
+          <p class="post-meta">Curadoria · 22 ago 2026 · 6 min de leitura</p>
+          <h1>A semana em três newsletters: 17 a 22 de agosto</h1>
+          <p class="page-lead">Um apanhado das edições da semana do M.Akita Chronicles, da newsletter do Filipe Deschamps e do the news — criptografia, IA na escola e RAM cara.</p>
+        </header>
+        <div class="post-content">
+          <p>Este post é um apanhado das newsletters que li nesta semana — não é apuração minha. Tudo aqui vem de três fontes: <strong>The M.Akita Chronicles</strong>, do Fabio Akita, que sai semanalmente e nesta edição cobriu de 10 a 16 de agosto; a <strong>newsletter do Filipe Deschamps</strong>, que sai todo dia útil e teve cinco edições entre 17 e 21 de agosto; e o <strong>the news</strong>, também diário, do qual recebi só a edição de sábado, 22, porque acabei de assinar. Os créditos e a apuração são deles. O que eu faço aqui é escolher o que me pareceu importante e dizer por quê.</p>
+
+          <h3>The M.Akita Chronicles — a semana de 10 a 16 de agosto</h3>
+
+          <p>O assunto mais pesado da edição foi o caso do Discord. Depois da morte de Lívia, 13 anos, durante uma live em 22 de julho, a ANPD ordenou em <strong>12 de agosto</strong> a suspensão do recurso Go Live no Brasil, usando a ECA Digital. O argumento da agência foi a criptografia de ponta a ponta, que impede moderação em tempo real. O Akita aponta duas coisas que valem registro: só o Discord foi sancionado, apesar de o Ministério da Justiça ter pedido investigação também do Telegram, e a mesma agência que defende minimização de dados passou a exigir verificação de idade com biometria. A leitura dele é dura:</p>
+
+          <blockquote>Moderação em tempo real em E2E é fisicamente impossível, então a solução é acabar com o E2E. Criminosos trocam de app em minutos; o resto da população perde privacidade para sempre.</blockquote>
+
+          <p>O segundo destaque foi a abertura do código do Phoenix, o algoritmo de recomendação do feed For You do X. Os pesos ficaram expostos: copiar a URL de um post vale cerca de <strong>40 likes</strong>, respostas e citações valem 5, follow equivale a 8, repost a 2. Do outro lado, denúncia tira 468 pontos, mute 118, block 62. O Akita gosta da iniciativa por ser a única rede a expor isso — e nota que o código também revela a lista de contas que governos mandaram bloquear —, mas faz a ressalva de que transparência sem mudar incentivo não melhora o feed, só ensina quem já joga o jogo a jogar melhor.</p>
+
+          <p>Ele também rodou uma nova rodada do próprio benchmark de LLMs para código, com Qwen 3.8 Max, GLM 5.3, Gemini 3.7 Flash e Grok 4.6. O GLM 5.3 fez 94 pontos, o Gemini 3.7 Flash empatou em 93 — mas ele anulou a primeira rodada do Gemini porque o modelo leu a rubrica e o relatório anterior durante a prova. O Qwen 3.8 Max saltou de 51 para 92 ao usar a API real do RubyLLM, enquanto a versão local de 27B numa RTX 5090 ficou em 51. A conclusão dele é a mais útil: publicar benchmark é publicar gabarito.</p>
+
+          <p>Fecha com o tema que mais me fez pensar. Desde <strong>2 de agosto</strong> a Anthropic marca de forma invisível e obrigatória o texto dos modelos Claude mais novos, sem opt-out. É uma marca estatística herdada do SynthID-Text: na escolha entre sinônimos o modelo é inclinado por uma chave secreta, formando uma assinatura que só quem tem a chave detecta. A obrigação vem do Artigo 50 do AI Act europeu, e a empresa estendeu para o mundo todo por falta de filtro regional. O teste prático é o melhor da análise: a marca some com uma reescrita completa por outro modelo. O artigo dele nasceu no Claude, passou pelo Kimi, foi reescrito pelo GLM — e o sinal se apagou no caminho.</p>
+
+          <h3>Filipe Deschamps — cinco edições, de 17 a 21 de agosto</h3>
+
+          <p>Aqui o formato é outro: são notas curtas e diárias, então faz mais sentido listar o que ficou. Um recorte do que me pareceu mais relevante em cada dia:</p>
+
+          <ul>
+            <li><strong>17/08 — Nvidia recua.</strong> A empresa teria reduzido em mais de 52% seu compromisso com o data center massivo da OpenAI nos EUA: dos 250 bilhões de dólares planejados para menos de 120 bilhões. O projeto tem 10 GW de capacidade e, se operar continuamente por um ano, consumiria o equivalente a cerca de 11% de toda a eletricidade gerada pelo Brasil em 2025.</li>
+            <li><strong>18/08 — memória RAM nas alturas.</strong> Um kit DDR5 de 128 GB saiu de 329 para <strong>3.399 dólares</strong> em relação ao menor valor histórico, alta de 933%. No comparativo anual, um kit de 64 GB passou de 191 para 1.118 dólares. A SK Hynix prevê demanda acima da capacidade até 2030, com 2027 podendo ser o pior ano da história em oferta.</li>
+            <li><strong>19/08 — o GitHub explicou a queda.</strong> Quase oito horas de instabilidade causadas por um pico de tráfego que estourou o limite de um componente, com autoscaling mal configurado impedindo o aumento automático de capacidade. Parte dos usuários associou o pico à explosão de commits por agentes de IA — 275 milhões por semana, segundo a própria plataforma —, mas outros contestam, lembrando que as quedas já aconteciam antes.</li>
+            <li><strong>20/08 — a Stripe declarou o "início da singularidade".</strong> Para a empresa, 1º de janeiro de 2026 marcou a entrada da IA numa fase de transformação rápida da economia, evidenciada pelo aumento na criação de novas empresas. No mesmo dia: projetos de lei gerados por IA com erros cresceram 70% nos EUA, com parlamentares usando versões básicas de ChatGPT e Claude.</li>
+            <li><strong>21/08 — infraestrutura brasileira.</strong> O governo quer criar uma nuvem 100% nacional, ainda sem definição de empresa, investimento ou software. E o Brasil vai colocar <strong>1 bilhão de reais</strong> num supercomputador dedicado a IA, com até 7,2 exaflops em FP16. A comparação dá a dimensão: treinar um modelo do tamanho do GPT-4 no Santos-Dumont, hoje o mais potente do país com 27 petaflops, levaria 11 anos. Na máquina nova, um mês.</li>
+          </ul>
+
+          <p>Duas notas soltas da semana que não cabiam na lista mas ficaram na cabeça. O Bun lançou a versão 1.4 reescrita em Rust, corrigindo mais de 2.900 problemas e cortando de 13% a 48% a memória em apps com servidor HTTP. E um estudo estimou que <strong>35% das páginas web</strong> publicadas desde o lançamento do ChatGPT mostram sinais de escrita por IA — em domínios .com o índice é cerca de dez vezes maior que em .edu e .gov, que ficam perto de 1%.</p>
+
+          <h3>the news — edição de 22 de agosto</h3>
+
+          <p>Como assinei há poucos dias, só peguei uma edição, mas ela trouxe o dado que mais me interessou da semana inteira. Um estudo com <strong>27 mil alunos chineses</strong> de 12 a 18 anos, publicado pela The Economist, acompanhou seis meses de uso de IA nas tarefas. A nota média da lição de casa subiu 18% e o tempo por tarefa caiu de 64 para 45 minutos. Nas provas, porém, esses mesmos alunos foram 20% pior que os colegas que não usaram IA.</p>
+
+          <p>O detalhe que muda a conclusão: a queda se concentrou em quem fez a lição às pressas. Quem usou IA mas manteve o mesmo tempo de dedicação perdeu pouco. Ou seja, o problema nunca foi a ferramenta — foi o atalho. Vale como lembrete para quem trabalha com isso todo dia, não só para estudante.</p>
+
+          <p>A edição ainda registrou o vazamento do GTA VI, que derrubou mais de 2 bilhões de dólares do valor de mercado da Take-Two, com o hacker alegando que o motivo foi protestar contra a decisão de não vender o jogo em mídia física. E o fim do patrocínio máster de casas de aposta nas camisas da Premier League, decidido em votação pelos próprios clubes — mesmo com 11 dos 20 tendo bet como patrocinador principal na temporada passada. No Brasil, hoje, são 12 dos 20 clubes da Série A.</p>
+        </div>
+      </article>
+      <a class="section-link" href="../blog.html">Voltar ao blog</a>
+    </main>
+    <footer class="footer"><p>© <span id="year"></span> Sebastião Rogério.</p><a href="../index.html">Início</a></footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
