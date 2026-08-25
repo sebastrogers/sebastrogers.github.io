@@ -1,5 +1,5 @@
 {
-  "atualizado": "18 de agosto de 2026",
+  "atualizado": "25 de agosto de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -12,9 +12,9 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "As 16 aulas com tema, foco do laboratório, entregável e datas das avaliações. Uma página.",
+          "descricao": "As 16 aulas com tema, foco do laboratorio, entregavel e datas das avaliacoes. Uma pagina. Atualizado em 25/08 com a nova Aula 3 e a Aula 4 de lacos e funcoes.",
           "arquivo": "assets/materiais/coding/cronograma-coding-2026-2.pdf",
-          "data": "18/08/2026",
+          "data": "25/08/2026",
           "tags": "calendario planejamento avaliacao"
         },
         {
@@ -67,16 +67,24 @@
         },
         {
           "tipo": "Aula",
-          "titulo": "Aula 3: Tipagem, execução e memória",
-          "descricao": "Os três eixos em profundidade, com Ariane 5, Mars Climate Orbiter, o erro de um bilhão de dólares e vazamento de memória com coletor ligado.",
-          "arquivo": "assets/materiais/coding/aula-03-tipagem-execucao-memoria.pdf",
+          "titulo": "Aula 3: Python na prática, variáveis, tipos e coleções",
+          "descricao": "Aula de teclado. Atribuição múltipla, tipagem dinâmica, conversão de tipo, dinheiro em Decimal, condicionais, listas, tuplas e dicionários. Cinco práticas com solução comentada e o fechamento em Git, do git add ao push.",
+          "arquivo": "assets/materiais/coding/aula-03-python-na-pratica.pdf",
           "data": "25/08/2026",
-          "tags": "slides tipos ponto flutuante garbage collector rust"
+          "tags": "slides python variaveis tipos listas tuplas dicionarios decimal git commit push pratica"
         },
         {
-          "tipo": "Roteiro",
-          "titulo": "Roteiro 3: Medindo linguagens na prática",
-          "descricao": "Comparação cronometrada entre Python e JavaScript, mais experimentos de dinheiro em ponto flutuante, acentuação quebrada e vazamento de memória.",
+          "tipo": "Apoio",
+          "titulo": "Apoio: tipagem, execução e memória em profundidade",
+          "descricao": "Material complementar sobre os três eixos, com Ariane 5, Mars Climate Orbiter, o erro de um bilhão de dólares e vazamento de memória com coletor ligado. Leitura recomendada antes da prova.",
+          "arquivo": "assets/materiais/coding/aula-03-tipagem-execucao-memoria.pdf",
+          "data": "25/08/2026",
+          "tags": "apoio tipos ponto flutuante garbage collector rust ariane mars"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apoio: medindo linguagens, Python e JavaScript",
+          "descricao": "Roteiro de laboratório opcional. Comparação cronometrada entre as duas linguagens, mais os experimentos de dinheiro em ponto flutuante, acentuação quebrada e consumo de memória.",
           "arquivo": "assets/materiais/coding/roteiro-03-medindo-linguagens.pdf",
           "data": "25/08/2026",
           "tags": "laboratorio pratica benchmark decimal utf-8 encoding"
