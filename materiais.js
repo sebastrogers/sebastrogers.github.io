@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var TIPOS = ["Todos", "Cronograma", "Aula", "Roteiro", "Apoio"];
+  var TIPOS = ["Todos", "Cronograma", "Aula", "Roteiro", "Projeto", "Apoio"];
   var estado = { tipo: "Todos", busca: "" };
   var dados = null;
 
@@ -37,6 +37,7 @@
     if (t.indexOf("aula") === 0) return "tag tag-aula";
     if (t.indexOf("roteiro") === 0) return "tag tag-roteiro";
     if (t.indexOf("cronograma") === 0) return "tag tag-cronograma";
+    if (t.indexOf("projeto") === 0) return "tag tag-projeto";
     return "tag tag-apoio";
   }
 
@@ -57,16 +58,26 @@
 
     var acoes = criar("div", "material-actions");
 
-    var abrir = criar("a", "strong", "Abrir PDF");
-    abrir.href = texto(material.arquivo);
-    abrir.target = "_blank";
-    abrir.rel = "noreferrer";
-    acoes.appendChild(abrir);
+    var arquivo = texto(material.arquivo);
+    var ext = (arquivo.split(".").pop() || "").toLowerCase();
 
-    var baixar = criar("a", null, "Baixar");
-    baixar.href = texto(material.arquivo);
-    baixar.setAttribute("download", "");
-    acoes.appendChild(baixar);
+    if (ext === "pdf") {
+      var abrir = criar("a", "strong", "Abrir PDF");
+      abrir.href = arquivo;
+      abrir.target = "_blank";
+      abrir.rel = "noreferrer";
+      acoes.appendChild(abrir);
+
+      var baixar = criar("a", null, "Baixar");
+      baixar.href = arquivo;
+      baixar.setAttribute("download", "");
+      acoes.appendChild(baixar);
+    } else {
+      var baixarSo = criar("a", "strong", "Baixar ." + ext);
+      baixarSo.href = arquivo;
+      baixarSo.setAttribute("download", "");
+      acoes.appendChild(baixarSo);
+    }
 
     if (material.extra && material.extra.url) {
       var extra = criar("a", null, texto(material.extra.rotulo || "Ver mais"));
