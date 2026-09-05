@@ -1,5 +1,5 @@
 {
-  "atualizado": "1 de setembro de 2026",
+  "atualizado": "5 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -12,7 +12,7 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "As 16 aulas com tema, foco do laboratorio, entregavel e datas das avaliacoes. Uma pagina. Atualizado em 25/08 com a nova Aula 3 e a Aula 4 de lacos e funcoes.",
+          "descricao": "As 16 aulas, com tema, prática e entregável de cada uma.",
           "arquivo": "assets/materiais/coding/cronograma-coding-2026-2.pdf",
           "data": "25/08/2026",
           "tags": "calendario planejamento avaliacao"
@@ -20,7 +20,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 1: Por que existem tantas linguagens",
-          "descricao": "Panorama do mercado segundo TIOBE, Octoverse e Stack Overflow, os três eixos em visão geral e o critério para escolher uma linguagem.",
+          "descricao": "Panorama do mercado, famílias de linguagens e como escolher uma.",
           "arquivo": "assets/materiais/coding/aula-01-por-que-tantas-linguagens.pdf",
           "data": "11/08/2026",
           "tags": "slides tiobe octoverse mercado cobol historia"
@@ -28,7 +28,7 @@
         {
           "tipo": "Roteiro",
           "titulo": "Roteiro 1: Ambiente, Git e o primeiro commit",
-          "descricao": "Instalação de Python, VS Code e Git, criação do repositório da equipe e escolha do domínio do projeto. Passo a passo com saídas esperadas.",
+          "descricao": "Instalar Python, VS Code e Git. Criar o repositório da equipe.",
           "arquivo": "assets/materiais/coding/roteiro-01-ambiente-git-primeiro-commit.pdf",
           "data": "11/08/2026",
           "tags": "laboratorio pratica git github python instalacao"
@@ -36,7 +36,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Apresentação da disciplina",
-          "descricao": "O que a disciplina constrói, competências desenvolvidas, método de trabalho e forma de avaliação.",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
           "arquivo": "assets/materiais/coding/apresentacao-da-disciplina.pdf",
           "data": "13/08/2026",
           "tags": "ementa introducao plano"
@@ -44,7 +44,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Material de apoio da semana 1",
-          "descricao": "Vídeos e textos comentados sobre linguagens e paradigmas, com a atividade de mapa mental.",
+          "descricao": "Vídeos e textos sobre linguagens e paradigmas.",
           "arquivo": "assets/materiais/coding/material-apoio-semana-01.pdf",
           "data": "13/08/2026",
           "tags": "leitura video estudo dirigido"
@@ -52,7 +52,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 2: Paradigmas de programação",
-          "descricao": "Imperativo, funcional e orientado a objetos aplicados ao mesmo relatório de vendas, mais o estilo declarativo do SQL.",
+          "descricao": "Imperativo, funcional e orientado a objetos no mesmo problema.",
           "arquivo": "assets/materiais/coding/aula-02-paradigmas-de-programacao.pdf",
           "data": "18/08/2026",
           "tags": "slides funcional imperativo objetos map filter reduce blub"
@@ -60,7 +60,7 @@
         {
           "tipo": "Roteiro",
           "titulo": "Roteiro 2: Refatorando um relatório de vendas",
-          "descricao": "Do procedural ao funcional com testes escritos antes da mudança. Inclui pytest, ambiente virtual e uma alteração de requisito para provar o ganho.",
+          "descricao": "Reescrever um relatório de vendas em estilo funcional, com testes.",
           "arquivo": "assets/materiais/coding/roteiro-02-refatoracao-procedural-funcional.pdf",
           "data": "18/08/2026",
           "tags": "laboratorio pratica python pytest refatoracao pipeline"
@@ -68,7 +68,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 3: Python na prática, variáveis, tipos e coleções",
-          "descricao": "Aula de teclado. Atribuição múltipla, tipagem dinâmica, conversão de tipo, dinheiro em Decimal, condicionais, listas, tuplas e dicionários. Cinco práticas com solução comentada e o fechamento em Git, do git add ao push.",
+          "descricao": "Variáveis, tipos, condicionais e coleções, com cinco práticas.",
           "arquivo": "assets/materiais/coding/aula-03-python-na-pratica.pdf",
           "data": "25/08/2026",
           "tags": "slides python variaveis tipos listas tuplas dicionarios decimal git commit push pratica"
@@ -76,7 +76,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Apoio: tipagem, execução e memória em profundidade",
-          "descricao": "Material complementar sobre os três eixos, com Ariane 5, Mars Climate Orbiter, o erro de um bilhão de dólares e vazamento de memória com coletor ligado. Leitura recomendada antes da prova.",
+          "descricao": "Tipagem, execução e memória, com casos reais de falha.",
           "arquivo": "assets/materiais/coding/aula-03-tipagem-execucao-memoria.pdf",
           "data": "25/08/2026",
           "tags": "apoio tipos ponto flutuante garbage collector rust ariane mars"
@@ -84,7 +84,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Apoio: medindo linguagens, Python e JavaScript",
-          "descricao": "Roteiro de laboratório opcional. Comparação cronometrada entre as duas linguagens, mais os experimentos de dinheiro em ponto flutuante, acentuação quebrada e consumo de memória.",
+          "descricao": "Comparação cronometrada entre Python e JavaScript.",
           "arquivo": "assets/materiais/coding/roteiro-03-medindo-linguagens.pdf",
           "data": "25/08/2026",
           "tags": "laboratorio pratica benchmark decimal utf-8 encoding"
@@ -92,7 +92,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 4: Laços, funções e módulos",
-          "descricao": "for, while, range e enumerate, funções com retorno e argumento padrão, separação em módulos e a primeira suíte de testes com pytest. Inclui a armadilha do valor padrão mutável e a correção do defeito deixado em aberto na Aula 3.",
+          "descricao": "Laços, funções, módulos e a primeira suíte de testes.",
           "arquivo": "assets/materiais/coding/aula-04-lacos-funcoes-e-modulos.pdf",
           "data": "01/09/2026",
           "tags": "slides python for while funcao modulo pytest teste escopo"
@@ -100,7 +100,7 @@
         {
           "tipo": "Projeto",
           "titulo": "Projetos do VS Code: aulas 3 e 4",
-          "descricao": "Duas pastas prontas para abrir no VS Code, com o código executado em aula e os mesmos exercícios em branco marcados com TODO. Trazem README, .gitignore e o pytest já configurado.",
+          "descricao": "Pastas prontas para o VS Code, com o código e os exercícios.",
           "arquivo": "assets/materiais/coding/projetos-vscode-aulas-03-04.zip",
           "data": "01/09/2026",
           "tags": "codigo fonte vscode python pytest projeto exercicios zip"
@@ -108,7 +108,7 @@
         {
           "tipo": "Roteiro",
           "titulo": "Roteiro 4: Da comanda ao módulo testado",
-          "descricao": "Dez passos para transformar o arquivo da Aula 3 em um módulo com funções e uma suíte de testes. Inclui o passo em que o teste é quebrado de propósito, para o aluno ver o pytest apontar o defeito.",
+          "descricao": "Transformar o código da Aula 3 em módulo testado com pytest.",
           "arquivo": "assets/materiais/coding/roteiro-04-comanda-modulo-testado.pdf",
           "data": "01/09/2026",
           "tags": "laboratorio pratica python pytest funcao modulo venv git"
@@ -126,7 +126,7 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "Os 16 encontros com tema, foco do laboratório, entregável e datas das avaliações. Uma página.",
+          "descricao": "Os 16 encontros, com tema, laboratório e datas das provas.",
           "arquivo": "assets/materiais/cloud/cronograma-cloud-2026-2.pdf",
           "data": "27/08/2026",
           "tags": "calendario planejamento avaliacao"
@@ -134,7 +134,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Apresentação da disciplina",
-          "descricao": "O que é computação em nuvem, o que a disciplina desenvolve e como funciona a avaliação.",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
           "arquivo": "assets/materiais/cloud/apresentacao-da-disciplina.pdf",
           "data": "13/08/2026",
           "tags": "ementa introducao aws nist"
@@ -142,7 +142,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Material de apoio da semana 1",
-          "descricao": "Introdução ao tema, vídeos e textos comentados, incluindo o treinamento oficial da AWS em português, com a atividade de mapa mental.",
+          "descricao": "Vídeos e textos de introdução à nuvem, incluindo o curso da AWS.",
           "arquivo": "assets/materiais/cloud/material-apoio-semana-01.pdf",
           "data": "13/08/2026",
           "tags": "leitura video aws cloud practitioner nist responsabilidade compartilhada"
@@ -150,7 +150,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 1: O que é nuvem de verdade",
-          "descricao": "As cinco características essenciais e os quatro modelos de implantação segundo o NIST, o que não é nuvem apesar de ser vendido como tal, e o panorama do mercado.",
+          "descricao": "As cinco características do NIST e o que não é nuvem.",
           "arquivo": "assets/materiais/cloud/aula-01-o-que-e-nuvem.pdf",
           "data": "20/08/2026",
           "tags": "slides nist caracteristicas modelos implantacao aws mercado"
@@ -158,7 +158,7 @@
         {
           "tipo": "Roteiro",
           "titulo": "Atividade 1: conta AWS com trava de orçamento",
-          "descricao": "Passo a passo para criar a conta, ativar o segundo fator na raiz, criar um usuário separado e configurar o alerta de orçamento em um dólar antes de qualquer provisionamento.",
+          "descricao": "Criar a conta AWS com segundo fator e alerta de orçamento.",
           "arquivo": "assets/materiais/cloud/atividade-01-conta-aws-com-trava-de-orcamento.pdf",
           "data": "20/08/2026",
           "tags": "laboratorio pratica aws iam mfa budgets conta"
@@ -166,10 +166,18 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 2: Camadas de serviço, infraestrutura, plataforma e software",
-          "descricao": "As três camadas na definição do NIST resolvendo a mesma tarefa, a fronteira de responsabilidade que cada uma estabelece, e o caso Capital One como exemplo de falha inteiramente do lado do cliente.",
+          "descricao": "Infraestrutura, plataforma e software, e de quem é a responsabilidade.",
           "arquivo": "assets/materiais/cloud/aula-02-camadas-de-servico.pdf",
           "data": "27/08/2026",
           "tags": "slides iaas paas saas faas responsabilidade compartilhada capital one"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Por que a nuvem é barata, e quando deixa de ser",
+          "descricao": "Economia em escala, CAPEX contra OPEX e as sete estratégias de migração.",
+          "arquivo": "assets/materiais/cloud/aula-03-economia-da-nuvem.pdf",
+          "data": "03/09/2026",
+          "tags": "slides economia escala capex opex tco migracao 7 rs fatura custo"
         }
       ]
     },
@@ -184,7 +192,7 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "Os 16 encontros com tema, foco do laboratório, entregável e datas das avaliações. Uma página.",
+          "descricao": "Os 16 encontros, com tema, laboratório e datas das provas.",
           "arquivo": "assets/materiais/requisitos/cronograma-requisitos-2026-2.pdf",
           "data": "27/08/2026",
           "tags": "calendario planejamento avaliacao ddr"
@@ -192,7 +200,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Apresentação da disciplina",
-          "descricao": "Por que projetos falham por requisitos, o que a disciplina desenvolve e como funciona a avaliação.",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
           "arquivo": "assets/materiais/requisitos/apresentacao-da-disciplina.pdf",
           "data": "13/08/2026",
           "tags": "ementa introducao ddr elicitacao"
@@ -200,7 +208,7 @@
         {
           "tipo": "Apoio",
           "titulo": "Material de apoio da semana 1",
-          "descricao": "Introdução ao tema, vídeos e textos comentados, com a atividade de mapa mental sobre requisitos.",
+          "descricao": "Vídeos e textos de introdução a requisitos.",
           "arquivo": "assets/materiais/requisitos/material-apoio-semana-01.pdf",
           "data": "13/08/2026",
           "tags": "leitura video requisito funcional nao funcional volere user stories"
@@ -208,7 +216,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 1: Por que projetos falham por requisitos",
-          "descricao": "Dados de mercado sobre causas de fracasso, casos reais de falha originada em especificação, o custo crescente de corrigir um defeito por fase e a introdução aos interessados no projeto.",
+          "descricao": "Por que requisitos derrubam projeto, com casos reais.",
           "arquivo": "assets/materiais/requisitos/aula-01-por-que-projetos-falham.pdf",
           "data": "20/08/2026",
           "tags": "slides chaos report ariane mars stakeholders moscow custo do defeito"
@@ -216,7 +224,7 @@
         {
           "tipo": "Roteiro",
           "titulo": "Atividade 1: o pedido vago",
-          "descricao": "Dinâmica em que um pedido ambíguo é transmitido em cadeia e cada grupo produz a sua interpretação. A comparação dos resultados revela a ambiguidade que passara despercebida.",
+          "descricao": "Dinâmica do pedido vago, para a turma sentir a ambiguidade.",
           "arquivo": "assets/materiais/requisitos/atividade-01-telefone-sem-fio.pdf",
           "data": "20/08/2026",
           "tags": "laboratorio dinamica ambiguidade elicitacao equipes"
@@ -224,10 +232,18 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 2: Atributos que caracterizam os requisitos",
-          "descricao": "Requisito funcional, não funcional e regra de negócio. Requisito de usuário, de sistema e de software. As nove características da ISO/IEC/IEEE 29148, seis defeitos recorrentes com a reescrita de cada um, e critérios de aceite em Dado, Quando, Então.",
+          "descricao": "Funcional, não funcional e regra de negócio. O que faz um requisito prestar.",
           "arquivo": "assets/materiais/requisitos/aula-02-atributos-dos-requisitos.pdf",
           "data": "27/08/2026",
           "tags": "slides requisito funcional nao funcional regra de negocio iso 29148 gherkin criterio de aceite"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Quem decide o que o sistema precisa fazer",
+          "descricao": "As fases do processo de requisitos e o papel de cada envolvido.",
+          "arquivo": "assets/materiais/requisitos/aula-03-processo-e-envolvidos.pdf",
+          "data": "03/09/2026",
+          "tags": "slides processo elicitacao analise especificacao validacao gerencia stakeholders papeis"
         }
       ]
     }
