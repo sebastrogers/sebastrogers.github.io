@@ -141,7 +141,7 @@ h2.big{font-size:clamp(1.5rem,4.2vw,2.3rem);letter-spacing:-.02em}
 </header>
 <main id="app"></main>
 <script>
-const CONTEUDO = {"aula":1,"disciplina":"Engenharia de Requisitos","titulo":"Por que projetos falham por requisitos — revisão","introducao":"RF, RNF, regra de negócio, e os atributos que separam um requisito de um desejo. Revise no seu ritmo.","desafios":[{"tipo":"pareamento","titulo":"As três categorias","instrucao":"Toque numa categoria e depois na pergunta que ela responde.","colunaA":"Categoria","colunaB":"Responde a pergunta","pares":[{"a":"Requisito funcional","b":"O que o sistema faz"},{"a":"Requisito não funcional","b":"Com que qualidade ele faz"},{"a":"Regra de negócio","b":"O que o negócio permite — vale mesmo sem sistema"}]},{"tipo":"categorizar","titulo":"Funcional, não funcional ou regra de negócio?","instrucao":"Leia a frase e escolha a categoria certa.","categorias":["Funcional","Não funcional","Regra de negócio"],"itens":[{"texto":"O sistema deve emitir um recibo em PDF após cada pagamento confirmado.","categoria":"Funcional"},{"texto":"O aplicativo deve carregar a lista de produtos em até 3 segundos mesmo com conexão 3G.","categoria":"Não funcional","explicacao":"Fala de qualidade (velocidade), não de uma ação nova do sistema."},{"texto":"Clientes inadimplentes há mais de 90 dias não podem fazer novos pedidos.","categoria":"Regra de negócio","explicacao":"Essa política existiria mesmo numa loja sem sistema nenhum."},{"texto":"O sistema deve permitir que o usuário redefina a senha por e-mail.","categoria":"Funcional"},{"texto":"O sistema deve garantir 99,5% de disponibilidade mensal.","categoria":"Não funcional"},{"texto":"Descontos acima de 20% precisam de aprovação do gerente.","categoria":"Regra de negócio","explicacao":"É uma política de negócio, não uma ação do software."}]},{"tipo":"defeito","titulo":"Qual atributo esse requisito viola?","instrucao":"Seis atributos de um requisito bem escrito: não ambíguo, verificável, rastreável, completo, consistente, viável.","casos":[{"trecho":"A interface deve ter um design bonito e moderno.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":0,"explicacao":"\"Bonito\" e \"moderno\" são subjetivos — cada pessoa que ler entende algo diferente."},{"trecho":"O sistema deve ser rápido o suficiente para os usuários.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":1,"explicacao":"Sem um número (segundos, percentil, carga), ninguém consegue montar um teste que aprove ou reprove."},{"trecho":"O requisito \"o sistema deve exportar relatórios em Excel\" foi encontrado no documento, mas ninguém no time lembra quem pediu isso ou por quê.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":2,"explicacao":"Todo requisito deveria apontar de onde veio e quem pediu. Sem isso, ninguém sabe se ainda é necessário."},{"trecho":"O sistema deve processar pagamentos com cartão de crédito.","pergunta":"Qual atributo esse requisito viola, pensando no que falta?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":3,"explicacao":"E se o pagamento for recusado? E se a conexão cair no meio? O caminho de exceção nunca foi escrito."},{"trecho":"O requisito 3.2 diz que \"todo pedido acima de R$ 500 precisa de aprovação manual\", mas o requisito 5.1 diz que \"pedidos são aprovados automaticamente, sem exceção\".","pergunta":"Qual atributo esses dois requisitos violam?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":4,"explicacao":"Os dois não podem ser verdade ao mesmo tempo — foram escritos em momentos ou entrevistas diferentes, e ninguém percebeu o conflito."},{"trecho":"O sistema deve prever, com 100% de precisão, a demanda de estoque para os próximos 12 meses.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":5,"explicacao":"100% de precisão numa previsão de 12 meses não é possível com nenhuma tecnologia — o requisito promete o impossível."}]}]};
+const CONTEUDO = {"aula":1,"disciplina":"Engenharia de Requisitos","titulo":"Por que projetos falham por requisitos — revisão","introducao":"RF, RNF, regra de negócio, e os atributos que separam um requisito de um desejo. Revise no seu ritmo.","desafios":[{"tipo":"pareamento","titulo":"As três categorias","contexto":"Todo documento de requisitos mistura três tipos de frase sem avisar. Antes de seguir em frente, relembre a diferença entre elas.","micro":{"texto":"Requisito funcional descreve uma ação ou comportamento do sistema — o que ele faz. Requisito não funcional descreve uma qualidade dessa ação — com que velocidade, segurança ou disponibilidade ele faz. Regra de negócio é uma política que existiria mesmo sem nenhum sistema — ela só aparece no documento porque afeta o software."},"instrucao":"Toque numa categoria e depois na pergunta que ela responde.","colunaA":"Categoria","colunaB":"Responde a pergunta","pares":[{"a":"Requisito funcional","b":"O que o sistema faz"},{"a":"Requisito não funcional","b":"Com que qualidade ele faz"},{"a":"Regra de negócio","b":"O que o negócio permite — vale mesmo sem sistema"}]},{"tipo":"categorizar","titulo":"Funcional, não funcional ou regra de negócio?","contexto":"Na prática, as três categorias aparecem misturadas dentro do mesmo documento, escritas por pessoas diferentes, em entrevistas diferentes.","micro":{"texto":"Um jeito rápido de separar: se a frase descreve uma ação nova do sistema, é funcional. Se descreve uma qualidade de uma ação que já existe, é não funcional. Se a frase faria sentido numa reunião sem nenhum computador na mesa, é regra de negócio."},"instrucao":"Leia a frase e escolha a categoria certa.","categorias":["Funcional","Não funcional","Regra de negócio"],"itens":[{"texto":"O sistema deve emitir um recibo em PDF após cada pagamento confirmado.","categoria":"Funcional"},{"texto":"O aplicativo deve carregar a lista de produtos em até 3 segundos mesmo com conexão 3G.","categoria":"Não funcional","explicacao":"Fala de qualidade (velocidade), não de uma ação nova do sistema."},{"texto":"Clientes inadimplentes há mais de 90 dias não podem fazer novos pedidos.","categoria":"Regra de negócio","explicacao":"Essa política existiria mesmo numa loja sem sistema nenhum."},{"texto":"O sistema deve permitir que o usuário redefina a senha por e-mail.","categoria":"Funcional"},{"texto":"O sistema deve garantir 99,5% de disponibilidade mensal.","categoria":"Não funcional"},{"texto":"Descontos acima de 20% precisam de aprovação do gerente.","categoria":"Regra de negócio","explicacao":"É uma política de negócio, não uma ação do software."}]},{"tipo":"defeito","titulo":"Qual atributo esse requisito viola?","contexto":"Um requisito bem-intencionado não basta — ele precisa passar em seis testes específicos. Cada frase abaixo falha em exatamente um deles.","micro":{"texto":"Os seis atributos: não ambíguo (só uma leitura possível), verificável (dá pra montar um teste que aprova ou reprova), rastreável (sabe-se de onde veio e por quê), completo (trata também os casos de exceção), consistente (não contradiz outro requisito) e viável (é possível construir com a tecnologia e o prazo disponíveis)."},"instrucao":"Seis atributos de um requisito bem escrito: não ambíguo, verificável, rastreável, completo, consistente, viável.","casos":[{"trecho":"A interface deve ter um design bonito e moderno.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":0,"explicacao":"\"Bonito\" e \"moderno\" são subjetivos — cada pessoa que ler entende algo diferente."},{"trecho":"O sistema deve ser rápido o suficiente para os usuários.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":1,"explicacao":"Sem um número (segundos, percentil, carga), ninguém consegue montar um teste que aprove ou reprove."},{"trecho":"O requisito \"o sistema deve exportar relatórios em Excel\" foi encontrado no documento, mas ninguém no time lembra quem pediu isso ou por quê.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":2,"explicacao":"Todo requisito deveria apontar de onde veio e quem pediu. Sem isso, ninguém sabe se ainda é necessário."},{"trecho":"O sistema deve processar pagamentos com cartão de crédito.","pergunta":"Qual atributo esse requisito viola, pensando no que falta?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":3,"explicacao":"E se o pagamento for recusado? E se a conexão cair no meio? O caminho de exceção nunca foi escrito."},{"trecho":"O requisito 3.2 diz que \"todo pedido acima de R$ 500 precisa de aprovação manual\", mas o requisito 5.1 diz que \"pedidos são aprovados automaticamente, sem exceção\".","pergunta":"Qual atributo esses dois requisitos violam?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":4,"explicacao":"Os dois não podem ser verdade ao mesmo tempo — foram escritos em momentos ou entrevistas diferentes, e ninguém percebeu o conflito."},{"trecho":"O sistema deve prever, com 100% de precisão, a demanda de estoque para os próximos 12 meses.","pergunta":"Qual atributo esse requisito viola?","opcoes":["Não ambíguo","Verificável","Rastreável","Completo","Consistente","Viável"],"correta":5,"explicacao":"100% de precisão numa previsão de 12 meses não é possível com nenhuma tecnologia — o requisito promete o impossível."}]}]};
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec";
 const LETRAS = 'ABCDEFGH';
 
@@ -255,11 +255,27 @@ function proximoDesafio(acertos, total) {
   abrirDesafio(S.idx + 1);
 }
 
+function acaoLabel(tipo) {
+  if (tipo === 'pareamento') return 'Atividade · emparelhar';
+  if (tipo === 'categorizar') return 'Atividade · categorizar';
+  if (tipo === 'sequencia') return 'Atividade · ordenar sequência';
+  return 'Atividade · escolha';
+}
+
+function cabecalhoMin(d) {
+  return `
+    <div class="kicker">Desafio ${S.idx + 1} de ${CONTEUDO.desafios.length}</div>
+    <h2 class="big" style="font-size:clamp(1.4rem,3.6vw,2rem)">${d.titulo}</h2>
+  `;
+}
+
 function cabecalho(d) {
   return `
     <div class="kicker">Desafio ${S.idx + 1} de ${CONTEUDO.desafios.length}</div>
     <h2 class="big" style="font-size:clamp(1.4rem,3.6vw,2rem)">${d.titulo}</h2>
-    ${d.instrucao ? '<p class="narr">' + d.instrucao + '</p>' : ''}
+    ${d.contexto ? '<p class="narr">' + d.contexto + '</p>' : ''}
+    ${d.micro ? '<div class="micro"><b>' + (d.micro.titulo || 'Microconteúdo') + '</b>' + d.micro.texto + '</div>' : ''}
+    ${d.instrucao ? '<div class="cmd"><em>' + acaoLabel(d.tipo) + '</em>' + d.instrucao + '</div>' : ''}
   `;
 }
 
@@ -273,7 +289,7 @@ function renderMCQ(d) {
     const p = d.perguntas[atual];
     ordemAtual = shuffle(p.opcoes.map((texto, i) => ({ texto, i })));
     montar(`
-      ${cabecalho(d)}
+      ${atual === 0 ? cabecalho(d) : cabecalhoMin(d)}
       <div class="ctx">
         <p class="qprog">Pergunta ${atual + 1} de ${d.perguntas.length}</p>
         <p style="font-weight:600;color:var(--ink)">${p.enunciado}</p>
@@ -329,7 +345,7 @@ function renderDefeito(d) {
     const p = d.casos[atual];
     ordemAtual = shuffle(p.opcoes.map((texto, i) => ({ texto, i })));
     montar(`
-      ${cabecalho(d)}
+      ${atual === 0 ? cabecalho(d) : cabecalhoMin(d)}
       <p class="qprog">Caso ${atual + 1} de ${d.casos.length}</p>
       <div class="excerto">"${p.trecho}"</div>
       <p style="font-weight:600;color:var(--ink)">${p.pergunta || 'Qual é o defeito nesse trecho?'}</p>
@@ -482,7 +498,7 @@ function renderCategorizar(d) {
   function render() {
     const item = d.itens[atual];
     montar(`
-      ${cabecalho(d)}
+      ${atual === 0 ? cabecalho(d) : cabecalhoMin(d)}
       <p class="qprog">Item ${atual + 1} de ${d.itens.length}</p>
       <div class="ctx">"${item.texto}"</div>
       <div class="chips" id="cats"></div>
