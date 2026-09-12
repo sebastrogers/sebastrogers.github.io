@@ -1,5 +1,5 @@
 {
-  "atualizado": "5 de setembro de 2026",
+  "atualizado": "12 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -244,6 +244,14 @@
           "arquivo": "assets/materiais/requisitos/aula-03-processo-e-envolvidos.pdf",
           "data": "03/09/2026",
           "tags": "slides processo elicitacao analise especificacao validacao gerencia stakeholders papeis"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Jogos de revisão — Aulas 1 a 4",
+          "descricao": "Revisão individual e interativa de cada aula, com identificação por nome e matrícula.",
+          "arquivo": "assets/materiais/requisitos/jogos-revisao.html",
+          "data": "12/09/2026",
+          "tags": "jogo revisao interativo individual pareamento sequencia mcq defeito categorizar"
         }
       ]
     }

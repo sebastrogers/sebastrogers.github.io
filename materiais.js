@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var TIPOS = ["Todos", "Cronograma", "Aula", "Roteiro", "Projeto", "Apoio"];
+  var TIPOS = ["Todos", "Cronograma", "Aula", "Roteiro", "Projeto", "Jogo", "Apoio"];
   var estado = { tipo: "Todos", busca: "" };
   var dados = null;
 
@@ -38,6 +38,7 @@
     if (t.indexOf("roteiro") === 0) return "tag tag-roteiro";
     if (t.indexOf("cronograma") === 0) return "tag tag-cronograma";
     if (t.indexOf("projeto") === 0) return "tag tag-projeto";
+    if (t.indexOf("jogo") === 0) return "tag tag-jogo";
     return "tag tag-apoio";
   }
 
@@ -72,6 +73,12 @@
       baixar.href = arquivo;
       baixar.setAttribute("download", "");
       acoes.appendChild(baixar);
+    } else if (ext === "html") {
+      var abrirJogo = criar("a", "strong", "Abrir jogo");
+      abrirJogo.href = arquivo;
+      abrirJogo.target = "_blank";
+      abrirJogo.rel = "noreferrer";
+      acoes.appendChild(abrirJogo);
     } else {
       var baixarSo = criar("a", "strong", "Baixar ." + ext);
       baixarSo.href = arquivo;

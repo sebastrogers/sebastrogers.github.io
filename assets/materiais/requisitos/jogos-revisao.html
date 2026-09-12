@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Jogos de revisão — Engenharia de Requisitos</title>
+<style>
+  :root {
+    --night: #0e1a1f;
+    --panel: #1c2f37;
+    --panel-l: #24383f;
+    --ink: #e7e2d8;
+    --muted: #8a938f;
+    --signal: #5fb8a8;
+    --stage: #c04a6e;
+    --border: #33454b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--night);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 36px 20px 60px; }
+  .kicker {
+    font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase;
+    color: var(--signal); font-weight: 700; margin-bottom: 8px;
+  }
+  h1 { font-size: 24px; color: #fff; margin: 0 0 10px; }
+  p.lead { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 0 0 28px; }
+  .card {
+    display: block; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;
+    text-decoration: none; color: inherit;
+  }
+  .card:active { transform: scale(0.995); }
+  .card .num {
+    font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--stage); font-weight: 700; margin-bottom: 4px;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 6px; color: #fff; }
+  .card p { font-size: 13.5px; color: var(--muted); margin: 0 0 12px; line-height: 1.5; }
+  .card .btn {
+    display: inline-block; background: var(--stage); color: #fff; font-size: 13px;
+    font-weight: 600; padding: 8px 14px; border-radius: 8px;
+  }
+  .rodape { text-align: center; font-size: 12px; color: var(--muted); margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Engenharia de Requisitos</p>
+  <h1>Jogos de revisão</h1>
+  <p class="lead">Escolha a aula que quer revisar. Cada jogo leva uns 10 a 15 minutos, pede seu nome e matrícula no início, e envia o resultado automaticamente ao final.</p>
+
+  <a class="card" href="jogo-aula-01.html">
+    <p class="num">Aula 1</p>
+    <h2>Por que projetos falham por requisitos</h2>
+    <p>Funcional, não funcional, regra de negócio, e os seis atributos de um requisito bem escrito.</p>
+    <span class="btn">Jogar →</span>
+  </a>
+
+  <a class="card" href="jogo-aula-02.html">
+    <p class="num">Aula 2</p>
+    <h2>Atributos que caracterizam os requisitos</h2>
+    <p>Níveis de requisito, as nove características da ISO/IEC/IEEE 29148, critério de aceite e a caça aos requisitos ruins.</p>
+    <span class="btn">Jogar →</span>
+  </a>
+
+  <a class="card" href="jogo-aula-03.html">
+    <p class="num">Aula 3</p>
+    <h2>Quem decide o que o sistema precisa fazer</h2>
+    <p>O processo de cinco atividades, o modelo cebola, a matriz poder e interesse, e o caso do National Programme for IT.</p>
+    <span class="btn">Jogar →</span>
+  </a>
+
+  <a class="card" href="jogo-aula-04.html">
+    <p class="num">Aula 4</p>
+    <h2>Requisito Sob Suspeita</h2>
+    <p>Técnicas de elicitação, papéis do projeto e os vieses que estragam uma entrevista.</p>
+    <span class="btn">Jogar →</span>
+  </a>
+
+  <p class="rodape">Engenharia de Requisitos · Faculdade Senac Pernambuco · Caruaru</p>
+</div>
+</body>
+</html>

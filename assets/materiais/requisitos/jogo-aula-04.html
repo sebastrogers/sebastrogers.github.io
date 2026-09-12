@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Requisito Sob Suspeita — revisão individual — revisão</title>
+<style>
+  :root {
+    --night: #0e1a1f;
+    --deep: #15242b;
+    --panel: #1c2f37;
+    --panel-l: #24383f;
+    --ink: #e7e2d8;
+    --muted: #8a938f;
+    --muted-2: #6b7370;
+    --signal: #5fb8a8;
+    --stage: #c04a6e;
+    --stage-l: #e087a4;
+    --good: #6bbf6b;
+    --good-bg: #1f3324;
+    --bad: #e07a7a;
+    --bad-bg: #35201f;
+    --border: #33454b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--night);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app {
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 28px 20px 60px;
+  }
+  h1, h2, h3 { font-weight: 600; margin: 0 0 8px; color: #fff; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 19px; }
+  h3 { font-size: 16px; }
+  p { line-height: 1.55; color: var(--ink); }
+  .kicker {
+    font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase;
+    color: var(--signal); font-weight: 700; margin-bottom: 6px;
+  }
+  .muted { color: var(--muted); font-size: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin: 16px 0;
+  }
+  input[type=text] {
+    width: 100%; background: var(--deep); border: 1px solid var(--border);
+    color: #fff; padding: 11px 12px; border-radius: 8px; font-size: 15px;
+    margin-bottom: 14px;
+  }
+  input[type=text]:focus { outline: none; border-color: var(--signal); }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  button {
+    font-family: inherit; cursor: pointer; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; padding: 12px 18px;
+  }
+  .btn-primary { background: var(--stage); color: #fff; width: 100%; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    background: transparent; color: var(--ink); border: 1px solid var(--border);
+    width: 100%;
+  }
+  .erro { color: var(--bad); font-size: 13px; margin: -6px 0 14px; display: none; }
+  .erro.show { display: block; }
+  .progresso {
+    display: flex; gap: 4px; margin-bottom: 20px;
+  }
+  .progresso .seg {
+    flex: 1; height: 4px; border-radius: 2px; background: var(--border);
+  }
+  .progresso .seg.done { background: var(--signal); }
+  .progresso .seg.atual { background: var(--stage); }
+  .opcao {
+    display: block; width: 100%; text-align: left; background: var(--panel-l);
+    color: var(--ink); border: 1px solid var(--border); border-radius: 10px;
+    padding: 13px 16px; margin-bottom: 10px; font-size: 14.5px; font-weight: 500;
+    transition: none;
+  }
+  .opcao:active { transform: scale(0.99); }
+  .opcao.correta { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+  .opcao.errada { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  .opcao.desabilitada { pointer-events: none; opacity: 0.55; }
+  .opcao.selecionavel-ativa { border-color: var(--signal); background: #1e3236; }
+  .excerto {
+    background: var(--night); border-left: 3px solid var(--stage); border-radius: 4px;
+    padding: 14px 16px; margin-bottom: 16px; font-style: italic; color: #d9d4c8;
+  }
+  .feedback {
+    border-radius: 10px; padding: 14px 16px; margin: 14px 0; font-size: 14px; line-height: 1.5;
+  }
+  .feedback.ok { background: var(--good-bg); color: var(--good); }
+  .feedback.no { background: var(--bad-bg); color: var(--bad); }
+  .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .duas-colunas { grid-template-columns: 1fr; } }
+  .col-titulo { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .item-clicavel {
+    background: var(--panel-l); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 8px; font-size: 13.5px; cursor: pointer;
+  }
+  .item-clicavel.selecionado { border-color: var(--signal); background: #1e3236; }
+  .item-clicavel.pareado-ok { border-color: var(--good); background: var(--good-bg); color: var(--good); pointer-events: none; }
+  .item-clicavel.pareado-erro { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .seq-lista { list-style: none; margin: 0; padding: 0; }
+  .seq-item {
+    background: var(--panel-l); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 8px; font-size: 14px; display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+  .seq-item .num {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .seq-item.marcado .num { background: var(--stage); color: #fff; }
+  .cat-botoes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .cat-botao {
+    flex: 1; min-width: 100px; background: var(--panel-l); border: 1px solid var(--border);
+    color: var(--ink); border-radius: 8px; padding: 12px 10px; font-size: 13px; font-weight: 600;
+  }
+  .estrela { font-size: 22px; }
+  .resultado-linha {
+    display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .resultado-linha:last-child { border-bottom: none; }
+  .rodape-nota { font-size: 12px; color: var(--muted-2); text-align: center; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CONTEUDO = {"aula":4,"disciplina":"Engenharia de Requisitos","titulo":"Requisito Sob Suspeita — revisão individual","introducao":"Um sistema de reserva de notebooks foi lançado com o levantamento de requisitos cheio de falhas. Investigue sozinho, no seu ritmo.","desafios":[{"tipo":"pareamento","titulo":"Quem é quem no projeto","instrucao":"Toque numa pessoa e depois no papel que ela ocupa no projeto.","colunaA":"Pessoas","colunaB":"Papéis","pares":[{"a":"Marina — coordenadora do laboratório, aprova orçamento e decide prioridades","b":"Patrocinador / decisor"},{"a":"Diego — aluno que usa os notebooks todos os dias para trabalhos","b":"Usuário final"},{"a":"Prof. Aline — professora que conhece de cor as regras de uso do laboratório","b":"Especialista de domínio"},{"a":"Rafael — desenvolvedor que vai programar o sistema","b":"Equipe técnica"},{"a":"Central de TI — setor que vai manter o servidor rodando depois de pronto","b":"Mantenedor / operação"}]},{"tipo":"defeito","titulo":"Quem ficou de fora","instrucao":"A ata mostra quem foi entrevistado antes de o sistema ser programado.","casos":[{"trecho":"Só Marina foi entrevistada antes de o sistema ser programado. Ninguém mais.","pergunta":"Considerando os papéis que você acabou de identificar, quem deveria ter sido ouvido e não foi — e provavelmente sabia da regra que travou o sistema?","opcoes":["Rafael, o desenvolvedor — ele quem escreve o código, então a decisão era dele.","Prof. Aline, a especialista de domínio — ela conhece as regras de uso do laboratório que nunca foram escritas em lugar nenhum.","A Central de TI — eles são quem vai manter o sistema, então precisam ser ouvidos primeiro.","Ninguém mais precisava ser ouvido — a coordenadora já representa todo mundo."],"correta":1,"explicacao":"A regra que faltou — professores podem bloquear horários do laboratório para suas turmas — só existia na cabeça de quem dá aula lá. Ninguém perguntou, e o sistema nunca soube que esse bloqueio existia."}]},{"tipo":"sequencia","titulo":"A ordem que ninguém seguiu","instrucao":"Clique nas etapas do processo na ordem em que deveriam acontecer.","itens":["Levantar, junto com quem participa do processo, o que o sistema precisa fazer. (Elicitação)","Organizar o que foi levantado, resolver contradições e separar o essencial do secundário. (Análise)","Escrever os requisitos de forma clara, específica e testável, em um documento. (Especificação)","Confirmar com quem participou do levantamento que o documento realmente representa o que foi pedido. (Validação)","Registrar e tratar as mudanças que aparecem depois que o projeto já começou. (Gestão de mudanças)"],"feedbackOk":"É essa a ordem. Guarde principalmente a penúltima: validação. É ali que se descobre, ainda a tempo, se o que foi entendido bate com o que foi pedido."},{"tipo":"defeito","titulo":"Qual etapa faltou","instrucao":"O documento de requisitos foi escrito, aprovado por Marina e entregue direto para a equipe programar.","casos":[{"trecho":"Ninguém voltou a mostrar o documento, ou um protótipo da tela, para Diego, Prof. Aline ou qualquer outro aluno antes do sistema entrar no ar.","pergunta":"Qual etapa do processo foi pulada nesse trecho da história?","opcoes":["Elicitação — porque ninguém foi entrevistado.","Especificação — porque o documento nunca foi escrito.","Validação — porque ninguém confirmou o entendimento com quem realmente usaria o sistema antes de programar.","Gestão de mudanças — porque os requisitos mudaram depois do sistema pronto."],"correta":2,"explicacao":"Aprovar com quem paga não é o mesmo que validar com quem usa. São papéis diferentes, e um não substitui o outro."}]},{"tipo":"mcq","titulo":"A técnica certa pro problema certo","instrucao":"Cinco situações do mesmo projeto — cada uma pede uma técnica de elicitação diferente.","perguntas":[{"enunciado":"A regra de bloqueio de horário para aulas só existe na cabeça da Prof. Aline — em nenhum lugar está escrita. Qual técnica melhor resolve essa situação?","opcoes":["Entrevista aberta, individual, com quem detém esse conhecimento","Questionário fechado enviado por e-mail","Observação do laboratório funcionando","Prototipação da tela de reserva"],"correta":0,"explicacao":"Conhecimento tácito, de uma única pessoa, pede conversa aberta — não uma pergunta fechada que já sugere a resposta."},{"enunciado":"A equipe quer confirmar, com os 40 alunos que usam o laboratório, se preferem reservar por hora ou por turno inteiro. Qual técnica melhor resolve essa situação?","opcoes":["Entrevista individual com cada um dos 40","Questionário objetivo enviado para todos","Workshop com os 40 alunos ao mesmo tempo","Observação do uso atual, sem sistema"],"correta":1,"explicacao":"Muita gente, pergunta fechada e objetiva — o questionário escala melhor que entrevistar 40 pessoas uma a uma."},{"enunciado":"A equipe quer entender como as pessoas realmente usam o balcão de empréstimo hoje, sem nenhum sistema. Qual técnica melhor resolve essa situação?","opcoes":["Prototipação de uma tela","Observação do processo acontecendo de verdade","Questionário sobre satisfação","Entrevista só com a coordenadora"],"correta":1,"explicacao":"Ver o processo real acontecendo revela detalhes que ninguém lembraria de contar numa entrevista."},{"enunciado":"A equipe quer reunir bibliotecário, coordenador e dois alunos para desenhar juntos, ao vivo, as regras de prioridade. Qual técnica melhor resolve essa situação?","opcoes":["Questionário individual","Observação","Workshop com todos os envolvidos ao mesmo tempo","Entrevista em série, um de cada vez"],"correta":2,"explicacao":"Quando o objetivo é construir um acordo entre pessoas com interesses diferentes, reunir todo mundo junto é mais rápido que entrevistar em série."},{"enunciado":"Antes de programar de verdade, a equipe quer saber se a tela de reserva faz sentido para quem vai usá-la. Qual técnica melhor resolve essa situação?","opcoes":["Prototipação e teste com usuários reais","Questionário sobre o sistema antigo","Gestão de mudanças","Análise de documentos antigos"],"correta":0,"explicacao":"Testar uma versão simulada da tela antes de programar é exatamente o papel da prototipação."}]},{"tipo":"defeito","titulo":"Depoimentos suspeitos","instrucao":"Quatro trechos do levantamento original. O que está errado em cada um?","casos":[{"trecho":"Analista, para Marina: \"Você concorda que um sistema simples, sem complicação, é o melhor caminho pra gente seguir, né?\"","pergunta":"O que está errado aqui?","opcoes":["Pergunta tendenciosa — já sugere a resposta que o analista quer ouvir","Pergunta perfeita, direta ao ponto","Falta de follow-up","Stakeholder errado sendo ouvido"],"correta":0,"explicacao":"Uma pergunta que termina com \"né?\" já empurra a resposta. Marina dificilmente diria \"não\" a essa formulação."},{"trecho":"A entrevista com Diego durou cinco minutos. Pergunta única: \"O sistema atual é ruim?\" Resposta: \"É.\"","pergunta":"O que está errado aqui?","opcoes":["Falta de follow-up — a resposta ficou vaga e ninguém aprofundou","Pergunta tendenciosa","Entrevista perfeita, foi rápida e objetiva","Diego não deveria ter sido ouvido"],"correta":0,"explicacao":"\"É ruim\" não diz nada sobre o que fazer. Faltaram perguntas como \"ruim como?\" ou \"o que exatamente não funciona hoje?\"."},{"trecho":"Nenhum professor que dá aula no laboratório foi procurado durante todo o levantamento.","pergunta":"O que está errado aqui?","opcoes":["Stakeholder não ouvido — quem tem uma regra de negócio relevante nunca foi consultado","Pergunta tendenciosa","Falta de follow-up","Requisito ambíguo"],"correta":0,"explicacao":"Não é um problema de como a pergunta foi feita — é a ausência total da pergunta."},{"trecho":"O documento final registra apenas: \"o sistema deve permitir reserva de forma simples e organizada\".","pergunta":"O que está errado aqui?","opcoes":["Requisito ambíguo — \"simples e organizada\" nunca foi traduzido em algo específico","Pergunta tendenciosa","Stakeholder não ouvido","Falta de validação"],"correta":0,"explicacao":"\"Simples\" e \"organizada\" significam coisas diferentes para cada pessoa. Sem detalhar isso, o requisito não pode ser testado nem implementado com segurança."}]}]};
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec";
+
+const S = {
+  nome: localStorage.getItem('jogoReq_nome') || '',
+  matricula: localStorage.getItem('jogoReq_matricula') || '',
+  idx: 0,
+  resultados: [],
+};
+
+function el(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return d.firstElementChild;
+}
+
+function montar(html) {
+  document.getElementById('app').innerHTML = html;
+}
+
+function progresso(atual, total) {
+  let segs = '';
+  for (let i = 0; i < total; i++) {
+    let cls = 'seg';
+    if (i < atual) cls += ' done';
+    else if (i === atual) cls += ' atual';
+    segs += '<div class="' + cls + '"></div>';
+  }
+  return '<div class="progresso">' + segs + '</div>';
+}
+
+// ---------------------------------------------------------------- tela 0: identificacao
+function telaIdentificacao() {
+  montar(`
+    <p class="kicker">${CONTEUDO.disciplina || 'Engenharia de Requisitos'} · Aula ${CONTEUDO.aula}</p>
+    <h1>Antes de começar</h1>
+    <p class="muted">Digite seu nome e sua matrícula (ou turma) pra eu saber quem jogou. Não precisa de senha.</p>
+    <div class="card">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" value="${S.nome}" placeholder="Ana Beatriz Souza" />
+      <label for="mat">Matrícula ou turma</label>
+      <input type="text" id="mat" value="${S.matricula}" placeholder="ADS2026208 ou Turma A" />
+      <p class="erro" id="erroId">Preencha os dois campos antes de começar.</p>
+      <button class="btn-primary" id="btnComecar">Começar a revisão</button>
+    </div>
+  `);
+  document.getElementById('btnComecar').addEventListener('click', () => {
+    const nome = document.getElementById('nome').value.trim();
+    const mat = document.getElementById('mat').value.trim();
+    const err = document.getElementById('erroId');
+    if (!nome || !mat) {
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    S.nome = nome;
+    S.matricula = mat;
+    localStorage.setItem('jogoReq_nome', nome);
+    localStorage.setItem('jogoReq_matricula', mat);
+    telaIntro();
+  });
+}
+
+// ---------------------------------------------------------------- tela 1: intro da aula
+function telaIntro() {
+  montar(`
+    <p class="kicker">${CONTEUDO.disciplina || 'Engenharia de Requisitos'} · Aula ${CONTEUDO.aula}</p>
+    <h1>${CONTEUDO.titulo}</h1>
+    <p>${CONTEUDO.introducao || ''}</p>
+    <div class="card">
+      <p class="col-titulo">Nesta revisão</p>
+      ${CONTEUDO.desafios.map((d, i) => '<p style="margin:4px 0;font-size:14px">' + (i + 1) + '. ' + d.titulo + '</p>').join('')}
+    </div>
+    <button class="btn-primary" id="btnIniciar">Começar, ${S.nome.split(' ')[0]}</button>
+  `);
+  document.getElementById('btnIniciar').addEventListener('click', () => {
+    S.idx = 0;
+    S.resultados = [];
+    abrirDesafio(0);
+  });
+}
+
+// ---------------------------------------------------------------- roteador de desafios
+function abrirDesafio(i) {
+  if (i >= CONTEUDO.desafios.length) { telaFinal(); return; }
+  S.idx = i;
+  const d = CONTEUDO.desafios[i];
+  if (d.tipo === 'mcq') renderMCQ(d);
+  else if (d.tipo === 'defeito') renderDefeito(d);
+  else if (d.tipo === 'sequencia') renderSequencia(d);
+  else if (d.tipo === 'pareamento') renderPareamento(d);
+  else if (d.tipo === 'categorizar') renderCategorizar(d);
+}
+
+function proximoDesafio(acertos, total) {
+  S.resultados.push({ titulo: CONTEUDO.desafios[S.idx].titulo, acertos, total });
+  abrirDesafio(S.idx + 1);
+}
+
+function cabecalho(d) {
+  return `
+    ${progresso(S.idx, CONTEUDO.desafios.length)}
+    <p class="kicker">Desafio ${S.idx + 1} de ${CONTEUDO.desafios.length}</p>
+    <h2>${d.titulo}</h2>
+    ${d.instrucao ? '<p class="muted">' + d.instrucao + '</p>' : ''}
+  `;
+}
+
+// ---------------------------------------------------------------- mecanica: MCQ rapido
+function renderMCQ(d) {
+  let atual = 0;
+  let acertos = 0;
+
+  function pergunta() {
+    const p = d.perguntas[atual];
+    montar(`
+      ${cabecalho(d)}
+      <div class="card">
+        <p style="margin-top:0;font-weight:600">${p.enunciado}</p>
+        <div id="opcoes"></div>
+        <div id="fb"></div>
+        <button class="btn-primary" id="btnProx" style="display:none;margin-top:10px">Continuar</button>
+      </div>
+    `);
+    const cont = document.getElementById('opcoes');
+    p.opcoes.forEach((op, i) => {
+      const b = el('<button class="opcao">' + op + '</button>');
+      b.addEventListener('click', () => responder(i));
+      cont.appendChild(b);
+    });
+  }
+
+  function responder(i) {
+    const p = d.perguntas[atual];
+    const botoes = document.querySelectorAll('#opcoes .opcao');
+    botoes.forEach((b, j) => {
+      b.classList.add('desabilitada');
+      if (j === p.correta) b.classList.add('correta');
+      else if (j === i) b.classList.add('errada');
+    });
+    const acertou = i === p.correta;
+    if (acertou) acertos++;
+    if (p.explicacao) {
+      document.getElementById('fb').innerHTML =
+        '<div class="feedback ' + (acertou ? 'ok' : 'no') + '">' + p.explicacao + '</div>';
+    }
+    document.getElementById('btnProx').style.display = 'block';
+    document.getElementById('btnProx').onclick = () => {
+      atual++;
+      if (atual < d.perguntas.length) pergunta();
+      else proximoDesafio(acertos, d.perguntas.length);
+    };
+  }
+
+  pergunta();
+}
+
+// ---------------------------------------------------------------- mecanica: defeito em trecho
+// (mesma logica do MCQ, layout com o trecho em destaque)
+function renderDefeito(d) {
+  let atual = 0;
+  let acertos = 0;
+
+  function pergunta() {
+    const p = d.casos[atual];
+    montar(`
+      ${cabecalho(d)}
+      <div class="card">
+        <div class="excerto">"${p.trecho}"</div>
+        <p style="margin-top:0;font-weight:600">${p.pergunta || 'Qual é o defeito nesse trecho?'}</p>
+        <div id="opcoes"></div>
+        <div id="fb"></div>
+        <button class="btn-primary" id="btnProx" style="display:none;margin-top:10px">Continuar</button>
+      </div>
+    `);
+    const cont = document.getElementById('opcoes');
+    p.opcoes.forEach((op, i) => {
+      const b = el('<button class="opcao">' + op + '</button>');
+      b.addEventListener('click', () => responder(i));
+      cont.appendChild(b);
+    });
+  }
+
+  function responder(i) {
+    const p = d.casos[atual];
+    const botoes = document.querySelectorAll('#opcoes .opcao');
+    botoes.forEach((b, j) => {
+      b.classList.add('desabilitada');
+      if (j === p.correta) b.classList.add('correta');
+      else if (j === i) b.classList.add('errada');
+    });
+    const acertou = i === p.correta;
+    if (acertou) acertos++;
+    if (p.explicacao) {
+      document.getElementById('fb').innerHTML =
+        '<div class="feedback ' + (acertou ? 'ok' : 'no') + '">' + p.explicacao + '</div>';
+    }
+    document.getElementById('btnProx').style.display = 'block';
+    document.getElementById('btnProx').onclick = () => {
+      atual++;
+      if (atual < d.casos.length) pergunta();
+      else proximoDesafio(acertos, d.casos.length);
+    };
+  }
+
+  pergunta();
+}
+
+// ---------------------------------------------------------------- mecanica: sequencia
+function renderSequencia(d) {
+  const itens = d.itens.map((texto, i) => ({ texto, i }));
+  const embaralhado = [...itens].sort(() => Math.random() - 0.5);
+  let marcados = [];
+
+  function render() {
+    montar(`
+      ${cabecalho(d)}
+      <div class="card">
+        <p class="muted">Clique nos itens na ordem certa.</p>
+        <ul class="seq-lista" id="lista"></ul>
+        <div id="fb"></div>
+        <button class="btn-primary" id="btnConferir" ${marcados.length === itens.length ? '' : 'disabled'}>Conferir ordem</button>
+      </div>
+    `);
+    const lista = document.getElementById('lista');
+    embaralhado.forEach((item) => {
+      const posMarcada = marcados.indexOf(item.i);
+      const li = el('<li class="seq-item' + (posMarcada > -1 ? ' marcado' : '') + '"><span class="num">' + (posMarcada > -1 ? (posMarcada + 1) : '') + '</span><span>' + item.texto + '</span></li>');
+      li.addEventListener('click', () => {
+        if (marcados.includes(item.i)) return;
+        marcados.push(item.i);
+        render();
+      });
+      lista.appendChild(li);
+    });
+    document.getElementById('btnConferir').addEventListener('click', conferir);
+  }
+
+  function conferir() {
+    const acertou = marcados.every((v, i) => v === i);
+    document.getElementById('fb').innerHTML =
+      '<div class="feedback ' + (acertou ? 'ok' : 'no') + '">' +
+      (acertou ? (d.feedbackOk || 'Ordem correta.') : (d.feedbackErro || 'Não foi essa a ordem. A ordem certa era: ' + itens.map(x => x.texto).join(' → '))) +
+      '</div>';
+    document.getElementById('btnConferir').style.display = 'none';
+    const btn = el('<button class="btn-primary" style="margin-top:10px">Continuar</button>');
+    btn.addEventListener('click', () => proximoDesafio(acertou ? 1 : 0, 1));
+    document.getElementById('fb').after(btn);
+  }
+
+  render();
+}
+
+// ---------------------------------------------------------------- mecanica: pareamento
+function renderPareamento(d) {
+  const esquerda = d.pares.map((p, i) => ({ texto: p.a, i }));
+  const direita = [...d.pares.map((p, i) => ({ texto: p.b, i }))].sort(() => Math.random() - 0.5);
+  let selecionadoEsq = null;
+  let resolvidos = [];
+  let acertos = 0;
+  let erros = 0;
+
+  function render() {
+    montar(`
+      ${cabecalho(d)}
+      <div class="card">
+        <div class="duas-colunas">
+          <div>
+            <p class="col-titulo">${d.colunaA || 'A'}</p>
+            <div id="colEsq"></div>
+          </div>
+          <div>
+            <p class="col-titulo">${d.colunaB || 'B'}</p>
+            <div id="colDir"></div>
+          </div>
+        </div>
+      </div>
+    `);
+    const colEsq = document.getElementById('colEsq');
+    esquerda.forEach((item) => {
+      const jaResolvido = resolvidos.includes(item.i);
+      const div = el('<div class="item-clicavel' + (jaResolvido ? ' pareado-ok' : (selecionadoEsq === item.i ? ' selecionado' : '')) + '">' + item.texto + '</div>');
+      if (!jaResolvido) {
+        div.addEventListener('click', () => { selecionadoEsq = item.i; render(); });
+      }
+      colEsq.appendChild(div);
+    });
+    const colDir = document.getElementById('colDir');
+    direita.forEach((item) => {
+      const jaResolvido = resolvidos.includes(item.i);
+      const div = el('<div class="item-clicavel' + (jaResolvido ? ' pareado-ok' : '') + '">' + item.texto + '</div>');
+      if (!jaResolvido) {
+        div.addEventListener('click', () => {
+          if (selecionadoEsq === null) return;
+          if (selecionadoEsq === item.i) {
+            acertos++;
+            resolvidos.push(item.i);
+            selecionadoEsq = null;
+            render();
+          } else {
+            erros++;
+            div.classList.add('pareado-erro');
+            setTimeout(() => { div.classList.remove('pareado-erro'); }, 500);
+          }
+          if (resolvidos.length === esquerda.length) {
+            setTimeout(() => proximoDesafio(acertos, acertos + erros), 500);
+          }
+        });
+      }
+      colDir.appendChild(div);
+    });
+  }
+
+  render();
+}
+
+// ---------------------------------------------------------------- mecanica: categorizar
+function renderCategorizar(d) {
+  let atual = 0;
+  let acertos = 0;
+
+  function render() {
+    const item = d.itens[atual];
+    montar(`
+      ${cabecalho(d)}
+      <div class="card">
+        <p style="margin-top:0;font-weight:600">"${item.texto}"</p>
+        <div class="cat-botoes" id="cats"></div>
+        <div id="fb"></div>
+        <button class="btn-primary" id="btnProx" style="display:none;margin-top:10px">Continuar</button>
+      </div>
+    `);
+    const cats = document.getElementById('cats');
+    d.categorias.forEach((cat) => {
+      const b = el('<button class="cat-botao">' + cat + '</button>');
+      b.addEventListener('click', () => responder(cat));
+      cats.appendChild(b);
+    });
+  }
+
+  function responder(cat) {
+    const item = d.itens[atual];
+    const acertou = cat === item.categoria;
+    if (acertou) acertos++;
+    document.querySelectorAll('#cats .cat-botao').forEach((b) => { b.disabled = true; });
+    document.getElementById('fb').innerHTML =
+      '<div class="feedback ' + (acertou ? 'ok' : 'no') + '">' +
+      (acertou ? 'Certo — é ' + item.categoria + '.' : 'Era ' + item.categoria + '.') +
+      (item.explicacao ? ' ' + item.explicacao : '') +
+      '</div>';
+    document.getElementById('btnProx').style.display = 'block';
+    document.getElementById('btnProx').onclick = () => {
+      atual++;
+      if (atual < d.itens.length) render();
+      else proximoDesafio(acertos, d.itens.length);
+    };
+  }
+
+  render();
+}
+
+// ---------------------------------------------------------------- tela final
+function telaFinal() {
+  const totalAcertos = S.resultados.reduce((s, r) => s + r.acertos, 0);
+  const totalPerguntas = S.resultados.reduce((s, r) => s + r.total, 0);
+  const pct = totalPerguntas ? Math.round((totalAcertos / totalPerguntas) * 100) : 0;
+  const estrelas = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+
+  montar(`
+    <p class="kicker">${CONTEUDO.disciplina || 'Engenharia de Requisitos'} · Aula ${CONTEUDO.aula}</p>
+    <h1>Resultado de ${S.nome.split(' ')[0]}</h1>
+    <div class="card">
+      <p class="estrela">${'★'.repeat(estrelas)}${'☆'.repeat(3 - estrelas)}</p>
+      <p style="font-size:15px;color:var(--muted)">${totalAcertos} de ${totalPerguntas} corretas (${pct}%)</p>
+      ${S.resultados.map(r => '<div class="resultado-linha"><span>' + r.titulo + '</span><span>' + r.acertos + '/' + r.total + '</span></div>').join('')}
+    </div>
+    <div id="statusEnvio" class="muted" style="text-align:center">Enviando resultado…</div>
+    <p class="rodape-nota">Mostre esta tela pro professor se ele pedir confirmação.</p>
+    <button class="btn-primary" id="btnJogarDeNovo" style="margin-top:18px">Jogar de novo</button>
+    <button class="btn-ghost" id="btnVoltarHub" style="margin-top:10px">Voltar para os jogos</button>
+  `);
+
+  document.getElementById('btnJogarDeNovo').addEventListener('click', () => {
+    S.idx = 0;
+    S.resultados = [];
+    telaIntro();
+  });
+  document.getElementById('btnVoltarHub').addEventListener('click', () => {
+    window.location.href = 'jogos-revisao.html';
+  });
+
+  enviarResultado({
+    nome: S.nome,
+    matricula: S.matricula,
+    aula: CONTEUDO.aula,
+    disciplina: CONTEUDO.disciplina || 'Engenharia de Requisitos',
+    acertos: totalAcertos,
+    total: totalPerguntas,
+    pontuacao: pct,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+function enviarResultado(dados) {
+  const status = document.getElementById('statusEnvio');
+  if (!WEBAPP_URL) {
+    status.textContent = 'Resultado registrado só nesta tela (envio automático ainda não configurado).';
+    return;
+  }
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(dados),
+  }).then(() => {
+    status.textContent = 'Resultado enviado.';
+  }).catch(() => {
+    status.textContent = 'Não consegui enviar o resultado agora — mostre esta tela pro professor.';
+  });
+}
+
+telaIdentificacao();
+</script>
+</body>
+</html>
