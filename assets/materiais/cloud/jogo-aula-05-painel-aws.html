@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Painel AWS: A Fatura Está Correndo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --night:#0A0F1F; --deep:#111834; --panel:#182042; --panel-2:#1F2950;
+  --edge:#2C3765; --edge-hi:#41508C; --ink:#EAEEFB; --ink-2:#B4BEE0; --dim:#7480A8;
+  --signal:#4FD6EC; --signal-deep:#1E7F94; --stage:#FFB547; --good:#5FD98F; --bad:#FF7A6B;
+  --shadow:0 2px 4px rgba(0,0,0,.4),0 18px 44px -22px rgba(0,0,0,.9); --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--night);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,serif;margin:0;line-height:1.08;font-weight:700;text-wrap:balance}
+p{margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+input[type=text],select{font-family:inherit;font-size:1rem;color:var(--ink);background:#0A1023;border:1px solid var(--edge-hi);border-radius:8px;padding:11px 14px;width:100%}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--signal)}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+label.lbl{display:block;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+
+#top{position:sticky;top:0;z-index:50;background:rgba(10,15,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#top .brand{font-family:"Bricolage Grotesque",serif;font-weight:800;font-size:1.02rem;letter-spacing:-.01em}
+#top .brand small{display:block;font-family:"JetBrains Mono",monospace;font-size:.56rem;letter-spacing:.16em;color:var(--dim);font-weight:400;text-transform:uppercase;margin-top:1px}
+#top .spacer{flex:1}
+#ticker{display:none;align-items:center;gap:9px;font-family:"JetBrains Mono",monospace;background:rgba(255,122,107,.1);border:1px solid rgba(255,122,107,.4);border-radius:99px;padding:7px 16px}
+#ticker .dot{width:7px;height:7px;border-radius:99px;background:var(--bad);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:.15}}
+#ticker .lbl{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+#ticker .val{font-size:.92rem;font-weight:600;color:var(--bad)}
+#ticker.stopped{background:rgba(95,217,143,.1);border-color:rgba(95,217,143,.4)}
+#ticker.stopped .dot{background:var(--good);animation:none}
+#ticker.stopped .val{color:var(--good)}
+
+#app{max-width:720px;margin:0 auto;padding:28px 20px 64px;min-height:calc(100vh - 60px)}
+
+.kicker{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--signal);margin-bottom:12px}
+.kicker.warm{color:var(--stage)}
+h2.big{font-size:clamp(1.5rem,4.2vw,2.3rem);letter-spacing:-.02em}
+.narr{color:var(--ink-2);max-width:64ch;margin-top:14px}
+.narr b{color:var(--ink)}
+.micro{margin-top:16px;border-left:3px solid var(--signal);background:var(--deep);padding:14px 18px;border-radius:0 var(--r) var(--r) 0;color:var(--ink-2);font-size:.95rem}
+.micro b{color:var(--signal);display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px}
+
+.cta{display:inline-flex;align-items:center;gap:9px;background:var(--signal);color:#06121A;font-weight:700;padding:12px 22px;border-radius:99px;font-size:1rem;transition:transform .16s,box-shadow .16s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px -8px rgba(79,214,236,.7)}
+.cta:disabled{background:var(--panel-2);color:var(--dim);cursor:not-allowed;transform:none;box-shadow:none}
+.cta.warm{background:var(--stage);color:#2B1B00}
+.cta.danger{background:var(--bad);color:#2A0D0A}
+.ghost{border:1px solid var(--edge-hi);color:var(--ink-2);padding:11px 20px;border-radius:99px;font-weight:600;font-size:.94rem}
+.ghost:hover{border-color:var(--signal);color:var(--signal)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+
+.panel{background:var(--deep);border:1px solid var(--edge);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);margin-top:20px}
+.field{margin-top:16px}
+.field+.field{margin-top:14px}
+
+.wizcards{display:grid;gap:11px;margin-top:18px}
+.wizcard{text-align:left;background:var(--panel);border:1.5px solid var(--edge-hi);border-radius:var(--r);padding:15px 18px;transition:border-color .16s,background .16s;width:100%}
+.wizcard:hover:not(:disabled){border-color:var(--signal)}
+.wizcard .t{font-weight:700;font-family:"Bricolage Grotesque",serif;font-size:1.02rem}
+.wizcard .d{color:var(--ink-2);font-size:.88rem;margin-top:4px}
+.wizcard.right{border-color:var(--good);background:rgba(95,217,143,.1)}
+.wizcard.wrong{border-color:var(--bad);background:rgba(255,122,107,.09)}
+.wizcard:disabled{cursor:default}
+.wizcard.faded{opacity:.38}
+
+.fb{margin-top:16px;border-radius:var(--r);padding:15px 18px;font-size:.94rem;border:1px solid;display:none;animation:pop .35s cubic-bezier(.22,1,.36,1)}
+.fb.show{display:block}
+.fb.ok{background:rgba(95,217,143,.09);border-color:rgba(95,217,143,.45);color:#CDF3DD}
+.fb.err{background:rgba(255,122,107,.09);border-color:rgba(255,122,107,.4);color:#FFD8D2}
+.fb.warn{background:rgba(255,181,71,.09);border-color:rgba(255,181,71,.4);color:#FFE7C2}
+.fb b{display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px;opacity:.85}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+.shake{animation:shk .38s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+
+.term{margin-top:18px;background:#050B14;border:1px solid #1B2A3D;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.term-head{background:#0B1420;color:#5A7A93;font-family:"JetBrains Mono",monospace;font-size:.68rem;padding:9px 16px;border-bottom:1px solid #1B2A3D;display:flex;gap:8px;align-items:center}
+.term-head .b{width:9px;height:9px;border-radius:99px;background:#2A3D52}
+.term-body{padding:16px 18px;font-family:"JetBrains Mono",monospace;font-size:.86rem;color:#8FE3B5;white-space:pre-wrap;line-height:1.7;min-height:52px}
+.term-body .cmd{color:#EAEEFB}
+.term-body .muted{color:#4F6A80}
+.term-body .warn{color:var(--stage)}
+.term-body .bad{color:var(--bad)}
+.term-line{padding:14px 18px;border-top:1px solid #1B2A3D;display:flex;align-items:center;gap:8px}
+.term-line .prompt{font-family:"JetBrains Mono",monospace;color:var(--signal);font-size:.92rem;white-space:nowrap}
+.term-line input{background:transparent;border:none;color:#EAEEFB;font-family:"JetBrains Mono",monospace;font-size:.92rem;padding:0;width:100%}
+.term-line input:focus{outline:none}
+
+.review{display:grid;gap:10px;margin-top:18px}
+.rrow{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;background:var(--night);border:1px solid var(--edge);border-radius:8px;padding:12px 15px}
+.rrow .k{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.rrow .v{font-weight:600;margin-top:3px}
+.rrow .tag{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.rrow .tag.ok{color:var(--good);border:1px solid var(--good)}
+.rrow .tag.bad{color:var(--bad);border:1px solid var(--bad)}
+.rrow .tag.warn{color:var(--stage);border:1px solid var(--stage)}
+
+.statuspill{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:.72rem;padding:6px 14px;border-radius:99px;margin-top:16px}
+.statuspill.pending{background:rgba(255,181,71,.1);color:var(--stage);border:1px solid rgba(255,181,71,.4)}
+.statuspill.running{background:rgba(95,217,143,.1);color:var(--good);border:1px solid rgba(95,217,143,.4)}
+
+.diagram{display:flex;align-items:stretch;gap:6px;margin-top:22px;overflow-x:auto;padding-bottom:6px}
+.dslot{flex:1 1 0;min-width:110px;min-height:70px;border:1.5px dashed var(--edge-hi);border-radius:var(--r);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700;font-family:"Bricolage Grotesque",serif;color:var(--dim);position:relative}
+.dslot.filled{border-style:solid;border-color:var(--signal);background:rgba(79,214,236,.08);color:var(--ink)}
+.dslot .k{position:absolute;top:4px;left:8px;font-family:"JetBrains Mono",monospace;font-size:.56rem;color:var(--dim)}
+.darrow{display:flex;align-items:center;color:var(--edge-hi);font-size:1.3rem;padding:0 2px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.dchip{border:1px solid var(--edge-hi);border-radius:99px;padding:9px 16px;font-size:.9rem;color:var(--ink-2);transition:all .16s;background:var(--panel)}
+.dchip:hover:not(:disabled){border-color:var(--signal);color:var(--ink)}
+.dchip:disabled{opacity:.3;cursor:default}
+
+.counter{font-family:"JetBrains Mono",monospace;font-size:clamp(2.2rem,8vw,3.6rem);font-weight:600;color:var(--bad);letter-spacing:-.03em;line-height:1}
+.stars{font-size:1.3rem;letter-spacing:2px;margin-top:8px}
+.seal{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--good);background:rgba(95,217,143,.1);border-radius:99px;padding:11px 22px;margin-top:22px;font-weight:700;color:#CDF3DD}
+.hint{font-size:.85rem;color:var(--dim);margin-top:14px;text-align:center}
+.disclaimer{font-size:.78rem;color:var(--dim);margin-top:10px}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}}
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand">Painel AWS<small>Cloud Computing · Aula 5 · Simulação individual</small></div>
+  <div class="spacer"></div>
+  <div id="ticker"><span class="dot"></span><span class="lbl">Custo simulado</span><span class="val mono" id="tval">$0,000000</span></div>
+</header>
+<main id="app"></main>
+
+<script>
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const IP_FALSO = '34.201.88.12';
+
+const AMI_OPCOES = [
+  { t: 'Amazon Linux 2023', d: 'Imagem oficial da AWS, mantida e atualizada.', ok: true },
+  { t: 'Windows Server 2022', d: 'Funciona, mas você conecta por RDP, não SSH — muda o resto do laboratório todo.', ok: false },
+  { t: 'Uma AMI de terceiro, sem avaliação nem verificação', d: 'Economiza tempo de configuração, mas ninguém garante o que já vem instalado nela.', ok: false },
+  { t: 'Nenhuma — só o disco vazio', d: 'Toda instância nasce a partir de uma imagem. Não dá pra pular essa escolha.', ok: false },
+];
+const TIPO_OPCOES = [
+  { t: 't2.micro', d: 'Uso geral, custo baixo — a família pensada pra cargas leves como essa.', ok: true },
+  { t: 't3.2xlarge', d: 'Processamento e memória muito além do que esse teste precisa — e o custo por hora acompanha.', ok: false },
+  { t: 'c5.large', d: 'Otimizada pra processamento intenso. Sua tarefa de hoje não chega perto de precisar disso.', ok: false },
+  { t: 'O maior tipo disponível, só por garantia', d: 'Maior não é mais seguro — só mais caro.', ok: false },
+];
+const BAIXAR_OPCOES = [
+  { t: 'Baixar o arquivo .pem agora, antes de continuar', d: 'É a única cópia que vai existir da chave privada.', ok: true },
+  { t: 'Baixar depois, quando precisar conectar', d: 'A AWS só mostra a chave uma vez, no momento da criação. "Depois" já é tarde.', ok: false },
+];
+const PORTA_OPCOES = [
+  { v: '', t: 'Selecione a porta…' },
+  { v: '22', t: '22 (SSH)' },
+  { v: '3389', t: '3389 (RDP)' },
+  { v: '80', t: '80 (HTTP)' },
+  { v: 'nenhuma', t: 'Nenhuma porta aberta' },
+];
+const ORIGEM_OPCOES = [
+  { v: '', t: 'Selecione a origem…' },
+  { v: 'meu-ip', t: 'Meu IP atual' },
+  { v: 'qualquer', t: '0.0.0.0/0 — qualquer lugar do mundo' },
+];
+const DIAGRAMA_SEQ = ['Lançar', 'Conectar', 'Usar', 'Encerrar'];
+const DIAGRAMA_DISTRATORES = ['Clonar', 'Backup'];
+
+const S = {
+  nome: localStorage.getItem('simEC2_nome') || '',
+  matricula: localStorage.getItem('simEC2_matricula') || '',
+  ami: null, tipo: null, chaveNome: '', baixar: null,
+  grupoPorta: '', grupoOrigem: '',
+  sshTentativas: 0,
+  verifTentativas: { uname: 0, whoami: 0, date: 0 },
+  diagramaTentativas: 0,
+  paradaAntes: false,
+  custo: 0,
+  tickerHandle: null,
+};
+
+function el(html){ const d=document.createElement('div'); d.innerHTML=html; return d.firstElementChild; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function montar(html){
+  document.getElementById('app').innerHTML = html;
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e){}
+}
+function normCmd(s){ return s.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+function iniciarTicker(){
+  const t = document.getElementById('ticker');
+  t.style.display = 'inline-flex';
+  t.classList.remove('stopped');
+  S.custo = 0;
+  if (S.tickerHandle) clearInterval(S.tickerHandle);
+  S.tickerHandle = setInterval(() => {
+    S.custo += 0.000043 + Math.random() * 0.000012;
+    document.getElementById('tval').textContent = '$' + S.custo.toFixed(6).replace('.', ',');
+  }, 250);
+}
+function pararTicker(){
+  if (S.tickerHandle) { clearInterval(S.tickerHandle); S.tickerHandle = null; }
+  document.getElementById('ticker').classList.add('stopped');
+}
+
+// ---------------------------------------------------------------- 0: identificacao
+function telaIdentificacao(){
+  montar('' +
+    '<div class="kicker">Cloud Computing · Aula 5</div>' +
+    '<h2 class="big">Antes de abrir o painel</h2>' +
+    '<p class="narr">Digite seu nome e sua matrícula (ou turma) pra eu saber quem operou o painel. Não precisa de senha, é só identificação.</p>' +
+    '<div class="panel" style="max-width:440px">' +
+      '<label class="lbl">Nome completo</label>' +
+      '<input type="text" id="nome" value="' + S.nome + '" placeholder="Ana Beatriz Souza" style="margin-bottom:16px">' +
+      '<label class="lbl">Matrícula ou turma</label>' +
+      '<input type="text" id="mat" value="' + S.matricula + '" placeholder="ADS2026208 ou Turma A">' +
+      '<div class="fb err" id="erroId"><b>Falta algo</b>Preencha os dois campos antes de começar.</div>' +
+    '</div>' +
+    '<div class="actions"><button class="cta" id="btnComecar">Entrar no painel →</button></div>');
+  document.getElementById('btnComecar').addEventListener('click', () => {
+    const nome = document.getElementById('nome').value.trim();
+    const mat = document.getElementById('mat').value.trim();
+    const err = document.getElementById('erroId');
+    if (!nome || !mat) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    S.nome = nome; S.matricula = mat;
+    localStorage.setItem('simEC2_nome', nome);
+    localStorage.setItem('simEC2_matricula', mat);
+    telaBriefing();
+  });
+}
+
+// ---------------------------------------------------------------- 1: briefing
+function telaBriefing(){
+  montar('' +
+    '<div class="kicker warm">Cloud Computing · Aula 5</div>' +
+    '<h2 class="big">A fatura está correndo</h2>' +
+    '<p class="narr">Sua tarefa: lançar uma instância EC2, confirmar que ela está no ar <b>digitando os comandos de verdade</b>, completar o diagrama do ciclo de vida, e encerrar tudo direito. Assim que a instância nascer, um medidor de custo simulado aparece no topo e não para de subir sozinho.</p>' +
+    '<div class="micro"><b>Como funciona</b>Cada decisão errada não te dá só uma explicação — ela te leva de volta pra corrigir, exatamente como aconteceria no console real. O relógio não para enquanto isso.</div>' +
+    '<div class="disclaimer">O valor mostrado é ilustrativo, pra dar a sensação de tempo = custo — não é a tarifa real da AWS.</div>' +
+    '<div class="actions"><button class="cta" id="btnIniciar">Começar a configurar, ' + S.nome.split(' ')[0] + ' →</button></div>');
+  document.getElementById('btnIniciar').addEventListener('click', telaAmi);
+}
+
+// ---------------------------------------------------------------- mecanica generica: MC embaralhado
+function renderMC(opts){
+  const { kickerTxt, tituloTxt, contextoTxt, opcoes, aoEscolher } = opts;
+  const ordem = shuffle(opcoes.map((o, i) => ({ o, i })));
+  montar('' +
+    '<div class="kicker">' + kickerTxt + '</div>' +
+    '<h2 class="big" style="font-size:clamp(1.3rem,3.6vw,1.8rem)">' + tituloTxt + '</h2>' +
+    (contextoTxt ? '<p class="narr">' + contextoTxt + '</p>' : '') +
+    '<div class="wizcards" id="cards"></div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes" style="display:none"><button class="cta" id="btnProx">Continuar →</button></div>');
+  const cont = document.getElementById('cards');
+  ordem.forEach((item) => {
+    const b = el('<button class="wizcard"><div class="t">' + item.o.t + '</div><div class="d">' + item.o.d + '</div></button>');
+    b.addEventListener('click', () => {
+      const botoes = document.querySelectorAll('#cards .wizcard');
+      botoes.forEach((bb) => { bb.disabled = true; });
+      botoes.forEach((bb, pos) => {
+        if (pos === ordem.indexOf(item)) bb.classList.add(item.o.ok ? 'right' : 'wrong');
+        else bb.classList.add('faded');
+      });
+      const fb = document.getElementById('fb');
+      fb.className = 'fb show ' + (item.o.ok ? 'ok' : 'err');
+      fb.innerHTML = '<b>' + (item.o.ok ? 'Boa escolha' : 'Isso vai dar problema') + '</b>' + item.o.d;
+      document.getElementById('acoes').style.display = 'flex';
+      document.getElementById('btnProx').onclick = () => aoEscolher(item.o);
+    });
+    cont.appendChild(b);
+  });
+}
+
+// ---------------------------------------------------------------- 2: AMI
+function telaAmi(){
+  renderMC({
+    kickerTxt: 'Passo 1 de 6 · Escolha a imagem (AMI)',
+    tituloTxt: 'Qual imagem essa instância vai usar?',
+    contextoTxt: 'Você precisa rodar um teste rápido num servidor Linux simples.',
+    opcoes: AMI_OPCOES,
+    aoEscolher: (op) => { S.ami = op; telaTipo(); },
+  });
+}
+
+// ---------------------------------------------------------------- 3: tipo
+function telaTipo(){
+  renderMC({
+    kickerTxt: 'Passo 2 de 6 · Escolha o tipo de instância',
+    tituloTxt: 'Quanto de máquina esse teste precisa?',
+    contextoTxt: 'É só um teste rápido, nada pesado.',
+    opcoes: TIPO_OPCOES,
+    aoEscolher: (op) => { S.tipo = op; telaChaveNome(); },
+  });
+}
+
+// ---------------------------------------------------------------- 4: nome da chave (digitado)
+function telaChaveNome(voltando){
+  montar('' +
+    '<div class="kicker">Passo 3 de 6 · Par de chaves</div>' +
+    '<h2 class="big" style="font-size:clamp(1.3rem,3.6vw,1.8rem)">Dê um nome pro seu par de chaves</h2>' +
+    '<p class="narr">Sem espaços. A AWS vai gerar um arquivo com esse nome + <span class="mono">.pem</span> — é ele que abre a porta da sua instância depois.</p>' +
+    '<div class="panel" style="max-width:480px">' +
+      '<label class="lbl">Nome do par de chaves</label>' +
+      '<div class="term-line" style="border-top:none;padding:0">' +
+        '<input type="text" id="chaveInput" placeholder="minha-chave-aula5" value="' + (S.chaveNome || '') + '">' +
+        '<span class="mono" style="color:var(--dim)">.pem</span>' +
+      '</div>' +
+      '<div class="fb err" id="erroChave"><b>Nome inválido</b>Use letras, números, hífen ou underline — sem espaço e sem ficar em branco.</div>' +
+    '</div>' +
+    '<div class="actions"><button class="cta" id="btnChaveOk">Criar par de chaves →</button></div>');
+  document.getElementById('btnChaveOk').addEventListener('click', () => {
+    const v = document.getElementById('chaveInput').value.trim();
+    const err = document.getElementById('erroChave');
+    if (!/^[a-zA-Z0-9_-]{2,40}$/.test(v)) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    S.chaveNome = v;
+    telaChaveBaixar();
+  });
+}
+
+// ---------------------------------------------------------------- 4b: baixar a chave agora?
+function telaChaveBaixar(){
+  renderMC({
+    kickerTxt: 'Passo 3 de 6 · Par de chaves',
+    tituloTxt: 'A AWS gerou ' + S.chaveNome + '.pem. E agora?',
+    contextoTxt: 'Essa tela só aparece uma vez.',
+    opcoes: BAIXAR_OPCOES,
+    aoEscolher: (op) => { S.baixar = op; telaGrupo(); },
+  });
+}
+
+// ---------------------------------------------------------------- 5: grupo de seguranca (form)
+function telaGrupo(voltando){
+  montar('' +
+    '<div class="kicker">Passo 4 de 6 · Grupo de segurança</div>' +
+    '<h2 class="big" style="font-size:clamp(1.3rem,3.6vw,1.8rem)">Monte a regra de entrada</h2>' +
+    '<p class="narr">Só você vai acessar essa instância, do seu notebook. Um grupo de segurança nasce com tudo fechado — você decide o que abrir.</p>' +
+    '<div class="panel" style="max-width:480px">' +
+      '<div class="field"><label class="lbl">Porta a liberar</label><select id="selPorta"></select></div>' +
+      '<div class="field"><label class="lbl">Origem permitida</label><select id="selOrigem"></select></div>' +
+    '</div>' +
+    '<div class="fb err" id="erroGrupo"><b>Falta escolher</b>Selecione porta e origem antes de continuar.</div>' +
+    '<div class="actions"><button class="cta" id="btnGrupoOk">Salvar regra →</button></div>');
+  const selPorta = document.getElementById('selPorta');
+  PORTA_OPCOES.forEach((o) => selPorta.appendChild(el('<option value="' + o.v + '">' + o.t + '</option>')));
+  const selOrigem = document.getElementById('selOrigem');
+  ORIGEM_OPCOES.forEach((o) => selOrigem.appendChild(el('<option value="' + o.v + '">' + o.t + '</option>')));
+  if (S.grupoPorta) selPorta.value = S.grupoPorta;
+  if (S.grupoOrigem) selOrigem.value = S.grupoOrigem;
+
+  document.getElementById('btnGrupoOk').addEventListener('click', () => {
+    const porta = selPorta.value, origem = selOrigem.value;
+    const err = document.getElementById('erroGrupo');
+    if (!porta || !origem) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    S.grupoPorta = porta; S.grupoOrigem = origem;
+    if (voltando) { telaSSH(); return; }
+    telaRevisao();
+  });
+}
+
+function grupoConecta(){ return S.grupoPorta === '22'; }
+function grupoSeguro(){ return S.grupoPorta === '22' && S.grupoOrigem === 'meu-ip'; }
+
+// ---------------------------------------------------------------- 6: revisao
+function telaRevisao(){
+  const portaTxt = (PORTA_OPCOES.find((o) => o.v === S.grupoPorta) || {}).t;
+  const origemTxt = (ORIGEM_OPCOES.find((o) => o.v === S.grupoOrigem) || {}).t;
+  const linhas = [
+    ['Imagem (AMI)', S.ami.t, S.ami.ok],
+    ['Tipo de instância', S.tipo.t, S.tipo.ok],
+    ['Par de chaves', S.chaveNome + '.pem', true],
+    ['Baixou a chave agora?', S.baixar.t, S.baixar.ok],
+    ['Grupo de segurança', portaTxt + ' · ' + origemTxt, grupoSeguro()],
+  ].map(([k, v, ok]) => '<div class="rrow"><div><div class="k">' + k + '</div><div class="v">' + v + '</div></div>' +
+    '<span class="tag ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'OK' : 'Risco') + '</span></div>').join('');
+
+  montar('' +
+    '<div class="kicker">Revisar e lançar</div>' +
+    '<h2 class="big">Confira antes de lançar</h2>' +
+    '<p class="narr">É assim que a AWS também funciona: ela deixa você lançar mesmo com uma configuração arriscada. As consequências aparecem depois.</p>' +
+    '<div class="review">' + linhas + '</div>' +
+    '<div class="actions"><button class="cta warm" id="btnLancar">Lançar instância →</button></div>');
+
+  document.getElementById('btnLancar').addEventListener('click', telaLancamento);
+}
+
+// ---------------------------------------------------------------- 7: lancamento (console)
+function telaLancamento(){
+  montar('' +
+    '<div class="kicker">Console EC2</div>' +
+    '<h2 class="big">Lançando a instância…</h2>' +
+    '<div class="term">' +
+      '<div class="term-head"><span class="b"></span><span class="b"></span><span class="b"></span>&nbsp;instância</div>' +
+      '<div class="term-body" id="consoleBody"><span class="cmd">i-0a1b2c3d4e5f6g7h</span>\n<span class="muted">chave:</span> ' + S.chaveNome + '.pem\n<span class="muted">status:</span> <span class="warn" id="statusTxt">pending</span></div>' +
+    '</div>' +
+    '<span class="statuspill pending" id="pill">● iniciando</span>' +
+    '<div class="actions" id="acoes" style="display:none"><button class="cta" id="btnConectar">Ir para o terminal →</button></div>');
+
+  setTimeout(() => {
+    document.getElementById('statusTxt').outerHTML = '<span class="warn" style="color:var(--good)">running</span>';
+    document.getElementById('pill').className = 'statuspill running';
+    document.getElementById('pill').textContent = '● running';
+    document.getElementById('acoes').style.display = 'flex';
+    iniciarTicker();
+    document.getElementById('btnConectar').addEventListener('click', telaSSH);
+  }, 900);
+}
+
+// ---------------------------------------------------------------- 8: SSH (comando digitado)
+function telaSSH(){
+  montar('' +
+    '<div class="kicker">Terminal · Passo 5 de 6</div>' +
+    '<h2 class="big">Digite o comando pra conectar</h2>' +
+    '<p class="narr">Complete o comando SSH: use a flag da chave, o arquivo <span class="mono">' + S.chaveNome + '.pem</span>, o usuário <span class="mono">ec2-user</span> e o IP <span class="mono">' + IP_FALSO + '</span>.</p>' +
+    '<div class="term">' +
+      '<div class="term-head"><span class="b"></span><span class="b"></span><span class="b"></span>&nbsp;terminal</div>' +
+      '<div class="term-body" id="termOut"><span class="muted">Digite o comando abaixo e pressione Conectar.</span></div>' +
+      '<div class="term-line"><span class="prompt">$</span><input type="text" id="sshInput" placeholder="ssh -i ' + S.chaveNome + '.pem ec2-user@' + IP_FALSO + '"></div>' +
+    '</div>' +
+    '<div class="actions"><button class="cta" id="btnTentar">Conectar →</button></div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes2" style="display:none"></div>');
+
+  document.getElementById('btnTentar').addEventListener('click', tentarSSH);
+  document.getElementById('sshInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') tentarSSH(); });
+}
+
+function tentarSSH(){
+  const digitado = document.getElementById('sshInput').value;
+  const cmd = normCmd(digitado);
+  const faltando = [];
+  if (!cmd.startsWith('ssh')) faltando.push('o comando precisa começar com "ssh"');
+  if (!cmd.includes('-i')) faltando.push('faltou a flag -i, que indica qual chave usar');
+  if (!cmd.includes((S.chaveNome + '.pem').toLowerCase())) faltando.push('faltou o nome certo do arquivo: ' + S.chaveNome + '.pem');
+  if (!cmd.includes('ec2-user@' + IP_FALSO)) faltando.push('faltou "ec2-user@' + IP_FALSO + '"');
+
+  S.sshTentativas++;
+  const fb = document.getElementById('fb');
+  const acoes2 = document.getElementById('acoes2');
+  const out = document.getElementById('termOut');
+
+  if (faltando.length) {
+    out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n<span class="bad">comando incompleto</span>';
+    fb.className = 'fb show err';
+    fb.innerHTML = '<b>Revise o comando</b>' + faltando.join('; ') + '.';
+    return;
+  }
+
+  if (!grupoConecta()) {
+    out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n<span class="bad">ssh: connect to host ' + IP_FALSO + ' port 22: Connection timed out</span>';
+    fb.className = 'fb show err';
+    fb.innerHTML = '<b>Connection timed out</b>A porta 22 não está liberada no grupo de segurança. A conexão nem chega a alcançar a instância.';
+    acoes2.style.display = 'flex';
+    acoes2.innerHTML = '<button class="cta" id="btnCorrigir">Corrigir grupo de segurança →</button>';
+    document.getElementById('btnCorrigir').addEventListener('click', () => telaGrupo(true));
+    return;
+  }
+  if (!S.baixar.ok) {
+    out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n<span class="bad">Permission denied (publickey).</span>';
+    fb.className = 'fb show err';
+    fb.innerHTML = '<b>Permission denied (publickey)</b>A rede está liberada, mas você nunca baixou o arquivo .pem — não tem como provar que a chave é sua.';
+    return;
+  }
+
+  out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n' +
+    (grupoSeguro() ? '' : '<span class="warn">aviso: esse grupo de segurança libera acesso de qualquer IP do mundo, não só do seu</span>\n') +
+    'Welcome to Amazon Linux 2023\nec2-user@ip-172-31-4-12:~$';
+  fb.className = 'fb show ok';
+  fb.innerHTML = '<b>Conectado</b>' + (grupoSeguro() ? 'Rede e chave conferem.' : 'Você entrou, mas com uma porta aberta pro mundo inteiro — revise isso no relatório final.');
+  acoes2.style.display = 'flex';
+  acoes2.innerHTML = '<button class="cta" id="btnOk">Rodar verificação →</button>';
+  document.getElementById('btnOk').addEventListener('click', () => telaVerificacao(0));
+}
+
+// ---------------------------------------------------------------- 9: verificacao (comandos digitados)
+const VERIF_PASSOS = [
+  { chave: 'uname', pergunta: 'Digite o comando pra ver informações do sistema operacional e a arquitetura.', esperado: 'uname -a', dica: 'Começa com "uname"' },
+  { chave: 'whoami', pergunta: 'Digite o comando pra ver qual usuário está logado agora.', esperado: 'whoami', dica: 'Uma palavra só, pergunta "quem sou eu"' },
+  { chave: 'date', pergunta: 'Digite o comando pra ver a data e a hora atuais do servidor.', esperado: 'date', dica: 'Uma palavra só, em inglês' },
+];
+function telaVerificacao(i){
+  if (i >= VERIF_PASSOS.length) { telaDiagrama(); return; }
+  const p = VERIF_PASSOS[i];
+  montar('' +
+    '<div class="kicker">Terminal · Verificação ' + (i + 1) + ' de ' + VERIF_PASSOS.length + '</div>' +
+    '<h2 class="big" style="font-size:clamp(1.3rem,3.6vw,1.8rem)">' + p.pergunta + '</h2>' +
+    '<div class="term">' +
+      '<div class="term-head"><span class="b"></span><span class="b"></span><span class="b"></span>&nbsp;ec2-user@ip-172-31-4-12</div>' +
+      '<div class="term-body" id="termOut"><span class="muted">Digite o comando e pressione Executar.</span></div>' +
+      '<div class="term-line"><span class="prompt">$</span><input type="text" id="verifInput" placeholder="comando"></div>' +
+    '</div>' +
+    '<div class="actions"><button class="cta" id="btnExec">Executar →</button></div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes2" style="display:none"></div>');
+
+  const executar = () => {
+    const digitado = document.getElementById('verifInput').value;
+    const cmd = normCmd(digitado);
+    S.verifTentativas[p.chave]++;
+    const out = document.getElementById('termOut');
+    const fb = document.getElementById('fb');
+    if (cmd === p.esperado) {
+      out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n' + (p.chave === 'uname' ? 'Linux ip-172-31-4-12 6.1.0 x86_64 GNU/Linux' : p.chave === 'whoami' ? 'ec2-user' : new Date().toString());
+      fb.className = 'fb show ok';
+      fb.innerHTML = '<b>Certo</b>Comando executado.';
+      document.getElementById('acoes2').style.display = 'flex';
+      document.getElementById('acoes2').innerHTML = '<button class="cta" id="btnNext">Continuar →</button>';
+      document.getElementById('btnNext').addEventListener('click', () => telaVerificacao(i + 1));
+    } else {
+      out.innerHTML = '<span class="cmd">$ ' + digitado + '</span>\n<span class="bad">bash: ' + (digitado.trim() || '(vazio)') + ': command not found</span>';
+      fb.className = 'fb show err';
+      fb.innerHTML = '<b>Ainda não</b>Dica: ' + p.dica + '.';
+    }
+  };
+  document.getElementById('btnExec').addEventListener('click', executar);
+  document.getElementById('verifInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') executar(); });
+}
+
+// ---------------------------------------------------------------- 10: diagrama do ciclo de vida
+function telaDiagrama(){
+  const banco = shuffle(DIAGRAMA_SEQ.concat(DIAGRAMA_DISTRATORES));
+  let preenchidos = 0;
+
+  montar('' +
+    '<div class="kicker">Passo 6 de 6 · Consolidando</div>' +
+    '<h2 class="big" style="font-size:clamp(1.3rem,3.6vw,1.8rem)">Complete o diagrama do ciclo de vida</h2>' +
+    '<p class="narr">Você acabou de viver esse ciclo na prática. Toque nas palavras do banco, na ordem certa, pra preencher o diagrama.</p>' +
+    '<div class="diagram" id="diag"></div>' +
+    '<div class="bank" id="bank"></div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes" style="display:none"><button class="cta" id="btnProx">Continuar →</button></div>');
+
+  const diag = document.getElementById('diag');
+  DIAGRAMA_SEQ.forEach((_, i) => {
+    if (i > 0) diag.appendChild(el('<div class="darrow">→</div>'));
+    diag.appendChild(el('<div class="dslot" data-i="' + i + '"><span class="k">' + (i + 1) + '</span>?</div>'));
+  });
+
+  const bankEl = document.getElementById('bank');
+  banco.forEach((palavra) => {
+    const b = el('<button class="dchip">' + palavra + '</button>');
+    b.addEventListener('click', () => {
+      const esperada = DIAGRAMA_SEQ[preenchidos];
+      const fb = document.getElementById('fb');
+      if (palavra === esperada) {
+        const slot = document.querySelector('.dslot[data-i="' + preenchidos + '"]');
+        slot.classList.add('filled');
+        slot.innerHTML = '<span class="k">' + (preenchidos + 1) + '</span>' + palavra;
+        b.disabled = true;
+        preenchidos++;
+        fb.className = 'fb';
+        if (preenchidos === DIAGRAMA_SEQ.length) {
+          fb.className = 'fb show ok';
+          fb.innerHTML = '<b>Ciclo completo</b>Lançar, conectar, usar, encerrar — nessa ordem, sempre.';
+          document.getElementById('acoes').style.display = 'flex';
+          document.getElementById('btnProx').addEventListener('click', telaEncerrar);
+        }
+      } else {
+        S.diagramaTentativas++;
+        b.classList.add('shake');
+        setTimeout(() => b.classList.remove('shake'), 400);
+        fb.className = 'fb show err';
+        fb.innerHTML = '<b>Ainda não</b>Essa não é a próxima etapa do ciclo.';
+      }
+    });
+    bankEl.appendChild(b);
+  });
+}
+
+// ---------------------------------------------------------------- 11: encerrar (stop vs terminate)
+function telaEncerrar(){
+  montar('' +
+    '<div class="kicker warm">Console EC2</div>' +
+    '<h2 class="big">A tarefa terminou. E agora?</h2>' +
+    '<p class="narr">O teste rodou, deu certo. O medidor de custo lá em cima continua subindo enquanto a instância existir.</p>' +
+    '<div class="actions">' +
+      '<button class="ghost" id="btnStop">Stop</button>' +
+      '<button class="cta danger" id="btnTerminate">Terminate</button>' +
+    '</div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes2" style="display:none"></div>');
+
+  document.getElementById('btnStop').addEventListener('click', () => {
+    S.paradaAntes = true;
+    const fb = document.getElementById('fb');
+    fb.className = 'fb show warn';
+    fb.innerHTML = '<b>Instância parada</b>Mas o volume (EBS) continua existindo — e o medidor lá em cima não parou. Stop não é o mesmo que Terminate.';
+    const acoes2 = document.getElementById('acoes2');
+    acoes2.style.display = 'flex';
+    acoes2.innerHTML = '<button class="cta danger" id="btnTerminateAgora">Terminate agora →</button>';
+    document.getElementById('btnTerminateAgora').addEventListener('click', finalizar);
+  });
+  document.getElementById('btnTerminate').addEventListener('click', finalizar);
+}
+
+function finalizar(){
+  pararTicker();
+  telaFatura();
+}
+
+// ---------------------------------------------------------------- 12: fatura final
+function telaFatura(){
+  const portaTxt = (PORTA_OPCOES.find((o) => o.v === S.grupoPorta) || {}).t;
+  const origemTxt = (ORIGEM_OPCOES.find((o) => o.v === S.grupoOrigem) || {}).t;
+  const checkpoints = [
+    S.ami.ok, S.tipo.ok, S.baixar.ok, grupoSeguro(),
+    S.sshTentativas === 1, !S.paradaAntes,
+  ];
+  const acertos = checkpoints.filter(Boolean).length;
+  const total = checkpoints.length;
+  const pct = Math.round((acertos / total) * 100);
+  const estrelas = acertos >= 6 ? 3 : acertos >= 4 ? 2 : 1;
+
+  const linhas = [
+    ['Imagem (AMI)', S.ami.t, S.ami.ok],
+    ['Tipo de instância', S.tipo.t, S.tipo.ok],
+    ['Baixou a chave na hora certa?', S.baixar.t, S.baixar.ok],
+    ['Grupo de segurança', portaTxt + ' · ' + origemTxt, grupoSeguro()],
+    ['Tentativas de SSH até conectar', String(S.sshTentativas), S.sshTentativas === 1],
+    ['Encerramento', S.paradaAntes ? 'Clicou em Stop antes de perceber que precisava de Terminate' : 'Foi direto no Terminate', !S.paradaAntes],
+  ].map(([k, v, ok]) => '<div class="rrow"><div><div class="k">' + k + '</div><div class="v">' + v + '</div></div>' +
+    '<span class="tag ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'OK' : 'Revisar') + '</span></div>').join('');
+
+  montar('' +
+    '<div class="kicker warm">Cloud Computing · Aula 5</div>' +
+    '<h2 class="big">Fatura final, ' + S.nome.split(' ')[0] + '</h2>' +
+    '<div class="panel">' +
+      '<div class="counter">$' + S.custo.toFixed(6).replace('.', ',') + '</div>' +
+      '<p class="stars">' + '★'.repeat(estrelas) + '☆'.repeat(3 - estrelas) + '</p>' +
+      '<p class="narr" style="margin-top:6px">Custo simulado total — quanto menor, melhor o uso do tempo entre lançar e encerrar.</p>' +
+    '</div>' +
+    '<h3 style="font-family:\'Bricolage Grotesque\',serif;font-size:1.15rem;margin-top:30px">Como cada decisão saiu</h3>' +
+    '<div class="review">' + linhas + '</div>' +
+    '<div class="micro"><b>Pra lembrar</b>Se sua conta AWS é anterior a 15/07/2025, tudo isso caberia nas 750h grátis por mês. Se é uma conta nova, o crédito de até US$ 200 em 6 meses cobre esse teste com folga — o que não muda é o hábito: destruir a instância assim que ela não for mais necessária.</div>' +
+    '<div class="seal">✓ Painel encerrado por ' + S.nome + '</div>' +
+    '<p class="hint" id="statusEnvio">Enviando resultado…</p>' +
+    '<div class="actions"><button class="cta" id="btnDeNovo">Rodar de novo →</button></div>');
+
+  document.getElementById('btnDeNovo').addEventListener('click', () => {
+    S.ami = null; S.tipo = null; S.chaveNome = ''; S.baixar = null;
+    S.grupoPorta = ''; S.grupoOrigem = ''; S.sshTentativas = 0;
+    S.verifTentativas = { uname: 0, whoami: 0, date: 0 }; S.diagramaTentativas = 0;
+    S.paradaAntes = false; S.custo = 0;
+    document.getElementById('ticker').style.display = 'none';
+    telaBriefing();
+  });
+
+  enviarResultado({
+    nome: S.nome, matricula: S.matricula, aula: 5,
+    disciplina: 'Cloud Computing', atividade: 'Painel AWS: A Fatura Está Correndo',
+    acertos: acertos, total: total, pontuacao: pct,
+    tentativasSSH: S.sshTentativas, custoSimulado: S.custo,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+function enviarResultado(dados){
+  const status = document.getElementById('statusEnvio');
+  if (!WEBAPP_URL) { status.textContent = 'Resultado registrado só nesta tela.'; return; }
+  fetch(WEBAPP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dados) })
+    .then(() => { status.textContent = 'Resultado enviado.'; })
+    .catch(() => { status.textContent = 'Não consegui enviar agora. Mostre esta tela pro professor.'; });
+}
+
+telaIdentificacao();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "atualizado": "12 de setembro de 2026",
+  "atualizado": "17 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -178,6 +178,14 @@
           "arquivo": "assets/materiais/cloud/aula-03-economia-da-nuvem.pdf",
           "data": "03/09/2026",
           "tags": "slides economia escala capex opex tco migracao 7 rs fatura custo"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Painel AWS: A Fatura Está Correndo",
+          "descricao": "Simulação do laboratório de EC2, com medidor de custo em tempo real e as armadilhas mais comuns.",
+          "arquivo": "assets/materiais/cloud/jogo-aula-05-painel-aws.html",
+          "data": "17/09/2026",
+          "tags": "jogo simulacao interativo individual ec2 ami chave grupo de seguranca stop terminate free tier"
         }
       ]
     },
@@ -247,11 +255,11 @@
         },
         {
           "tipo": "Jogo",
-          "titulo": "Jogos de revisão — Aulas 1 a 4",
+          "titulo": "Jogos de revisão — Aulas 1 a 5",
           "descricao": "Revisão individual e interativa de cada aula, com identificação por nome e matrícula.",
           "arquivo": "assets/materiais/requisitos/jogos-revisao.html",
-          "data": "12/09/2026",
-          "tags": "jogo revisao interativo individual pareamento sequencia mcq defeito categorizar"
+          "data": "17/09/2026",
+          "tags": "jogo revisao interativo individual pareamento sequencia mcq defeito categorizar dossie sprint zero user stories invest"
         }
       ]
     }

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dossiê: Sprint Zero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@600;700&display=swap">
+<style>
+:root{
+  --night:#0A0F1F; --deep:#111834; --panel:#182042; --panel-2:#1F2950;
+  --edge:#2C3765; --edge-hi:#41508C; --ink:#EAEEFB; --ink-2:#B4BEE0; --dim:#7480A8;
+  --signal:#4FD6EC; --signal-deep:#1E7F94; --stage:#FFB547; --good:#5FD98F; --bad:#FF7A6B;
+  --shadow:0 2px 4px rgba(0,0,0,.4),0 18px 44px -22px rgba(0,0,0,.9); --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--night);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,serif;margin:0;line-height:1.08;font-weight:700;text-wrap:balance}
+p{margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+input[type=text]{font-family:inherit;font-size:1rem;color:var(--ink);background:#0A1023;border:1px solid var(--edge-hi);border-radius:8px;padding:11px 14px;width:100%}
+input[type=text]:focus{outline:none;border-color:var(--signal)}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+#top{position:sticky;top:0;z-index:50;background:rgba(10,15,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#top .brand{font-family:"Bricolage Grotesque",serif;font-weight:800;font-size:1.02rem;letter-spacing:-.01em}
+#top .brand small{display:block;font-family:"JetBrains Mono",monospace;font-size:.56rem;letter-spacing:.16em;color:var(--dim);font-weight:400;text-transform:uppercase;margin-top:1px}
+#meter{flex:1 1 160px;min-width:120px;display:flex;align-items:center;gap:10px}
+#meter .track{flex:1;height:6px;background:var(--panel);border-radius:99px;overflow:hidden;border:1px solid var(--edge)}
+#meter .fill{height:100%;width:0;background:linear-gradient(90deg,var(--signal-deep),var(--signal));transition:width .8s cubic-bezier(.22,1,.36,1)}
+#meter .pct{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--signal);min-width:60px;text-align:right}
+#meter .lbl{font-family:"JetBrains Mono",monospace;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+
+#app{max-width:720px;margin:0 auto;padding:28px 20px 64px;min-height:calc(100vh - 60px)}
+
+.kicker{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--signal);margin-bottom:12px}
+.kicker.warm{color:var(--stage)}
+h2.big{font-size:clamp(1.5rem,4.2vw,2.3rem);letter-spacing:-.02em}
+.narr{color:var(--ink-2);max-width:64ch;margin-top:14px}
+.narr b{color:var(--ink)}
+.micro{margin-top:16px;border-left:3px solid var(--signal);background:var(--deep);padding:14px 18px;border-radius:0 var(--r) var(--r) 0;color:var(--ink-2);font-size:.95rem}
+.micro b{color:var(--signal);display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px}
+
+.cta{display:inline-flex;align-items:center;gap:9px;background:var(--signal);color:#06121A;font-weight:700;padding:12px 22px;border-radius:99px;font-size:1rem;transition:transform .16s,box-shadow .16s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 22px -8px rgba(79,214,236,.7)}
+.cta:disabled{background:var(--panel-2);color:var(--dim);cursor:not-allowed;transform:none;box-shadow:none}
+.cta.warm{background:var(--stage)}
+.ghost{border:1px solid var(--edge-hi);color:var(--ink-2);padding:11px 20px;border-radius:99px;font-weight:600;font-size:.94rem}
+.ghost:hover{border-color:var(--signal);color:var(--signal)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+
+.panel{background:var(--deep);border:1px solid var(--edge);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);margin-top:20px}
+
+.evtag{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stage);border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08);border-radius:99px;padding:5px 12px;margin-bottom:14px}
+.evtag .dot{width:6px;height:6px;border-radius:99px;background:var(--stage)}
+
+/* --- estilos de "documento" por tipo de evidencia --- */
+.doc{margin-top:18px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.doc-head{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.04em;padding:10px 16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.doc-body{padding:16px 18px;font-size:.96rem}
+
+.doc.email{background:#F4F1E9;color:#20201C;border:1px solid #D8D2BE}
+.doc.email .doc-head{background:#E7E1CD;color:#5B5340;border-bottom:1px solid #D8D2BE}
+.doc.email .doc-body{font-family:"Instrument Sans",sans-serif;color:#2B2A24;line-height:1.6}
+.doc.email .doc-body b{color:#141310}
+
+.doc.chat{background:#0E1526;border:1px solid var(--edge)}
+.doc.chat .doc-head{background:#151E38;color:var(--dim);border-bottom:1px solid var(--edge)}
+.doc.chat .doc-body{padding:16px}
+.bubble{max-width:82%;border-radius:14px;padding:10px 14px;margin-bottom:10px;font-size:.93rem;line-height:1.45}
+.bubble:last-child{margin-bottom:0}
+.bubble .who{display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:3px}
+.bubble.them{background:var(--panel);color:var(--ink);border:1px solid var(--edge-hi);border-bottom-left-radius:3px}
+.bubble.me{background:var(--signal-deep);color:#EAFBFF;margin-left:auto;border-bottom-right-radius:3px}
+
+.doc.sticky{background:#FFE9A8;color:#3A2E05;transform:rotate(-.6deg);border:1px solid #E8CE7A}
+.doc.sticky .doc-head{background:transparent;color:#7A611F;border-bottom:1px dashed #C9AE5E}
+.doc.sticky .doc-body{font-family:"Caveat",cursive;font-size:1.35rem;line-height:1.35}
+
+.doc.transcript{background:var(--deep);border:1px solid var(--edge)}
+.doc.transcript .doc-head{background:var(--panel);color:var(--dim);border-bottom:1px solid var(--edge)}
+.doc.transcript .doc-body{font-size:.94rem}
+.line{margin-bottom:10px}
+.line:last-child{margin-bottom:0}
+.line .who{font-family:"JetBrains Mono",monospace;font-size:.68rem;color:var(--signal);margin-right:6px}
+
+.doc.comment{background:var(--deep);border:1px solid var(--edge)}
+.doc.comment .doc-head{background:var(--panel);color:var(--dim);border-bottom:1px solid var(--edge)}
+.doc.comment .doc-body{font-size:.94rem;color:var(--ink-2)}
+.doc.comment .doc-body b{color:var(--ink)}
+
+.qbox{margin-top:20px;background:var(--panel);border:1px solid var(--edge-hi);border-radius:var(--r);padding:14px 18px}
+.qbox em{display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);font-style:normal;font-weight:400;margin-bottom:6px}
+.qbox p{font-weight:600;font-size:1rem}
+
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.opt{display:grid;grid-template-columns:26px 1fr;gap:12px;text-align:left;align-items:start;background:var(--panel);border:1px solid var(--edge-hi);border-radius:var(--r);padding:13px 16px;font-size:.95rem;transition:border-color .16s,background .16s;width:100%}
+.opt:hover:not(:disabled){border-color:var(--signal)}
+.opt .l{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--dim)}
+.opt.right{border-color:var(--good);background:rgba(95,217,143,.1)}
+.opt.right .l{color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,122,107,.09)}
+.opt.wrong .l{color:var(--bad)}
+.opt:disabled{cursor:default}
+.opt.faded{opacity:.4}
+.shake{animation:shk .38s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+
+.fb{margin-top:16px;border-radius:var(--r);padding:15px 18px;font-size:.94rem;border:1px solid;display:none;animation:pop .35s cubic-bezier(.22,1,.36,1)}
+.fb.show{display:block}
+.fb.ok{background:rgba(95,217,143,.09);border-color:rgba(95,217,143,.45);color:#CDF3DD}
+.fb.err{background:rgba(255,122,107,.09);border-color:rgba(255,122,107,.4);color:#FFD8D2}
+.fb b{display:block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px;opacity:.85}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+
+.dossie-added{margin-top:14px;display:flex;align-items:center;gap:9px;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--good)}
+.dossie-added svg{flex:0 0 auto}
+
+.counter{font-family:"JetBrains Mono",monospace;font-size:clamp(2.2rem,8vw,3.6rem);font-weight:600;color:var(--good);letter-spacing:-.03em;line-height:1}
+.stars{font-size:1.3rem;letter-spacing:2px;margin-top:8px}
+.report{display:grid;gap:11px;margin-top:18px}
+.rep{background:var(--night);border:1px solid var(--edge);border-radius:8px;padding:13px 16px}
+.rep .n{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+.rep .t{font-weight:600;margin-top:4px}
+.rep .x{color:var(--ink-2);font-size:.9rem;margin-top:4px}
+.seal{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--good);background:rgba(95,217,143,.1);border-radius:99px;padding:11px 22px;margin-top:22px;font-weight:700;color:#CDF3DD}
+.hint{font-size:.85rem;color:var(--dim);margin-top:14px;text-align:center}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}}
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand">Dossiê: Sprint Zero<small>Engenharia de Requisitos · Aula 5 · Atividade individual</small></div>
+  <div id="meter">
+    <span class="lbl">Evidências</span>
+    <div class="track"><div class="fill" id="mfill"></div></div>
+    <span class="pct mono" id="mpct">0/8</span>
+  </div>
+</header>
+<main id="app"></main>
+
+<script>
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const LETRAS = 'ABCDEF';
+
+const EVIDENCIAS = [
+  {
+    n: '01', kicker: 'Evidência 01 · E-mail', tipo: 'email',
+    doc: {
+      head: { de: 'De: Marina (coordenadora)', para: 'Para: Time técnico · Assunto: Documento corrigido' },
+      body: 'Pessoal, segue o documento de requisitos do sistema de reservas, já revisado depois da nossa investigação — agora com a regra de bloqueio de horário da Prof. Aline incluída, sem ambiguidade. <b>O sprint começa segunda. Preciso do backlog pronto até lá.</b>'
+    },
+    pergunta: 'O documento chegou correto e sem viés. O que a equipe precisa fazer com ele antes de qualquer linha de código?',
+    opcoes: [
+      { t: 'Nada — um documento correto já está pronto para o sprint.', ok: false, why: 'Correto não é a mesma coisa que pronto para o time usar. Falta um passo intermediário.' },
+      { t: 'Traduzir cada requisito em uma user story, no formato Como, Quero, Para.', ok: true, why: '' },
+      { t: 'Pedir para Marina fazer mais uma rodada de entrevistas.', ok: false, why: 'A elicitação já foi feita e corrigida na Aula 4. O problema agora está depois dela, não antes.' },
+      { t: 'Dividir o documento em partes iguais entre os desenvolvedores e programar direto.', ok: false, why: 'Programar direto de um documento de dez páginas é exatamente o que travou a reunião de planejamento.' },
+    ],
+    nota: 'Um requisito corrigido não é a mesma coisa que um requisito pronto para o time usar. O primeiro passo é sempre reescrever como user story.'
+  },
+  {
+    n: '02', kicker: 'Evidência 02 · Print de chat', tipo: 'chat',
+    doc: {
+      lines: [
+        { who: 'Rafael (dev)', me: false, txt: 'gente eu simplesmente não sei por onde começar. tem um requisito aqui que fala de reservar, cancelar, ver histórico e avaliar o sistema, tudo junto' },
+        { who: 'Você (PO)', me: true, txt: 'bota tudo numa história só, é mais rápido de escrever' },
+        { who: 'Rafael (dev)', me: false, txt: 'ok... mas isso não vai caber num sprint só' },
+      ]
+    },
+    pergunta: 'A sugestão de colocar tudo numa história só falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'I — Independente', ok: false, why: 'A história não depende de nenhuma outra aqui. O problema é outro.' },
+      { t: 'V — Valiosa', ok: false, why: 'O valor para o aluno existe. O problema não é a falta de valor.' },
+      { t: 'S — Pequena', ok: true, why: '' },
+      { t: 'T — Testável', ok: false, why: 'Dá para testar cada pedaço — o problema é que são pedaços demais numa história só.' },
+    ],
+    nota: 'Reservar, cancelar, histórico e avaliação numa história só é um épico disfarçado. Falha o teste de Pequena (S) — precisa ser fatiada antes de entrar no sprint.'
+  },
+  {
+    n: '03', kicker: 'Evidência 03 · Anotação no quadro', tipo: 'sticky',
+    doc: { body: 'Como desenvolvedor, quero migrar o banco de dados pra PostgreSQL, pra deixar tudo mais moderno.' },
+    pergunta: 'Esse card, encontrado colado no quadro do backlog, falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'N — Negociável', ok: false, why: 'Não é sobre falta de espaço pra negociar — o card nem chegou a especificar demais.' },
+      { t: 'V — Valiosa', ok: true, why: '' },
+      { t: 'E — Estimável', ok: false, why: 'O time até consegue estimar uma migração de banco. O problema é outro.' },
+      { t: 'T — Testável', ok: false, why: 'Dá pra testar se o banco migrou. O problema não é esse.' },
+    ],
+    nota: 'Escrita do ponto de vista do desenvolvedor, sem nenhum aluno, professor ou coordenadora sentindo falta se for cortada — é preferência técnica disfarçada de história. Falha em Valiosa (V).'
+  },
+  {
+    n: '04', kicker: 'Evidência 04 · Trecho da reunião de refinamento', tipo: 'transcript',
+    doc: {
+      lines: [
+        { who: 'Você (PO)', txt: '"Como aluno, quero que o app seja rápido."' },
+        { who: 'Rafael (dev)', txt: '"Rápido quanto? Como a gente confirma isso depois, no fim do sprint?"' },
+        { who: 'Você (PO)', txt: '"...Boa pergunta."' },
+      ]
+    },
+    pergunta: 'A pergunta do Rafael aponta uma falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'S — Pequena', ok: false, why: 'O tamanho não é o problema aqui — a história até parece pequena.' },
+      { t: 'I — Independente', ok: false, why: 'Não há nenhuma outra história envolvida nessa conversa.' },
+      { t: 'E — Estimável', ok: false, why: 'Dá pra estimar o esforço de deixar algo "rápido". O problema é confirmar depois.' },
+      { t: 'T — Testável', ok: true, why: '' },
+    ],
+    nota: '"Rápido" não tem um número ou limite definido. Sem um critério objetivo, ninguém confirma se a história foi cumprida. Falha em Testável (T).'
+  },
+  {
+    n: '05', kicker: 'Evidência 05 · Comentário no card', tipo: 'comment',
+    doc: { body: '<b>Rafael comentou:</b> essa história só pode entrar no sprint depois que "Sistema de Notificações" — que nem começou ainda — estiver pronta.' },
+    pergunta: 'Essa dependência revela uma falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'I — Independente', ok: true, why: '' },
+      { t: 'N — Negociável', ok: false, why: 'Não é sobre negociar detalhes — é sobre depender de outra história inteira.' },
+      { t: 'E — Estimável', ok: false, why: 'O time consegue estimar essa história. O problema é quando ela pode começar.' },
+      { t: 'S — Pequena', ok: false, why: 'O tamanho não é o que trava aqui — é a dependência de outra história.' },
+    ],
+    nota: 'A história não consegue ser entregue sozinha — ela trava esperando outra terminar. Falha em Independente (I).'
+  },
+  {
+    n: '06', kicker: 'Evidência 06 · Print de chat', tipo: 'chat',
+    doc: {
+      lines: [
+        { who: 'Diego (aluno, via formulário)', me: false, txt: 'card enviado: "como aluno, quero um botão verde, 48px, escrito RESERVAR AGORA em maiúsculas, no canto inferior direito."' },
+        { who: 'Rafael (dev)', me: false, txt: 'peraí, isso já é praticamente um mockup. não sobrou nada pra gente decidir?' },
+      ]
+    },
+    pergunta: 'A reclamação do Rafael aponta uma falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'N — Negociável', ok: true, why: '' },
+      { t: 'V — Valiosa', ok: false, why: 'O botão de reservar claramente tem valor pro aluno. O problema é outro.' },
+      { t: 'T — Testável', ok: false, why: 'Dá pra testar se o botão existe do jeito pedido. O problema não é esse.' },
+      { t: 'S — Pequena', ok: false, why: 'O tamanho da história não é o problema — é o quanto ela já veio fechada.' },
+    ],
+    nota: 'O card já chegou com decisão de design fechada — cor, tamanho, posição, texto. Não sobrou nada para negociar com o time técnico. Falha em Negociável (N).'
+  },
+  {
+    n: '07', kicker: 'Evidência 07 · Ata do planning poker', tipo: 'transcript',
+    doc: {
+      lines: [
+        { who: 'Registro', txt: 'Card discutido: "Como aluno, quero que o sistema seja confiável."' },
+        { who: 'Resultado', txt: 'Cartas do time: 2, 8, 40, "?", 13. Nenhum consenso. Rodada encerrada sem estimativa.' },
+      ]
+    },
+    pergunta: 'A falta de consenso no planning poker aponta uma falha em qual letra do INVEST?',
+    opcoes: [
+      { t: 'E — Estimável', ok: true, why: '' },
+      { t: 'V — Valiosa', ok: false, why: 'Confiabilidade tem valor claro pro aluno. O problema não é a falta de valor.' },
+      { t: 'I — Independente', ok: false, why: 'Não há nenhuma outra história envolvida nessa história.' },
+      { t: 'T — Testável', ok: false, why: 'É parecido, mas o sintoma aqui é especificamente a impossibilidade de dar um tamanho.' },
+    ],
+    nota: '"Confiável" é vago demais para o time arriscar um tamanho — por isso as cartas do planning poker variaram de 2 a 40. Falha em Estimável (E).'
+  },
+  {
+    n: '08', kicker: 'Evidência 08 · E-mail', tipo: 'email',
+    doc: {
+      head: { de: 'De: Prof. Aline', para: 'Para: Você (PO) · Assunto: Minha regra entrou no sprint?' },
+      body: 'Oi! Passei aqui rapidinho: a regra de bloqueio de horário das minhas turmas entrou certinha na história do sprint? <b>Ninguém me chamou pra confirmar o card antes de ele entrar</b> — e essa é a regra que travou o sistema da primeira vez, lembra?'
+    },
+    pergunta: 'O e-mail da Prof. Aline mostra que algo falhou antes da história entrar no sprint. O quê?',
+    opcoes: [
+      { t: 'A Definition of Ready — a história entrou no sprint sem confirmar a regra com quem a conhece.', ok: true, why: '' },
+      { t: 'A Definition of Done — o código não foi testado.', ok: false, why: 'O problema aconteceu antes do sprint começar, não depois de terminar.' },
+      { t: 'O backlog — as histórias não estavam priorizadas.', ok: false, why: 'A ordem das histórias não é o que a Prof. Aline está questionando.' },
+      { t: 'O INVEST — a história não era pequena o suficiente.', ok: false, why: 'O tamanho não é o problema aqui — é a falta de confirmação com quem detém a regra.' },
+    ],
+    nota: 'A Definition of Ready existe exatamente para isso: confirmar, antes do sprint começar, que quem detém a regra de negócio já validou a história. Pular esse checklist repete o mesmo erro da Aula 4 — só que mais tarde.'
+  },
+];
+
+const S = {
+  nome: localStorage.getItem('dossieReq5_nome') || '',
+  matricula: localStorage.getItem('dossieReq5_matricula') || '',
+  idx: 0,
+  resultados: [],
+};
+
+function el(html){ const d=document.createElement('div'); d.innerHTML=html; return d.firstElementChild; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function paintMeter(){
+  const total = EVIDENCIAS.length;
+  const atual = Math.min(S.idx, total);
+  document.getElementById('mfill').style.width = (total ? Math.round((atual/total)*100) : 0) + '%';
+  document.getElementById('mpct').textContent = atual + '/' + total;
+}
+function montar(html){
+  document.getElementById('app').innerHTML = html;
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e){}
+  paintMeter();
+}
+
+function renderDoc(ev){
+  if (ev.tipo === 'email') {
+    return '<div class="doc email"><div class="doc-head"><span>' + ev.doc.head.de + '</span><span>' + ev.doc.head.para + '</span></div><div class="doc-body">' + ev.doc.body + '</div></div>';
+  }
+  if (ev.tipo === 'chat') {
+    const bubbles = ev.doc.lines.map((l) => '<div class="bubble ' + (l.me ? 'me' : 'them') + '"><span class="who">' + l.who + '</span>' + l.txt + '</div>').join('');
+    return '<div class="doc chat"><div class="doc-head"><span>Conversa do time · #backlog-sprint-zero</span></div><div class="doc-body">' + bubbles + '</div></div>';
+  }
+  if (ev.tipo === 'sticky') {
+    return '<div class="doc sticky"><div class="doc-head"><span>Post-it · quadro do backlog</span></div><div class="doc-body">' + ev.doc.body + '</div></div>';
+  }
+  if (ev.tipo === 'transcript') {
+    const lines = ev.doc.lines.map((l) => '<div class="line"><span class="who">' + l.who + ':</span>' + l.txt + '</div>').join('');
+    return '<div class="doc transcript"><div class="doc-head"><span>Registro da reunião</span></div><div class="doc-body">' + lines + '</div></div>';
+  }
+  if (ev.tipo === 'comment') {
+    return '<div class="doc comment"><div class="doc-head"><span>Comentário no card · board da equipe</span></div><div class="doc-body">' + ev.doc.body + '</div></div>';
+  }
+  return '';
+}
+
+// ---------------------------------------------------------------- tela 0: identificacao
+function telaIdentificacao(){
+  montar('' +
+    '<div class="kicker">Engenharia de Requisitos · Aula 5</div>' +
+    '<h2 class="big">Antes de abrir o dossiê</h2>' +
+    '<p class="narr">Digite seu nome e sua matrícula (ou turma) pra eu saber quem investigou o caso. Não precisa de senha, é só identificação.</p>' +
+    '<div class="panel" style="max-width:440px">' +
+      '<label style="display:block;font-family:\'JetBrains Mono\',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Nome completo</label>' +
+      '<input type="text" id="nome" value="' + S.nome + '" placeholder="Ana Beatriz Souza" style="margin-bottom:16px">' +
+      '<label style="display:block;font-family:\'JetBrains Mono\',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Matrícula ou turma</label>' +
+      '<input type="text" id="mat" value="' + S.matricula + '" placeholder="ADS2026208 ou Turma A">' +
+      '<div class="fb err" id="erroId"><b>Falta algo</b>Preencha os dois campos antes de começar.</div>' +
+    '</div>' +
+    '<div class="actions"><button class="cta" id="btnComecar">Abrir o dossiê →</button></div>');
+  document.getElementById('btnComecar').addEventListener('click', () => {
+    const nome = document.getElementById('nome').value.trim();
+    const mat = document.getElementById('mat').value.trim();
+    const err = document.getElementById('erroId');
+    if (!nome || !mat) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    S.nome = nome; S.matricula = mat;
+    localStorage.setItem('dossieReq5_nome', nome);
+    localStorage.setItem('dossieReq5_matricula', mat);
+    telaIntro();
+  });
+}
+
+// ---------------------------------------------------------------- tela 1: intro do caso
+function telaIntro(){
+  montar('' +
+    '<div class="kicker warm">Engenharia de Requisitos · Aula 5</div>' +
+    '<h2 class="big">Dossiê: Sprint Zero</h2>' +
+    '<p class="narr">A investigação da Aula 4 terminou. O requisito do laboratório de notebooks saiu corrigido, sem viés, com a Prof. Aline finalmente ouvida. Você acabou de entrar como <b>Product Owner</b> do time técnico. Sobre sua mesa: um dossiê com oito evidências do que aconteceu entre a entrega do documento e o caos da reunião de planejamento.</p>' +
+    '<div class="micro"><b>Como funciona</b>Abra uma evidência por vez — e-mails, prints de chat, anotações do quadro, trechos de reunião. Depois de cada uma, responda o que ela revela. Sua resposta é arquivada no dossiê, e no final você vê o relatório completo do caso.</div>' +
+    '<div class="actions"><button class="cta" id="btnIniciar">Abrir a primeira evidência, ' + S.nome.split(' ')[0] + ' →</button></div>');
+  document.getElementById('btnIniciar').addEventListener('click', () => {
+    S.idx = 0; S.resultados = [];
+    abrirEvidencia(0);
+  });
+}
+
+// ---------------------------------------------------------------- roteador de evidencias
+function abrirEvidencia(i){
+  if (i >= EVIDENCIAS.length) { S.idx = EVIDENCIAS.length; telaRelatorio(); return; }
+  S.idx = i;
+  const ev = EVIDENCIAS[i];
+  const ordem = shuffle(ev.opcoes.map((o, k) => ({ o, k })));
+
+  montar('' +
+    '<div class="evtag"><span class="dot"></span>' + ev.kicker + ' · ' + (i+1) + ' de ' + EVIDENCIAS.length + '</div>' +
+    renderDoc(ev) +
+    '<div class="qbox"><em>O que essa evidência revela?</em><p>' + ev.pergunta + '</p></div>' +
+    '<div class="opts" id="opcoes"></div>' +
+    '<div class="fb" id="fb"></div>' +
+    '<div class="actions" id="acoes" style="display:none"><button class="cta" id="btnProx">Arquivar no dossiê →</button></div>');
+
+  const cont = document.getElementById('opcoes');
+  ordem.forEach((item, pos) => {
+    const b = el('<button class="opt"><span class="l">' + LETRAS[pos] + '</span><span class="txt">' + item.o.t + '</span></button>');
+    b.addEventListener('click', () => responder(ev, ordem, pos));
+    cont.appendChild(b);
+  });
+}
+
+function responder(ev, ordem, posEscolhida){
+  const posCorreta = ordem.findIndex((it) => it.o.ok);
+  const botoes = document.querySelectorAll('#opcoes .opt');
+  botoes.forEach((b, j) => {
+    b.disabled = true;
+    if (j === posCorreta) b.classList.add('right');
+    else if (j === posEscolhida) b.classList.add('wrong', 'shake');
+    else b.classList.add('faded');
+  });
+  const acertou = posEscolhida === posCorreta;
+  const escolhida = ordem[posEscolhida].o;
+  const fb = document.getElementById('fb');
+  fb.className = 'fb show ' + (acertou ? 'ok' : 'err');
+  fb.innerHTML = '<b>' + (acertou ? 'Confirmado' : 'Ainda não') + '</b>' + (acertou ? ev.nota : (escolhida.why || ev.nota));
+  document.getElementById('acoes').style.display = 'flex';
+  document.getElementById('acoes').insertAdjacentHTML('beforebegin',
+    '<div class="dossie-added"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l6 6L20 6"/></svg>Nota arquivada no dossiê</div>');
+  S.resultados.push({ n: ev.n, kicker: ev.kicker, pergunta: ev.pergunta, acertou, nota: ev.nota });
+  document.getElementById('btnProx').onclick = () => abrirEvidencia(S.idx + 1);
+}
+
+// ---------------------------------------------------------------- tela final: relatorio do caso
+function telaRelatorio(){
+  const acertos = S.resultados.filter((r) => r.acertou).length;
+  const total = S.resultados.length;
+  const pct = total ? Math.round((acertos/total)*100) : 0;
+  const estrelas = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+
+  montar('' +
+    '<div class="kicker warm">Engenharia de Requisitos · Aula 5</div>' +
+    '<h2 class="big">Relatório do caso, ' + S.nome.split(' ')[0] + '</h2>' +
+    '<div class="panel">' +
+      '<div class="counter">' + pct + '%</div>' +
+      '<p class="stars">' + '★'.repeat(estrelas) + '☆'.repeat(3 - estrelas) + '</p>' +
+      '<p class="narr" style="margin-top:6px">' + acertos + ' de ' + total + ' evidências lidas corretamente.</p>' +
+    '</div>' +
+    '<h3 style="font-family:\'Bricolage Grotesque\',serif;font-size:1.15rem;margin-top:30px">Notas do dossiê</h3>' +
+    '<div class="report" id="rep"></div>' +
+    '<div class="seal">✓ Dossiê encerrado por ' + S.nome + '</div>' +
+    '<p class="hint" id="statusEnvio">Enviando resultado…</p>' +
+    '<div class="actions">' +
+      '<button class="cta" id="btnDeNovo">Reabrir o dossiê →</button>' +
+    '</div>');
+
+  const rep = document.getElementById('rep');
+  S.resultados.forEach((r) => {
+    rep.appendChild(el('<div class="rep"><div class="n">' + r.kicker + '</div><div class="t">' + r.pergunta + '</div><div class="x">' + r.nota + '</div></div>'));
+  });
+
+  document.getElementById('btnDeNovo').addEventListener('click', () => { S.idx = 0; S.resultados = []; telaIntro(); });
+
+  enviarResultado({
+    nome: S.nome, matricula: S.matricula, aula: 5,
+    disciplina: 'Engenharia de Requisitos', atividade: 'Dossiê: Sprint Zero',
+    acertos: acertos, total: total, pontuacao: pct, timestamp: new Date().toISOString(),
+  });
+}
+
+function enviarResultado(dados){
+  const status = document.getElementById('statusEnvio');
+  if (!WEBAPP_URL) { status.textContent = 'Resultado registrado só nesta tela.'; return; }
+  fetch(WEBAPP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dados) })
+    .then(() => { status.textContent = 'Resultado enviado.'; })
+    .catch(() => { status.textContent = 'Não consegui enviar agora. Mostre esta tela pro professor.'; });
+}
+
+telaIdentificacao();
+</script>
+</body>
+</html>
