@@ -60,9 +60,16 @@
     var acoes = criar("div", "material-actions");
 
     var arquivo = texto(material.arquivo);
-    var ext = (arquivo.split(".").pop() || "").toLowerCase();
+    var externo = /^https?:\/\//i.test(arquivo);
+    var ext = externo ? "" : (arquivo.split(".").pop() || "").toLowerCase();
 
-    if (ext === "pdf") {
+    if (externo) {
+      var verLink = criar("a", "strong", "Ver apresentação");
+      verLink.href = arquivo;
+      verLink.target = "_blank";
+      verLink.rel = "noreferrer";
+      acoes.appendChild(verLink);
+    } else if (ext === "pdf") {
       var abrir = criar("a", "strong", "Abrir PDF");
       abrir.href = arquivo;
       abrir.target = "_blank";

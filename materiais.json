@@ -254,6 +254,22 @@
           "tags": "slides processo elicitacao analise especificacao validacao gerencia stakeholders papeis"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 4: Como descobrir o que ninguém disse ainda",
+          "descricao": "As cinco técnicas de elicitação, os vieses que arruínam uma entrevista, e o caso real do sistema de despacho de ambulâncias de Londres.",
+          "arquivo": "https://drive.google.com/file/d/1ZQfbyDFmL9c47egvKO0FIGtcKhWM0qKG/view",
+          "data": "10/09/2026",
+          "tags": "slides entrevista questionario observacao workshop prototipacao vies pergunta tendenciosa lascad londres ambulancia"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 5: Da entrevista ao backlog, escrever para quem vai construir",
+          "descricao": "O formato Como, Quero, Para, o critério INVEST e os artefatos: backlog, critério de aceite, Definition of Ready e Done.",
+          "arquivo": "https://drive.google.com/file/d/17B_y82HdOMoNyOj70ce_2FftWUWJpoI3/view",
+          "data": "17/09/2026",
+          "tags": "slides user story invest backlog criterio de aceite definition of ready done epico tarefa"
+        },
+        {
           "tipo": "Jogo",
           "titulo": "Jogos de revisão — Aulas 1 a 5",
           "descricao": "Revisão individual e interativa de cada aula, com identificação por nome e matrícula.",
