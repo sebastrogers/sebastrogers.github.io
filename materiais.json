@@ -180,6 +180,14 @@
           "tags": "slides economia escala capex opex tco migracao 7 rs fatura custo"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 4: Geografia da nuvem, região, zona de disponibilidade e borda",
+          "descricao": "Onde os dados moram fisicamente, latência, soberania de dados e alta disponibilidade.",
+          "arquivo": "https://drive.google.com/file/d/1HSy-zzjxB4_pRAttU2BdblapLOtX2Kz4/view",
+          "data": "10/09/2026",
+          "tags": "slides regiao zona de disponibilidade edge borda latencia soberania de dados lgpd alta disponibilidade"
+        },
+        {
           "tipo": "Jogo",
           "titulo": "Painel AWS: A Fatura Está Correndo",
           "descricao": "Simulação do laboratório de EC2, com medidor de custo em tempo real e as armadilhas mais comuns.",
