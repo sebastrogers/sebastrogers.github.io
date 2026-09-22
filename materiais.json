@@ -1,5 +1,5 @@
 {
-  "atualizado": "17 de setembro de 2026",
+  "atualizado": "22 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -112,6 +112,22 @@
           "arquivo": "assets/materiais/coding/roteiro-04-comanda-modulo-testado.pdf",
           "data": "01/09/2026",
           "tags": "laboratorio pratica python pytest funcao modulo venv git"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 6: POO II, encapsulamento e invariantes",
+          "descricao": "Proteção de estado, properties e validação no ponto de entrada, com AV1 no mesmo encontro.",
+          "arquivo": "assets/materiais/coding/aula-06-classes-encapsulamento.pdf",
+          "data": "22/09/2026",
+          "tags": "slides encapsulamento invariante property self init classe atributo metodo av1"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Fazenda dos Paradigmas",
+          "descricao": "Jogo de revisão de toda a disciplina, com personagem próprio e uma etapa por unidade, do fundamento ao full-stack.",
+          "arquivo": "assets/materiais/coding/jogo-fazenda-dos-paradigmas.html",
+          "data": "22/09/2026",
+          "tags": "jogo revisao interativo individual personagem fazenda simcity classe objeto poo backend frontend fullstack"
         }
       ]
     },
