@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Editor do blog | Sebastião Rogério</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="editor.css" />
+  </head>
+  <body>
+    <!-- Tela de acesso -->
+    <section class="login" id="login" hidden>
+      <div class="login-card">
+        <p class="eyebrow">Editor do blog</p>
+        <h1>Entrar</h1>
+        <p>O editor publica direto no repositório <code>sebastrogers/sebastrogers.github.io</code>. Para isso ele precisa de um token do GitHub, que fica guardado só neste navegador.</p>
+        <label class="field">
+          <span>Token do GitHub</span>
+          <input id="tokenInput" type="password" autocomplete="off" placeholder="github_pat_..." />
+        </label>
+        <label class="check"><input id="rememberInput" type="checkbox" checked /> Lembrar neste navegador</label>
+        <button class="button primary" id="loginButton" type="button">Entrar</button>
+        <p class="login-error" id="loginError" role="alert"></p>
+        <details class="login-help">
+          <summary>Como gerar o token (uma vez só)</summary>
+          <ol>
+            <li>Abra <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained token</a>.</li>
+            <li>Nome: <em>editor do blog</em>. Validade: a que preferir (até 1 ano).</li>
+            <li><strong>Repository access</strong>: <em>Only select repositories</em> → <code>sebastrogers.github.io</code>.</li>
+            <li><strong>Permissions → Repository → Contents</strong>: <em>Read and write</em>. Nada mais.</li>
+            <li>Gere, copie e cole aqui.</li>
+          </ol>
+          <p>O token só consegue mexer neste repositório. Se perder o computador, é só revogá-lo na mesma página do GitHub.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Editor -->
+    <div class="app" id="app" hidden>
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="toggleSidebar" type="button" aria-label="Mostrar posts">☰</button>
+        <a class="brand" href="../blog.html" target="_blank" rel="noopener"><span class="brand-mark">SR</span><span class="hide-mobile">Editor do blog</span></a>
+        <span class="status" id="status" role="status"></span>
+        <div class="top-actions">
+          <button class="button secondary small" id="draftButton" type="button" title="Guarda o texto no GitHub sem publicar no blog">Salvar rascunho</button>
+          <button class="button primary small" id="publishButton" type="button">Publicar</button>
+          <button class="icon-btn" id="themeButton" type="button" aria-label="Alternar tema">☾</button>
+          <button class="link-btn muted" id="logoutButton" type="button" title="Sair (esquece o token neste navegador)">Sair</button>
+        </div>
+      </header>
+
+      <aside class="sidebar" id="sidebar">
+        <button class="button primary small full" id="newButton" type="button">+ Novo post</button>
+        <p class="side-title">Publicados</p>
+        <ul class="post-list" id="publishedList"><li class="muted">Carregando…</li></ul>
+        <p class="side-title">Rascunhos</p>
+        <ul class="post-list" id="draftList"><li class="muted">—</li></ul>
+      </aside>
+
+      <main class="workspace">
+        <div class="notice" id="notice" hidden></div>
+
+        <section class="meta-grid">
+          <label class="field span-3">
+            <span>Título</span>
+            <input id="fTitle" type="text" placeholder="Título do post" />
+          </label>
+          <label class="field">
+            <span>Categoria</span>
+            <input id="fCategory" type="text" list="categoryList" placeholder="Educação, Trabalho, Dados…" />
+            <datalist id="categoryList"></datalist>
+          </label>
+          <label class="field">
+            <span>Data</span>
+            <input id="fDate" type="date" />
+          </label>
+          <label class="field">
+            <span>Endereço <small id="slugHint"></small></span>
+            <div class="slug-wrap"><span class="slug-prefix">posts/</span><input id="fSlug" type="text" spellcheck="false" /><span class="slug-prefix">.html</span></div>
+          </label>
+          <label class="field span-2">
+            <span>Resumo <small>(aparece na lista do blog e nas prévias de link)</small></span>
+            <textarea id="fSummary" rows="2" placeholder="Duas linhas sobre o post. Se ficar vazio, uso o primeiro parágrafo."></textarea>
+          </label>
+          <div class="field">
+            <span>Capa <small>(opcional)</small></span>
+            <div class="cover">
+              <img id="coverImg" alt="" hidden />
+              <button class="button secondary small" id="coverButton" type="button">Escolher imagem</button>
+              <button class="link-btn" id="coverRemove" type="button" hidden>remover</button>
+              <input id="coverInput" type="file" accept="image/*" hidden />
+            </div>
+          </div>
+        </section>
+
+        <div class="mobile-tabs only-mobile" role="tablist">
+          <button type="button" class="is-active" data-pane="write">Escrever</button>
+          <button type="button" data-pane="preview">Pré-visualizar</button>
+        </div>
+
+        <section class="panes">
+          <div class="pane pane-write" id="paneWrite">
+            <div class="toolbar" id="toolbar">
+              <button type="button" data-cmd="h2" title="Subtítulo">H2</button>
+              <button type="button" data-cmd="h3" title="Seção menor">H3</button>
+              <button type="button" data-cmd="bold" title="Negrito (Ctrl/Cmd+B)"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="Itálico (Ctrl/Cmd+I)"><i>I</i></button>
+              <button type="button" data-cmd="link" title="Link (Ctrl/Cmd+K)">🔗</button>
+              <span class="sep"></span>
+              <button type="button" data-cmd="ul" title="Lista">• Lista</button>
+              <button type="button" data-cmd="ol" title="Lista numerada">1. Lista</button>
+              <button type="button" data-cmd="quote" title="Citação">❝</button>
+              <button type="button" data-cmd="code" title="Código">&lt;/&gt;</button>
+              <span class="sep"></span>
+              <button type="button" data-cmd="image" title="Imagem (também dá para colar ou arrastar)">🖼 Imagem</button>
+              <button type="button" data-cmd="video" title="Vídeo MP4">🎬 Vídeo</button>
+              <button type="button" data-cmd="youtube" title="Vídeo do YouTube">▶ YouTube</button>
+              <button type="button" data-cmd="button" title="Botão de destaque">Botão</button>
+              <button type="button" data-cmd="note" title="Caixa de observação">Nota</button>
+              <input id="mediaInput" type="file" hidden />
+            </div>
+            <textarea id="fBody" spellcheck="true" placeholder="Escreva em Markdown.
+
+## Um subtítulo
+
+Um parágrafo com **negrito**, *itálico* e [um link](https://exemplo.com).
+
+Cole ou arraste imagens aqui."></textarea>
+            <p class="counter" id="counter"></p>
+          </div>
+          <div class="pane pane-preview" id="panePreview">
+            <div class="post-shell preview-shell">
+              <article>
+                <header class="post-header">
+                  <p class="post-meta" id="pMeta"></p>
+                  <h1 id="pTitle"></h1>
+                </header>
+                <div class="post-content" id="pBody"></div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/turndown@7.2.0/dist/turndown.js"></script>
+    <script src="editor.js"></script>
+  </body>
+</html>
