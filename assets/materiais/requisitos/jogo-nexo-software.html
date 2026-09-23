@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexo Software · Engenharia de Requisitos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --bg1:#1C3F63; --bg2:#0C1D31; --panel:#FFFFFF; --panel-2:#F1F4F9; --ink:#1B2233; --ink-2:#4A5568; --line:#D6DEEA;
+  --acc:#FFC940; --acc-ink:#3A2A00; --blue:#2F80ED; --good:#219653; --bad:#D64036; --r:14px;
+  --light:#F2F5FB; --light-2:#B9C6DA;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(1100px 620px at 50% -12%,#2E6394,var(--bg1) 45%,var(--bg2));background-attachment:fixed;color:var(--light);font-family:"Nunito",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;line-height:1.15}
+p{margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.px{font-family:"Pixelify Sans","Nunito",sans-serif}
+
+/* topo */
+#top{position:sticky;top:0;z-index:40;background:rgba(9,22,40,.88);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.08);padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{font-family:"Pixelify Sans",sans-serif;font-size:1.2rem;letter-spacing:.02em;color:#fff}
+.brand small{display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--light-2);font-weight:700}
+#hud{flex:1;display:flex;justify-content:flex-end;gap:12px;align-items:center;font-size:.86rem;color:var(--light-2)}
+#hud b{color:#fff}
+.som{font-size:1.05rem;padding:5px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08)}
+.som:hover{background:rgba(255,255,255,.18)}
+
+#app{max-width:1220px;margin:0 auto;padding:26px 18px 60px}
+
+/* texto sobre o fundo escuro (fora de cartões) */
+.kicker{font-family:"Pixelify Sans",sans-serif;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#8FD0FF;margin-bottom:8px}
+.titulo{font-family:"Pixelify Sans",sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);color:#fff;font-weight:700}
+.lead{color:var(--light-2);max-width:66ch;margin-top:10px;font-size:1.02rem}
+
+/* cartões claros: sempre tinta escura */
+.card{background:var(--panel);color:var(--ink);border-radius:var(--r);padding:22px;box-shadow:0 6px 0 rgba(0,0,0,.25),0 18px 40px -20px rgba(0,0,0,.6);margin-top:20px}
+.card .muted{color:var(--ink-2)}
+.lbl{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:800;margin-top:14px}
+.lbl:first-child{margin-top:0}
+input[type=text]{font-family:inherit;font-size:1rem;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:10px;padding:11px 14px;width:100%;margin-top:6px}
+input[type=text]:focus{outline:none;border-color:var(--blue)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--acc);color:var(--acc-ink);font-weight:800;padding:12px 22px;border-radius:10px;box-shadow:0 4px 0 #C99A1A;transition:transform .1s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #C99A1A}
+.btn:disabled{background:#E2E6EE;color:#98A2B3;box-shadow:none;transform:none;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--ink);box-shadow:0 4px 0 #B8C2D3;border:2px solid var(--line)}
+.btn.dark{background:#223C5E;color:#fff;box-shadow:0 4px 0 #0E2036}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+
+/* criação de avatar */
+.av-grid{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
+.av-preview{background:linear-gradient(180deg,#DDEBFA,#F4F8FD);border-radius:12px;display:flex;flex-direction:column;align-items:center;padding:12px;border:2px solid var(--line)}
+.sw-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sw{width:32px;height:32px;border-radius:8px;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.sw.sel{box-shadow:0 0 0 3px var(--blue)}
+.sw-t{padding:7px 12px;border-radius:8px;border:2px solid var(--line);background:#fff;font-weight:700;font-size:.85rem;color:var(--ink-2)}
+.sw-t.sel{border-color:var(--blue);color:var(--blue);background:#EEF5FF}
+
+/* prólogo */
+.pips{display:flex;gap:6px;margin-top:18px}
+.pip{width:10px;height:10px;border-radius:3px;background:var(--line)}
+.pip.on{background:var(--acc)}
+.historia{font-size:1.06rem;line-height:1.7}
+.historia b{color:#0D4F8B}
+.card h3{font-family:"Pixelify Sans",sans-serif;font-size:1.5rem;color:var(--ink);margin-bottom:10px}
+
+/* jogo */
+#jogo{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+#stageWrap{position:relative;border-radius:16px;overflow:hidden;background:#07111E;box-shadow:0 0 0 3px #0B1A2C,0 0 0 5px #28496F,0 20px 40px -18px rgba(0,0,0,.8)}
+#stage{display:block;width:100%;height:clamp(380px,64vh,620px);touch-action:manipulation}
+#roomTag{position:absolute;left:12px;top:12px;background:rgba(9,22,40,.8);color:#fff;border-radius:9px;padding:6px 12px;font-family:"Pixelify Sans",sans-serif;font-size:.95rem;pointer-events:none}
+#roomTag small{display:block;font-family:"Nunito",sans-serif;font-size:.7rem;color:var(--light-2);letter-spacing:.08em;text-transform:uppercase}
+#chatbar{display:flex;gap:8px;padding:10px;background:#0E2036;border-top:1px solid rgba(255,255,255,.06)}
+#chatbar input{margin:0;background:#fff;border-color:#fff}
+#chatbar .btn{padding:10px 16px}
+#side{display:flex;flex-direction:column;gap:12px}
+.box{background:var(--panel);color:var(--ink);border-radius:var(--r);padding:16px;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.box h4{margin:0 0 10px;font-family:"Pixelify Sans",sans-serif;font-size:1.05rem}
+.prog{height:12px;border-radius:6px;background:var(--panel-2);overflow:hidden;border:1px solid var(--line)}
+.prog span{display:block;height:100%;background:linear-gradient(90deg,#4FC3F7,#2F80ED);border-radius:6px;transition:width .4s}
+.npc-list{display:flex;flex-direction:column;gap:8px}
+.npc-item{display:flex;gap:10px;align-items:center;text-align:left;padding:8px;border-radius:10px;border:2px solid var(--line);background:#fff;width:100%}
+.npc-item:hover{border-color:var(--blue)}
+.npc-item canvas{flex:0 0 auto;border-radius:8px;background:#E8F0FA}
+.npc-item .n{font-weight:800;font-size:.92rem;line-height:1.2}
+.npc-item .c{font-size:.74rem;color:var(--ink-2);line-height:1.2}
+.npc-item .st{margin-left:auto;font-size:.72rem;font-weight:800;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.st.pend{background:#FFF3C4;color:#7A5B00}
+.st.ok{background:#DDF3E6;color:#16693A}
+.st.wait{background:var(--panel-2);color:var(--ink-2)}
+.side-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.side-btns .btn{justify-content:center;padding:10px 8px;font-size:.88rem}
+.dica{font-size:.8rem;color:var(--ink-2);margin-top:8px;line-height:1.45}
+
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(4,10,20,.66);display:none;align-items:flex-start;justify-content:center;z-index:80;padding:24px 14px;overflow-y:auto}
+#modal.on{display:flex}
+#mbox{background:var(--panel);color:var(--ink);border-radius:16px;max-width:720px;width:100%;padding:24px;box-shadow:0 8px 0 rgba(0,0,0,.3);margin:auto 0;position:relative}
+.m-head{display:flex;gap:14px;align-items:center}
+.m-head canvas{border-radius:12px;background:linear-gradient(180deg,#DDEBFA,#F4F8FD);border:2px solid var(--line);flex:0 0 auto}
+.m-head .n{font-family:"Pixelify Sans",sans-serif;font-size:1.3rem;line-height:1.1}
+.m-head .c{font-size:.82rem;color:var(--ink-2)}
+.m-tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#0D4F8B;background:#E6F1FC;border-radius:6px;padding:4px 8px;margin-bottom:6px}
+.fala{position:relative;background:var(--panel-2);border:2px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:1rem}
+.fala::before{content:'';position:absolute;left:26px;top:-10px;border:8px solid transparent;border-bottom-color:var(--line);border-top:0}
+.pergunta{font-weight:800;font-size:1.06rem;margin-top:18px}
+.opts{display:grid;gap:10px;margin-top:12px}
+.opt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:11px;padding:12px 14px;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:.96rem;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--blue);background:#F6FAFF}
+.opt .l{font-family:"Pixelify Sans",sans-serif;font-weight:700;color:var(--ink-2);font-size:1rem}
+.opt.right{border-color:var(--good);background:#EAF7EF}
+.opt.right .l{color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:#FDEEEC}
+.opt.wrong .l{color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;border-radius:11px;padding:12px 14px;font-size:.94rem;border:2px solid}
+.fb.ok{background:#EAF7EF;border-color:var(--good);color:#11552D}
+.fb.err{background:#FDEEEC;border-color:var(--bad);color:#7C1F18}
+.fb b{display:block;margin-bottom:3px}
+.conceito{margin-top:14px;border-radius:11px;padding:14px 16px;background:#EEF5FF;border:2px solid #C7DDF7;font-size:.94rem;color:#18365A}
+.conceito b{display:block;font-family:"Pixelify Sans",sans-serif;font-size:1.02rem;margin-bottom:4px;color:#0D4F8B}
+.cls{display:grid;gap:10px;margin-top:12px}
+.cls-item{border:2px solid var(--line);border-radius:11px;padding:12px 14px;background:#fff}
+.cls-item.right{border-color:var(--good);background:#F2FAF5}
+.cls-item.wrong{border-color:var(--bad);background:#FEF4F3}
+.cls-item p{font-size:.95rem}
+.cls-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cls-btns button{border:2px solid var(--line);border-radius:8px;padding:6px 11px;font-size:.82rem;font-weight:800;color:var(--ink-2);background:#fff}
+.cls-btns button.sel{border-color:var(--blue);color:#fff;background:var(--blue)}
+.cls-btns button:disabled{opacity:.8;cursor:default}
+.cls-why{font-size:.86rem;margin-top:8px}
+.cls-item.right .cls-why{color:#11552D}
+.cls-item.wrong .cls-why{color:#7C1F18}
+.nav-list{display:grid;gap:10px;margin-top:14px}
+.nav-item{display:flex;align-items:center;gap:14px;border:2px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;text-align:left;width:100%;color:var(--ink)}
+.nav-item:hover:not(:disabled){border-color:var(--blue);background:#F6FAFF}
+.nav-item:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.6)}
+.nav-item.here{border-color:var(--acc);background:#FFFBEA}
+.nav-item .e{font-size:1.8rem}
+.nav-item .n{font-weight:800}
+.nav-item .u{font-size:.8rem;color:var(--ink-2)}
+.nav-item .p{margin-left:auto;font-size:.8rem;font-weight:800;color:var(--ink-2);white-space:nowrap}
+.lista-intro{margin:12px 0 0;padding-left:20px}
+.lista-intro li{margin-top:6px}
+.x-btn{position:absolute;right:12px;top:10px;font-size:1.3rem;color:var(--ink-2);padding:4px 10px;border-radius:8px}
+.x-btn:hover{background:var(--panel-2)}
+
+/* resultado */
+.big-num{font-family:"Pixelify Sans",sans-serif;font-size:clamp(2.6rem,8vw,3.8rem);color:#fff;line-height:1}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:14px}
+.res-item{background:var(--panel-2);border-radius:10px;padding:12px;border:1px solid var(--line)}
+.res-item b{display:block}
+.res-item small{color:var(--ink-2)}
+.seal{display:inline-flex;gap:8px;align-items:center;background:#EAF7EF;color:#11552D;border:2px solid var(--good);border-radius:10px;padding:8px 14px;font-weight:800}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#0E2036;color:#fff;border:2px solid #2E5A88;border-radius:12px;padding:12px 18px;z-index:90;transition:transform .3s;font-weight:700;max-width:92vw}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:980px){
+  #jogo{grid-template-columns:1fr}
+  .av-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+      <polygon points="17,3 31,10 17,17 3,10" fill="#FFC940"/>
+      <polygon points="3,10 17,17 17,31 3,24" fill="#2F80ED"/>
+      <polygon points="31,10 17,17 17,31 31,24" fill="#1B5FB8"/>
+      <polygon points="17,9 23,12 17,15 11,12" fill="#fff" opacity=".85"/>
+    </svg>
+    <div><b>Nexo Software</b><small>Engenharia de Requisitos</small></div>
+  </div>
+  <div id="hud"></div>
+</header>
+<main id="app"></main>
+<div id="modal" role="dialog" aria-modal="true"><div id="mbox"></div></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+
+/* =====================================================================
+   PERSONAGENS
+   ===================================================================== */
+const NPCS = {
+  lia:    { nome: 'Lia', cargo: 'Recepção e integração', look: { pele: '#F1C27D', cabelo: '#3B2314', estilo: 'coque', camisa: '#E85D75', calca: '#2E3A59' },
+            falas: ['Café na copa, água no bebedouro. Fique à vontade!', 'Aqui todo mundo já errou requisito. O segredo é errar cedo.', 'O quadro da parede resume o que se vê em cada sala.'] },
+  rafael: { nome: 'Rafael', cargo: 'Desenvolvedor sênior', look: { pele: '#8D5524', cabelo: '#161616', estilo: 'curto', camisa: '#3D7DD8', calca: '#33373D' },
+            falas: ['Requisito bom é aquele que eu não preciso adivinhar.', 'Se tá escrito "etc.", eu travo.', 'Código a gente refaz. Mal-entendido custa mais.'] },
+  julia:  { nome: 'Júlia', cargo: 'Analista de QA', look: { pele: '#FFDBAC', cabelo: '#B03A2E', estilo: 'longo', camisa: '#27AE60', calca: '#2C3E50' },
+            falas: ['Se não dá para testar, não dá para aceitar.', '"Rápido" quanto? "Fácil" para quem?', 'Critério de aceite é o meu melhor amigo.'] },
+  helena: { nome: 'Helena', cargo: 'Gerente de projetos', look: { pele: '#C68642', cabelo: '#5A3A22', estilo: 'longo', camisa: '#8E44AD', calca: '#2B2B3A' },
+            falas: ['Projeto sem interessado mapeado é surpresa na certa.', 'Prazo, escopo e custo: mexeu num, mexe nos outros.', 'Toda mudança passa por mim, com análise de impacto.'] },
+  celia:  { nome: 'Dona Célia', cargo: 'Dona da Clínica Patas & Cia', look: { pele: '#E0AC69', cabelo: '#C8C8C8', estilo: 'cacheado', camisa: '#F39C12', calca: '#5D4037' },
+            falas: ['Minha agenda de papel já tem mais rabisco que horário.', 'O Tiago é quem sabe como a recepção funciona.', 'Eu só quero que o tutor não fique esperando.'] },
+  tiago:  { nome: 'Tiago', cargo: 'Atendente da clínica', look: { pele: '#A0522D', cabelo: '#24160B', estilo: 'cacheado', camisa: '#16A085', calca: '#34495E' },
+            falas: ['Tem dia que o telefone não para.', 'Emergência a gente sempre dá um jeito de encaixar.', 'Meu caderno tem umas setinhas que só eu entendo.'] },
+  bia:    { nome: 'Bia', cargo: 'Product Owner', look: { pele: '#F5D0A9', cabelo: '#E1B12C', estilo: 'longo', camisa: '#E67E22', calca: '#2C3E50' },
+            falas: ['Backlog bom é backlog que conta uma história.', 'Quem, o quê e para quê. Sempre.', 'Se a história não cabe na sprint, a gente quebra.'] },
+  marcos: { nome: 'Marcos', cargo: 'Gerente de produto', look: { pele: '#D2A679', cabelo: '#4A3728', estilo: 'careca', camisa: '#34495E', calca: '#1F2A36' },
+            falas: ['Não cabe tudo. Nunca cabe.', 'Prioridade sem critério é só opinião.', 'Primeira versão: o mínimo que resolve de verdade.'] },
+  carla:  { nome: 'Carla', cargo: 'Analista de requisitos sênior', look: { pele: '#6F4E37', cabelo: '#111111', estilo: 'coque', camisa: '#C0392B', calca: '#2B2B2B' },
+            falas: ['O documento tem que falar sozinho.', 'Revisão cruzada acha o que o autor não vê.', '"Conforme combinado" não é requisito.'] },
+  nina:   { nome: 'Nina', cargo: 'Designer de produto', look: { pele: '#FFE0BD', cabelo: '#6C3483', estilo: 'curto', camisa: '#1ABC9C', calca: '#3D3D5C' },
+            falas: ['Um bom diagrama poupa três reuniões.', 'Modelo de domínio fala a língua do cliente.', 'Protótipo é pergunta, não é resposta.'] },
+  otavio: { nome: 'Otávio', cargo: 'Líder de QA', look: { pele: '#C68642', cabelo: '#8C8C8C', estilo: 'curto', camisa: '#2980B9', calca: '#2C3E50' },
+            falas: ['Necessidade, requisito, teste. Tudo ligado.', 'Checklist não é burocracia, é memória.', 'Requisito órfão me dá calafrio.'] },
+  ruth:   { nome: 'Dra. Ruth', cargo: 'Consultora externa', look: { pele: '#8D5524', cabelo: '#E0E0E0', estilo: 'coque', camisa: '#5D4037', calca: '#2B2B2B' },
+            falas: ['Toda decisão precisa de um porquê registrado.', 'Documento bom sobrevive à troca de equipe.', 'Me mostre a origem desse requisito.'] },
+};
+
+/* =====================================================================
+   SITUAÇÕES-PROBLEMA (18, em ordem crescente de complexidade)
+   ===================================================================== */
+const MISSOES = {
+  m1: { npc: 'lia', tema: 'O custo de um defeito', tipo: 'escolha',
+    contexto: 'Bem-vindo(a) à Nexo! Antes de tudo, uma história da casa. Ano passado entregamos o sistema de uma academia. Na homologação, o dono disse que a matrícula tinha que aceitar plano familiar, coisa que ninguém escreveu. Refazer custou três semanas.',
+    pergunta: 'Se esse erro tivesse sido pego antes, em que momento a correção sairia mais barata?',
+    opcoes: [
+      { t: 'No levantamento de requisitos, antes de escrever qualquer código.', ok: true, why: 'Quanto mais cedo, mais barato. No levantamento, corrigir é reescrever uma frase. Depois do código, é refazer tela, regra, teste e às vezes o banco de dados.' },
+      { t: 'Nos testes, porque é exatamente para isso que o time de QA existe.', why: 'O teste encontra o defeito, mas a essa altura ele já virou código, tela e banco. A correção arrasta tudo o que foi construído em cima dele.' },
+      { t: 'Depois da entrega, quando o cliente usa de verdade e reclama.', why: 'É o momento mais caro: além do retrabalho, há usuário parado, dado inconsistente e desgaste com o cliente.' },
+      { t: 'Em qualquer fase: o custo de corrigir é o mesmo do início ao fim.', why: 'Não é. O custo de correção cresce a cada fase, porque cada etapa é construída sobre a anterior.' },
+    ],
+    conceito: { titulo: 'Custo de corrigir um defeito', texto: 'Um defeito de requisito fica mais caro quanto mais tarde é encontrado, porque design, código e testes foram construídos sobre ele. Por isso uma parte grande das falhas de projeto nasce na especificação, e não na programação.' } },
+
+  m2: { npc: 'rafael', tema: 'Funcional, não funcional ou regra de negócio', tipo: 'classificar',
+    contexto: 'Opa! Sou o Rafael, cuido do código. A Dona Célia, da Clínica Patas & Cia, mandou um áudio enorme e eu transcrevi umas frases. Antes de eu sair programando, me ajuda a separar o que é o quê?',
+    pergunta: 'Classifique cada frase.',
+    categorias: ['Funcional', 'Não funcional', 'Regra de negócio'],
+    itens: [
+      { t: 'O tutor pode agendar uma consulta pelo celular.', cat: 0, why: 'Descreve algo que o sistema faz: um comportamento, uma função.' },
+      { t: 'A agenda precisa abrir em até 2 segundos, mesmo com 50 pessoas usando ao mesmo tempo.', cat: 1, why: 'Não diz o que o sistema faz, e sim quão bem ele faz: desempenho.' },
+      { t: 'Retorno em até 15 dias após a consulta não é cobrado.', cat: 2, why: 'É uma política da clínica. Existiria mesmo sem sistema, no papel e na recepção.' },
+      { t: 'O sistema envia um lembrete 24 horas antes da consulta.', cat: 0, why: 'Outra ação do sistema, com gatilho definido: funcional.' },
+      { t: 'Os dados dos tutores devem ser protegidos de acordo com a LGPD.', cat: 1, why: 'É uma restrição de qualidade (segurança e conformidade) que vale para o sistema inteiro.' },
+    ],
+    conceito: { titulo: 'Três tipos de requisito', texto: 'Funcional descreve o que o sistema faz. Não funcional descreve como ele deve se comportar: desempenho, segurança, usabilidade, disponibilidade. Regra de negócio é uma política da organização que o sistema precisa respeitar, e que existiria mesmo sem software.' } },
+
+  m3: { npc: 'julia', tema: 'Requisito verificável', tipo: 'escolha',
+    contexto: 'Oi! Júlia, do QA. Chegou este requisito para eu testar: "O cancelamento de consulta deve ser fácil." Como é que eu provo que está fácil? Preciso de um critério de aceite de verdade.',
+    pergunta: 'Qual critério de aceite deixa o requisito testável?',
+    opcoes: [
+      { t: 'Dado que há consulta marcada com mais de 2h de antecedência, quando o tutor cancela, então o horário é liberado e ele é avisado.', ok: true, why: 'Tem contexto, ação e resultado observáveis. Qualquer pessoa consegue executar e dizer se passou ou falhou.' },
+      { t: 'Dado que o tutor quer cancelar uma consulta, quando ele toca em Cancelar, então o processo é simples, rápido e intuitivo para ele.', why: 'Usa o formato, mas "simples, rápido e intuitivo" continua sem medida. O formato não salva um conteúdo vago.' },
+      { t: 'Dado que o tutor cancelou uma consulta, quando ele volta ao aplicativo, então a experiência de cancelamento foi agradável e fácil.', why: '"Agradável" e "fácil" dependem de quem avalia. Não existe resultado observável para dizer se passou ou falhou.' },
+      { t: 'Dado que o tutor está no aplicativo, quando ele procura a opção de cancelar, então encontra um botão grande e vermelho na tela.', why: 'Descreve uma decisão de design, não o resultado do cancelamento. Não diz o que acontece com a consulta depois do toque.' },
+    ],
+    conceito: { titulo: 'Verificável, com Dado, Quando, Então', texto: 'Um requisito é verificável quando existe um procedimento com resultado objetivo que prova se ele foi atendido. O formato Dado (contexto), Quando (ação), Então (resultado esperado) ajuda a escrever critérios de aceite assim. A ISO/IEC/IEEE 29148 inclui a verificabilidade entre as características de um bom requisito.' } },
+
+  m4: { npc: 'helena', tema: 'As fases do processo', tipo: 'escolha',
+    contexto: 'Sou a Helena, gerente de projetos. Semana que vem vamos sentar com a Dona Célia, ler com ela o documento que escrevemos e perguntar: "É isso mesmo que a senhora precisa?"',
+    pergunta: 'Essa conversa pertence a qual fase do processo de Engenharia de Requisitos?',
+    opcoes: [
+      { t: 'Validação', ok: true, why: 'Validar é confirmar, com quem tem a necessidade, que o requisito certo foi escrito. É a pergunta "estamos construindo o produto certo?".' },
+      { t: 'Elicitação', why: 'Elicitação é descobrir as necessidades. Aqui elas já foram descobertas e escritas; o objetivo agora é conferir.' },
+      { t: 'Especificação', why: 'Especificar é escrever os requisitos de forma organizada. Essa etapa já aconteceu antes da reunião.' },
+      { t: 'Gerência de requisitos', why: 'A gerência cuida de mudanças, versões e rastreabilidade ao longo do projeto, não da confirmação com a cliente.' },
+    ],
+    conceito: { titulo: 'O processo de Engenharia de Requisitos', texto: 'Elicitação descobre as necessidades, análise organiza e resolve conflitos, especificação registra, validação confirma com os interessados e gerência acompanha as mudanças. Na prática as fases se repetem em ciclos, não em linha reta.' } },
+
+  m5: { npc: 'helena', tema: 'Quem manda e quem se importa', tipo: 'escolha',
+    contexto: 'Montei o mapa de interessados da clínica. O Conselho Regional de Medicina Veterinária pode barrar o sistema se o prontuário não seguir as normas, mas não tem o menor interesse no nosso dia a dia.',
+    pergunta: 'Na matriz poder e interesse, qual a estratégia para o Conselho?',
+    opcoes: [
+      { t: 'Manter satisfeito: atender às exigências sem excesso de detalhe.', ok: true, why: 'Alto poder e baixo interesse. Ignorar é perigoso, mas chamar para cada reunião também não faz sentido.' },
+      { t: 'Gerenciar de perto: envolvê-lo em todas as reuniões do projeto.', why: 'Essa é a estratégia para alto poder e alto interesse, como a Dona Célia, que é a patrocinadora.' },
+      { t: 'Manter informado: enviar relatórios periódicos sobre o andamento.', why: 'É para quem tem muito interesse e pouco poder, como os veterinários que vão usar o sistema.' },
+      { t: 'Monitorar: acompanhar de longe, com o mínimo de esforço possível.', why: 'Serve para baixo poder e baixo interesse. O Conselho tem poder para barrar o projeto.' },
+    ],
+    conceito: { titulo: 'Matriz poder e interesse', texto: 'Cruza o poder de influência de cada interessado com o interesse dele no projeto. Alto poder e alto interesse: gerenciar de perto. Alto poder e baixo interesse: manter satisfeito. Baixo poder e alto interesse: manter informado. Baixo nos dois: monitorar.' } },
+
+  m6: { npc: 'celia', tema: 'A primeira pergunta', tipo: 'escolha',
+    contexto: 'Olha, meu filho, eu não entendo nada de computador. Só sei que a recepção vive um caos. Pode perguntar o que quiser.',
+    pergunta: 'Qual pergunta abre melhor a entrevista?',
+    opcoes: [
+      { t: 'Me conta como é um dia de atendimento aqui, do telefonema à saída?', ok: true, why: 'Pergunta aberta e neutra: deixa a cliente descrever o processo com as palavras dela e revela coisas que você nem sabia que devia perguntar.' },
+      { t: 'A senhora não acha que um aplicativo resolveria tudo isso, né?', why: 'Pergunta tendenciosa: já sugere a resposta e a solução. A pessoa tende a concordar só para ser gentil.' },
+      { t: 'O sistema vai precisar ter uma agenda online para os tutores, certo?', why: 'Fechada e indutiva. Você está confirmando a sua ideia, não descobrindo a necessidade dela.' },
+      { t: 'Quantos atendimentos a clínica faz por dia, em média, hoje em dia?', why: 'É útil mais adiante, mas fechada demais para abrir a conversa: rende um número e encerra o assunto.' },
+    ],
+    conceito: { titulo: 'Entrevista e vieses', texto: 'Perguntas abertas exploram o problema; fechadas confirmam detalhes. O erro mais comum é a pergunta tendenciosa, que carrega a resposta desejada. Comece amplo, deixe o entrevistado falar e só depois feche nos detalhes.' } },
+
+  m7: { npc: 'tiago', tema: 'Quando o usuário não sabe explicar', tipo: 'escolha',
+    contexto: 'Eu? Eu só vou encaixando os horários, sabe. Não tem muito o que explicar, eu vou fazendo e dá certo. Às vezes eu risco a agenda, às vezes anoto no caderno...',
+    pergunta: 'O Tiago faz o trabalho no automático e não consegue descrevê-lo. Qual técnica usar?',
+    opcoes: [
+      { t: 'Observação: acompanhar o Tiago na recepção durante um turno real.', ok: true, why: 'Quando o conhecimento é tácito, ver a pessoa trabalhando revela os atalhos, o caderno e as exceções que ela nunca lembraria de contar.' },
+      { t: 'Questionário: enviar um formulário online para ele responder em casa.', why: 'Se ele não consegue explicar falando, não vai conseguir por escrito. Questionário funciona para muitas pessoas e perguntas objetivas.' },
+      { t: 'Entrevista de novo: refazer as perguntas, agora mais detalhadas.', why: 'O problema não é a pergunta: o conhecimento está no fazer. Insistir tende a gerar respostas inventadas.' },
+      { t: 'Nenhuma: desenhar a agenda do jeito que a equipe achar melhor.', why: 'Assim se constrói um sistema que ignora como o trabalho acontece de verdade, e a recepção volta para o caderno.' },
+    ],
+    conceito: { titulo: 'Observação', texto: 'Técnica em que o analista acompanha o trabalho real, no local. É indicada quando o usuário tem conhecimento tácito, aquele que ele usa sem perceber. Costuma ser combinada com entrevista, para confirmar o que foi visto.' } },
+
+  m8: { npc: 'bia', tema: 'Uma boa história de usuário', tipo: 'escolha',
+    contexto: 'Oi, sou a Bia, Product Owner deste projeto. Juntei as anotações da entrevista e da observação e comecei o backlog. Qual destas histórias você aprovaria?',
+    pergunta: 'Qual história de usuário está bem escrita?',
+    opcoes: [
+      { t: 'Como tutor, quero remarcar uma consulta pelo celular, para não precisar ligar para a clínica.', ok: true, why: 'Tem quem (tutor), o quê (remarcar pelo celular) e para quê (evitar a ligação). É pequena, tem valor e dá para testar.' },
+      { t: 'Como sistema, quero um banco de dados relacional, para guardar as consultas com segurança.', why: 'O sistema não é usuário, e banco de dados é decisão técnica. Não entrega valor visível para ninguém da clínica.' },
+      { t: 'Como usuário, quero gerenciar tudo o que acontece na clínica, para facilitar a vida de todo mundo.', why: 'Grande demais para estimar ou caber numa iteração, e "tudo" não pode ser testado. Precisa ser quebrada em várias histórias.' },
+      { t: 'Como tutor, quero que o aplicativo seja bonito e moderno, para gostar de usar no dia a dia.', why: 'Bonito e moderno não descreve uma ação nem pode ser testado. Falta um critério objetivo para aceitar a história.' },
+    ],
+    conceito: { titulo: 'User story e INVEST', texto: 'O formato Como (papel), Quero (ação), Para (benefício) centra a história no valor para alguém. INVEST resume o que se espera dela: Independente, Negociável, Valiosa, Estimável, Pequena (Small) e Testável.' } },
+
+  m9: { npc: 'marcos', tema: 'Priorizar com critério', tipo: 'classificar',
+    contexto: 'Marcos, gerente de produto. A primeira versão sai em seis semanas e não cabe tudo. Classifica estes itens para mim, pensando no que a clínica precisa para funcionar no primeiro dia.',
+    pergunta: 'Classifique cada item pelo método MoSCoW.',
+    categorias: ['Must', 'Should', 'Could', "Won't (agora)"],
+    itens: [
+      { t: 'Agendar consulta pelo sistema.', cat: 0, why: 'Sem isso o sistema não tem razão de existir: é o coração da primeira versão.' },
+      { t: 'Lembrete automático por WhatsApp antes da consulta.', cat: 1, why: 'Importante e reduz faltas, mas a recepção consegue ligar manualmente enquanto isso não existe.' },
+      { t: 'Tema escuro no aplicativo.', cat: 2, why: 'Agrada, mas ninguém deixa de ser atendido sem ele. Entra se sobrar tempo.' },
+      { t: 'Integração com o pet shop da rede vizinha.', cat: 3, why: 'Fica registrado, mas fora desta versão. Won\'t não quer dizer "nunca", e sim "não agora".' },
+    ],
+    conceito: { titulo: 'MoSCoW', texto: 'Must: sem isso a entrega fracassa. Should: importante, mas há alternativa temporária. Could: desejável se sobrar tempo. Won\'t: combinado que fica fora desta entrega. O critério de cada escolha precisa ficar explícito, senão a priorização vira a opinião de quem fala mais alto.' } },
+
+  m10: { npc: 'carla', tema: 'Um documento que se explica sozinho', tipo: 'escolha',
+    contexto: 'Carla, analista sênior. Fiz a revisão cruzada do DDR de outra equipe e parei nesta frase: "O sistema deve processar os pagamentos conforme combinado com o cliente na reunião."',
+    pergunta: 'Qual é o problema principal dessa frase?',
+    opcoes: [
+      { t: 'Depende de um combinado que não está escrito, e quem lê não consegue testar.', ok: true, why: 'O DDR precisa ser compreendido por quem não participou da elicitação. A regra combinada tem que estar no documento.' },
+      { t: 'Está curta demais: um requisito precisa ocupar pelo menos um parágrafo inteiro.', why: 'Tamanho não é critério. Uma frase curta e completa é melhor do que um parágrafo vago.' },
+      { t: 'Deveria estar escrita no formato de caso de uso, com ator e fluxo principal.', why: 'O formato não resolve: um caso de uso que diz "conforme combinado" continua incompleto.' },
+      { t: 'Pagamento é assunto do setor financeiro, não do documento de requisitos.', why: 'Se o sistema processa pagamento, as regras desse processamento são requisitos, e dos importantes.' },
+    ],
+    conceito: { titulo: 'DDR e revisão cruzada', texto: 'O Documento de Definição de Requisitos é lido por quem não participou das conversas: desenvolvimento, QA, auditoria, a própria equipe daqui a meses. Na revisão cruzada, outra equipe lê com um checklist e aponta o que está ambíguo, incompleto ou dependente de informação que não está escrita.' } },
+
+  m11: { npc: 'rafael', tema: 'Caminho principal e exceções', tipo: 'escolha',
+    contexto: 'Tô escrevendo o caso de uso "Agendar consulta". O cenário principal está pronto, mas me enrolei nos fluxos. Dá uma olhada?',
+    pergunta: 'Qual situação é um fluxo de exceção, em que o objetivo do caso de uso não é alcançado?',
+    opcoes: [
+      { t: 'O serviço de pagamento cai e a consulta não pode ser confirmada.', ok: true, why: 'O ator não atinge o objetivo: o caso de uso termina sem agendamento, e o sistema precisa tratar isso de forma controlada.' },
+      { t: 'O tutor troca de veterinário porque o primeiro não tinha horário.', why: 'É um fluxo alternativo: o caminho muda, mas a consulta acaba agendada.' },
+      { t: 'O tutor escolhe data e horário disponíveis e confirma o agendamento.', why: 'Esse é o cenário principal, o caminho mais comum até o objetivo.' },
+      { t: 'O tutor precisa estar com o cadastro ativo antes de poder agendar.', why: 'É uma pré-condição: algo que precisa ser verdade antes de o caso de uso começar.' },
+    ],
+    conceito: { titulo: 'Caso de uso', texto: 'Descreve a interação entre um ator e o sistema para alcançar um objetivo. O cenário principal é o caminho mais comum; fluxos alternativos são desvios que ainda chegam ao objetivo; fluxos de exceção tratam situações em que o objetivo não é alcançado.' } },
+
+  m12: { npc: 'nina', tema: 'Modelo de domínio', tipo: 'escolha',
+    contexto: 'Oi, Nina, design de produto. Vou desenhar o modelo de domínio da clínica para a equipe entender o negócio antes de pensar em telas e tabelas.',
+    pergunta: 'Qual conjunto de classes pertence a um modelo de domínio?',
+    opcoes: [
+      { t: 'Tutor, Animal, Consulta e Veterinário, com suas associações.', ok: true, why: 'São conceitos do negócio, com os nomes que a clínica usa. O modelo explica o domínio sem decidir nada de implementação.' },
+      { t: 'ConsultaController, ConsultaRepository e ConsultaDAO, com métodos.', why: 'São classes de projeto de software. Colocá-las no modelo de requisitos antecipa decisões técnicas que ainda nem precisam ser tomadas.' },
+      { t: 'Tabela tb_consulta, com chave estrangeira id_animal e índices.', why: 'Isso é modelo de banco de dados. Útil depois, mas descreve armazenamento, não o negócio.' },
+      { t: 'TelaLogin, BotaoConfirmar, MenuLateral e as telas de agenda.', why: 'São elementos de interface. O modelo de domínio descreve os conceitos, não as telas.' },
+    ],
+    conceito: { titulo: 'UML de apoio', texto: 'Em requisitos, o diagrama de classes de domínio e o diagrama de atividades ajudam a entender o negócio e o fluxo do processo. O cuidado é não transformar o modelo em projeto de software, com controllers, tabelas e telas antes da hora.' } },
+
+  m13: { npc: 'julia', tema: 'Não funcional com número', tipo: 'escolha',
+    contexto: 'Voltei! Agora é com os não funcionais. A Dona Célia pediu que "o sistema esteja sempre disponível". Eu não tenho como testar "sempre".',
+    pergunta: 'Qual reescrita torna o requisito mensurável?',
+    opcoes: [
+      { t: 'Disponibilidade mínima de 99,5% ao mês, medida por monitor externo, fora manutenções avisadas com 48h.', ok: true, why: 'Tem número, unidade, período, forma de medição e condição. Dá para verificar no fim de cada mês.' },
+      { t: 'Disponibilidade de 100% do tempo, todos os dias do ano, sem nenhuma falha ou interrupção de serviço aceita.', why: 'Tem número, mas é irreal: nenhum serviço garante 100%. Um requisito impossível de cumprir também é um defeito.' },
+      { t: 'O sistema deve ser altamente disponível, robusto e tolerante a falhas em qualquer situação.', why: 'Continua vago: "altamente" e "robusto" não dizem como medir.' },
+      { t: 'O sistema deve rodar em servidores de boa qualidade, com redundância, backup e manutenção frequente.', why: 'Fala de solução, não de resultado. E "boa qualidade" não é verificável.' },
+    ],
+    conceito: { titulo: 'Requisito não funcional mensurável', texto: 'Um requisito não funcional bem escrito declara métrica, valor, unidade e condição de medição. Assim cada atributo de qualidade (desempenho, disponibilidade, usabilidade, segurança) vira um teste ou uma medição.' } },
+
+  m14: { npc: 'tiago', tema: 'O protótipo como pergunta', tipo: 'escolha',
+    contexto: 'Olha, gostei da tela! Mas... e as emergências? Todo dia chega bicho atropelado e a gente encaixa no meio da agenda. Aqui não tem onde fazer isso.',
+    pergunta: 'O que fazer com essa descoberta na validação do protótipo?',
+    opcoes: [
+      { t: 'Registrar a necessidade, ajustar requisito e protótipo, e validar de novo com ele.', ok: true, why: 'É para isso que o protótipo existe: provocar descobertas antes do código. Mudar agora custa pouco.' },
+      { t: 'Explicar que emergência não estava no escopo combinado e seguir com a tela como está.', why: 'O sistema seria entregue sem cobrir uma situação diária. A recepção voltaria para o caderno no primeiro atendimento de urgência.' },
+      { t: 'Anotar a sugestão para uma versão futura e pedir que ele se adapte à tela.', why: 'Adiar algo que acontece todo dia deixa a recepção sem saída. O usuário mostrou uma necessidade real do trabalho, não uma sugestão.' },
+      { t: 'Pedir ao Rafael que programe o encaixe direto, sem mexer no documento.', why: 'A mudança fica sem rastro no documento, sem critério de aceite e sem teste. Some na próxima revisão.' },
+    ],
+    conceito: { titulo: 'Prototipação e validação', texto: 'O protótipo é uma pergunta feita ao usuário, não uma entrega. Validar com quem vai usar revela necessidades que nenhuma entrevista mostrou. O que aparecer deve ser registrado, refletido no requisito e validado de novo.' } },
+
+  m15: { npc: 'otavio', tema: 'Rastreabilidade', tipo: 'escolha',
+    contexto: 'Otávio, líder de QA. Montei a matriz de rastreabilidade do DDR. O RF-07, "exportar relatório de vacinas em PDF", não está ligado a nenhuma necessidade dos interessados, e nenhum teste aponta para ele.',
+    pergunta: 'O que a matriz está sinalizando?',
+    opcoes: [
+      { t: 'Um requisito sem origem nem teste: investigar de onde veio e, se valer, criar o teste.', ok: true, why: 'A matriz liga necessidade, requisito e teste. Lacuna para trás indica requisito sem justificativa; lacuna para frente indica requisito sem verificação.' },
+      { t: 'Nada de errado: todo documento tem alguns requisitos soltos, e isso é esperado no projeto.', why: 'Requisito solto é risco. Ou é trabalho desnecessário, ou é uma necessidade real que perdeu o contexto.' },
+      { t: 'Que o RF-07 é o mais independente e, por isso, deve ser implementado primeiro.', why: 'Independência não tem relação com a falta de origem. A matriz está apontando um problema, não uma prioridade.' },
+      { t: 'Que a matriz foi montada errada e precisa ser refeita do zero pela equipe de QA.', why: 'A matriz fez o trabalho dela: revelou uma lacuna. O que precisa de ajuste é o requisito.' },
+    ],
+    conceito: { titulo: 'Inspeção e matriz de rastreabilidade', texto: 'A matriz liga cada necessidade aos requisitos que a atendem e cada requisito aos testes que o verificam. Mostra requisitos sem origem, necessidades não atendidas e o impacto de uma mudança. Junto com a inspeção por checklist, é a base da verificação do documento.' } },
+
+  m16: { npc: 'helena', tema: 'Mudança depois da baseline', tipo: 'escolha',
+    contexto: 'O DDR v2 foi aprovado e virou a nossa linha de base. Hoje a Dona Célia ligou: quer que o sistema também controle o estoque de vacinas.',
+    pergunta: 'Qual é o caminho correto?',
+    opcoes: [
+      { t: 'Abrir solicitação de mudança, analisar o impacto, decidir com a patrocinadora e versionar.', ok: true, why: 'A baseline não impede a mudança: ela dá a referência para medir o impacto e decidir com consciência.' },
+      { t: 'Incluir já na sprint atual, porque o pedido vem da patrocinadora e cliente tem sempre razão.', why: 'Sem análise de impacto, o prazo estoura e ninguém sabe o que foi trocado pelo quê.' },
+      { t: 'Recusar o pedido, porque depois da baseline aprovada nenhum requisito pode mudar mais.', why: 'A baseline é um ponto de referência, não um congelamento eterno. Mudanças legítimas passam pelo controle.' },
+      { t: 'Repassar aos desenvolvedores, para que decidam no código qual a melhor forma de encaixar.', why: 'Decisão de escopo é do negócio. Tomá-la no código apaga o rastro, e o documento deixa de refletir o sistema.' },
+    ],
+    conceito: { titulo: 'Baseline e controle de mudanças', texto: 'A baseline é a versão aprovada dos requisitos, usada como referência. Toda mudança posterior passa por solicitação formal, análise de impacto, decisão e versionamento. Isso não trava o projeto: torna a mudança visível e negociável.' } },
+
+  m17: { npc: 'marcos', tema: 'Ágil e tradicional', tipo: 'escolha',
+    contexto: 'Outro cliente nosso diz que "no ágil não tem requisito, tem só backlog". Eu discordo, mas queria ouvir você.',
+    pergunta: 'O que permanece quando o documento dá lugar a um backlog vivo?',
+    opcoes: [
+      { t: 'Requisitos claros, verificáveis e rastreáveis; mudam o momento e a forma de detalhar.', ok: true, why: 'No ágil, o detalhamento acontece mais perto da construção, em histórias e critérios de aceite, mas a qualidade do requisito continua valendo.' },
+      { t: 'Nada: no ágil basta conversar com o cliente e programar, sem registrar requisitos.', why: 'Conversa sem registro vira memória de quem estava presente. Critério de aceite continua sendo escrito.' },
+      { t: 'O backlog, que passa a ser apenas uma lista de tarefas técnicas para o time de desenvolvimento.', why: 'Um backlog bem feito é feito de valor para o usuário, não de tarefas soltas de implementação.' },
+      { t: 'A decisão do time, porque no ágil o cliente deixa de participar das definições.', why: 'É o contrário: o ágil depende da participação frequente de quem representa o negócio, como o Product Owner.' },
+    ],
+    conceito: { titulo: 'Requisitos em contexto ágil e tradicional', texto: 'No tradicional, boa parte do detalhamento vem antes, num documento. No ágil, o backlog evolui e o detalhe chega perto da construção. Cada abordagem tem seu risco: documento que envelhece, ou backlog que perde a visão do todo.' } },
+
+  m18: { npc: 'ruth', tema: 'A defesa', tipo: 'escolha',
+    contexto: 'Sou a Dra. Ruth, consultora externa. A Nexo me chamou para ouvir a defesa do DDR da clínica. Primeira pergunta: por que o agendamento online é Must e o lembrete por WhatsApp é Should?',
+    pergunta: 'Qual resposta sustenta melhor a decisão?',
+    opcoes: [
+      { t: 'O critério registrado: sem agendamento a clínica não opera; sem lembrete, a recepção liga.', ok: true, why: 'Retoma o critério explícito que está no documento, e que veio da entrevista e da observação. É uma decisão rastreável, não uma opinião.' },
+      { t: 'A decisão da equipe: foi o que o grupo achou melhor na reunião em que priorizou o backlog.', why: 'Sem critério, a banca não tem como avaliar a decisão, e a cliente não tem como contestá-la.' },
+      { t: 'A dificuldade técnica: o agendamento é bem mais complexo de programar que o lembrete.', why: 'Dificuldade técnica não define prioridade de negócio. O critério é o valor e o risco para quem usa.' },
+      { t: 'A autoridade do PO: o Product Owner definiu assim, e a prioridade é responsabilidade dele.', why: 'Quem decide importa, mas a defesa precisa mostrar o porquê. "Mandou" não se sustenta numa arguição.' },
+    ],
+    conceito: { titulo: 'Defender um documento de requisitos', texto: 'Cada decisão registrada precisa ter origem (de quem veio), critério (por que foi assim) e verificação (como saber se foi atendida). Um documento assim se defende sozinho e sobrevive à troca de pessoas no projeto.' } },
+};
+
+/* =====================================================================
+   SALAS
+   ===================================================================== */
+const SALAS = [
+  { id: 'recepcao', nome: 'Recepção', unidade: 'Fundamentos', emoji: '🛎️', W: 9, H: 8, porta: 5, inicio: [1, 5],
+    piso: ['#E9DFCB', '#DDD1B9'], parede: ['#9EC3E6', '#BAD6F0'],
+    moveis: [
+      { t: 'tapete', x: 3, y: 4, w: 3, d: 3, cor: '#C0504D' },
+      { t: 'balcao', x: 3, y: 2, w: 2, d: 1 },
+      { t: 'planta', x: 8, y: 0 }, { t: 'planta', x: 0, y: 7 },
+      { t: 'estante', x: 1, y: 0 },
+      { t: 'pc', x: 7, y: 0 }, { t: 'pc', x: 8, y: 2 },
+      { t: 'bebedouro', x: 0, y: 1 },
+      { t: 'sofa', x: 8, y: 5 }, { t: 'sofa', x: 8, y: 6 },
+    ],
+    paredeObj: [
+      { lado: 'dir', a: 4.3, b: 6.5, h1: 34, h2: 86, t: 'quadro' },
+      { lado: 'dir', a: 2.0, b: 3.2, h1: 44, h2: 92, t: 'poster', cor: '#2F80ED' },
+      { lado: 'esq', a: 1.6, b: 3.6, h1: 44, h2: 92, t: 'janela' },
+    ],
+    npcs: [ { id: 'lia', x: 4, y: 1, dir: 1 }, { id: 'rafael', x: 7, y: 2, dir: 0 }, { id: 'julia', x: 6, y: 6, dir: 1 }, { id: 'helena', x: 2, y: 6, dir: 0 } ],
+    missoes: ['m1', 'm2', 'm3', 'm4', 'm5'],
+    intro: { titulo: 'Primeiro dia na Nexo', texto: 'Aqui você conhece a equipe e o projeto do semestre: o sistema de agendamento da Clínica Veterinária Patas & Cia.',
+      itens: ['Por que tantos projetos falham por causa de requisitos', 'Requisito funcional, não funcional e regra de negócio', 'O que torna um requisito verificável', 'As fases do processo e quem são os interessados'] } },
+
+  { id: 'cliente', nome: 'Sala do Cliente', unidade: 'Elicitação e especificação', emoji: '☕', W: 8, H: 7, porta: 4, inicio: [1, 4],
+    piso: ['#D9E7D5', '#CCDCC7'], parede: ['#E8C9A0', '#F2D8B6'],
+    moveis: [
+      { t: 'tapete', x: 2, y: 4, w: 3, d: 2, cor: '#5B8DB8' },
+      { t: 'mesa', x: 3, y: 2, w: 2, d: 1 },
+      { t: 'cadeira', x: 3, y: 1, costas: 'y0' }, { t: 'cadeira', x: 4, y: 1, costas: 'y0' },
+      { t: 'planta', x: 7, y: 0 }, { t: 'estante', x: 0, y: 0 },
+      { t: 'sofa', x: 7, y: 4 }, { t: 'sofa', x: 7, y: 5 },
+      { t: 'bebedouro', x: 0, y: 6 },
+    ],
+    paredeObj: [
+      { lado: 'dir', a: 1.4, b: 3.6, h1: 34, h2: 86, t: 'quadro' },
+      { lado: 'dir', a: 4.6, b: 6.4, h1: 44, h2: 92, t: 'janela' },
+      { lado: 'esq', a: 1.2, b: 2.6, h1: 44, h2: 90, t: 'poster', cor: '#27AE60' },
+    ],
+    npcs: [ { id: 'celia', x: 2, y: 2, dir: 0 }, { id: 'tiago', x: 6, y: 1, dir: 1 }, { id: 'bia', x: 5, y: 5, dir: 1 } ],
+    missoes: ['m6', 'm7', 'm8'],
+    intro: { titulo: 'Frente a frente com a cliente', texto: 'Hora de descobrir o que a clínica precisa, com quem vive o problema todos os dias.',
+      itens: ['Como abrir uma entrevista sem induzir a resposta', 'O que fazer quando o usuário não sabe explicar o próprio trabalho', 'Como transformar o que foi ouvido em histórias de usuário'] } },
+
+  { id: 'reunioes', nome: 'Sala de Reuniões', unidade: 'Especificação e modelos', emoji: '📋', W: 10, H: 8, porta: 5, inicio: [1, 5],
+    piso: ['#D8D3E8', '#CAC4DD'], parede: ['#A7C4B5', '#BFD6C9'],
+    moveis: [
+      { t: 'tapete', x: 3, y: 2, w: 4, d: 4, cor: '#6A8D73' },
+      { t: 'mesa', x: 4, y: 3, w: 2, d: 1 }, { t: 'mesa', x: 4, y: 4, w: 2, d: 1 },
+      { t: 'cadeira', x: 3, y: 3, costas: 'x0' }, { t: 'cadeira', x: 3, y: 4, costas: 'x0' }, { t: 'cadeira', x: 6, y: 3, costas: 'x1' }, { t: 'cadeira', x: 6, y: 4, costas: 'x1' },
+      { t: 'planta', x: 9, y: 0 }, { t: 'planta', x: 0, y: 0 },
+      { t: 'estante', x: 2, y: 0 }, { t: 'armario', x: 9, y: 4 },
+    ],
+    paredeObj: [
+      { lado: 'dir', a: 4.0, b: 7.6, h1: 30, h2: 90, t: 'quadro' },
+      { lado: 'esq', a: 1.4, b: 3.4, h1: 44, h2: 92, t: 'janela' },
+    ],
+    npcs: [ { id: 'marcos', x: 5, y: 2, dir: 1 }, { id: 'carla', x: 8, y: 2, dir: 1 }, { id: 'rafael', x: 7, y: 6, dir: 2 }, { id: 'nina', x: 2, y: 6, dir: 0 } ],
+    missoes: ['m9', 'm10', 'm11', 'm12'],
+    intro: { titulo: 'Do backlog ao documento', texto: 'O que foi descoberto precisa ser priorizado, organizado e escrito para quem não estava nas conversas.',
+      itens: ['Priorização com MoSCoW e critério explícito', 'O Documento de Definição de Requisitos e a revisão cruzada', 'Casos de uso: cenário principal, alternativo e exceção', 'Modelos UML que apoiam o requisito sem virar projeto'] } },
+
+  { id: 'qa', nome: 'Laboratório de QA', unidade: 'Verificação e validação', emoji: '🔬', W: 9, H: 8, porta: 5, inicio: [1, 5],
+    piso: ['#DCE3EA', '#CFD8E1'], parede: ['#C7B8E0', '#D8CCEC'],
+    moveis: [
+      { t: 'tapete', x: 3, y: 4, w: 3, d: 2, cor: '#8E7CC3' },
+      { t: 'pc', x: 2, y: 0 }, { t: 'pc', x: 3, y: 0 }, { t: 'pc', x: 4, y: 0 }, { t: 'pc', x: 5, y: 0 },
+      { t: 'cadeira', x: 2, y: 1, costas: 'y1' }, { t: 'cadeira', x: 4, y: 1, costas: 'y1' },
+      { t: 'planta', x: 8, y: 0 }, { t: 'estante', x: 0, y: 0 },
+      { t: 'pc', x: 8, y: 3 }, { t: 'pc', x: 8, y: 4 },
+      { t: 'bebedouro', x: 0, y: 7 },
+    ],
+    paredeObj: [
+      { lado: 'dir', a: 6.0, b: 7.8, h1: 34, h2: 88, t: 'quadro' },
+      { lado: 'esq', a: 1.3, b: 3.5, h1: 44, h2: 92, t: 'janela' },
+    ],
+    npcs: [ { id: 'julia', x: 3, y: 2, dir: 1 }, { id: 'tiago', x: 7, y: 4, dir: 0 }, { id: 'otavio', x: 5, y: 6, dir: 1 } ],
+    missoes: ['m13', 'm14', 'm15'],
+    intro: { titulo: 'Provar que está certo', texto: 'Antes de entregar, é preciso mostrar que os requisitos são mensuráveis, que atendem quem vai usar e que nada ficou solto.',
+      itens: ['Requisitos não funcionais com número, unidade e condição', 'Protótipo e validação com o usuário', 'Inspeção com checklist e matriz de rastreabilidade'] } },
+
+  { id: 'diretoria', nome: 'Diretoria', unidade: 'Gerência de requisitos', emoji: '🏛️', W: 8, H: 7, porta: 4, inicio: [1, 4],
+    piso: ['#E4D3C0', '#D8C4AE'], parede: ['#B7A48E', '#CBB9A4'],
+    moveis: [
+      { t: 'tapete', x: 2, y: 3, w: 4, d: 3, cor: '#9C4A2F' },
+      { t: 'mesa', x: 3, y: 1, w: 2, d: 1 }, { t: 'pc', x: 5, y: 1 },
+      { t: 'armario', x: 7, y: 0 }, { t: 'planta', x: 0, y: 0 }, { t: 'estante', x: 1, y: 0 },
+      { t: 'sofa', x: 7, y: 3 }, { t: 'sofa', x: 7, y: 4 },
+      { t: 'planta', x: 0, y: 6 },
+    ],
+    paredeObj: [
+      { lado: 'dir', a: 3.0, b: 5.4, h1: 34, h2: 86, t: 'quadro' },
+      { lado: 'dir', a: 1.6, b: 2.6, h1: 46, h2: 90, t: 'poster', cor: '#C0392B' },
+      { lado: 'esq', a: 1.0, b: 3.0, h1: 44, h2: 92, t: 'janela' },
+    ],
+    npcs: [ { id: 'helena', x: 4, y: 0, dir: 1 }, { id: 'marcos', x: 2, y: 5, dir: 0 }, { id: 'ruth', x: 6, y: 5, dir: 1 } ],
+    missoes: ['m16', 'm17', 'm18'],
+    intro: { titulo: 'Quando tudo muda', texto: 'Documento aprovado não é documento parado. Aqui o projeto encara mudança, método e a defesa final.',
+      itens: ['Baseline, solicitação de mudança e análise de impacto', 'Requisitos em contexto ágil e em contexto tradicional', 'A defesa do documento: origem, critério e verificação'] } },
+];
+const TOTAL = Object.keys(MISSOES).length;
+
+/* =====================================================================
+   AVATAR
+   ===================================================================== */
+const PELES = ['#FFE0BD', '#F1C27D', '#E0AC69', '#C68642', '#8D5524', '#5C3A1E'];
+const CABELOS = ['#1A1A1A', '#4A2C17', '#8B5A2B', '#D4A017', '#B03A2E', '#8C8C8C', '#6C3483', '#2E86C1'];
+const ESTILOS = [['curto', 'Curto'], ['longo', 'Longo'], ['cacheado', 'Cacheado'], ['coque', 'Coque'], ['careca', 'Sem cabelo']];
+const CAMISAS = ['#E74C3C', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6', '#E67E22', '#1ABC9C', '#34495E'];
+const CALCAS = ['#2C3E50', '#1B2631', '#5D4037', '#7F8C8D', '#1F4E79'];
+
+function shade(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) + amt, g = ((n >> 8) & 255) + amt, b = (n & 255) + amt;
+  r = Math.max(0, Math.min(255, r)); g = Math.max(0, Math.min(255, g)); b = Math.max(0, Math.min(255, b));
+  return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+}
+function circ(ctx, x, y, r, c) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+
+/* desenha o boneco com os pés em (0,0). dir: 0 frente-direita, 1 frente-esquerda, 2 costas-esquerda, 3 costas-direita */
+function drawAvatar(ctx, look, dir, t, walking) {
+  const front = dir === 0 || dir === 1;
+  const flip = dir === 1 || dir === 2;
+  const sw = walking ? Math.sin(t * 11) : 0;
+  const bob = walking ? Math.abs(Math.sin(t * 11)) * 1.6 : Math.sin(t * 2.2) * 0.5;
+  ctx.save();
+  if (flip) ctx.scale(-1, 1);
+  ctx.fillStyle = 'rgba(0,0,0,.22)';
+  ctx.beginPath(); ctx.ellipse(0, 0, 13, 5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.translate(0, -bob);
+  const pele = look.pele, cam = look.camisa, cal = look.calca;
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,.28)';
+
+  // braço de trás
+  ctx.save(); ctx.translate(0, -sw * 2.2);
+  ctx.fillStyle = shade(cam, -30); rr(ctx, -12, -41, 4.5, 15, 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(pele, -20); ctx.fillRect(-12, -27, 4.5, 4);
+  ctx.restore();
+
+  // pernas
+  const legs = [[-6, -sw * 3, Math.max(0, sw) * 2], [1, sw * 3, Math.max(0, -sw) * 2]];
+  legs.forEach(([lx, dx, lift], i) => {
+    ctx.fillStyle = i === 0 ? shade(cal, -18) : cal;
+    rr(ctx, lx + dx, -22 - lift, 5.5, 20, 1.5); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#222';
+    rr(ctx, lx + dx - 0.5, -3.5 - lift, 7, 4, 1.5); ctx.fill();
+  });
+
+  // tronco
+  ctx.fillStyle = cam; rr(ctx, -9, -43, 18, 23, 4); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(cam, -22); ctx.fillRect(-9, -39, 3, 17);
+  ctx.fillStyle = shade(cal, -10); ctx.fillRect(-9, -23, 18, 2.5);
+  if (front) { ctx.fillStyle = shade(cam, 25); ctx.fillRect(1, -42, 5, 3); }
+
+  // braço da frente
+  ctx.save(); ctx.translate(0, sw * 2.2);
+  ctx.fillStyle = shade(cam, -8); rr(ctx, 7.5, -41, 4.5, 15, 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = pele; ctx.fillRect(7.5, -27, 4.5, 4);
+  ctx.restore();
+
+  // pescoço e cabeça
+  ctx.fillStyle = shade(pele, -25); ctx.fillRect(-3, -46, 6, 4);
+  ctx.fillStyle = pele; rr(ctx, -8, -62, 17, 18, 5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(pele, -18); ctx.fillRect(-8, -56, 3, 8);
+
+  const hc = look.cabelo, st = look.estilo;
+  if (front) {
+    ctx.fillStyle = '#1B1B1B';
+    ctx.fillRect(2, -54, 2, 3.2); ctx.fillRect(6, -54, 2, 3.2);
+    ctx.fillStyle = shade(pele, -45); ctx.fillRect(3, -48, 4, 1.3);
+    ctx.fillStyle = shade(pele, -12); ctx.fillRect(-6, -54, 3, 4);
+    ctx.fillStyle = hc;
+    if (st === 'curto') { rr(ctx, -9, -65, 19, 8, 4); ctx.fill(); ctx.fillRect(-9, -60, 5, 10); ctx.fillRect(6, -60, 4, 3); }
+    else if (st === 'longo') { ctx.fillStyle = shade(hc, -15); rr(ctx, -11, -60, 8, 26, 3); ctx.fill(); ctx.fillStyle = hc; rr(ctx, -9, -65, 19, 8, 4); ctx.fill(); ctx.fillRect(7, -60, 3, 12); }
+    else if (st === 'cacheado') { [[-6, -61, 6], [0, -64, 6], [6, -62, 5], [-9, -55, 5], [9, -57, 4], [-4, -66, 4]].forEach(([x, y, r]) => circ(ctx, x, y, r, hc)); }
+    else if (st === 'coque') { rr(ctx, -9, -65, 19, 7, 4); ctx.fill(); ctx.fillRect(-9, -60, 4, 8); circ(ctx, -7, -67, 5, hc); }
+  } else {
+    ctx.fillStyle = hc;
+    if (st === 'curto') { rr(ctx, -9, -65, 19, 18, 5); ctx.fill(); }
+    else if (st === 'longo') { rr(ctx, -10, -65, 21, 32, 5); ctx.fill(); }
+    else if (st === 'cacheado') { [[-6, -61, 6], [1, -63, 6], [6, -58, 5], [-7, -53, 5], [3, -52, 5], [0, -57, 6]].forEach(([x, y, r]) => circ(ctx, x, y, r, hc)); }
+    else if (st === 'coque') { rr(ctx, -9, -64, 19, 16, 5); ctx.fill(); circ(ctx, 0, -67, 5.5, hc); }
+    else { ctx.fillStyle = shade(pele, 18); ctx.fillRect(-3, -60, 5, 2); }
+  }
+  ctx.restore();
+}
+
+function retratoCanvas(look, size, dir) {
+  const c = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  c.width = size * dpr; c.height = size * dpr; c.style.width = size + 'px'; c.style.height = size + 'px';
+  const ctx = c.getContext('2d');
+  if (!ctx) return c;
+  const s = size / 46;
+  ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * size / 2, dpr * (size + 38 * s));
+  drawAvatar(ctx, look, dir == null ? 0 : dir, 0, false);
+  return c;
+}
+
+/* =====================================================================
+   TRILHA SONORA (composição original, gerada em tempo real)
+   Cada sala tem um gênero próprio: ritmo, instrumentos e harmonia.
+   ===================================================================== */
+const Musica = (() => {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  let ctx = null, master = null, musGain = null, sfxGain = null, eco = null, ruido = null, timer = null;
+  let ligado = true, iniciado = false, atual = null, pedido = 'menu';
+  let passo = 0, compasso = 0, voltas = 0, proxT = 0;
+  const ondas = {};
+  const PC = { C: 0, Db: 1, D: 2, Eb: 3, E: 4, F: 5, Gb: 6, G: 7, Ab: 8, A: 9, Bb: 10, B: 11 };
+  const TIPOS = { maj7: [0, 4, 7, 11, 14], m7: [0, 3, 7, 10, 14], '7': [0, 4, 7, 10, 14], '6': [0, 4, 7, 9, 14] };
+  const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+  function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+  /* ---------- timbres ---------- */
+  function onda(duty) {
+    if (ondas[duty]) return ondas[duty];
+    const N = 32, re = new Float32Array(N), im = new Float32Array(N);
+    for (let n = 1; n < N; n++) im[n] = (2 / (n * Math.PI)) * Math.sin(n * Math.PI * duty);
+    return (ondas[duty] = ctx.createPeriodicWave(re, im));
+  }
+  function voz(t, freq, dur, vol, opt) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    if (opt.duty) o.setPeriodicWave(onda(opt.duty)); else o.type = opt.tipo || 'triangle';
+    o.frequency.setValueAtTime(freq, t);
+    if (opt.vib) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = 5.2; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(freq * 0.006, t + 0.22); l.connect(lg); lg.connect(o.frequency); l.start(t); l.stop(t + dur + 0.4); }
+    let no = o;
+    if (opt.lp) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = opt.lp; f.Q.value = opt.q || 0.8; o.connect(f); no = f; }
+    const a = opt.a || 0.008, rel = opt.r || 0.08, sus = opt.sus == null ? 0.7 : opt.sus;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + a);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol * sus), t + a + Math.min(0.14, dur * 0.5));
+    g.gain.setValueAtTime(Math.max(0.0002, vol * sus), t + dur);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur + rel);
+    no.connect(g);
+    let saida = g;
+    if (opt.trem) { const tg = ctx.createGain(), l = ctx.createOscillator(), lg = ctx.createGain(); tg.gain.value = 0.8; l.frequency.value = 4.2; lg.gain.value = 0.2; l.connect(lg); lg.connect(tg.gain); g.connect(tg); saida = tg; l.start(t); l.stop(t + dur + rel + 0.1); }
+    saida.connect(opt.dest || musGain);
+    if (opt.eco) saida.connect(eco);
+    o.start(t); o.stop(t + dur + rel + 0.05);
+  }
+  const I = {
+    pulso: (t, m, d, v, duty, lp, x) => voz(t, hz(m), d, v, Object.assign({ duty: duty || 0.25, lp: lp || 2300, r: 0.09, sus: 0.45 }, x || {})),
+    pluck: (t, m, d, v) => voz(t, hz(m), d, v, { tipo: 'triangle', lp: 2800, a: 0.004, r: 0.3, sus: 0.12 }),
+    caixinha: (t, m, d, v) => { voz(t, hz(m), d, v, { tipo: 'sine', a: 0.003, r: 0.8, sus: 0.06, eco: true }); voz(t, hz(m) * 3, d * 0.5, v * 0.16, { tipo: 'sine', a: 0.002, r: 0.25, sus: 0.03 }); },
+    rhodes: (t, m, d, v) => { voz(t, hz(m), d, v, { tipo: 'sine', a: 0.006, r: 0.6, sus: 0.35, trem: true }); voz(t, hz(m) * 2, d * 0.4, v * 0.22, { tipo: 'sine', a: 0.004, r: 0.2, sus: 0.1 }); },
+    serra: (t, m, d, v, lp, x) => voz(t, hz(m), d, v, Object.assign({ tipo: 'sawtooth', lp: lp || 2400, r: 0.06, sus: 0.35 }, x || {})),
+    pad: (t, m, d, v) => voz(t, hz(m), d, v, { tipo: 'triangle', a: 0.35, r: 0.6, sus: 0.9 }),
+    flauta: (t, m, d, v) => voz(t, hz(m), d, v, { tipo: 'sine', a: 0.05, r: 0.18, sus: 0.8, vib: true, eco: true }),
+    baixo: (t, m, d, v) => { voz(t, hz(m), d, v, { tipo: 'triangle', r: 0.06, sus: 0.55 }); voz(t, hz(m), d * 0.6, v * 0.25, { duty: 0.5, lp: 520, r: 0.05, sus: 0.4 }); },
+    baixoSine: (t, m, d, v) => { voz(t, hz(m), d, v, { tipo: 'sine', a: 0.01, r: 0.12, sus: 0.7 }); voz(t, hz(m) * 2, d * 0.3, v * 0.2, { tipo: 'triangle', r: 0.05, sus: 0.2 }); },
+    slap: (t, m, d, v) => { voz(t, hz(m), d, v * 0.6, { duty: 0.5, lp: 1100, q: 3, r: 0.04, sus: 0.3 }); voz(t, hz(m), d, v * 0.7, { tipo: 'triangle', r: 0.05, sus: 0.4 }); },
+    serraBaixo: (t, m, d, v) => voz(t, hz(m), d, v, { tipo: 'sawtooth', lp: 650, q: 4, r: 0.04, sus: 0.3 }),
+  };
+  function batida(t, tipo, vol) {
+    if (!vol) return;
+    if (tipo === 'kick') {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.13);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+      o.connect(g); g.connect(musGain); o.start(t); o.stop(t + 0.3);
+      return;
+    }
+    const cfg = {
+      hat: ['highpass', 7200, 0.7, 0.035], open: ['highpass', 7000, 0.7, 0.18], ride: ['highpass', 5200, 0.6, 0.22],
+      rim: ['bandpass', 1900, 1.4, 0.07], shaker: ['highpass', 5200, 0.8, 0.05], brush: ['bandpass', 2600, 0.6, 0.16],
+      clap: ['bandpass', 1150, 1.2, 0.12], snare: ['bandpass', 1700, 0.8, 0.14],
+    }[tipo];
+    const rep = tipo === 'clap' ? [0, 0.012, 0.024] : [0];
+    rep.forEach((dt) => {
+      const src = ctx.createBufferSource(); src.buffer = ruido;
+      const f = ctx.createBiquadFilter(), g = ctx.createGain();
+      f.type = cfg[0]; f.frequency.value = cfg[1]; f.Q.value = cfg[2];
+      g.gain.setValueAtTime(vol, t + dt); g.gain.exponentialRampToValueAtTime(0.001, t + dt + cfg[3]);
+      src.connect(f); f.connect(g); g.connect(musGain); src.start(t + dt, Math.random() * 0.5); src.stop(t + dt + cfg[3] + 0.02);
+    });
+    if (tipo === 'rim') voz(t, 820, 0.01, vol * 0.35, { duty: 0.5, r: 0.03, sus: 0.3 });
+    if (tipo === 'snare') voz(t, 190, 0.05, vol * 0.5, { tipo: 'triangle', r: 0.05, sus: 0.2 });
+  }
+  function voicing(raiz, tons, lo, hi, semRaiz) {
+    return (semRaiz ? tons.slice(1) : tons.slice(0, 4)).map((i) => { let m = lo + ((raiz + i - lo) % 12 + 12) % 12; if (m > hi) m -= 12; return m; });
+  }
+
+  /* ---------- melodia ---------- */
+  const BANCOS = {
+    normal: { ritmos: [[[0, 3], [3, 3], [6, 2], [8, 4], [12, 2], [14, 2]], [[2, 2], [4, 2], [6, 4], [10, 2], [12, 4]], [[0, 2], [2, 2], [4, 4], [8, 2], [10, 2], [12, 4]], [[0, 6], [6, 2], [8, 2], [10, 6]], [[4, 2], [6, 2], [8, 3], [11, 5]]], fecho: [[0, 4], [4, 4], [8, 8]] },
+    esparsa: { ritmos: [[[0, 8], [8, 8]], [[0, 4], [6, 10]], [[4, 4], [8, 8]], [[0, 6], [8, 8]], [[2, 6], [10, 6]]], fecho: [[0, 16]] },
+    densa: { ritmos: [[[0, 2], [2, 2], [4, 2], [6, 2], [8, 2], [10, 2], [12, 4]], [[0, 1], [1, 1], [2, 2], [4, 2], [6, 2], [8, 4], [12, 4]], [[0, 3], [3, 3], [6, 2], [8, 2], [10, 2], [12, 2], [14, 2]], [[2, 2], [4, 1], [5, 1], [6, 2], [8, 4], [12, 2], [14, 2]]], fecho: [[0, 2], [2, 2], [4, 4], [8, 8]] },
+    valsa: { ritmos: [[[0, 4], [4, 4], [8, 4]], [[0, 6], [6, 2], [8, 4]], [[0, 2], [2, 2], [4, 8]], [[0, 8], [8, 4]]], fecho: [[0, 12]] },
+  };
+  function gerarMelodia(p) {
+    const r = rng(p.seed), B = BANCOS[p.banco];
+    const pick = (a) => a[Math.floor(r() * a.length)];
+    const rA = pick(B.ritmos), rB = pick(B.ritmos.filter((x) => x !== rA)), rC = pick(B.ritmos);
+    const plano = [rA, rB, rA, B.fecho, rA, rB, rC, B.fecho];
+    const [lo, hi] = p.faixa;
+    let prev = Math.round((lo + hi) / 2);
+    const notas = []; let motivo = null;
+    plano.forEach((ritmo, bar) => {
+      const ac = p.prog[bar % p.prog.length], tons = TIPOS[ac[1]].map((i) => (PC[ac[0]] + i) % 12);
+      const cand = []; for (let m = lo; m <= hi; m++) if (tons.includes(m % 12)) cand.push(m);
+      const perto = (alvo) => cand.reduce((b, c) => (Math.abs(c - alvo) < Math.abs(b - alvo) ? c : b), cand[0]);
+      const repetir = (bar === 2 || bar === 4) && motivo;
+      ritmo.forEach(([s, d], k) => {
+        let alvo;
+        if (repetir) alvo = prev + (motivo[k] || 0);
+        else if (ritmo === B.fecho && k === ritmo.length - 1) alvo = prev - 2;
+        else alvo = prev + pick([-5, -3, -2, -1, 1, 2, 3, 4]);
+        if (alvo > hi - 2) alvo -= 5; if (alvo < lo + 2) alvo += 5;
+        let n = perto(alvo);
+        if (n === prev && !repetir && r() < 0.75) {
+          const dirc = alvo >= prev ? cand.filter((c) => c > prev) : cand.filter((c) => c < prev);
+          if (dirc.length) n = alvo >= prev ? dirc[0] : dirc[dirc.length - 1];
+        }
+        notas.push({ bar, s, d, m: n }); prev = n;
+      });
+      if (bar === 0) { const b0 = notas.filter((n) => n.bar === 0); motivo = b0.map((n, i) => (i === 0 ? 0 : n.m - b0[i - 1].m)); }
+    });
+    return notas;
+  }
+
+  /* ---------- estilos ---------- */
+  const PRESETS = {
+    // tela inicial: caixinha de música calma
+    menu: { bpm: 84, passos: 16, swing: 0, seed: 7, banco: 'esparsa', faixa: [72, 88], prog: [['C', 'maj7'], ['A', 'm7'], ['F', 'maj7'], ['G', '6']],
+      bat: { shaker: [2, 6, 10, 14], sv: 0.02 },
+      baixo: [[0, 0, 12]], baixoI: 'baixoSine', bv: 0.12,
+      harm(t, s, h) { if (s === 0) voicing(h.raiz, h.tons, 55, 67).forEach((m) => I.pad(t, m, h.spp * 15, 0.014)); if ([0, 4, 8, 12].includes(s)) { const v = voicing(h.raiz, h.tons, 67, 80); I.caixinha(t, v[(s / 4 + h.bar) % v.length], h.spp * 3, 0.03); } },
+      lead: 'flauta', lv: 0.045 },
+    // recepção: lounge com swing
+    recepcao: { bpm: 112, passos: 16, swing: 0.3, seed: 11, banco: 'normal', faixa: [66, 84], prog: [['C', 'maj7'], ['A', 'm7'], ['D', 'm7'], ['G', '7']],
+      bat: { kick: [0, 8], kv: 0.55, caixa: [4, 12], ct: 'rim', cv: 0.22, hat: [0, 2, 4, 6, 8, 10, 12, 14], hv: 0.06, open: [14] },
+      baixo: [[0, 0, 5], [6, 7, 2], [8, 12, 3], [12, 7, 2], [14, 'ap', 2]], baixoI: 'baixo', bv: 0.2,
+      harm(t, s, h) {
+        if ([2, 6, 10, 13].includes(s) && !(s === 13 && h.bar % 2 === 0)) voicing(h.raiz, h.tons, 57, 70, true).forEach((m) => I.pulso(t, m, h.spp * 1.2, 0.028));
+        if (s === 0) voicing(h.raiz, h.tons, 55, 67).forEach((m) => I.pad(t, m, h.spp * 15, 0.012));
+        if (h.descanso && [0, 6, 10].includes(s)) I.caixinha(t, 76 + ((h.raiz + h.tons[(h.bar + s) % 4]) % 12), h.spp * 3, 0.03);
+      },
+      lead: 'pulso', lv: 0.06 },
+    // sala do cliente: valsa de café, violão dedilhado e flauta
+    cliente: { bpm: 150, passos: 12, swing: 0, seed: 23, banco: 'valsa', faixa: [65, 81], prog: [['F', 'maj7'], ['D', 'm7'], ['G', 'm7'], ['C', '7']],
+      bat: { kick: [0], kv: 0.22, caixa: [4, 8], ct: 'brush', cv: 0.07 },
+      baixo: [[0, 0, 4], [8, 7, 2]], baixoI: 'baixo', bv: 0.17,
+      harm(t, s, h) {
+        const v = voicing(h.raiz, h.tons, 55, 67, true);
+        if (s === 4 || s === 8) v.forEach((m) => I.pluck(t, m, h.spp * 2, 0.035));
+        if ([2, 6, 10].includes(s)) I.pluck(t, v[(s / 2 + h.bar) % v.length] + 12, h.spp * 2, 0.03);
+      },
+      lead: 'flauta', lv: 0.055 },
+    // sala de reuniões: funk de escritório, reto e acelerado
+    reunioes: { bpm: 118, passos: 16, swing: 0, seed: 37, banco: 'densa', faixa: [67, 86], prog: [['D', 'm7'], ['G', '7'], ['E', 'm7'], ['A', '7']],
+      bat: { kick: [0, 7, 8], kv: 0.6, caixa: [4, 12], ct: 'clap', cv: 0.16, hat: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], hv: 0.03, open: [14] },
+      baixo: [[0, 0, 1], [3, 12, 1], [4, 0, 1], [7, 12, 1], [8, 0, 1], [10, 10, 1], [11, 12, 1], [14, 7, 2]], baixoI: 'slap', bv: 0.22,
+      harm(t, s, h) { if ([2, 5, 10, 13].includes(s)) voicing(h.raiz, h.tons, 60, 74, true).forEach((m) => I.serra(t, m, h.spp * 0.8, 0.02, 3200)); },
+      lead: 'serra', lv: 0.04 },
+    // laboratório de QA: eletrônico em tom menor, arpejo com filtro
+    qa: { bpm: 124, passos: 16, swing: 0, seed: 41, banco: 'esparsa', faixa: [69, 86], prog: [['A', 'm7'], ['F', 'maj7'], ['D', 'm7'], ['E', '7']],
+      bat: { kick: [0, 4, 8, 12], kv: 0.6, caixa: [4, 12], ct: 'clap', cv: 0.1, hat: [2, 6, 10, 14], hv: 0.07 },
+      baixo: [[0, 0, 1], [2, 12, 1], [4, 0, 1], [6, 12, 1], [8, 0, 1], [10, 12, 1], [12, 0, 1], [14, 12, 1]], baixoI: 'serraBaixo', bv: 0.16,
+      harm(t, s, h) {
+        const v = voicing(h.raiz, h.tons, 57, 69); const seq = [0, 1, 2, 3, 2, 1, 0, 1];
+        const k = seq[s % 8]; const m = v[k % v.length] + (s % 16 >= 8 ? 12 : 0);
+        const lp = 900 + 1900 * (0.5 + 0.5 * Math.sin(((h.bar * 16 + s) / 128) * Math.PI * 2));
+        I.serra(t, m, h.spp * 0.7, 0.02, lp, { q: 5 });
+        if (s === 0) voicing(h.raiz, h.tons, 52, 64).forEach((n) => I.pad(t, n, h.spp * 15, 0.01));
+      },
+      lead: 'quadrada', lv: 0.04 },
+    // diretoria: balada de jazz, piano elétrico e baixo caminhando
+    diretoria: { bpm: 72, passos: 16, swing: 0.33, seed: 53, banco: 'esparsa', faixa: [65, 82], prog: [['Eb', 'maj7'], ['C', 'm7'], ['F', 'm7'], ['Bb', '7']],
+      bat: { kick: [0], kv: 0.2, caixa: [4, 12], ct: 'brush', cv: 0.08, hat: [0, 4, 6, 8, 12, 14], ht: 'ride', hv: 0.035 },
+      baixo: [[0, 0, 4], [4, 't3', 4], [8, 7, 4], [12, 'ap', 4]], baixoI: 'baixoSine', bv: 0.2,
+      harm(t, s, h) { if (s === 0 || s === 10) voicing(h.raiz, h.tons, 58, 72, true).forEach((m) => I.rhodes(t, m, h.spp * (s === 0 ? 7 : 5), 0.03)); },
+      lead: 'rhodes', lv: 0.065 },
+    // tela final: fanfarra
+    final: { bpm: 132, passos: 16, swing: 0, seed: 67, banco: 'normal', faixa: [67, 86], prog: [['C', '6'], ['F', 'maj7'], ['G', '7'], ['C', '6']],
+      bat: { kick: [0, 8], kv: 0.6, caixa: [4, 12], ct: 'snare', cv: 0.18, hat: [0, 2, 4, 6, 8, 10, 12, 14], hv: 0.04, rufo: true },
+      baixo: [[0, 0, 2], [4, 7, 2], [8, 0, 2], [12, 7, 2]], baixoI: 'baixo', bv: 0.2,
+      harm(t, s, h) { if ([0, 4, 8, 12].includes(s)) voicing(h.raiz, h.tons, 60, 74).forEach((m) => I.pulso(t, m, h.spp * 1.4, 0.022, 0.5, 3400)); },
+      lead: 'pulso', lv: 0.07 },
+  };
+
+  function tocarPasso(t, spp) {
+    const p = atual, ac = p.prog[compasso % p.prog.length], raiz = PC[ac[0]], tons = TIPOS[ac[1]], s = passo;
+    const descanso = voltas % 3 === 2;
+    const D = p.bat;
+    if (D.kick && D.kick.includes(s)) batida(t, 'kick', D.kv);
+    if (D.caixa && D.caixa.includes(s)) batida(t, D.ct, D.cv);
+    if (D.hat && D.hat.includes(s)) batida(t, D.ht || 'hat', D.hv * (s % 4 === 0 ? 1 : 0.7));
+    if (D.open && D.open.includes(s) && compasso % 2 === 1) batida(t, 'open', 0.05);
+    if (D.shaker && D.shaker.includes(s)) batida(t, 'shaker', D.sv);
+    if (D.rufo && compasso % 4 === 3 && s >= 13) batida(t, 'snare', D.cv * 0.6);
+    const nb = p.baixo.find((x) => x[0] === s);
+    if (nb) {
+      let b = 36 + raiz; if (b > 43) b -= 12;
+      let iv = nb[1];
+      if (iv === 'ap') { let bp = 36 + PC[p.prog[(compasso + 1) % p.prog.length][0]]; if (bp > 43) bp -= 12; iv = bp + (bp > b ? -1 : 1) - b; }
+      else if (iv === 't3') iv = tons[1];
+      I[p.baixoI](t, b + iv, nb[2] * spp * 0.9, p.bv);
+    }
+    p.harm(t, s, { raiz, tons, spp, bar: compasso, descanso });
+    if (!descanso) {
+      p.mel.filter((n) => n.bar === compasso % 8 && n.s === s).forEach((n) => {
+        const d = n.d * spp * 0.85;
+        if (p.lead === 'pulso') I.pulso(t, n.m, d, p.lv, 0.125, 3600, { vib: true, eco: true, r: 0.1, sus: 0.6 });
+        else if (p.lead === 'quadrada') I.pulso(t, n.m, d, p.lv, 0.5, 2600, { eco: true, r: 0.12, sus: 0.5 });
+        else if (p.lead === 'serra') I.serra(t, n.m, d, p.lv, 3000, { eco: true, vib: true, sus: 0.55 });
+        else I[p.lead](t, n.m, d, p.lv);
+      });
+    }
+  }
+  function agendar() {
+    if (!ctx || !atual) return;
+    while (proxT < ctx.currentTime + 0.2) {
+      if (passo === 0 && pedido && PRESETS[pedido] && atual !== PRESETS[pedido]) trocar(pedido);
+      const spp = 60 / atual.bpm / 4;
+      const swing = passo % 4 === 2 ? spp * atual.swing : 0;
+      tocarPasso(proxT + swing, spp);
+      proxT += spp;
+      passo = (passo + 1) % atual.passos;
+      if (passo === 0) { compasso++; if (compasso % 8 === 0) voltas++; }
+    }
+  }
+  function trocar(nome) { const p = PRESETS[nome]; if (!p.mel) p.mel = gerarMelodia(p); atual = p; compasso = 0; voltas = 0; passo = 0; }
+  function iniciar() {
+    if (iniciado || !AC) return;
+    iniciado = true;
+    ctx = new AC();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+    master = ctx.createGain(); master.gain.value = ligado ? 0.9 : 0;
+    musGain = ctx.createGain(); musGain.gain.value = 0.6;
+    sfxGain = ctx.createGain(); sfxGain.gain.value = 0.6;
+    eco = ctx.createDelay(1); const fb = ctx.createGain(), ew = ctx.createGain();
+    eco.delayTime.value = 0.27; fb.gain.value = 0.28; ew.gain.value = 0.35;
+    eco.connect(fb); fb.connect(eco); eco.connect(ew); ew.connect(musGain);
+    musGain.connect(master); sfxGain.connect(master); master.connect(comp); comp.connect(ctx.destination);
+    ruido = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    trocar(pedido || 'menu');
+    proxT = ctx.currentTime + 0.08;
+    timer = setInterval(agendar, 25);
+    if (ctx.state === 'suspended') ctx.resume();
+  }
+  function tocar(nome) { pedido = nome; }
+  function alternar() { ligado = !ligado; if (master) master.gain.setTargetAtTime(ligado ? 0.9 : 0, ctx.currentTime, 0.08); return ligado; }
+  function sfx(tipo) {
+    if (!ctx || !ligado) return;
+    const t = ctx.currentTime + 0.01;
+    const seq = { ok: [[72, 0], [76, 0.07], [79, 0.14], [84, 0.21]], erro: [[58, 0], [55, 0.12]], abrir: [[79, 0], [86, 0.05]], blip: [[88, 0]], sala: [[67, 0], [72, 0.1], [76, 0.2], [79, 0.3], [84, 0.42]], porta: [[64, 0], [60, 0.08]] }[tipo] || [];
+    seq.forEach(([m, dt]) => voz(t + dt, hz(m), tipo === 'erro' ? 0.14 : 0.07, tipo === 'erro' ? 0.08 : 0.07, { duty: tipo === 'erro' ? 0.5 : 0.25, lp: 4000, r: 0.08, sus: 0.6, dest: sfxGain }));
+  }
+  return { iniciar, tocar, alternar, sfx, ligado: () => ligado, disponivel: () => !!AC };
+})();
+
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
+const estado = {
+  tela: 'id', nome: '', matricula: '',
+  avatar: { pele: PELES[2], cabelo: CABELOS[1], estilo: 'curto', camisa: CAMISAS[1], calca: CALCAS[0], apelido: '' },
+  sala: 0, visto: {}, feitas: {}, errou: {}, ordem: {},
+};
+const app = document.getElementById('app');
+const hud = document.getElementById('hud');
+const modal = document.getElementById('modal');
+const mbox = document.getElementById('mbox');
+
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function embaralhar(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function apelido() { return estado.avatar.apelido || estado.nome.split(' ')[0] || 'Analista'; }
+function feitasTotal() { return Object.keys(estado.feitas).length; }
+function acertosPrimeira() { return Object.keys(estado.feitas).filter((k) => !estado.errou[k]).length; }
+function salaCompleta(i) { return SALAS[i].missoes.every((m) => estado.feitas[m]); }
+function salaLiberada(i) { return i === 0 || salaCompleta(i - 1); }
+function proximaMissao(i) { return SALAS[i].missoes.find((m) => !estado.feitas[m]) || null; }
+function statusNpc(i, npcId) {
+  const minhas = SALAS[i].missoes.filter((m) => MISSOES[m].npc === npcId);
+  const prox = proximaMissao(i);
+  if (prox && MISSOES[prox].npc === npcId) return 'pend';
+  if (minhas.some((m) => !estado.feitas[m])) return 'wait';
+  if (minhas.length) return 'ok';
+  return 'none';
+}
+
+function atualizarHud() {
+  const som = Musica.disponivel() ? `<button class="som" id="btnSom" aria-label="Ligar ou desligar a música" title="Música">${Musica.ligado() ? '🔊' : '🔇'}</button>` : '';
+  hud.innerHTML = (estado.nome ? `<span>👤 <b>${esc(apelido())}</b></span><span>📁 <b>${feitasTotal()}/${TOTAL}</b> situações</span>` : '') + som;
+  const b = document.getElementById('btnSom');
+  if (b) b.addEventListener('click', () => { Musica.iniciar(); b.textContent = Musica.alternar() ? '🔊' : '🔇'; });
+}
+['pointerdown', 'keydown'].forEach((ev) => document.addEventListener(ev, () => Musica.iniciar(), { once: true }));
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 3200);
+}
+
+/* =====================================================================
+   TELAS
+   ===================================================================== */
+function render() {
+  pararMotor();
+  Musica.tocar(estado.tela === 'jogo' ? salaAtual().id : estado.tela === 'final' ? 'final' : 'menu');
+  atualizarHud();
+  window.scrollTo(0, 0);
+  if (estado.tela === 'id') telaId();
+  else if (estado.tela === 'avatar') telaAvatar();
+  else if (estado.tela === 'prologo') telaPrologo(0);
+  else if (estado.tela === 'jogo') telaJogo();
+  else if (estado.tela === 'final') telaFinal();
+}
+
+function telaId() {
+  app.innerHTML = `
+    <div class="kicker">Engenharia de Requisitos · jogo da disciplina</div>
+    <h1 class="titulo">Um semestre inteiro na Nexo Software</h1>
+    <p class="lead">Circule pelas salas de uma software house, converse com a equipe e com a cliente, e resolva as situações que aparecem do primeiro dia de projeto até a defesa do documento final. Antes de entrar, identifique-se: o resultado vai para a planilha da disciplina.</p>
+    <div class="card" style="max-width:640px">
+      <label class="lbl" for="inNome">Nome completo</label>
+      <input type="text" id="inNome" placeholder="Seu nome" value="${esc(estado.nome)}">
+      <label class="lbl" for="inMat">Matrícula ou turma</label>
+      <input type="text" id="inMat" placeholder="Ex.: 2026104521" value="${esc(estado.matricula)}">
+      <div class="actions"><button class="btn" id="btnId">Entrar no prédio →</button></div>
+    </div>`;
+  const nome = document.getElementById('inNome'), mat = document.getElementById('inMat');
+  const ir = () => {
+    if (!nome.value.trim()) { nome.focus(); return; }
+    if (!mat.value.trim()) { mat.focus(); return; }
+    estado.nome = nome.value.trim(); estado.matricula = mat.value.trim();
+    if (!estado.avatar.apelido) estado.avatar.apelido = estado.nome.split(' ')[0];
+    estado.tela = 'avatar'; render();
+  };
+  document.getElementById('btnId').addEventListener('click', ir);
+  [nome, mat].forEach((el) => el.addEventListener('keydown', (e) => { if (e.key === 'Enter') ir(); }));
+}
+
+let previewRaf = null;
+function telaAvatar() {
+  const a = estado.avatar;
+  const swatches = (lista, campo) => lista.map((c) => `<button class="sw ${a[campo] === c ? 'sel' : ''}" style="background:${c}" data-campo="${campo}" data-val="${c}" aria-label="${c}"></button>`).join('');
+  app.innerHTML = `
+    <div class="kicker">Crachá da Nexo</div>
+    <h1 class="titulo">Monte o seu avatar</h1>
+    <p class="lead">É assim que a equipe vai ver você andando pelas salas. Dá para voltar e mudar depois.</p>
+    <div class="card">
+      <div class="av-grid">
+        <div class="av-preview">
+          <canvas id="avPrev" width="200" height="230" style="width:200px;height:230px"></canvas>
+          <div class="side-btns" style="width:100%;margin-top:8px">
+            <button class="btn sec" id="girar" style="font-size:.82rem">↻ Girar</button>
+            <button class="btn sec" id="andar" style="font-size:.82rem">🚶 Andar</button>
+          </div>
+        </div>
+        <div>
+          <label class="lbl" for="inApelido">Nome no crachá</label>
+          <input type="text" id="inApelido" maxlength="16" value="${esc(a.apelido)}">
+          <span class="lbl">Tom de pele</span><div class="sw-row">${swatches(PELES, 'pele')}</div>
+          <span class="lbl">Cor do cabelo</span><div class="sw-row">${swatches(CABELOS, 'cabelo')}</div>
+          <span class="lbl">Estilo do cabelo</span><div class="sw-row">${ESTILOS.map(([v, n]) => `<button class="sw-t ${a.estilo === v ? 'sel' : ''}" data-campo="estilo" data-val="${v}">${n}</button>`).join('')}</div>
+          <span class="lbl">Camisa</span><div class="sw-row">${swatches(CAMISAS, 'camisa')}</div>
+          <span class="lbl">Calça</span><div class="sw-row">${swatches(CALCAS, 'calca')}</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn sec" id="voltar">← Voltar</button>
+        <button class="btn" id="seguir">Pegar o crachá →</button>
+      </div>
+    </div>`;
+  let dirPrev = 0, andando = false;
+  app.querySelectorAll('[data-campo]').forEach((b) => b.addEventListener('click', () => {
+    a[b.dataset.campo] = b.dataset.val;
+    app.querySelectorAll(`[data-campo="${b.dataset.campo}"]`).forEach((x) => x.classList.toggle('sel', x === b));
+  }));
+  document.getElementById('girar').addEventListener('click', () => { dirPrev = (dirPrev + 1) % 4; });
+  document.getElementById('andar').addEventListener('click', (e) => { andando = !andando; e.currentTarget.textContent = andando ? '✋ Parar' : '🚶 Andar'; });
+  document.getElementById('inApelido').addEventListener('input', (e) => { a.apelido = e.target.value.trim(); });
+  document.getElementById('voltar').addEventListener('click', () => { estado.tela = 'id'; render(); });
+  document.getElementById('seguir').addEventListener('click', () => {
+    if (!a.apelido) a.apelido = estado.nome.split(' ')[0];
+    estado.tela = 'prologo'; render();
+  });
+  const cv = document.getElementById('avPrev');
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = 200 * dpr; cv.height = 230 * dpr;
+  const ctx = cv.getContext('2d');
+  if (!ctx) return;
+  const loop = (ts) => {
+    if (!document.body.contains(cv)) { previewRaf = null; return; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, 200, 230);
+    ctx.fillStyle = '#C9DCF2';
+    ctx.beginPath(); ctx.moveTo(100, 176); ctx.lineTo(170, 200); ctx.lineTo(100, 224); ctx.lineTo(30, 200); ctx.closePath(); ctx.fill();
+    ctx.setTransform(dpr * 2.6, 0, 0, dpr * 2.6, dpr * 100, dpr * 200);
+    drawAvatar(ctx, a, dirPrev, ts / 1000, andando);
+    previewRaf = requestAnimationFrame(loop);
+  };
+  if (previewRaf) cancelAnimationFrame(previewRaf);
+  previewRaf = requestAnimationFrame(loop);
+}
+
+const PROLOGO = [
+  { titulo: 'Seu primeiro dia', texto: `Você acaba de ser contratado(a) como <b>analista de requisitos júnior</b> da Nexo Software, uma pequena software house de Caruaru. O primeiro cliente que cai no seu colo é a <b>Clínica Veterinária Patas & Cia</b>, que quer largar de vez o caderno e a agenda de papel.` },
+  { titulo: 'Como funciona', texto: `Clique no chão para andar e nas pessoas para conversar. Quem tem um <b>balão amarelo</b> sobre a cabeça traz uma situação para você resolver. Errar não tira ninguém do jogo: você recebe a explicação e tenta de novo, mas <b>só conta ponto o que sair certo de primeira</b>. As salas abrem em ordem, do começo do projeto até a entrega, e a porta de cada sala leva ao mapa do prédio.` },
+];
+function telaPrologo(p) {
+  const pg = PROLOGO[p], ultima = p === PROLOGO.length - 1;
+  app.innerHTML = `
+    <div class="kicker">Prólogo</div>
+    <div class="card" style="max-width:760px">
+      <h3>${pg.titulo}</h3>
+      <p class="historia">${pg.texto}</p>
+      <div class="pips">${PROLOGO.map((_, i) => `<span class="pip ${i <= p ? 'on' : ''}"></span>`).join('')}</div>
+    </div>
+    <div class="actions"><button class="btn" id="seguir">${ultima ? 'Entrar na recepção →' : 'Continuar →'}</button></div>`;
+  document.getElementById('seguir').addEventListener('click', () => {
+    if (ultima) { estado.tela = 'jogo'; render(); } else telaPrologo(p + 1);
+  });
+}
+
+/* =====================================================================
+   MOTOR ISOMÉTRICO
+   ===================================================================== */
+const TW = 64, TH = 32, WALLH = 112;
+function iso(x, y, z) { return { x: (x - y) * TW / 2, y: (x + y) * TH / 2 - (z || 0) }; }
+
+const M = {
+  on: false, raf: null, cv: null, ctx: null, dpr: 1, cw: 0, ch: 0, scale: 1, offX: 0, offY: 0,
+  t: 0, last: 0, grid: null, npcs: [], player: null, bolhas: [], hover: null, hoverNpc: null, hoverObj: null,
+  marcas: [], proxAmbiente: 6, proxSubida: 4.5,
+};
+
+function pararMotor() { M.on = false; if (M.raf) cancelAnimationFrame(M.raf); M.raf = null; if (previewRaf) { cancelAnimationFrame(previewRaf); previewRaf = null; } }
+
+function salaAtual() { return SALAS[estado.sala]; }
+
+function montarSala() {
+  const s = salaAtual();
+  M.grid = Array.from({ length: s.H }, () => Array(s.W).fill(0));
+  s.moveis.forEach((f) => {
+    if (f.t === 'tapete') return;
+    const w = f.w || 1, d = f.d || 1;
+    for (let yy = f.y; yy < f.y + d; yy++) for (let xx = f.x; xx < f.x + w; xx++) if (M.grid[yy] && xx < s.W) M.grid[yy][xx] = 1;
+  });
+  M.npcs = s.npcs.map((n) => ({ ...n, base: n.dir, virarEm: 3 + Math.random() * 6 }));
+  M.player = { x: s.inicio[0], y: s.inicio[1], dir: 0, path: [], walking: false, acao: null };
+  M.bolhas = []; M.marcas = []; M.proxAmbiente = 5 + Math.random() * 4; M.proxSubida = 4.5;
+}
+function livre(x, y) {
+  const s = salaAtual();
+  if (x < 0 || y < 0 || x >= s.W || y >= s.H) return false;
+  if (M.grid[y][x]) return false;
+  if (M.npcs.some((n) => n.x === x && n.y === y)) return false;
+  return true;
+}
+function bfs(sx, sy) {
+  const s = salaAtual();
+  const dist = Array.from({ length: s.H }, () => Array(s.W).fill(-1));
+  const prev = {};
+  const q = [[sx, sy]]; dist[sy][sx] = 0;
+  const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+  while (q.length) {
+    const [x, y] = q.shift();
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx, ny = y + dy;
+      if (!livre(nx, ny) || dist[ny][nx] !== -1) continue;
+      if (dx && dy && (!livre(x + dx, y) || !livre(x, y + dy))) continue;
+      dist[ny][nx] = dist[y][x] + 1; prev[nx + ',' + ny] = [x, y]; q.push([nx, ny]);
+    }
+  }
+  return { dist, prev };
+}
+function reconstruir(prev, sx, sy, tx, ty) {
+  const path = []; let cur = [tx, ty];
+  while (!(cur[0] === sx && cur[1] === sy)) { path.unshift(cur); cur = prev[cur[0] + ',' + cur[1]]; if (!cur) return null; }
+  return path;
+}
+function andarAte(alvos, acao) {
+  const p = M.player;
+  const sx = Math.round(p.x), sy = Math.round(p.y);
+  const { dist, prev } = bfs(sx, sy);
+  let melhor = null, md = Infinity;
+  alvos.forEach(([x, y]) => {
+    if (x === sx && y === sy) { melhor = [x, y]; md = 0; return; }
+    const s = salaAtual();
+    if (x < 0 || y < 0 || x >= s.W || y >= s.H) return;
+    if (dist[y][x] >= 0 && dist[y][x] < md) { md = dist[y][x]; melhor = [x, y]; }
+  });
+  if (!melhor) return false;
+  const path = md === 0 ? [] : reconstruir(prev, sx, sy, melhor[0], melhor[1]);
+  if (path === null) return false;
+  if (p.x !== sx || p.y !== sy) path.unshift([sx, sy]);
+  p.path = path; p.acao = acao || null;
+  if (!path.length && acao) { p.acao = null; acao(); }
+  return true;
+}
+function vizinhos(x, y) { const r = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (dx || dy) r.push([x + dx, y + dy]); return r; }
+function dirPara(dx, dy, atual) {
+  const sdx = dx - dy, sdy = dx + dy;
+  let frente = atual === 0 || atual === 1, esq = atual === 1 || atual === 2;
+  if (sdy > 0.01) frente = true; else if (sdy < -0.01) frente = false;
+  if (sdx > 0.01) esq = false; else if (sdx < -0.01) esq = true;
+  return frente ? (esq ? 1 : 0) : (esq ? 2 : 3);
+}
+
+function iniciarMotor() {
+  M.cv = document.getElementById('stage');
+  M.ctx = M.cv.getContext('2d');
+  M.on = true; M.last = 0;
+  redimensionar();
+  M.cv.addEventListener('mousemove', aoMover);
+  M.cv.addEventListener('mouseleave', () => { M.hover = null; M.hoverNpc = null; M.hoverObj = null; });
+  M.cv.addEventListener('click', aoClicar);
+  if (!M.ctx) return;
+  M.raf = requestAnimationFrame(loop);
+}
+function redimensionar() {
+  if (!M.cv) return;
+  const s = salaAtual();
+  M.dpr = window.devicePixelRatio || 1;
+  M.cw = M.cv.clientWidth || 800; M.ch = M.cv.clientHeight || 500;
+  M.cv.width = Math.round(M.cw * M.dpr); M.cv.height = Math.round(M.ch * M.dpr);
+  const minX = -s.H * TW / 2, maxX = s.W * TW / 2;
+  const minY = -WALLH - 8, maxY = (s.W + s.H) * TH / 2 + 14;
+  M.scale = Math.min(M.cw / (maxX - minX + 60), M.ch / (maxY - minY + 70), 1.7);
+  M.offX = M.cw / 2 - M.scale * (maxX + minX) / 2;
+  M.offY = M.ch / 2 - M.scale * (maxY + minY) / 2 + 18;
+}
+window.addEventListener('resize', () => { if (M.on) redimensionar(); });
+
+function telaParaIso(mx, my) { return { x: (mx - M.offX) / M.scale, y: (my - M.offY) / M.scale }; }
+function isoParaTela(ix, iy) { return { x: M.offX + ix * M.scale, y: M.offY + iy * M.scale }; }
+function tileEm(ix, iy) {
+  const x = (iy / (TH / 2) + ix / (TW / 2)) / 2, y = (iy / (TH / 2) - ix / (TW / 2)) / 2;
+  return { x: Math.floor(x), y: Math.floor(y) };
+}
+function npcEmPonto(ix, iy) {
+  let achou = null, melhorProf = -Infinity;
+  M.npcs.forEach((n) => {
+    const p = iso(n.x + 0.5, n.y + 0.5);
+    if (Math.abs(ix - p.x) < 15 && iy > p.y - 68 && iy < p.y + 5 && n.x + n.y > melhorProf) { achou = n; melhorProf = n.x + n.y; }
+  });
+  return achou;
+}
+function poligonoParede(o) {
+  if (o.lado === 'dir') return [iso(o.a, 0, o.h1), iso(o.b, 0, o.h1), iso(o.b, 0, o.h2), iso(o.a, 0, o.h2)];
+  return [iso(0, o.a, o.h1), iso(0, o.b, o.h1), iso(0, o.b, o.h2), iso(0, o.a, o.h2)];
+}
+function portaObj() { const s = salaAtual(); return { lado: 'esq', a: s.porta + 0.14, b: s.porta + 0.86, h1: 0, h2: 80, t: 'porta' }; }
+function dentro(pt, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const a = poly[i], b = poly[j];
+    if ((a.y > pt.y) !== (b.y > pt.y) && pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y) + a.x) c = !c;
+  }
+  return c;
+}
+function objParedeEm(ix, iy) {
+  const s = salaAtual();
+  const todos = s.paredeObj.filter((o) => o.t === 'quadro').concat([portaObj()]);
+  return todos.find((o) => dentro({ x: ix, y: iy }, poligonoParede(o))) || null;
+}
+function posMouse(e) { const r = M.cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+function aoMover(e) {
+  const m = posMouse(e), i = telaParaIso(m.x, m.y);
+  M.hoverNpc = npcEmPonto(i.x, i.y);
+  M.hoverObj = M.hoverNpc ? null : objParedeEm(i.x, i.y);
+  const t = tileEm(i.x, i.y), s = salaAtual();
+  M.hover = (t.x >= 0 && t.y >= 0 && t.x < s.W && t.y < s.H) ? t : null;
+  M.cv.style.cursor = (M.hoverNpc || M.hoverObj) ? 'pointer' : (M.hover ? 'pointer' : 'default');
+}
+function aoClicar(e) {
+  if (modal.classList.contains('on')) return;
+  const m = posMouse(e), i = telaParaIso(m.x, m.y);
+  const npc = npcEmPonto(i.x, i.y);
+  if (npc) { irAoNpc(npc); return; }
+  const obj = objParedeEm(i.x, i.y);
+  if (obj && obj.t === 'porta') { irPraPorta(); return; }
+  if (obj && obj.t === 'quadro') { abrirIntroSala(true); return; }
+  const t = tileEm(i.x, i.y), s = salaAtual();
+  if (t.x < 0 || t.y < 0 || t.x >= s.W || t.y >= s.H) return;
+  if (t.x === 0 && t.y === s.porta) { irPraPorta(); return; }
+  const alvos = livre(t.x, t.y) ? [[t.x, t.y]] : vizinhos(t.x, t.y);
+  if (andarAte(alvos)) M.marcas.push({ x: t.x, y: t.y, t: 0 });
+}
+function irPraPorta() { const s = salaAtual(); andarAte([[0, s.porta]], () => abrirNavegador()); }
+function irAoNpc(npc) {
+  andarAte(vizinhos(npc.x, npc.y), () => interagirNpc(npc));
+}
+
+function interagirNpc(npc) {
+  const p = M.player;
+  p.dir = dirPara(npc.x - p.x, npc.y - p.y, p.dir);
+  npc.dir = dirPara(p.x - npc.x, p.y - npc.y, npc.dir);
+  npc.virarEm = 6;
+  const st = statusNpc(estado.sala, npc.id);
+  const info = NPCS[npc.id];
+  if (st === 'pend') { abrirMissao(proximaMissao(estado.sala), npc); return; }
+  if (st === 'wait') {
+    const prox = proximaMissao(estado.sala);
+    falar(npc, `Já já a gente conversa. Antes, fala com ${NPCS[MISSOES[prox].npc].nome}.`);
+    return;
+  }
+  if (st === 'ok') { falar(npc, ['Valeu pela ajuda, ' + apelido() + '!', ...info.falas][Math.floor(Math.random() * (info.falas.length + 1))]); return; }
+  falar(npc, info.falas[Math.floor(Math.random() * info.falas.length)]);
+}
+
+/* ---------- balões de fala ---------- */
+function cabecaTela(ref) {
+  const p = ref === 'player' ? iso(M.player.x + 0.5, M.player.y + 0.5) : iso(ref.x + 0.5, ref.y + 0.5);
+  return isoParaTela(p.x, p.y - 66);
+}
+function quebrarTexto(ctx, txt, maxW) {
+  const palavras = txt.split(' '); const linhas = []; let atual = '';
+  palavras.forEach((w) => { const teste = atual ? atual + ' ' + w : w; if (ctx.measureText(teste).width > maxW && atual) { linhas.push(atual); atual = w; } else atual = teste; });
+  if (atual) linhas.push(atual);
+  return linhas.slice(0, 3);
+}
+function falar(ref, texto) {
+  const ehPlayer = ref === 'player';
+  const nome = ehPlayer ? apelido() : NPCS[ref.id].nome;
+  const cor = ehPlayer ? estado.avatar.camisa : NPCS[ref.id].look.camisa;
+  const h = cabecaTela(ref);
+  const ctx = M.ctx;
+  let linhas = [texto];
+  if (ctx) { ctx.font = '700 13px Nunito, sans-serif'; linhas = quebrarTexto(ctx, nome + ': ' + texto, Math.min(320, M.cw - 60)); }
+  const alt = 12 + linhas.length * 16;
+  M.bolhas.forEach((b) => { b.alvoY -= alt + 6; });
+  const y = Math.max(34, Math.min(h.y - 34, M.ch * 0.62));
+  M.bolhas.push({ nome, texto, cor, linhas, alt, ax: h.x, x: h.x, y, alvoY: y, idade: 0 });
+  M.proxSubida = 5;
+}
+
+/* ---------- loop ---------- */
+function loop(ts) {
+  if (!M.on) return;
+  const dt = M.last ? Math.min(0.05, (ts - M.last) / 1000) : 0.016;
+  M.last = ts; M.t += dt;
+  atualizar(dt);
+  desenhar();
+  M.raf = requestAnimationFrame(loop);
+}
+function atualizar(dt) {
+  const p = M.player;
+  if (p.path.length) {
+    const [nx, ny] = p.path[0];
+    const dx = nx - p.x, dy = ny - p.y, d = Math.hypot(dx, dy), passo = 3.4 * dt;
+    if (d > 0.001) p.dir = dirPara(dx, dy, p.dir);
+    p.walking = true;
+    if (d <= passo) {
+      p.x = nx; p.y = ny; p.path.shift();
+      if (!p.path.length) { p.walking = false; if (p.acao) { const a = p.acao; p.acao = null; a(); } }
+    } else { p.x += dx / d * passo; p.y += dy / d * passo; }
+  } else p.walking = false;
+
+  M.npcs.forEach((n) => {
+    n.virarEm -= dt;
+    if (n.virarEm <= 0) { n.dir = Math.random() < 0.6 ? n.base : Math.floor(Math.random() * 2); n.virarEm = 5 + Math.random() * 8; }
+  });
+
+  if (!modal.classList.contains('on')) {
+    M.proxAmbiente -= dt;
+    if (M.proxAmbiente <= 0 && M.npcs.length) {
+      const n = M.npcs[Math.floor(Math.random() * M.npcs.length)];
+      const f = NPCS[n.id].falas; falar(n, f[Math.floor(Math.random() * f.length)]);
+      M.proxAmbiente = 10 + Math.random() * 8;
+    }
+  }
+  M.proxSubida -= dt;
+  if (M.proxSubida <= 0) { M.bolhas.forEach((b) => { b.alvoY -= 30; }); M.proxSubida = 4.5; }
+  M.bolhas.forEach((b) => { b.y += (b.alvoY - b.y) * Math.min(1, dt * 9); b.idade += dt; });
+  M.bolhas = M.bolhas.filter((b) => b.y > -60 && b.idade < 28);
+  M.marcas.forEach((m) => { m.t += dt; });
+  M.marcas = M.marcas.filter((m) => m.t < 0.6);
+}
+
+/* ---------- desenho ---------- */
+function poly(ctx, pts, fill, stroke) {
+  ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+}
+function caixa(ctx, x0, y0, x1, y1, z, h, cTop, cL, cR) {
+  const s = 'rgba(0,0,0,.22)';
+  poly(ctx, [iso(x0, y1, z + h), iso(x1, y1, z + h), iso(x1, y1, z), iso(x0, y1, z)], cL, s);
+  poly(ctx, [iso(x1, y0, z + h), iso(x1, y1, z + h), iso(x1, y1, z), iso(x1, y0, z)], cR, s);
+  poly(ctx, [iso(x0, y0, z + h), iso(x1, y0, z + h), iso(x1, y1, z + h), iso(x0, y1, z + h)], cTop, s);
+}
+function desenharMovel(ctx, f) {
+  const x = f.x, y = f.y, w = f.w || 1, d = f.d || 1;
+  if (f.t === 'mesa') {
+    [[x + .1, y + .1], [x + w - .2, y + .1], [x + .1, y + d - .2], [x + w - .2, y + d - .2]].forEach(([lx, ly]) => caixa(ctx, lx, ly, lx + .1, ly + .1, 0, 22, '#6E4B2A', '#5A3D22', '#654427'));
+    caixa(ctx, x + .05, y + .05, x + w - .05, y + d - .05, 22, 5, '#C99A62', '#9B7045', '#AF7F4F');
+  } else if (f.t === 'pc') {
+    [[x + .1, y + .1], [x + .8, y + .1], [x + .1, y + .8], [x + .8, y + .8]].forEach(([lx, ly]) => caixa(ctx, lx, ly, lx + .1, ly + .1, 0, 22, '#555', '#444', '#4C4C4C'));
+    caixa(ctx, x + .05, y + .05, x + .95, y + .95, 22, 5, '#EDEDED', '#BDBDBD', '#D0D0D0');
+    caixa(ctx, x + .42, y + .45, x + .58, y + .55, 27, 6, '#333', '#2A2A2A', '#303030');
+    caixa(ctx, x + .25, y + .38, x + .75, y + .48, 33, 24, '#2B2F3A', '#1F222B', '#353A47');
+    poly(ctx, [iso(x + .29, y + .48, 36), iso(x + .71, y + .48, 36), iso(x + .71, y + .48, 54), iso(x + .29, y + .48, 54)], (Math.floor(M.t * 2 + x) % 5 === 0) ? '#A5E3FF' : '#7FD4FF', null);
+    caixa(ctx, x + .3, y + .62, x + .7, y + .78, 27, 2, '#F5F5F5', '#AAA', '#BBB');
+  } else if (f.t === 'cadeira') {
+    caixa(ctx, x + .46, y + .46, x + .54, y + .54, 0, 14, '#555', '#444', '#4A4A4A');
+    caixa(ctx, x + .26, y + .26, x + .74, y + .74, 14, 4, '#3B5B85', '#2B4466', '#33507A');
+    const cb = { y0: [x + .26, y + .26, x + .74, y + .34], y1: [x + .26, y + .66, x + .74, y + .74], x0: [x + .26, y + .26, x + .34, y + .74], x1: [x + .66, y + .26, x + .74, y + .74] }[f.costas || 'y0'];
+    caixa(ctx, cb[0], cb[1], cb[2], cb[3], 18, 18, '#3B5B85', '#2B4466', '#33507A');
+  } else if (f.t === 'sofa') {
+    caixa(ctx, x + .08, y + .1, x + .92, y + .9, 0, 14, '#D35F4F', '#A8473A', '#BD5446');
+    caixa(ctx, x + .08, y + .1, x + .32, y + .9, 14, 18, '#D35F4F', '#A8473A', '#BD5446');
+  } else if (f.t === 'planta') {
+    caixa(ctx, x + .33, y + .33, x + .67, y + .67, 0, 16, '#C1693C', '#9E5230', '#B35E35');
+    const c = iso(x + .5, y + .5, 16);
+    circ(ctx, c.x, c.y - 8, 12, '#3E8E41'); circ(ctx, c.x - 9, c.y - 2, 8, '#357A38'); circ(ctx, c.x + 9, c.y - 3, 8, '#4CAF50'); circ(ctx, c.x + 1, c.y - 19, 8, '#5DBB63');
+  } else if (f.t === 'estante') {
+    caixa(ctx, x + .1, y + .1, x + .9, y + .5, 0, 80, '#8B5E3C', '#6E4A2F', '#7C5334');
+    const cores = ['#E74C3C', '#3498DB', '#F1C40F', '#2ECC71', '#9B59B6', '#E67E22'];
+    [14, 38, 62].forEach((z, k) => {
+      poly(ctx, [iso(x + .12, y + .5, z - 3), iso(x + .88, y + .5, z - 3), iso(x + .88, y + .5, z - 1), iso(x + .12, y + .5, z - 1)], '#5A3C24', null);
+      for (let i = 0; i < 5; i++) { const a = x + .16 + i * .14, hh = 12 + ((i + k) % 3) * 3; poly(ctx, [iso(a, y + .5, z), iso(a + .1, y + .5, z), iso(a + .1, y + .5, z + hh), iso(a, y + .5, z + hh)], cores[(i + k * 2) % cores.length], 'rgba(0,0,0,.2)'); }
+    });
+  } else if (f.t === 'armario') {
+    caixa(ctx, x + .1, y + .1, x + .9, y + .6, 0, 86, '#95A5A6', '#7F8C8D', '#8A9899');
+    poly(ctx, [iso(x + .5, y + .6, 6), iso(x + .5, y + .6, 80), iso(x + .5, y + .6, 80), iso(x + .5, y + .6, 6)], null, 'rgba(0,0,0,.35)');
+    circ(ctx, iso(x + .45, y + .6, 44).x, iso(x + .45, y + .6, 44).y, 2, '#444'); circ(ctx, iso(x + .55, y + .6, 44).x, iso(x + .55, y + .6, 44).y, 2, '#444');
+  } else if (f.t === 'balcao') {
+    caixa(ctx, x + .02, y + .15, x + w - .02, y + d - .1, 0, 34, '#5D6D7E', '#4B5968', '#56667A');
+    caixa(ctx, x - .02, y + .1, x + w + .02, y + d - .05, 34, 4, '#F0E6D2', '#CFC3AA', '#DDD1B8');
+    poly(ctx, [iso(x + .3, y + d - .1, 12), iso(x + w - .3, y + d - .1, 12), iso(x + w - .3, y + d - .1, 24), iso(x + .3, y + d - .1, 24)], '#FFC940', null);
+  } else if (f.t === 'bebedouro') {
+    caixa(ctx, x + .3, y + .3, x + .7, y + .7, 0, 30, '#ECF0F1', '#BDC3C7', '#D0D5D8');
+    const c = iso(x + .5, y + .5, 30); circ(ctx, c.x, c.y - 9, 8, 'rgba(133,193,233,.9)'); circ(ctx, c.x - 2, c.y - 12, 2.5, 'rgba(255,255,255,.7)');
+  }
+}
+function desenharParedeObj(ctx, o, destaque) {
+  const pts = poligonoParede(o);
+  if (o.t === 'janela') {
+    poly(ctx, pts, '#F4F4F4', 'rgba(0,0,0,.25)');
+    const ins = { ...o, a: o.a + .1, b: o.b - .1, h1: o.h1 + 5, h2: o.h2 - 5 };
+    poly(ctx, poligonoParede(ins), '#A9D8F5', null);
+    const meio = (o.a + o.b) / 2, hm = (o.h1 + o.h2) / 2;
+    const L = o.lado === 'dir' ? (a, h) => iso(a, 0, h) : (a, h) => iso(0, a, h);
+    ctx.strokeStyle = '#F4F4F4'; ctx.lineWidth = 3;
+    ctx.beginPath(); const p1 = L(meio, o.h1 + 5), p2 = L(meio, o.h2 - 5); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+    const p3 = L(o.a + .1, hm), p4 = L(o.b - .1, hm); ctx.moveTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y); ctx.stroke(); ctx.lineWidth = 1;
+    circ(ctx, L(o.a + .35, o.h2 - 14).x, L(o.a + .35, o.h2 - 14).y, 4, 'rgba(255,255,255,.8)');
+  } else if (o.t === 'quadro') {
+    poly(ctx, pts, '#8A8F98', null);
+    poly(ctx, poligonoParede({ ...o, a: o.a + .06, b: o.b - .06, h1: o.h1 + 4, h2: o.h2 - 4 }), '#FBFBFB', null);
+    const L = o.lado === 'dir' ? (a, h) => iso(a, 0, h) : (a, h) => iso(0, a, h);
+    const cores = ['#FFE066', '#9BE7A5', '#FFB3C1', '#A7D8FF'];
+    const n = Math.max(3, Math.floor((o.b - o.a) * 2.2));
+    for (let i = 0; i < n; i++) {
+      const a = o.a + .15 + i * ((o.b - o.a - .3) / n), h = o.h2 - 14 - (i % 2) * 22;
+      poly(ctx, [L(a, h - 14), L(a + .22, h - 14), L(a + .22, h), L(a, h)], cores[i % cores.length], 'rgba(0,0,0,.15)');
+    }
+    ctx.strokeStyle = '#2F80ED'; ctx.lineWidth = 1.5; ctx.beginPath();
+    const q1 = L(o.a + .2, o.h1 + 12), q2 = L(o.b - .3, o.h1 + 12); ctx.moveTo(q1.x, q1.y); ctx.lineTo(q2.x, q2.y); ctx.stroke(); ctx.lineWidth = 1;
+    if (destaque) { ctx.lineWidth = 3; poly(ctx, pts, null, '#FFE066'); ctx.lineWidth = 1; }
+  } else if (o.t === 'poster') {
+    poly(ctx, pts, o.cor || '#2F80ED', 'rgba(0,0,0,.25)');
+    const L = o.lado === 'dir' ? (a, h) => iso(a, 0, h) : (a, h) => iso(0, a, h);
+    const m = (o.a + o.b) / 2, hm = (o.h1 + o.h2) / 2;
+    poly(ctx, [L(m, hm + 16), L(m + .2, hm + 4), L(m, hm - 8), L(m - .2, hm + 4)], '#FFC940', null);
+    poly(ctx, [L(o.a + .15, o.h1 + 10), L(o.b - .15, o.h1 + 10), L(o.b - .15, o.h1 + 13), L(o.a + .15, o.h1 + 13)], 'rgba(255,255,255,.8)', null);
+  } else if (o.t === 'porta') {
+    poly(ctx, pts, '#5C4330', 'rgba(0,0,0,.35)');
+    poly(ctx, poligonoParede({ ...o, a: o.a + .06, b: o.b - .06, h1: 0, h2: o.h2 - 5 }), '#7A5A40', null);
+    const pm = iso(0, o.b - .18, 38); circ(ctx, pm.x, pm.y, 2.6, '#F1C40F');
+    if (destaque) { ctx.lineWidth = 3; poly(ctx, pts, null, '#FFE066'); ctx.lineWidth = 1; }
+  }
+}
+function marcador(ctx, x, y, tipo) {
+  const bob = Math.sin(M.t * 4) * 2.5;
+  if (tipo === 'pend') {
+    ctx.fillStyle = 'rgba(0,0,0,.25)'; rr(ctx, x - 9, y - 19 + bob + 2, 18, 18, 5); ctx.fill();
+    ctx.fillStyle = '#FFC940'; rr(ctx, x - 9, y - 21 + bob, 18, 18, 5); ctx.fill();
+    ctx.strokeStyle = '#8A6500'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x - 3, y - 4 + bob); ctx.lineTo(x + 3, y - 4 + bob); ctx.lineTo(x, y + 1 + bob); ctx.closePath(); ctx.fillStyle = '#FFC940'; ctx.fill();
+    ctx.fillStyle = '#3A2A00'; ctx.font = '800 14px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('!', x, y - 12 + bob);
+  } else if (tipo === 'ok') {
+    circ(ctx, x, y - 10, 8, '#27AE60'); ctx.fillStyle = '#fff'; ctx.font = '800 11px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('✓', x, y - 10);
+  } else if (tipo === 'wait') {
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; rr(ctx, x - 11, y - 17, 22, 12, 6); ctx.fill();
+    [-5, 0, 5].forEach((d) => circ(ctx, x + d, y - 11, 1.8, '#667'));
+  }
+}
+function desenhar() {
+  const ctx = M.ctx, s = salaAtual();
+  ctx.setTransform(M.dpr, 0, 0, M.dpr, 0, 0);
+  const g = ctx.createRadialGradient(M.cw / 2, M.ch * 0.4, 40, M.cw / 2, M.ch / 2, Math.max(M.cw, M.ch));
+  g.addColorStop(0, '#15304F'); g.addColorStop(1, '#060E19');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, M.cw, M.ch);
+  ctx.setTransform(M.dpr * M.scale, 0, 0, M.dpr * M.scale, M.dpr * M.offX, M.dpr * M.offY);
+
+  // espessura do piso
+  poly(ctx, [iso(0, s.H), iso(s.W, s.H), iso(s.W, s.H, -10), iso(0, s.H, -10)], shade(s.piso[1], -60), null);
+  poly(ctx, [iso(s.W, 0), iso(s.W, s.H), iso(s.W, s.H, -10), iso(s.W, 0, -10)], shade(s.piso[1], -40), null);
+  // piso
+  for (let y = 0; y < s.H; y++) for (let x = 0; x < s.W; x++) {
+    poly(ctx, [iso(x, y), iso(x + 1, y), iso(x + 1, y + 1), iso(x, y + 1)], s.piso[(x + y) % 2], 'rgba(0,0,0,.07)');
+  }
+  // tapetes e capacho
+  s.moveis.filter((f) => f.t === 'tapete').forEach((f) => {
+    poly(ctx, [iso(f.x + .08, f.y + .08), iso(f.x + f.w - .08, f.y + .08), iso(f.x + f.w - .08, f.y + f.d - .08), iso(f.x + .08, f.y + f.d - .08)], f.cor, null);
+    poly(ctx, [iso(f.x + .28, f.y + .28), iso(f.x + f.w - .28, f.y + .28), iso(f.x + f.w - .28, f.y + f.d - .28), iso(f.x + .28, f.y + f.d - .28)], null, 'rgba(255,255,255,.35)');
+  });
+  poly(ctx, [iso(.05, s.porta + .12), iso(.75, s.porta + .12), iso(.75, s.porta + .88), iso(.05, s.porta + .88)], '#6B4F3A', null);
+
+  // paredes
+  poly(ctx, [iso(0, 0), iso(0, s.H), iso(0, s.H, WALLH), iso(0, 0, WALLH)], s.parede[0], 'rgba(0,0,0,.15)');
+  poly(ctx, [iso(0, 0), iso(s.W, 0), iso(s.W, 0, WALLH), iso(0, 0, WALLH)], s.parede[1], 'rgba(0,0,0,.15)');
+  poly(ctx, [iso(0, 0), iso(0, s.H), iso(0, s.H, 8), iso(0, 0, 8)], shade(s.parede[0], -35), null);
+  poly(ctx, [iso(0, 0), iso(s.W, 0), iso(s.W, 0, 8), iso(0, 0, 8)], shade(s.parede[1], -35), null);
+  poly(ctx, [iso(0, 0, WALLH), iso(0, s.H, WALLH), iso(-.18, s.H + .18, WALLH), iso(-.18, -.18, WALLH)], shade(s.parede[0], 30), 'rgba(0,0,0,.12)');
+  poly(ctx, [iso(0, 0, WALLH), iso(s.W, 0, WALLH), iso(s.W + .18, -.18, WALLH), iso(-.18, -.18, WALLH)], shade(s.parede[1], 30), 'rgba(0,0,0,.12)');
+  s.paredeObj.forEach((o) => desenharParedeObj(ctx, o, M.hoverObj && M.hoverObj.t === 'quadro' && M.hoverObj.a === o.a));
+  desenharParedeObj(ctx, portaObj(), M.hoverObj && M.hoverObj.t === 'porta');
+
+  // destaque de tile e marcas de clique
+  if (M.hover && !M.hoverNpc && !M.hoverObj) {
+    const h = M.hover; ctx.lineWidth = 2;
+    poly(ctx, [iso(h.x, h.y), iso(h.x + 1, h.y), iso(h.x + 1, h.y + 1), iso(h.x, h.y + 1)], 'rgba(255,224,102,.18)', livre(h.x, h.y) || (h.x === Math.round(M.player.x) && h.y === Math.round(M.player.y)) ? '#FFE066' : 'rgba(255,255,255,.35)');
+    ctx.lineWidth = 1;
+  }
+  M.marcas.forEach((m) => {
+    const k = m.t / 0.6, i = 0.5 - 0.5 * (1 - k) * 0.6;
+    ctx.globalAlpha = 1 - k; ctx.lineWidth = 2;
+    poly(ctx, [iso(m.x + .5, m.y + .5 - i), iso(m.x + .5 + i, m.y + .5), iso(m.x + .5, m.y + .5 + i), iso(m.x + .5 - i, m.y + .5)], null, '#FFFFFF');
+    ctx.globalAlpha = 1; ctx.lineWidth = 1;
+  });
+
+  // objetos com ordem de profundidade
+  const itens = [];
+  s.moveis.filter((f) => f.t !== 'tapete').forEach((f) => itens.push({ z: f.x + (f.w || 1) - 1 + f.y + (f.d || 1) - 1, fn: () => desenharMovel(ctx, f) }));
+  M.npcs.forEach((n) => itens.push({ z: n.x + n.y + .5, fn: () => {
+    const p = iso(n.x + .5, n.y + .5);
+    ctx.save(); ctx.translate(p.x, p.y); drawAvatar(ctx, NPCS[n.id].look, n.dir, M.t + n.x, false); ctx.restore();
+    marcador(ctx, p.x, p.y - 72, statusNpc(estado.sala, n.id));
+    if (M.hoverNpc === n) etiqueta(ctx, p.x, p.y - 98, NPCS[n.id].nome + ' · ' + NPCS[n.id].cargo);
+  } }));
+  const pl = M.player;
+  itens.push({ z: pl.x + pl.y + .5, fn: () => {
+    const p = iso(pl.x + .5, pl.y + .5);
+    ctx.save(); ctx.translate(p.x, p.y); drawAvatar(ctx, estado.avatar, pl.dir, M.t, pl.walking); ctx.restore();
+  } });
+  itens.sort((a, b) => a.z - b.z).forEach((i) => i.fn());
+
+  // balões (em coordenadas de tela)
+  ctx.setTransform(M.dpr, 0, 0, M.dpr, 0, 0);
+  M.bolhas.forEach((b) => desenharBolha(ctx, b));
+}
+function etiqueta(ctx, x, y, txt) {
+  ctx.font = '700 11px Nunito, sans-serif';
+  const w = ctx.measureText(txt).width + 14;
+  ctx.fillStyle = 'rgba(9,22,40,.88)'; rr(ctx, x - w / 2, y - 10, w, 20, 6); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+}
+function desenharBolha(ctx, b) {
+  ctx.font = '700 13px Nunito, sans-serif';
+  const larg = Math.max(...b.linhas.map((l) => ctx.measureText(l).width)) + 38;
+  const x = Math.max(6, Math.min(M.cw - larg - 6, b.ax - larg / 2));
+  const y = b.y;
+  ctx.globalAlpha = b.idade > 22 ? Math.max(0, 1 - (b.idade - 22) / 6) : 1;
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; rr(ctx, x + 2, y + 3, larg, b.alt, 7); ctx.fill();
+  ctx.fillStyle = '#FFFFFF'; rr(ctx, x, y, larg, b.alt, 7); ctx.fill();
+  ctx.strokeStyle = '#23262E'; ctx.lineWidth = 1.2; ctx.stroke();
+  const tx = Math.max(x + 10, Math.min(x + larg - 10, b.ax));
+  ctx.beginPath(); ctx.moveTo(tx - 5, y + b.alt - .5); ctx.lineTo(tx, y + b.alt + 6); ctx.lineTo(tx + 5, y + b.alt - .5); ctx.closePath(); ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(tx - 5, y + b.alt); ctx.lineTo(tx, y + b.alt + 6); ctx.lineTo(tx + 5, y + b.alt); ctx.stroke();
+  ctx.fillStyle = b.cor; rr(ctx, x + 7, y + 6, 14, 14, 3); ctx.fill();
+  ctx.fillStyle = '#23262E'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  b.linhas.forEach((l, i) => {
+    if (i === 0 && l.startsWith(b.nome + ':')) {
+      ctx.font = '800 13px Nunito, sans-serif'; ctx.fillText(b.nome + ':', x + 27, y + 7);
+      const wn = ctx.measureText(b.nome + ': ').width;
+      ctx.font = '600 13px Nunito, sans-serif'; ctx.fillText(l.slice(b.nome.length + 2), x + 27 + wn, y + 7);
+    } else { ctx.font = '600 13px Nunito, sans-serif'; ctx.fillText(l, x + 27, y + 7 + i * 16); }
+  });
+  ctx.globalAlpha = 1;
+}
+
+/* =====================================================================
+   TELA DO JOGO
+   ===================================================================== */
+function telaJogo() {
+  app.innerHTML = `
+    <div id="jogo">
+      <div>
+        <div id="stageWrap">
+          <canvas id="stage" aria-label="Sala do jogo: clique no chão para andar e nas pessoas para conversar"></canvas>
+          <div id="roomTag"></div>
+          <div id="chatbar">
+            <input type="text" id="chatIn" maxlength="70" placeholder="Diga alguma coisa para quem está na sala..." autocomplete="off">
+            <button class="btn" id="chatBtn">Falar</button>
+          </div>
+        </div>
+      </div>
+      <aside id="side"></aside>
+    </div>`;
+  montarSala();
+  iniciarMotor();
+  atualizarPainel();
+  const chatIn = document.getElementById('chatIn');
+  const enviar = () => {
+    const txt = chatIn.value.trim(); if (!txt) return;
+    chatIn.value = '';
+    falar('player', txt); Musica.sfx('blip');
+    responderChat(txt);
+  };
+  document.getElementById('chatBtn').addEventListener('click', enviar);
+  chatIn.addEventListener('keydown', (e) => { if (e.key === 'Enter') enviar(); });
+  if (!estado.visto[salaAtual().id]) setTimeout(() => abrirIntroSala(false), 350);
+}
+function responderChat(txt) {
+  const p = M.player;
+  let perto = null, md = 99;
+  M.npcs.forEach((n) => { const d = Math.max(Math.abs(n.x - p.x), Math.abs(n.y - p.y)); if (d < md) { md = d; perto = n; } });
+  if (!perto || md > 3) return;
+  const info = NPCS[perto.id];
+  const st = statusNpc(estado.sala, perto.id);
+  let resp;
+  if (/\b(oi|ol[aá]|opa|e a[ií]|bom dia|boa tarde|boa noite|salve)\b/i.test(txt)) resp = `Oi, ${apelido()}! Tudo certo?`;
+  else if (/obrigad|valeu/i.test(txt)) resp = 'Imagina! A gente está junto nesse projeto.';
+  else if (st === 'pend') resp = 'Quando puder, clica em mim que eu te conto o problema.';
+  else resp = info.falas[Math.floor(Math.random() * info.falas.length)];
+  setTimeout(() => { if (M.on) { perto.dir = dirPara(p.x - perto.x, p.y - perto.y, perto.dir); perto.virarEm = 5; falar(perto, resp); } }, 900);
+}
+function atualizarPainel() {
+  const side = document.getElementById('side'); if (!side) return;
+  const i = estado.sala, s = SALAS[i];
+  document.getElementById('roomTag').innerHTML = `${s.emoji} ${s.nome}<small>${s.unidade}</small>`;
+  const feitasSala = s.missoes.filter((m) => estado.feitas[m]).length;
+  const pessoas = s.npcs.map((n) => {
+    const st = statusNpc(i, n.id);
+    const rot = st === 'pend' ? ['pend', 'Tem uma situação'] : st === 'ok' ? ['ok', 'Resolvido'] : st === 'wait' ? ['wait', 'Aguardando'] : ['wait', 'Só de passagem'];
+    return `<button class="npc-item" data-npc="${n.id}"><span class="av" data-look="${n.id}"></span><span><span class="n">${NPCS[n.id].nome}</span><br><span class="c">${NPCS[n.id].cargo}</span></span><span class="st ${rot[0]}">${rot[1]}</span></button>`;
+  }).join('');
+  const tudo = feitasTotal() === TOTAL;
+  side.innerHTML = `
+    <div class="box">
+      <h4>Progresso do projeto</h4>
+      <div class="prog"><span style="width:${(feitasTotal() / TOTAL) * 100}%"></span></div>
+      <p class="dica" style="margin-top:6px"><b>${feitasTotal()} de ${TOTAL}</b> situações resolvidas · nesta sala: ${feitasSala} de ${s.missoes.length}</p>
+      ${tudo ? '<div class="actions" style="margin-top:12px"><button class="btn" id="verRes" style="width:100%;justify-content:center">🏁 Ver resultado</button></div>' : ''}
+    </div>
+    <div class="box">
+      <h4>Pessoas nesta sala</h4>
+      <div class="npc-list">${pessoas}</div>
+      <p class="dica">Clique numa pessoa (aqui ou na sala) para ir até ela.</p>
+    </div>
+    <div class="box">
+      <div class="side-btns">
+        <button class="btn dark" id="btnNav">🗺️ Mapa do prédio</button>
+        <button class="btn sec" id="btnQuadro">📌 Quadro da sala</button>
+      </div>
+      <p class="dica">A porta da sala também abre o mapa. O quadro na parede resume o que se vê aqui.</p>
+    </div>`;
+  side.querySelectorAll('[data-look]').forEach((el) => el.replaceWith(retratoCanvas(NPCS[el.dataset.look].look, 40)));
+  side.querySelectorAll('.npc-item').forEach((b) => b.addEventListener('click', () => {
+    const n = M.npcs.find((x) => x.id === b.dataset.npc); if (n) irAoNpc(n);
+  }));
+  document.getElementById('btnNav').addEventListener('click', abrirNavegador);
+  document.getElementById('btnQuadro').addEventListener('click', () => abrirIntroSala(true));
+  const vr = document.getElementById('verRes'); if (vr) vr.addEventListener('click', () => { estado.tela = 'final'; render(); });
+  atualizarHud();
+}
+
+/* ---------- modais ---------- */
+function abrirModal(html) {
+  mbox.innerHTML = html; modal.classList.add('on');
+  const x = mbox.querySelector('.x-btn'); if (x) x.addEventListener('click', fecharModal);
+}
+function fecharModal() { modal.classList.remove('on'); mbox.innerHTML = ''; }
+modal.addEventListener('click', (e) => { if (e.target === modal && !mbox.querySelector('[data-travado]')) fecharModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('on') && !mbox.querySelector('[data-travado]')) fecharModal(); });
+
+function abrirIntroSala(revisita) {
+  const s = salaAtual();
+  estado.visto[s.id] = true;
+  abrirModal(`
+    <button class="x-btn" aria-label="Fechar">✕</button>
+    <span class="m-tag">${s.emoji} ${s.nome} · ${s.unidade}</span>
+    <h3 class="px" style="font-size:1.6rem;margin-top:4px">${s.intro.titulo}</h3>
+    <p style="margin-top:8px">${s.intro.texto}</p>
+    <p style="margin-top:12px;font-weight:800">${revisita ? 'O que se trabalha nesta sala:' : 'O que você vai encontrar aqui:'}</p>
+    <ul class="lista-intro">${s.intro.itens.map((i) => `<li>${i}</li>`).join('')}</ul>
+    <div class="actions"><button class="btn" id="ok">${revisita ? 'Fechar' : 'Bora trabalhar →'}</button></div>`);
+  document.getElementById('ok').addEventListener('click', fecharModal);
+}
+
+function abrirNavegador() {
+  const lista = SALAS.map((s, i) => {
+    const lib = salaLiberada(i), aqui = i === estado.sala;
+    const f = s.missoes.filter((m) => estado.feitas[m]).length;
+    return `<button class="nav-item ${aqui ? 'here' : ''}" data-i="${i}" ${lib ? '' : 'disabled'}>
+      <span class="e">${lib ? s.emoji : '🔒'}</span>
+      <span><span class="n">${s.nome}</span><br><span class="u">${s.unidade}</span></span>
+      <span class="p">${aqui ? 'Você está aqui' : lib ? `${f}/${s.missoes.length}` : 'Trancada'}</span></button>`;
+  }).join('');
+  abrirModal(`
+    <button class="x-btn" aria-label="Fechar">✕</button>
+    <span class="m-tag">Mapa do prédio</span>
+    <h3 class="px" style="font-size:1.5rem;margin-top:4px">Para onde você quer ir?</h3>
+    <p class="muted" style="margin-top:6px;color:var(--ink-2)">Cada sala abre quando todas as situações da anterior estiverem resolvidas.</p>
+    <div class="nav-list">${lista}</div>`);
+  mbox.querySelectorAll('.nav-item:not([disabled])').forEach((b) => b.addEventListener('click', () => {
+    const i = Number(b.dataset.i); fecharModal(); if (i !== estado.sala) irParaSala(i);
+  }));
+}
+function irParaSala(i) {
+  estado.sala = i;
+  Musica.sfx('porta'); Musica.tocar(salaAtual().id);
+  montarSala(); redimensionar(); atualizarPainel();
+  if (!estado.visto[salaAtual().id]) setTimeout(() => abrirIntroSala(false), 250);
+  else toast(`${salaAtual().emoji} ${salaAtual().nome}`);
+}
+
+/* ---------- situações-problema ---------- */
+function abrirMissao(mid, npcRef) {
+  const m = MISSOES[mid], info = NPCS[m.npc];
+  abrirModal(`
+    <button class="x-btn" aria-label="Fechar">✕</button>
+    <div class="m-head"><span id="retrato"></span><div><span class="m-tag">Situação-problema · ${m.tema}</span><div class="n">${info.nome}</div><div class="c">${info.cargo}</div></div></div>
+    <div class="fala">${m.contexto}</div>
+    <p class="pergunta">${m.pergunta}</p>
+    <div id="corpo"></div>
+    <div id="fb"></div>
+    <div class="actions" id="rodape"></div>`);
+  document.getElementById('retrato').replaceWith(retratoCanvas(info.look, 76, 0));
+  Musica.sfx('abrir');
+  if (m.tipo === 'escolha') montarEscolha(mid); else montarClassificar(mid);
+}
+function concluirMissao(mid) {
+  estado.feitas[mid] = true;
+  Musica.sfx('ok');
+  const rod = document.getElementById('rodape');
+  rod.innerHTML = '<button class="btn" id="seguir">Continuar →</button>';
+  mbox.setAttribute('data-travado', '');
+  document.getElementById('seguir').addEventListener('click', () => {
+    mbox.removeAttribute('data-travado');
+    fecharModal();
+    const npc = M.npcs.find((n) => n.id === MISSOES[mid].npc);
+    if (npc) falar(npc, estado.errou[mid] ? 'Pegou a ideia! Valeu, ' + apelido() + '.' : 'Mandou bem, ' + apelido() + '! Era isso mesmo.');
+    atualizarPainel();
+    posConclusao();
+  });
+}
+function blocoConceito(m) { return `<div class="conceito"><b>${m.conceito.titulo}</b>${m.conceito.texto}</div>`; }
+function montarEscolha(mid) {
+  const m = MISSOES[mid];
+  if (!estado.ordem[mid]) estado.ordem[mid] = embaralhar(m.opcoes.map((_, i) => i));
+  const corpo = document.getElementById('corpo');
+  corpo.innerHTML = `<div class="opts">${estado.ordem[mid].map((oi, k) => `<button class="opt" data-oi="${oi}"><span class="l">${'ABCD'[k]}</span><span>${m.opcoes[oi].t}</span></button>`).join('')}</div>`;
+  corpo.querySelectorAll('.opt').forEach((b) => b.addEventListener('click', () => {
+    const op = m.opcoes[Number(b.dataset.oi)];
+    const fb = document.getElementById('fb');
+    if (op.ok) {
+      corpo.querySelectorAll('.opt').forEach((x) => { x.disabled = true; });
+      b.classList.add('right');
+      fb.innerHTML = `<div class="fb ok"><b>${estado.errou[mid] ? 'Agora sim.' : 'Certo de primeira!'}</b>${op.why}</div>${blocoConceito(m)}`;
+      concluirMissao(mid);
+    } else {
+      estado.errou[mid] = true; Musica.sfx('erro');
+      b.classList.add('wrong'); b.disabled = true;
+      fb.innerHTML = `<div class="fb err"><b>Ainda não.</b>${op.why} Tente outra alternativa.</div>`;
+    }
+  }));
+}
+function montarClassificar(mid) {
+  const m = MISSOES[mid];
+  if (!estado.ordem[mid]) estado.ordem[mid] = embaralhar(m.itens.map((_, i) => i));
+  const escolhas = {}; const travados = {};
+  const corpo = document.getElementById('corpo');
+  corpo.innerHTML = `<div class="cls">${estado.ordem[mid].map((ii) => `
+    <div class="cls-item" data-ii="${ii}"><p>${m.itens[ii].t}</p>
+      <div class="cls-btns">${m.categorias.map((c, ci) => `<button data-ci="${ci}">${c}</button>`).join('')}</div>
+      <div class="cls-why"></div></div>`).join('')}</div>`;
+  const rod = document.getElementById('rodape');
+  rod.innerHTML = '<button class="btn" id="conferir" disabled>Conferir</button>';
+  const btnC = document.getElementById('conferir');
+  const checar = () => { btnC.disabled = m.itens.some((_, ii) => escolhas[ii] == null); };
+  corpo.querySelectorAll('.cls-item').forEach((it) => {
+    const ii = Number(it.dataset.ii);
+    it.querySelectorAll('.cls-btns button').forEach((b) => b.addEventListener('click', () => {
+      if (travados[ii]) return;
+      escolhas[ii] = Number(b.dataset.ci);
+      it.querySelectorAll('.cls-btns button').forEach((x) => x.classList.toggle('sel', x === b));
+      it.classList.remove('wrong'); it.querySelector('.cls-why').textContent = '';
+      checar();
+    }));
+  });
+  btnC.addEventListener('click', () => {
+    let erros = 0;
+    corpo.querySelectorAll('.cls-item').forEach((it) => {
+      const ii = Number(it.dataset.ii), item = m.itens[ii];
+      if (travados[ii]) return;
+      if (escolhas[ii] === item.cat) {
+        travados[ii] = true; it.classList.add('right');
+        it.querySelectorAll('.cls-btns button').forEach((x) => { x.disabled = true; });
+        it.querySelector('.cls-why').textContent = '✓ ' + item.why;
+      } else {
+        erros++; it.classList.add('wrong');
+        it.querySelector('.cls-why').textContent = 'Reveja esta. Pense: ' + dicaCategoria(m, item);
+        escolhas[ii] = null; it.querySelectorAll('.cls-btns button').forEach((x) => x.classList.remove('sel'));
+      }
+    });
+    const fb = document.getElementById('fb');
+    if (erros) {
+      estado.errou[mid] = true; Musica.sfx('erro');
+      fb.innerHTML = `<div class="fb err"><b>${erros === 1 ? 'Falta acertar uma.' : `Faltam ${erros}.`}</b>As certas ficaram travadas. Reclassifique as marcadas em vermelho e confira de novo.</div>`;
+      checar();
+    } else {
+      fb.innerHTML = `<div class="fb ok"><b>${estado.errou[mid] ? 'Agora sim, tudo no lugar.' : 'Tudo certo de primeira!'}</b>Cada frase está na categoria certa.</div>${blocoConceito(m)}`;
+      concluirMissao(mid);
+    }
+  });
+}
+function dicaCategoria(m, item) {
+  if (m.id === 'm9' || m.categorias[0] === 'Must') return 'a clínica consegue funcionar no primeiro dia sem isso? Existe alternativa manual?';
+  return 'isso é algo que o sistema faz, a qualidade com que ele faz, ou uma política da clínica que existiria mesmo sem sistema?';
+}
+function posConclusao() {
+  const i = estado.sala;
+  if (feitasTotal() === TOTAL) {
+    abrirModal(`
+      <span class="m-tag">🏁 Projeto entregue</span>
+      <h3 class="px" style="font-size:1.6rem;margin-top:4px">A Patas & Cia tem sistema!</h3>
+      <p style="margin-top:8px">Você passou por todas as salas, do primeiro dia à defesa do documento. Hora de ver o resultado e enviar para a planilha da disciplina.</p>
+      <div class="actions"><button class="btn" id="res">Ver resultado →</button><button class="btn sec" id="ficar">Ficar mais um pouco</button></div>`);
+    document.getElementById('res').addEventListener('click', () => { fecharModal(); estado.tela = 'final'; render(); });
+    document.getElementById('ficar').addEventListener('click', fecharModal);
+    return;
+  }
+  if (salaCompleta(i) && i + 1 < SALAS.length) {
+    const prox = SALAS[i + 1];
+    setTimeout(() => Musica.sfx('sala'), 150);
+    abrirModal(`
+      <span class="m-tag">Sala concluída</span>
+      <h3 class="px" style="font-size:1.5rem;margin-top:4px">${SALAS[i].emoji} ${SALAS[i].nome}: tudo resolvido!</h3>
+      <p style="margin-top:8px">A próxima sala foi liberada: <b>${prox.emoji} ${prox.nome}</b> (${prox.unidade}).</p>
+      <div class="actions"><button class="btn" id="ir">Ir agora →</button><button class="btn sec" id="ficar">Ficar aqui</button></div>`);
+    document.getElementById('ir').addEventListener('click', () => { fecharModal(); irParaSala(i + 1); });
+    document.getElementById('ficar').addEventListener('click', fecharModal);
+  }
+}
+
+/* =====================================================================
+   RESULTADO
+   ===================================================================== */
+function telaFinal() {
+  const ac = acertosPrimeira(), pct = Math.round((ac / TOTAL) * 100);
+  app.innerHTML = `
+    <div class="kicker">Relatório de fim de projeto</div>
+    <h1 class="titulo">Bom trabalho, ${esc(apelido())}!</h1>
+    <p class="lead">Situações resolvidas de primeira, do total da disciplina:</p>
+    <div style="margin-top:14px" class="big-num">${ac}/${TOTAL} <span style="font-size:.45em;color:var(--light-2)">· ${pct}%</span></div>
+    <div class="card">
+      <h3>Por sala</h3>
+      <div class="res-grid">${SALAS.map((s) => { const a = s.missoes.filter((m) => estado.feitas[m] && !estado.errou[m]).length; return `<div class="res-item"><b>${s.emoji} ${s.nome}</b><small>${s.unidade} · ${a} de ${s.missoes.length} de primeira</small></div>`; }).join('')}</div>
+    </div>
+    <div class="card">
+      <p class="muted">Resultado de <b>${esc(estado.nome)}</b> (${esc(estado.matricula)}) pronto para envio.</p>
+      <div class="actions"><button class="btn" id="btnEnviar">Enviar resultado</button><button class="btn sec" id="voltarJogo">Voltar ao prédio</button></div>
+      <p id="statusEnvio" style="margin-top:10px"></p>
+    </div>`;
+  document.getElementById('btnEnviar').addEventListener('click', () => enviarResultado(ac, pct));
+  document.getElementById('voltarJogo').addEventListener('click', () => { estado.tela = 'jogo'; render(); });
+}
+function enviarResultado(ac, pct) {
+  const st = document.getElementById('statusEnvio'), btn = document.getElementById('btnEnviar');
+  btn.disabled = true; st.textContent = 'Enviando...';
+  const dados = {
+    nome: estado.nome, matricula: estado.matricula,
+    disciplina: 'Engenharia de Requisitos', aula: 'todas (1 a 16)', atividade: 'Nexo Software',
+    acertos: ac, total: TOTAL, pontuacao: pct, timestamp: new Date().toISOString(),
+  };
+  if (!WEBAPP_URL) { st.textContent = 'Resultado registrado só nesta tela.'; return; }
+  fetch(WEBAPP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(dados) })
+    .then(() => { st.innerHTML = '<span class="seal">✓ Resultado enviado.</span>'; btn.style.display = 'none'; })
+    .catch(() => { st.textContent = 'Não foi possível enviar agora. Tente de novo ou mostre esta tela ao professor.'; btn.disabled = false; });
+}
+
+Object.keys(MISSOES).forEach((k) => { MISSOES[k].id = k; });
+render();
+</script>
+</body>
+</html>

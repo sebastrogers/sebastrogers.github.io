@@ -300,6 +300,14 @@
           "arquivo": "assets/materiais/requisitos/jogos-revisao.html",
           "data": "17/09/2026",
           "tags": "jogo revisao interativo individual pareamento sequencia mcq defeito categorizar dossie sprint zero user stories invest"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Nexo Software: um semestre de analista",
+          "descricao": "Jogo de salas com avatar, personagens e 18 situações-problema que cobrem a disciplina inteira, do primeiro dia de projeto à defesa do documento.",
+          "arquivo": "assets/materiais/requisitos/jogo-nexo-software.html",
+          "data": "22/09/2026",
+          "tags": "jogo revisao interativo individual avatar personagens situacao problema elicitacao moscow caso de uso rastreabilidade baseline defesa ddr"
         }
       ]
     }
