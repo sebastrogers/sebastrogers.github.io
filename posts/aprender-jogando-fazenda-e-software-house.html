@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aprender jogando: uma fazenda e uma software house em sala de aula | Sebastião Rogério</title>
+    <meta name="description" content="Como transformei as disciplinas de Coding e Engenharia de Requisitos do SENAC em dois jogos, com ajuda da IA generativa." />
+    <meta property="og:title" content="Aprender jogando: uma fazenda e uma software house em sala de aula" />
+    <meta property="og:description" content="Dois jogos feitos com IA generativa para as disciplinas de Coding e Engenharia de Requisitos do curso de ADS do SENAC." />
+    <meta property="og:image" content="https://sebastrogers.github.io/assets/blog/fazenda-dos-paradigmas.jpg" />
+    <meta property="og:type" content="article" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      .post-video { margin: 8px 0 0; }
+      .post-video video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #111820; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+      .post-video figcaption { margin-top: 10px; color: var(--muted); font-size: 0.94rem; font-weight: 700; }
+      .post-content h3 { margin-top: 18px; font-size: 1.45rem; color: var(--ink); }
+      .post-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+      .post-note { padding: 14px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font-size: 0.98rem; }
+      .post-ref { padding-top: 22px; border-top: 1px solid var(--line); font-size: 0.92rem; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" id="topo">
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="brand" href="../index.html"><span class="brand-mark">SR</span><span>Sebastião Rogério</span></a>
+        <div class="menu" id="menu">
+          <a href="../sobre.html">Sobre</a><a href="../materiais.html">Materiais</a><a href="../blog.html">Blog</a><a href="../publicacoes.html">Publicações</a><a href="../contato.html">Contato</a>
+        </div>
+        <div class="nav-tools">
+          <a class="lang-switch" href="../en/blog.html" aria-label="View English version">EN</a>
+          <button class="theme-toggle" type="button" aria-label="Alternar tema claro ou escuro"><span class="theme-icon" aria-hidden="true">☾</span></button>
+          <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+        </div>
+      </nav>
+    </header>
+    <main class="post-shell">
+      <article>
+        <header class="post-header">
+          <p class="post-meta">Educação · 23 set 2026 · 4 min de leitura</p>
+          <h1>Aprender jogando: uma fazenda e uma software house em sala de aula</h1>
+          <p class="page-lead">Como transformei as disciplinas de Coding e Engenharia de Requisitos do SENAC em dois jogos, com uma ajudinha da IA generativa.</p>
+        </header>
+        <div class="post-content">
+          <p>Desde pequeno sou apaixonado por jogos. Na graduação, pesquisei e fiz meu TCC na área, e cheguei a seguir um pouco nessa linha no mestrado. A vida acabou me levando para outros caminhos, mas nunca parei de jogar, experimentar, conhecer gente e me divertir muito com isso. No fim das contas, não é esse o propósito?</p>
+
+          <p>Foi na graduação que conheci vários pesquisadores de games na educação, e um deles me marcou em especial. João Mattar escreveu uma frase que nunca mais saiu da minha cabeça:</p>
+
+          <blockquote>"O aprendizado necessita de motivação para um envolvimento intenso, o que é atingido pelos games." (MATTAR, 2010)</blockquote>
+
+          <p>Concordo demais com ela. Existem muitas formas de ensinar alguma coisa, e o jogo, sem dúvida, é uma das mais poderosas.</p>
+
+          <p>Hoje, com assistentes de IA generativa como o Claude e o ChatGPT, ficou muito mais fácil construir materiais dinâmicos. Uma experiência recente foi nas disciplinas que ministro no curso de Análise e Desenvolvimento de Sistemas do SENAC: Coding e Engenharia de Requisitos. Uma é bem prática, a outra mais teórica. Como engajar a turma nas duas?</p>
+
+          <p>Tcharam! Pedi ao "Claudinho" dois jogos: um inspirado em Stardew Valley para Coding e outro inspirado em Habbo para Engenharia de Requisitos. Em pouco tempo, os dois estavam prontos, com o conteúdo das disciplinas trabalhado de forma lúdica. Os alunos amaram, e eu também, claro.</p>
+
+          <h3>Fazenda dos Paradigmas · Coding</h3>
+
+          <figure class="post-video">
+            <video controls preload="metadata" playsinline poster="../assets/blog/fazenda-dos-paradigmas.jpg">
+              <source src="../assets/blog/fazenda-dos-paradigmas.mp4" type="video/mp4" />
+              Seu navegador não conseguiu reproduzir o vídeo.
+            </video>
+            <figcaption>Trinta segundos de jogo, com a trilha original da própria fazenda.</figcaption>
+          </figure>
+
+          <p>O aluno herda uma fazenda com cinco talhões, um para cada unidade da disciplina, do Python básico ao full-stack. Para plantar, responde a situações de programação; para regar, decide se uma afirmação é verdade ou mito; no lago, pesca bugs escondidos em trechos de código; no quadro de pedidos, coloca comandos do Git em ordem ou classifica conceitos. A cada capítulo concluído, a fazenda cresce: aparecem galinheiro, estufa, celeiro e moinho. O cenário ainda acompanha o relógio de quem está jogando, então à noite os lampiões acendem.</p>
+
+          <div class="post-actions">
+            <a class="button primary" href="../assets/materiais/coding/jogo-fazenda-dos-paradigmas.html" target="_blank" rel="noopener">Jogar a Fazenda dos Paradigmas</a>
+          </div>
+
+          <h3>Nexo Software · Engenharia de Requisitos</h3>
+
+          <figure class="post-video">
+            <video controls preload="metadata" playsinline poster="../assets/blog/nexo-software.jpg">
+              <source src="../assets/blog/nexo-software.mp4" type="video/mp4" />
+              Seu navegador não conseguiu reproduzir o vídeo.
+            </video>
+            <figcaption>Um passeio pelas cinco salas da software house.</figcaption>
+          </figure>
+
+          <p>Aqui o aluno é um analista de requisitos recém-contratado por uma pequena software house de Caruaru, e o primeiro cliente é uma clínica veterinária. Ele monta o próprio avatar, anda por salas isométricas, conversa com a equipe e com a cliente em balões de fala e resolve 18 situações-problema: entrevista sem viés, histórias de usuário, priorização com MoSCoW, casos de uso, rastreabilidade, controle de mudanças e, no fim, a defesa do documento de requisitos. Cada sala tem uma música própria.</p>
+
+          <div class="post-actions">
+            <a class="button primary" href="../assets/materiais/requisitos/jogo-nexo-software.html" target="_blank" rel="noopener">Jogar o Nexo Software</a>
+          </div>
+
+          <p class="post-note">Os dois jogos foram pensados para a turma, por isso pedem nome e matrícula no início. Se você está aqui só para conhecer, pode usar qualquer nome e jogar à vontade.</p>
+
+          <p class="post-ref">MATTAR, João. <em>Games em educação: como os nativos digitais aprendem</em>. São Paulo: Pearson Prentice Hall, 2010.</p>
+        </div>
+      </article>
+      <a class="section-link" href="../blog.html">Voltar ao blog</a>
+    </main>
+    <footer class="footer"><p>© <span id="year"></span> Sebastião Rogério.</p><a href="../index.html">Início</a></footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
