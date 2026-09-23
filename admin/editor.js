@@ -78,7 +78,7 @@
     coverImg: $("#coverImg"), coverButton: $("#coverButton"), coverRemove: $("#coverRemove"),
     coverInput: $("#coverInput"), body: $("#fBody"), toolbar: $("#toolbar"), mediaInput: $("#mediaInput"),
     counter: $("#counter"), pMeta: $("#pMeta"), pTitle: $("#pTitle"), pBody: $("#pBody"),
-    panes: document.querySelector(".panes"),
+    panes: document.querySelector(".panes"), removeButton: $("#removeButton"),
   };
 
   const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -155,7 +155,9 @@
     const commit = await gh(repoPath(`/git/commits/${head}`));
     const tree = [];
     for (const f of files) {
-      if (f.blob) {
+      if (f.remove) {
+        tree.push({ path: f.path, mode: "100644", type: "blob", sha: null });
+      } else if (f.blob) {
         setStatus(`Enviando ${f.path.split("/").pop()}…`);
         const b = await gh(repoPath("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobToB64(f.blob), encoding: "base64" }) });
         tree.push({ path: f.path, mode: "100644", type: "blob", sha: b.sha });
@@ -346,6 +348,12 @@ ${body}
     return { html: html.replace(LIST_RE, (_, a, __, c) => a + inner + c), entries };
   }
 
+  function removeFromBlog(html, slug) {
+    const entries = parseBlog(html).filter((e) => e.slug !== slug);
+    const inner = entries.length ? "\n" + entries.map((e) => e.block).join("\n") : "";
+    return { html: html.replace(LIST_RE, (_, a, __, c) => a + inner + c), entries };
+  }
+
   function updateIndex(html, entries) {
     if (!html || !GRID_RE.test(html)) return null;
     const cards = entries.slice(0, 3).map((e) => `          <article class="blog-card">
@@ -469,7 +477,7 @@ ${body}
       fillForm({ date: todayISO() }, "");
     }
     dirty = false;
-    markCurrent();
+    markCurrent(); updateRemoveButton();
     closeSidebar();
     el.title.focus();
   }
@@ -512,7 +520,7 @@ ${body}
       showNotice(`Publicado em <a href="${CFG.site}/posts/${slug}.html" target="_blank" rel="noopener">${CFG.site.replace("https://", "")}/posts/${slug}.html</a>`);
     }
     dirty = false;
-    markCurrent();
+    markCurrent(); updateRemoveButton();
     setStatus("");
   }
 
@@ -600,7 +608,7 @@ ${body}
       clearLocal(localKeyBefore); clearLocal(localKey());
       dirty = false;
       updateSlugLock();
-      await refreshList(); markCurrent();
+      await refreshList(); markCurrent(); updateRemoveButton();
       const url = `${CFG.site}/posts/${m.slug}.html`;
       if (publish) {
         setStatus("Publicado ✓", "ok");
@@ -622,6 +630,74 @@ ${body}
       busy = false; el.publishButton.disabled = el.draftButton.disabled = false;
     }
   }
+
+  // ---------------------------------------------------------------- tirar do ar / apagar
+  function askRemove() {
+    if (!cur.slug || busy) return;
+    const p = posts.find((x) => x.slug === cur.slug) || {};
+    const title = esc(el.title.value || cur.slug);
+    showNotice(`<strong>O que fazer com “${title}”?</strong><div class="notice-actions">`
+      + (cur.published ? `<button type="button" class="button secondary small" id="doUnpublish">Tirar do ar (vira rascunho)</button>` : "")
+      + `<button type="button" class="button small danger" id="doDelete">Apagar de vez</button>`
+      + `<button type="button" class="link-btn muted" id="doCancel">Cancelar</button></div>`
+      + `<small class="muted">${cur.published ? "Tirar do ar remove o post do site e da página inicial, mas guarda o texto nos rascunhos. " : ""}Apagar de vez remove também o texto e as imagens enviadas pelo editor. Dá para recuperar pelo histórico do GitHub, mas não pelo editor.</small>`, "warn");
+    $("#doCancel").onclick = () => showNotice("");
+    $("#doDelete").onclick = () => { if (confirm(`Apagar “${el.title.value || cur.slug}” de vez?`)) removePost({ hard: true, hasSource: p.hasSource !== false }); };
+    const u = $("#doUnpublish"); if (u) u.onclick = () => removePost({ hard: false });
+    el.notice.scrollIntoView({ block: "nearest" });
+  }
+
+  async function removePost({ hard, hasSource = true }) {
+    const slug = cur.slug; const m = readForm();
+    busy = true; el.publishButton.disabled = el.draftButton.disabled = true;
+    try {
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        setStatus("Preparando…");
+        const files = [];
+        if (cur.published) {
+          const blog = await getText("blog.html");
+          const { html, entries } = removeFromBlog(blog, slug);
+          files.push({ path: "blog.html", text: html });
+          const index = updateIndex(await getText("index.html"), entries);
+          if (index) files.push({ path: "index.html", text: index });
+          if (await getText(`posts/${slug}.html`) !== null) files.push({ path: `posts/${slug}.html`, remove: true });
+        }
+        if (hard) {
+          if (await getText(`${CFG.srcDir}/${slug}.md`) !== null) files.push({ path: `${CFG.srcDir}/${slug}.md`, remove: true });
+          const media = await listDir(`${CFG.assetDir}/${slug}`);
+          for (const f of Array.isArray(media) ? media : []) if (f.type === "file") files.push({ path: `${CFG.assetDir}/${slug}/${f.name}`, remove: true });
+        } else {
+          files.push({ path: `${CFG.srcDir}/${slug}.md`, text: buildSource({ ...m, slug, draft: true }, m.md) });
+        }
+        if (!files.length) break;
+        try {
+          await commitFiles(files, `blog: ${hard ? "apaga" : "tira do ar"} "${m.title || slug}"\n\nEnviado pelo editor do site (admin/).`);
+        } catch (e) {
+          if ((e.status === 422 || e.status === 409) && attempt < 3) continue;
+          throw e;
+        }
+        break;
+      }
+      clearLocal(LOCAL_KEY + slug);
+      if (hard) {
+        dirty = false; newPost();
+        setStatus("Post apagado ✓", "ok");
+        showNotice(`“${esc(m.title || slug)}” foi apagado. O site atualiza em 1 a 2 minutos.`);
+      } else {
+        cur.published = false; dirty = false;
+        setStatus("Post tirado do ar ✓", "ok");
+        showNotice("O post saiu do site e agora está nos rascunhos. Para voltar, é só clicar em <strong>Publicar</strong>.");
+      }
+      await refreshList(); markCurrent(); updateRemoveButton();
+    } catch (e) {
+      console.error(e);
+      setStatus("Não deu certo", "err");
+      showNotice(`<strong>Erro:</strong> ${esc(e.message)}`, "err");
+    } finally {
+      busy = false; el.publishButton.disabled = el.draftButton.disabled = false;
+    }
+  }
+  function updateRemoveButton() { el.removeButton.hidden = !cur.slug; }
 
   // ---------------------------------------------------------------- mídia
   async function prepareImage(file) {
@@ -778,6 +854,7 @@ ${body}
     el.publishButton.addEventListener("click", () => save({ publish: true }));
     el.draftButton.addEventListener("click", () => save({ publish: false }));
     el.newButton.addEventListener("click", newPost);
+    el.removeButton.addEventListener("click", askRemove);
     el.sidebar.addEventListener("click", (e) => {
       const b = e.target.closest("button[data-slug]");
       if (b) openPost(b.dataset.slug).catch((err) => { setStatus("Não consegui abrir o post", "err"); showNotice(esc(err.message), "err"); });
