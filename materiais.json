@@ -124,10 +124,10 @@
         {
           "tipo": "Jogo",
           "titulo": "Fazenda dos Paradigmas",
-          "descricao": "Jogo de revisão de toda a disciplina, com personagem próprio e uma etapa por unidade, do fundamento ao full-stack.",
+          "descricao": "Jogo de fazenda em pixel art: plante, regue, colha, pesque bugs e atenda pedidos em 44 atividades que cobrem a disciplina inteira.",
           "arquivo": "assets/materiais/coding/jogo-fazenda-dos-paradigmas.html",
           "data": "22/09/2026",
-          "tags": "jogo revisao interativo individual personagem fazenda simcity classe objeto poo backend frontend fullstack"
+          "tags": "jogo revisao interativo individual fazenda pixel art personagem python poo backend api frontend javascript react git"
         }
       ]
     },
