@@ -1,5 +1,5 @@
 {
-  "atualizado": "22 de setembro de 2026",
+  "atualizado": "24 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -210,6 +210,14 @@
           "arquivo": "assets/materiais/cloud/jogo-aula-05-painel-aws.html",
           "data": "17/09/2026",
           "tags": "jogo simulacao interativo individual ec2 ami chave grupo de seguranca stop terminate free tier"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro completo: da conta AWS ao site no ar",
+          "descricao": "Criar e proteger a conta, ligar um servidor EC2 e publicar o site da equipe no S3, pela interface do console ou pelo terminal do CloudShell.",
+          "arquivo": "assets/materiais/cloud/roteiro-completo-conta-ec2-s3.pdf",
+          "data": "24/09/2026",
+          "tags": "laboratorio pratica aws conta iam mfa budgets ec2 instance connect apache s3 site estatico bucket policy cloudshell cli terminal console"
         }
       ]
     },
