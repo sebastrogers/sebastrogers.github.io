@@ -212,6 +212,14 @@
           "tags": "jogo simulacao interativo individual ec2 ami chave grupo de seguranca stop terminate free tier"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 6: Processar e guardar, EC2 e S3 em teoria e em cenários",
+          "descricao": "O que são o EC2 e o S3, como cada um é cobrado e qual escolher, com cenários como a Black Friday de uma loja, os exames de um hospital e o caso Netflix.",
+          "arquivo": "assets/materiais/cloud/aula-06-ec2-e-s3.pdf",
+          "data": "24/09/2026",
+          "tags": "slides ec2 s3 instancia familia spot savings plans ebs auto scaling objeto durabilidade classes glacier ciclo de vida versionamento netflix arquitetura cenarios"
+        },
+        {
           "tipo": "Roteiro",
           "titulo": "Roteiro completo: da conta AWS ao site no ar",
           "descricao": "Criar e proteger a conta, ligar um servidor EC2 e publicar o site da equipe no S3, pela interface do console ou pelo terminal do CloudShell.",
