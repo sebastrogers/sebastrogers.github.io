@@ -29,19 +29,19 @@ O que a gente quer é uma forma de representar o texto que capture o **significa
 
 ## Texto vira coordenada
 
-Um embedding é uma lista de números que representa um texto. Algo como `[0.12, -0.48, 0.91, ...]`, com algumas centenas ou milhares de números. A ideia central é simples: **textos com significados parecidos viram listas de números parecidas.**
+Um embedding é uma lista de números que representa um texto. Algo como `[0.12, -0.45, 0.89, ...]`, com algumas centenas ou milhares de números. A ideia central é simples: **textos com significados parecidos viram listas de números parecidas.**
 
-![Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)](../assets/blog/o-que-e-um-embedding-afinal/embedding-fluxo-6lj8.jpg "Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)")
+![Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)](../assets/blog/o-que-e-um-embedding-afinal/embedding-fluxo-8khz.jpg "Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)")
 
 Uma forma de visualizar isso é imaginar um mapa. Cada texto vira um ponto nesse mapa, e o modelo de embeddings é quem decide onde colocar cada ponto. Um bom modelo coloca "dor atrás dos olhos", "dor retro-orbitária" e "dor ao mexer os olhos" bem perto uns dos outros, e bem longe de "pressão alta".
 
-![Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini)](../assets/blog/o-que-e-um-embedding-afinal/embedding-mapa-crls.jpg "Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini)")
+![Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini).](../assets/blog/o-que-e-um-embedding-afinal/embedding-mapa-an9b.jpg "Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini).")
 
 A diferença para um mapa de verdade é que ele não tem duas dimensões, tem centenas. Não dá para desenhar, mas a matemática funciona igual: dá para medir a distância entre dois pontos. E buscar passa a ser isso. Você transforma a pergunta em um ponto e procura os documentos que estão mais perto dela.
 
 ## Um exemplo com três dimensões
 
-Para ficar concreto, vou inventar um modelo de brinquedo com só três números por texto. Cada número mede o quanto o texto fala de um assunto: **arbovirose**, **quadro respiratório** e **quadro cardiovascular**.
+Para ficar concreto, vou inventar um modelo bem simplificado, com só três números por texto. Cada número mede o quanto o texto fala de um assunto: **arbovirose**, **quadro respiratório** e **quadro cardiovascular**.
 
 | Texto | arbovirose | respiratório | cardiovascular |
 |---|---|---|---|
@@ -96,10 +96,16 @@ for doc, sim in sorted(zip(documentos, similaridades), key=lambda x: -x[1]):
 Quando rodei aqui, o resultado foi este:
 
 ```
-[RODAR E COLAR O RESULTADO AQUI]
+0.873  Dengue: febre alta, dor retro-orbitária, dor muscular e exantema
+0.867  Chikungunya: febre e dor intensa nas articulações, que pode durar meses
+0.866  Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas
+0.855  Síndrome gripal: febre, tosse, coriza e dor de garganta
+0.843  Hipertensão arterial: diagnóstico e acompanhamento na atenção primária
 ```
 
-Três coisas para reparar. Primeiro, cada documento virou um vetor de 384 números (`docs_vec.shape` mostra isso). Segundo, os prefixos `query:` e `passage:`: esse modelo foi treinado assim, e cada família de modelos tem sua convenção, um detalhe que faz diferença de verdade e que volta no próximo post. Terceiro, os números absolutos importam menos que a **ordem**: o que interessa na busca é qual documento vem primeiro.
+A ordem faz sentido: dengue em primeiro, chikungunya logo atrás (outra arbovirose, também com febre e dor) e hipertensão por último. Mas repare nos números: estão todos entre 0,84 e 0,87, bem longe do 0,99 contra 0,00 do exemplo inventado lá em cima, com três dimensões. Isso não é defeito. Os modelos e5 foram treinados de um jeito que espreme as similaridades numa faixa estreita, perto de 0,7 a 1,0, e os próprios autores avisam isso [no FAQ do modelo](https://huggingface.co/intfloat/multilingual-e5-small). Cada modelo tem a sua "escala", então um valor como 0,85 não quer dizer nada sozinho.
+
+Mais três coisas para reparar. Primeiro, cada documento virou um vetor de 384 números (`docs_vec.shape` mostra isso). Segundo, os prefixos `query:` e `passage:`: esse modelo foi treinado assim, e cada família de modelos tem sua convenção, um detalhe que faz diferença de verdade e que volta no próximo post. Terceiro, e mais importante: na busca, o que interessa é a **ordem**, e não o número absoluto. Aqui a ordem saiu certa, mas com uma margem pequena entre os primeiros colocados. Com outros modelos a escala e a margem mudam, e comparar vários deles em português é o assunto do post 6.
 
 Vale brincar um pouco: troque a pergunta por "minha barriga dói muito e não paro de vomitar", "meus joelhos e punhos doem demais depois da febre" ou "tô com tosse e nariz escorrendo" e veja o ranking mudar.
 
