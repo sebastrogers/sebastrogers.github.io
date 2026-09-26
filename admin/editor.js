@@ -44,7 +44,8 @@
       .post-content th, .post-content td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
       .post-content th { color: var(--ink); }
       .post-figure, .post-video { margin: 8px 0 0; }
-      .post-figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+      .post-figure img { display: block; width: auto; max-width: 100%; max-height: 460px; height: auto; margin: 0 auto; border: 1px solid var(--line); border-radius: var(--radius); }
+      .post-figure figcaption { text-align: center; }
       .post-video video, .post-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; background: #111820; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
       .post-figure figcaption, .post-video figcaption { margin-top: 10px; color: var(--muted); font-size: 0.94rem; font-weight: 700; }
       .post-actions { display: flex; flex-wrap: wrap; gap: 12px; }
