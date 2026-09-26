@@ -730,7 +730,7 @@ const JUIZES = [
    ESTADO SALVO
    ===================================================================== */
 const CHAVE = 'trilhaJuizes.v2';
-let S = { nome:'', turma:'', som:false, res:{} };
+let S = { nome:'', turma:'', som:true, res:{} };
 try { const s = JSON.parse(localStorage.getItem(CHAVE) || 'null'); if (s) S = Object.assign(S, s); } catch (e) {}
 function salvar(){ try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch (e) {} }
 
@@ -1751,7 +1751,7 @@ function terminarJuiz(){
   const c = $('fim-cv'), ctx = c.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); ctx.setTransform(2.8, 0, 0, 2.8, 110, 244); drawAvatar(ctx, LOOKS[J.id], 0, 0, false);
   const todos = JUIZES.every((j) => S.res[j.id]);
   $('btn-fechamento').hidden = !todos; $('btn-outro').className = todos ? 'btn sec' : 'btn';
-  tela('tela-fim'); sfx('vitoria'); musica('selecao');
+  tela('tela-fim'); sfx('vitoria'); musica('escolha');
   enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Lição ' + J.licao + ' · ' + (J.nomeLongo || J.nome), juiz:J.nomeLongo || J.nome, acertos:R.acertos, total:R.total, pontuacao:pct, estrelas:R.estrelas, maxEstrelas:R.max });
   G = null;
 }
@@ -1762,7 +1762,7 @@ function enviarResultado(dados){
     .then(() => st.textContent = 'Resultado enviado.').catch(() => st.textContent = 'Não consegui enviar agora. Mostre esta tela ao professor.');
 }
 
-$('btn-voltar').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('selecao'); };
+$('btn-voltar').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('escolha'); };
 $('btn-historia').onclick = () => { if (G && $('modal').hidden) abrirIntro(true); };
 $('btn-reiniciar').onclick = () => { if (!G || !$('modal').hidden) return; $('forca').hidden = true; Object.assign(R, G.r0); iniciarDesafio(); };
 $('btn-outro').onclick = () => { montarEscolha(); tela('tela-escolha'); };
@@ -1781,7 +1781,7 @@ function abrirFinal(){
   $('final-num').innerHTML = `<div><b>${ac}/${tot}</b><span>Perguntas certas</span></div><div><b>${tot ? Math.round(ac / tot * 100) : 0}%</b><span>Aproveitamento</span></div><div><b>★ ${est}</b><span>de ${mx} estrelas</span></div><div><b>${JUIZES.reduce((n, j) => n + j.desafios.length, 0)}</b><span>Desafios cumpridos</span></div>`;
   const med = $('final-med'); med.innerHTML = '';
   JUIZES.forEach((j) => { const r = S.res[j.id]; const d = document.createElement('div'); d.className = 'medalha'; const c = retrato(LOOKS[j.id], 64, 64, 0); d.append(c); d.insertAdjacentHTML('beforeend', `<b>${esc(j.nome)}</b><small>★ ${r ? r.estrelas : 0} · ${r ? r.acertos + '/' + r.total : '0'}</small>`); med.append(d); });
-  tela('tela-final'); sfx('vitoria'); musica('selecao');
+  tela('tela-final'); sfx('vitoria'); musica('final');
   finalT0 = performance.now(); if (!finalRaf) finalRaf = requestAnimationFrame(cenaFinal);
   enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Trilha completa (7 juízes)', juiz:'Trilha completa (7 juízes)', acertos:ac, total:tot, pontuacao:tot ? Math.round(ac / tot * 100) : 0, estrelas:est, maxEstrelas:mx });
 }
@@ -1809,7 +1809,7 @@ function cenaFinal(ts){
   finalRaf = requestAnimationFrame(cenaFinal);
 }
 $('btn-refazer').onclick = () => comecarJuiz(J);
-$('form-nome').addEventListener('submit', (e) => { e.preventDefault(); S.nome = $('in-nome').value.trim() || 'Visitante'; S.turma = $('in-turma').value.trim(); salvar(); $('chip-nome').textContent = S.nome; audioDesbloquear(); montarEscolha(); tela('tela-escolha'); musica('selecao'); });
+$('form-nome').addEventListener('submit', (e) => { e.preventDefault(); S.nome = $('in-nome').value.trim() || 'Visitante'; S.turma = $('in-turma').value.trim(); salvar(); $('chip-nome').textContent = S.nome; audioDesbloquear(); montarEscolha(); tela('tela-escolha'); musica('escolha'); });
 $('cv').addEventListener('mousemove', aoMover);
 $('cv').addEventListener('mouseleave', () => { if (G) G.hover = null; });
 $('cv').addEventListener('click', aoClicar);
@@ -1818,7 +1818,9 @@ $('cv').addEventListener('click', aoClicar);
    SOM (Web Audio, gerado na hora, sem arquivos)
    ===================================================================== */
 const PRESETS = {
-  selecao:{bpm:92,root:57,esc:[0,2,4,7,9],onda:'triangle',prog:[0,3,4,3]},
+  abertura:{bpm:78,root:50,esc:[0,2,4,7,9],onda:'triangle',prog:[0,3,2,4],pad:true,sino:true},
+  escolha:{bpm:108,root:55,esc:[0,2,4,5,7,9,10],onda:'square',prog:[0,3,4,0],pad:true,bumbo:true},
+  final:{bpm:120,root:60,esc:[0,2,4,5,7,9,11],onda:'triangle',prog:[0,3,4,4],pad:true,bumbo:true,sino:true},
   otniel:{bpm:96,root:62,esc:[0,2,3,5,7,9,10],onda:'triangle',prog:[0,3,4,0]},
   eude:{bpm:104,root:60,esc:[0,1,4,5,7,8,10],onda:'square',prog:[0,1,0,5]},
   sangar:{bpm:100,root:64,esc:[0,2,4,7,9],onda:'triangle',prog:[0,2,3,0]},
@@ -1827,49 +1829,74 @@ const PRESETS = {
   jefte:{bpm:84,root:55,esc:[0,2,3,5,7,8,11],onda:'triangle',prog:[0,3,4,4]},
   sansao:{bpm:112,root:52,esc:[0,1,3,5,7,8,10],onda:'square',prog:[0,1,0,4]}
 };
-let AC = null, master = null, ruido = null, timer = 0, preset = PRESETS.selecao, pNome = 'selecao', passo = 0, prox = 0, melodia = [];
+PRESETS.selecao = PRESETS.escolha;
+let AC = null, master = null, ruido = null, timer = 0, preset = PRESETS.abertura, pNome = 'abertura', passo = 0, prox = 0, melodia = [], audioTag = null;
 function mtof(m){ return 440 * Math.pow(2, (m - 69) / 12); }
 function rnd(seed){ let s = seed >>> 0 || 1; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+/* iPhone e iPad: o som gerado por código obedece à chave de silencioso do aparelho.
+   Um <audio> mudo tocando em loop coloca a página no modo "reprodução", que ignora essa chave. */
+function wavMudo(){
+  const n = 800, buf = new ArrayBuffer(44 + n), v = new DataView(buf), w = (o, t) => [...t].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 8000, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
+  return URL.createObjectURL(new Blob([buf], { type:'audio/wav' }));
+}
 function audioDesbloquear(){
   if (!S.som) return;
-  if (!AC){ try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e){ return; }
-    master = AC.createGain(); master.gain.value = 0.5; master.connect(AC.destination);
-    ruido = AC.createBuffer(1, AC.sampleRate * 0.2, AC.sampleRate); const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
-  if (AC.state === 'suspended') AC.resume();
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  if (!AC){
+    try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e){ return; }
+    master = AC.createGain(); master.gain.value = 0.8; master.connect(AC.destination);
+    ruido = AC.createBuffer(1, AC.sampleRate * 0.2, AC.sampleRate); const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  if (AC.state !== 'running') AC.resume();
+  try { const src = AC.createBufferSource(); src.buffer = AC.createBuffer(1, 1, 22050); src.connect(AC.destination); src.start(0); } catch (e) {}
+  try { if (!audioTag){ audioTag = new Audio(wavMudo()); audioTag.loop = true; audioTag.setAttribute('playsinline', ''); } if (audioTag.paused){ const pr = audioTag.play(); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
   if (!timer) musica(pNome);
 }
-function nota(f, t, dur, onda, vol){ const o = AC.createOscillator(), g = AC.createGain(); o.type = onda; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05); }
+['touchend', 'click', 'keydown'].forEach((ev) => document.addEventListener(ev, () => { if (S.som && (!AC || AC.state !== 'running' || !timer || (audioTag && audioTag.paused))) audioDesbloquear(); }, { capture:true, passive:true }));
+document.addEventListener('visibilitychange', () => {
+  if (!AC) return;
+  if (document.hidden){ AC.suspend(); if (audioTag) audioTag.pause(); }
+  else if (S.som){ AC.resume(); }
+});
+function nota(f, t, dur, onda, vol, ataque){ const o = AC.createOscillator(), g = AC.createGain(); o.type = onda; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + (ataque || 0.01)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05); }
 function chimbal(t, vol){ const s = AC.createBufferSource(); s.buffer = ruido; const f = AC.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 6000; const g = AC.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05); s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + 0.06); }
+function bumbo(t, vol){ const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18); o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.2); }
 function grau(p, g, oit){ const n = p.esc.length, o = Math.floor(g / n); return p.root + p.esc[((g % n) + n) % n] + 12 * (o + oit); }
 function geraMelodia(nome){ const r = rnd([...nome].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7)); let g = 4; melodia = []; for (let i = 0; i < 32; i++){ if (r() < 0.36 && i % 4 !== 0){ melodia.push(null); continue; } g += Math.round((r() - 0.5) * 4); g = Math.max(0, Math.min(9, g)); melodia.push(g); } }
 function tocaPasso(t){
   const p = preset, col = 60 / p.bpm / 2, ac = p.prog[Math.floor(passo / 8) % 4], m = melodia[passo];
-  if (m !== null) nota(mtof(grau(p, m + ac, 1)), t, col * 1.8, p.onda, p.onda === 'square' ? 0.022 : 0.045);
-  if (passo % 8 === 0) nota(mtof(grau(p, ac, -1)), t, col * 6, 'triangle', 0.07);
-  if (passo % 8 === 4) nota(mtof(grau(p, ac + 4, -1)), t, col * 3, 'triangle', 0.045);
-  if (passo % 2 === 1) chimbal(t, 0.01);
+  if (m !== null) nota(mtof(grau(p, m + ac, 1)), t, col * 1.8, p.onda, p.onda === 'square' ? 0.03 : 0.06);
+  if (p.sino && m !== null && passo % 4 === 0) nota(mtof(grau(p, m + ac, 2)), t, col * 4, 'sine', 0.025);
+  if (passo % 8 === 0) nota(mtof(grau(p, ac, -1)), t, col * 6, 'triangle', 0.09);
+  if (passo % 8 === 4) nota(mtof(grau(p, ac + 2, -1)), t, col * 3, 'triangle', 0.06);
+  if (p.pad && passo % 8 === 0) [0, 2, 4].forEach((k) => nota(mtof(grau(p, ac + k, 0)), t, col * 8.5, 'sine', 0.028, col * 2));
+  if (p.bumbo && passo % 4 === 0) bumbo(t, 0.16);
+  if (passo % 2 === 1) chimbal(t, p.bumbo ? 0.016 : 0.01);
 }
 function musica(nome){
-  pNome = nome; preset = PRESETS[nome] || PRESETS.selecao; geraMelodia(nome); passo = 0;
+  pNome = nome; preset = PRESETS[nome] || PRESETS.escolha; geraMelodia(nome); passo = 0;
   if (!AC || !S.som) return;
   prox = AC.currentTime + 0.05;
-  if (!timer) timer = setInterval(() => { if (!AC || !S.som) return; while (prox < AC.currentTime + 0.2){ tocaPasso(prox); prox += 60 / preset.bpm / 2; passo = (passo + 1) % 32; } }, 50);
+  if (!timer) timer = setInterval(() => { if (!AC || !S.som || AC.state !== 'running') return; if (prox < AC.currentTime) prox = AC.currentTime + 0.05; while (prox < AC.currentTime + 0.2){ tocaPasso(prox); prox += 60 / preset.bpm / 2; passo = (passo + 1) % 32; } }, 50);
 }
 function sfx(tipo){
-  if (!AC || !S.som) return; const t = AC.currentTime;
+  if (!AC || !S.som || AC.state !== 'running') return; const t = AC.currentTime;
   const T = {
-    ok:() => [660, 880, 1320].forEach((f, i) => nota(f, t + i * 0.07, 0.18, 'triangle', 0.09)),
-    erro:() => { nota(220, t, 0.18, 'square', 0.04); nota(165, t + 0.12, 0.25, 'square', 0.04); },
-    pegar:() => { nota(880, t, 0.08, 'square', 0.035); nota(1175, t + 0.06, 0.12, 'square', 0.035); },
-    pego:() => { nota(392, t, 0.12, 'square', 0.05); nota(311, t + 0.12, 0.12, 'square', 0.05); nota(233, t + 0.24, 0.3, 'square', 0.05); },
-    golpe:() => { chimbal(t, 0.12); nota(140, t, 0.12, 'triangle', 0.12); },
-    forca:() => nota(200 + Math.random() * 60, t, 0.08, 'square', 0.04),
-    clique:() => nota(520, t, 0.06, 'triangle', 0.05),
-    vitoria:() => [523, 659, 784, 1046].forEach((f, i) => nota(f, t + i * 0.12, 0.35, 'triangle', 0.08))
+    ok:() => [660, 880, 1320].forEach((f, i) => nota(f, t + i * 0.07, 0.18, 'triangle', 0.1)),
+    erro:() => { nota(220, t, 0.18, 'square', 0.05); nota(165, t + 0.12, 0.25, 'square', 0.05); },
+    pegar:() => { nota(880, t, 0.08, 'square', 0.04); nota(1175, t + 0.06, 0.12, 'square', 0.04); },
+    pego:() => { nota(392, t, 0.12, 'square', 0.06); nota(311, t + 0.12, 0.12, 'square', 0.06); nota(233, t + 0.24, 0.3, 'square', 0.06); },
+    golpe:() => { chimbal(t, 0.14); nota(140, t, 0.12, 'triangle', 0.14); },
+    forca:() => nota(200 + Math.random() * 60, t, 0.08, 'square', 0.05),
+    clique:() => nota(520, t, 0.06, 'triangle', 0.06),
+    vitoria:() => [523, 659, 784, 1046].forEach((f, i) => nota(f, t + i * 0.12, 0.35, 'triangle', 0.09))
   };
   (T[tipo] || (() => {}))();
 }
-function atualizaSom(){ const b = $('btn-som'); b.textContent = S.som ? '🔊' : '🔇'; b.setAttribute('aria-pressed', S.som ? 'true' : 'false'); const t = S.som ? 'Desligar o som' : 'Ligar o som'; b.setAttribute('aria-label', t); b.title = t; b.classList.toggle('ligado', S.som); if (AC && master) master.gain.setTargetAtTime(S.som ? 0.5 : 0, AC.currentTime, 0.05); }
+function atualizaSom(){ const b = $('btn-som'); b.textContent = S.som ? '🔊' : '🔇'; b.setAttribute('aria-pressed', S.som ? 'true' : 'false'); const t = S.som ? 'Desligar o som' : 'Ligar o som'; b.setAttribute('aria-label', t); b.title = t; b.classList.toggle('ligado', S.som); if (AC && master) master.gain.setTargetAtTime(S.som ? 0.8 : 0, AC.currentTime, 0.05); if (!S.som && audioTag) audioTag.pause(); }
 $('btn-som').onclick = () => { S.som = !S.som; salvar(); atualizaSom(); if (S.som) audioDesbloquear(); };
 
 /* =====================================================================
@@ -1887,7 +1914,7 @@ function irTelaInicial(){
   sairDoJogo();
   $('in-nome').value = S.nome || ''; $('in-turma').value = S.turma || '';
   $('btn-entrar').textContent = S.nome ? 'Continuar a trilha' : 'Começar a trilha';
-  tela('tela-nome'); musica('selecao'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi);
+  tela('tela-nome'); musica('abertura'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi);
 }
 function abrirMenu(){
   const emJogo = !!G && !$('tela-jogo').hidden;
@@ -1907,7 +1934,7 @@ function abrirMenu(){
   const fechar = () => { fecharModal(); if (emJogo && G) G.pausa = pausado; };
   if (emJogo) $('mn-voltar').onclick = fechar;
   $('mn-fechar').onclick = fechar;
-  $('mn-juizes').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('selecao'); };
+  $('mn-juizes').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('escolha'); };
   $('mn-inicio').onclick = irTelaInicial;
   const confirmar = (btn, acao) => { btn.onclick = () => {
     if (!btn.classList.contains('conf')){ btn.classList.add('conf'); btn.querySelector('b').textContent = 'Toque de novo para confirmar'; setTimeout(() => { if (btn.isConnected){ btn.classList.remove('conf'); abrirMenuTextos(btn); } }, 4000); return; }
@@ -1940,8 +1967,8 @@ function heroi(ts){
 
 function start(){
   logo(); atualizaSom();
-  if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; $('in-turma').value = S.turma || ''; montarEscolha(); tela('tela-escolha'); }
-  else { tela('tela-nome'); heroiRaf = requestAnimationFrame(heroi); }
+  if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; $('in-turma').value = S.turma || ''; montarEscolha(); tela('tela-escolha');  musica('escolha'); }
+  else { tela('tela-nome'); musica('abertura'); heroiRaf = requestAnimationFrame(heroi); }
   $('btn-menu').onclick = abrirMenu;
   $('btn-menu').hidden = !S.nome;
 }
