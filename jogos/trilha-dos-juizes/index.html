@@ -199,6 +199,7 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
 .rank-turma{display:block;font-size:.75rem;color:var(--tinta2);font-weight:700}
 .rank-msg{margin-top:10px;font-size:.92rem;color:var(--tinta2)}
 .rank-wrap{overflow-x:auto}
+@media (max-width:560px){.rank-tab .c-est{display:none}.rank-tab th,.rank-tab td{padding:7px 5px}.rank-tab th{letter-spacing:.03em}}
 /* menu */
 .menu-op{display:grid;gap:10px;margin-top:14px}
 .menu-op button{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;text-align:left;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:12px 14px;color:var(--tinta)}
@@ -1817,15 +1818,16 @@ function carregarRanking(espera){
   setTimeout(() => buscarRanking().then((d) => { rankDados = (d && d.ranking) || []; desenharRanking(); })
     .catch(() => { $('rank-corpo').innerHTML = '<p class="rank-msg">Não consegui carregar o ranking agora. <button class="btn mini sec" id="rank-tentar">Tentar de novo</button></p>'; $('rank-tentar').onclick = () => carregarRanking(0); }), espera);
 }
-function desenharRanking(){
+function desenharRanking(alvo){
+  const box = $(alvo || 'rank-corpo');
   const eu = abreviarNome(S.nome), lista = rankDados.slice();
-  if (!lista.length){ $('rank-corpo').innerHTML = '<p class="rank-msg">Ainda não há ninguém no ranking. Você pode ser o primeiro!</p>'; return; }
+  if (!lista.length){ box.innerHTML = '<p class="rank-msg">Ainda não há ninguém no ranking. Você pode ser o primeiro!</p>'; return; }
   const ehEu = (r) => r.nome === eu;
   const minhaPos = lista.findIndex(ehEu);
   const mostrar = lista.slice(0, 10).map((r, i) => ({ r, i }));
   if (minhaPos >= 10) mostrar.push({ r:lista[minhaPos], i:minhaPos, sep:true });
-  $('rank-corpo').innerHTML = `<table class="rank-tab"><thead><tr><th>#</th><th>Jogador</th><th class="num">Acertos</th><th class="num">Estrelas</th><th class="num">Pontos</th></tr></thead><tbody>
-    ${mostrar.map(({ r, i, sep }) => `${sep ? '<tr><td colspan="5" style="text-align:center;color:var(--tinta2)">···</td></tr>' : ''}<tr class="${ehEu(r) ? 'eu' : ''}"><td><span class="rank-pos ${i < 3 ? 'p' + (i + 1) : ''}">${i + 1}</span></td><td>${esc(r.nome)}${ehEu(r) ? ' (você)' : ''}</td><td class="num">${r.acertos}/${r.total}</td><td class="num">★ ${r.estrelas}</td><td class="num"><b>${r.pontos}</b></td></tr>`).join('')}
+  box.innerHTML = `<table class="rank-tab"><thead><tr><th>#</th><th>Jogador</th><th class="num">Acertos</th><th class="num c-est">Estrelas</th><th class="num">Pontos</th></tr></thead><tbody>
+    ${mostrar.map(({ r, i, sep }) => `${sep ? '<tr><td colspan="5" style="text-align:center;color:var(--tinta2)">···</td></tr>' : ''}<tr class="${ehEu(r) ? 'eu' : ''}"><td><span class="rank-pos ${i < 3 ? 'p' + (i + 1) : ''}">${i + 1}</span></td><td>${esc(r.nome)}${ehEu(r) ? ' (você)' : ''}</td><td class="num">${r.acertos}/${r.total}</td><td class="num c-est">★ ${r.estrelas}</td><td class="num"><b>${r.pontos}</b></td></tr>`).join('')}
   </tbody></table>${minhaPos >= 0 ? `<p class="rank-msg">Você está em <b>${minhaPos + 1}º lugar</b> de ${lista.length}.</p>` : ''}`;
 }
 
@@ -1983,6 +1985,7 @@ function abrirMenu(){
     <div class="menu-op">
       ${emJogo ? '<button id="mn-voltar"><span class="ic">▶</span><span><b>Voltar ao jogo</b><small>Continuar o desafio de onde parou</small></span></button>' : ''}
       <button id="mn-juizes"><span class="ic">⚖</span><span><b>Escolher juiz</b><small>Linha do tempo e cartões dos juízes</small></span></button>
+      ${WEBAPP_URL ? '<button id="mn-rank"><span class="ic">🏆</span><span><b>Ver ranking</b><small>Quem já completou a trilha e com quantos pontos</small></span></button>' : ''}
       <button id="mn-inicio"><span class="ic">⌂</span><span><b>Tela inicial</b><small>Volta para a apresentação do jogo</small></span></button>
       <button id="mn-trocar" class="perigo"><span class="ic">👤</span><span><b>Trocar de jogador</b><small>Outra pessoa vai jogar neste aparelho. Apaga nome e placar daqui.</small></span></button>
       <button id="mn-zerar" class="perigo"><span class="ic">↺</span><span><b>Recomeçar a trilha</b><small>Mantém seu nome e apaga as estrelas e acertos</small></span></button>
@@ -1993,6 +1996,7 @@ function abrirMenu(){
   $('mn-fechar').onclick = fechar;
   $('mn-juizes').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('escolha'); };
   $('mn-inicio').onclick = irTelaInicial;
+  if (WEBAPP_URL) $('mn-rank').onclick = () => abrirRankingModal(() => { if (emJogo && G) G.pausa = pausado; });
   const confirmar = (btn, acao) => { btn.onclick = () => {
     if (!btn.classList.contains('conf')){ btn.classList.add('conf'); btn.querySelector('b').textContent = 'Toque de novo para confirmar'; setTimeout(() => { if (btn.isConnected){ btn.classList.remove('conf'); abrirMenuTextos(btn); } }, 4000); return; }
     acao(); }; };
@@ -2000,6 +2004,18 @@ function abrirMenu(){
   confirmar($('mn-trocar'), () => { S.nome = ''; S.res = {}; salvar(); $('chip-nome').textContent = ''; irTelaInicial(); });
   confirmar($('mn-zerar'), () => { S.res = {}; salvar(); sairDoJogo(); montarEscolha(); tela('tela-escolha'); toastPagina('Placar apagado. Boa trilha!'); });
   (emJogo ? $('mn-voltar') : $('mn-juizes')).focus();
+}
+function abrirRankingModal(aoFechar){
+  abrirModal(`<div class="tag">Ranking</div><h2 class="m-tit">Ranking da trilha</h2>
+    <div class="rank-wrap" id="mrank-corpo"><p class="rank-msg">Carregando ranking...</p></div>
+    <p class="rank-msg">Entra no ranking quem completa os sete juízes. Pontos: 10 por pergunta certa e 1 por estrela. Vale o melhor resultado de cada jogador. Os nomes aparecem abreviados.</p>
+    <div class="acoes"><button class="btn" id="mr-menu">Voltar ao menu</button><button class="btn sec" id="mr-fechar">Fechar</button></div>`);
+  $('mr-menu').onclick = () => abrirMenu();
+  $('mr-fechar').onclick = () => { fecharModal(); if (aoFechar) aoFechar(); };
+  const carregar = () => buscarRanking().then((d) => { rankDados = (d && d.ranking) || []; if ($('mrank-corpo')) desenharRanking('mrank-corpo'); })
+    .catch(() => { const el = $('mrank-corpo'); if (!el) return; el.innerHTML = '<p class="rank-msg">Não consegui carregar o ranking agora. <button class="btn mini sec" id="mr-tentar">Tentar de novo</button></p>'; $('mr-tentar').onclick = () => { el.innerHTML = '<p class="rank-msg">Carregando ranking...</p>'; carregar(); }; });
+  carregar();
+  $('mr-menu').focus();
 }
 function toastPagina(msg){ const t = document.createElement('div'); t.textContent = msg; t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e2036;color:#fff;border:2px solid #2e5a88;border-radius:12px;padding:10px 16px;font-weight:800;z-index:90'; document.body.append(t); setTimeout(() => t.remove(), 2600); }
 let heroiRaf = 0;
