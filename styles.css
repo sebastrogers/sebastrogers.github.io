@@ -1080,13 +1080,42 @@ h3 {
 
 .publication-list .pub h3 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .publication-list .pub h3 a:hover,
 .publication-list .pub h3 a:focus-visible {
+  color: #f0b56d;
+  text-decoration-color: currentColor;
+}
+
+.publication-list .pub-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+}
+
+.publication-list .pub-link a {
+  font-weight: 700;
+  color: #f0b56d;
+  text-decoration: none;
+}
+
+.publication-list .pub-link a:hover,
+.publication-list .pub-link a:focus-visible {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.publication-list .pub-doi {
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
 }
 
 .publication-list .pub-authors {
