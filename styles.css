@@ -1019,3 +1019,75 @@ h3 {
     width: 100%;
   }
 }
+
+/* Publicações agrupadas por ano */
+.publication-list.by-year {
+  gap: 0;
+}
+
+.pub-group {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 26px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.pub-group-head {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+
+.publication-list .pub-group .pub-year {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.publication-list .pub-count {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+}
+
+.pub-items {
+  display: grid;
+  gap: 0;
+}
+
+.publication-list .pub-items article {
+  display: block;
+  padding: 0 0 18px;
+  border-top: 0;
+}
+
+.publication-list .pub-items article + article {
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.publication-list .pub-items article:last-child {
+  padding-bottom: 0;
+}
+
+.publication-list .pub-items h3 {
+  margin: 0 0 6px;
+}
+
+@media (max-width: 860px) {
+  .pub-group {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .pub-group-head {
+    position: static;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .publication-list .pub-count {
+    margin: 0;
+  }
+}
