@@ -65,7 +65,7 @@
         align-items: baseline;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
       }
       .discipline-head h2 {
         font-size: clamp(1.6rem, 3vw, 2.3rem);
@@ -78,91 +78,57 @@
       }
       .discipline-lead {
         max-width: 760px;
-        margin: 0 0 26px;
+        margin: 0 0 18px;
         color: var(--muted);
       }
 
-      .material-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
+      .material-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-top: 1px solid var(--line);
       }
       .material-card {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        padding: 22px;
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        align-items: baseline;
+        gap: 16px;
+        padding: 12px 4px;
+        border-bottom: 1px solid var(--line);
       }
-      .material-card h3 {
-        font-size: 1.05rem;
-      }
-      .material-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-      .material-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-      }
-      .tag {
-        width: fit-content;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 0.74rem;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-      .tag-aula { background: #fff2df; color: #7b4b00; }
-      .tag-roteiro { background: #e9f3ef; color: #0b4f4a; }
-      .tag-cronograma { background: #eceaff; color: #3c3a8c; }
-      .tag-apoio { background: #fdecea; color: #963826; }
-      .tag-projeto { background: #e6f0fb; color: #14457e; }
-      .tag-jogo { background: #eaf7e6; color: #1f6b2f; }
-      body[data-theme="dark"] .tag-aula { background: #4a3410; color: #f2c46d; }
-      body[data-theme="dark"] .tag-roteiro { background: #123f3a; color: #5eead4; }
-      body[data-theme="dark"] .tag-cronograma { background: #2b2a56; color: #bdbaf5; }
-      body[data-theme="dark"] .tag-apoio { background: #4d2018; color: #f08a6f; }
-      body[data-theme="dark"] .tag-projeto { background: #16324f; color: #86bdf2; }
-      body[data-theme="dark"] .tag-jogo { background: #163f1f; color: #7ed389; }
-
       .material-date {
         color: var(--muted);
-        font-size: 0.8rem;
+        font-size: 0.88rem;
         font-weight: 700;
+        font-variant-numeric: tabular-nums;
         white-space: nowrap;
       }
-      .material-actions {
+      .material-main {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin-top: auto;
-        padding-top: 4px;
+        align-items: baseline;
+        gap: 4px 14px;
       }
-      .material-actions a {
-        min-height: 40px;
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 14px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
+      .material-link {
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .material-link:hover,
+      .material-link:focus-visible {
         color: var(--teal-dark);
-        font-size: 0.88rem;
-        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
-      .material-actions a.strong {
-        background: var(--ink);
-        border-color: var(--ink);
-        color: var(--bg);
+      .material-ext {
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 600;
       }
-      .material-actions a:hover,
-      .material-actions a:focus-visible {
-        border-color: var(--coral);
+      .material-extra {
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 600;
       }
       .material-card[hidden],
       .discipline[hidden] { display: none; }
@@ -178,7 +144,7 @@
       }
 
       @media (max-width: 860px) {
-        .material-grid { grid-template-columns: 1fr; }
+        .material-card { grid-template-columns: 52px minmax(0, 1fr); gap: 12px; }
         .filters { flex-direction: column; align-items: stretch; }
       }
     </style>
@@ -276,6 +242,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script src="materiais.js"></script>
+    <script src="materiais.js?v=20260926"></script>
   </body>
 </html>

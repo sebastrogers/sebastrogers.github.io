@@ -42,67 +42,48 @@
     return "tag tag-apoio";
   }
 
+  function dataCurta(d) {
+    var m = /^(\d{1,2})\/(\d{1,2})/.exec(texto(d));
+    return m ? (m[1].length === 1 ? "0" + m[1] : m[1]) + "/" + (m[2].length === 1 ? "0" + m[2] : m[2]) : texto(d);
+  }
+
   function montarCard(material) {
-    var card = criar("article", "material-card");
-    card.dataset.tipo = texto(material.tipo);
-    card.dataset.busca = semAcento(
+    var item = criar("li", "material-card");
+    item.dataset.tipo = texto(material.tipo);
+    item.dataset.busca = semAcento(
       [material.titulo, material.descricao, material.tipo, material.tags].join(" ")
     );
 
-    var topo = criar("div", "material-top");
-    topo.appendChild(criar("span", classeTag(material.tipo), texto(material.tipo)));
-    if (material.data) topo.appendChild(criar("span", "material-date", texto(material.data)));
-    card.appendChild(topo);
-
-    card.appendChild(criar("h3", null, texto(material.titulo)));
-    if (material.descricao) card.appendChild(criar("p", null, texto(material.descricao)));
-
-    var acoes = criar("div", "material-actions");
+    var data = criar("time", "material-date", material.data ? dataCurta(material.data) : "");
+    if (material.data) data.setAttribute("title", texto(material.data));
+    item.appendChild(data);
 
     var arquivo = texto(material.arquivo);
     var externo = /^https?:\/\//i.test(arquivo);
     var ext = externo ? "" : (arquivo.split(".").pop() || "").toLowerCase();
 
-    if (externo) {
-      var verLink = criar("a", "strong", "Ver apresentação");
-      verLink.href = arquivo;
-      verLink.target = "_blank";
-      verLink.rel = "noreferrer";
-      acoes.appendChild(verLink);
-    } else if (ext === "pdf") {
-      var abrir = criar("a", "strong", "Abrir PDF");
-      abrir.href = arquivo;
-      abrir.target = "_blank";
-      abrir.rel = "noreferrer";
-      acoes.appendChild(abrir);
-
-      var baixar = criar("a", null, "Baixar");
-      baixar.href = arquivo;
-      baixar.setAttribute("download", "");
-      acoes.appendChild(baixar);
-    } else if (ext === "html") {
-      var abrirJogo = criar("a", "strong", "Abrir jogo");
-      abrirJogo.href = arquivo;
-      abrirJogo.target = "_blank";
-      abrirJogo.rel = "noreferrer";
-      acoes.appendChild(abrirJogo);
+    var link = criar("a", "material-link", texto(material.titulo));
+    link.href = arquivo;
+    if (!externo && ext !== "pdf" && ext !== "html") {
+      link.setAttribute("download", "");
+      link.appendChild(criar("span", "material-ext", " ." + ext));
     } else {
-      var baixarSo = criar("a", "strong", "Baixar ." + ext);
-      baixarSo.href = arquivo;
-      baixarSo.setAttribute("download", "");
-      acoes.appendChild(baixarSo);
+      link.target = "_blank";
+      link.rel = "noreferrer";
     }
+    if (material.descricao) link.title = texto(material.descricao);
 
+    var linha = criar("div", "material-main");
+    linha.appendChild(link);
     if (material.extra && material.extra.url) {
-      var extra = criar("a", null, texto(material.extra.rotulo || "Ver mais"));
+      var extra = criar("a", "material-extra", texto(material.extra.rotulo || "Ver mais"));
       extra.href = material.extra.url;
       extra.target = "_blank";
       extra.rel = "noreferrer";
-      acoes.appendChild(extra);
+      linha.appendChild(extra);
     }
-
-    card.appendChild(acoes);
-    return card;
+    item.appendChild(linha);
+    return item;
   }
 
   function montarDisciplina(disciplina) {
@@ -112,13 +93,9 @@
     var head = criar("div", "discipline-head");
     head.appendChild(criar("h2", null, texto(disciplina.nome)));
 
-    var metaPartes = [disciplina.periodo, disciplina.dia, disciplina.instituicao].filter(Boolean);
-    if (metaPartes.length) head.appendChild(criar("p", "discipline-meta", metaPartes.join("  ·  ")));
     bloco.appendChild(head);
 
-    if (disciplina.resumo) bloco.appendChild(criar("p", "discipline-lead", texto(disciplina.resumo)));
-
-    var grid = criar("div", "material-grid");
+    var grid = criar("ol", "material-list");
     (disciplina.materiais || []).forEach(function (m) {
       grid.appendChild(montarCard(m));
     });
