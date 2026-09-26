@@ -34,7 +34,8 @@
       .post-content th, .post-content td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
       .post-content th { color: var(--ink); }
       .post-figure, .post-video { margin: 8px 0 0; }
-      .post-figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+      .post-figure img { display: block; width: auto; max-width: 100%; max-height: 460px; height: auto; margin: 0 auto; border: 1px solid var(--line); border-radius: var(--radius); }
+      .post-figure figcaption { text-align: center; }
       .post-video video, .post-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; background: #111820; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
       .post-figure figcaption, .post-video figcaption { margin-top: 10px; color: var(--muted); font-size: 0.94rem; font-weight: 700; }
       .post-actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -134,30 +135,30 @@
           <p>Chega de teoria. O código abaixo usa a biblioteca <code>sentence-transformers</code> e um modelo pequeno e multilíngue que funciona bem em português. Roda num notebook comum ou no Google Colab (<code>pip install sentence-transformers</code>):</p>
           <pre><code class="language-python">from sentence_transformers import SentenceTransformer
 
-          modelo = SentenceTransformer("intfloat/multilingual-e5-small")
+modelo = SentenceTransformer("intfloat/multilingual-e5-small")
 
-          documentos = [
-              "Dengue: febre alta, dor retro-orbitária, dor muscular e exantema",
-              "Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas",
-              "Chikungunya: febre e dor intensa nas articulações, que pode durar meses",
-              "Síndrome gripal: febre, tosse, coriza e dor de garganta",
-              "Hipertensão arterial: diagnóstico e acompanhamento na atenção primária",
-          ]
-          pergunta = "dor atrás dos olhos e manchas vermelhas no corpo"
+documentos = [
+    "Dengue: febre alta, dor retro-orbitária, dor muscular e exantema",
+    "Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas",
+    "Chikungunya: febre e dor intensa nas articulações, que pode durar meses",
+    "Síndrome gripal: febre, tosse, coriza e dor de garganta",
+    "Hipertensão arterial: diagnóstico e acompanhamento na atenção primária",
+]
+pergunta = "dor atrás dos olhos e manchas vermelhas no corpo"
 
-          # este modelo espera os prefixos "query:" e "passage:"
-          docs_vec = modelo.encode(["passage: " + d for d in documentos], normalize_embeddings=True)
-          perg_vec = modelo.encode("query: " + pergunta, normalize_embeddings=True)
+# este modelo espera os prefixos "query:" e "passage:"
+docs_vec = modelo.encode(["passage: " + d for d in documentos], normalize_embeddings=True)
+perg_vec = modelo.encode("query: " + pergunta, normalize_embeddings=True)
 
-          similaridades = docs_vec @ perg_vec   # com vetores normalizados, isso já é o cosseno
-          for doc, sim in sorted(zip(documentos, similaridades), key=lambda x: -x[1]):
-              print(f"{sim:.3f}  {doc}")</code></pre>
+similaridades = docs_vec @ perg_vec   # com vetores normalizados, isso já é o cosseno
+for doc, sim in sorted(zip(documentos, similaridades), key=lambda x: -x[1]):
+    print(f"{sim:.3f}  {doc}")</code></pre>
           <p>Quando rodei aqui, o resultado foi este:</p>
           <pre><code>0.873  Dengue: febre alta, dor retro-orbitária, dor muscular e exantema
-          0.867  Chikungunya: febre e dor intensa nas articulações, que pode durar meses
-          0.866  Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas
-          0.855  Síndrome gripal: febre, tosse, coriza e dor de garganta
-          0.843  Hipertensão arterial: diagnóstico e acompanhamento na atenção primária</code></pre>
+0.867  Chikungunya: febre e dor intensa nas articulações, que pode durar meses
+0.866  Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas
+0.855  Síndrome gripal: febre, tosse, coriza e dor de garganta
+0.843  Hipertensão arterial: diagnóstico e acompanhamento na atenção primária</code></pre>
           <p>A ordem faz sentido: dengue em primeiro, chikungunya logo atrás (outra arbovirose, também com febre e dor) e hipertensão por último. Mas repare nos números: estão todos entre 0,84 e 0,87, bem longe do 0,99 contra 0,00 do exemplo inventado lá em cima, com três dimensões. Isso não é defeito. Os modelos e5 foram treinados de um jeito que espreme as similaridades numa faixa estreita, perto de 0,7 a 1,0, e os próprios autores avisam isso <a href="https://huggingface.co/intfloat/multilingual-e5-small" target="_blank" rel="noopener">no FAQ do modelo</a>. Cada modelo tem a sua "escala", então um valor como 0,85 não quer dizer nada sozinho.</p>
           <p>Mais três coisas para reparar. Primeiro, cada documento virou um vetor de 384 números (<code>docs_vec.shape</code> mostra isso). Segundo, os prefixos <code>query:</code> e <code>passage:</code>: esse modelo foi treinado assim, e cada família de modelos tem sua convenção, um detalhe que faz diferença de verdade e que volta no próximo post. Terceiro, e mais importante: na busca, o que interessa é a <strong>ordem</strong>, e não o número absoluto. Aqui a ordem saiu certa, mas com uma margem pequena entre os primeiros colocados. Com outros modelos a escala e a margem mudam, e comparar vários deles em português é o assunto do post 6.</p>
           <p>Vale brincar um pouco: troque a pergunta por "minha barriga dói muito e não paro de vomitar", "meus joelhos e punhos doem demais depois da febre" ou "tô com tosse e nariz escorrendo" e veja o ranking mudar.</p>
