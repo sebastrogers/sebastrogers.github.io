@@ -324,6 +324,14 @@
           "arquivo": "assets/materiais/requisitos/jogo-nexo-software.html",
           "data": "22/09/2026",
           "tags": "jogo revisao interativo individual avatar personagens situacao problema elicitacao moscow caso de uso rastreabilidade baseline defesa ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 6: O que entra primeiro, priorizar requisitos com critério",
+          "descricao": "Por que priorizar, e quatro técnicas para decidir: MoSCoW, matriz de valor e esforço, modelo de Kano e os 100 pontos. Com a atividade de priorizar o backlog da equipe.",
+          "arquivo": "assets/materiais/requisitos/aula-06-priorizacao-de-requisitos.pdf",
+          "data": "24/09/2026",
+          "tags": "slides priorizacao moscow must should could wont valor esforco kano 100 pontos backlog criterio ddr"
         }
       ]
     }
