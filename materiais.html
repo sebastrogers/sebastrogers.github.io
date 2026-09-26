@@ -57,7 +57,7 @@
       }
 
       .discipline {
-        padding-top: 54px;
+        padding-top: 40px;
       }
       .discipline-head {
         display: flex;
@@ -93,7 +93,7 @@
         grid-template-columns: 64px minmax(0, 1fr);
         align-items: baseline;
         gap: 16px;
-        padding: 12px 4px;
+        padding: 7px 4px;
         border-bottom: 1px solid var(--line);
       }
       .material-date {
@@ -181,31 +181,9 @@
       <section class="section page-hero">
         <p class="eyebrow">Ensino</p>
         <h1>Materiais didáticos</h1>
-        <p class="page-lead">
-          Slides das aulas, roteiros práticos de laboratório e cronogramas das disciplinas
-          que ministro. O material é aberto: alunos, colegas docentes e qualquer pessoa
-          interessada podem baixar e reutilizar, citando a fonte.
-        </p>
-        <p class="page-lead" id="ultimaAtualizacao"></p>
       </section>
 
-      <section class="section" style="padding-top: 0" aria-label="Filtros e lista de materiais">
-        <div class="filters">
-          <div>
-            <p class="eyebrow" style="margin-bottom: 8px">Filtrar por tipo</p>
-            <div class="chip-row" id="tipoFiltros" role="group" aria-label="Filtrar por tipo de material"></div>
-          </div>
-          <label class="search">
-            <span>Buscar</span>
-            <input
-              type="search"
-              id="materialSearch"
-              placeholder="Disciplina, tema ou número da aula"
-              autocomplete="off"
-            />
-          </label>
-        </div>
-
+      <section class="section" style="padding-top: 0" aria-label="Lista de materiais">
         <div id="listaMateriais"></div>
 
         <p class="empty-state" id="semResultado" hidden>
@@ -242,6 +220,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script src="materiais.js?v=20260926"></script>
+    <script src="materiais.js?v=20260926b"></script>
   </body>
 </html>
