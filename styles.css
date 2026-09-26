@@ -1127,3 +1127,161 @@ h3 {
     margin: 0;
   }
 }
+
+/* Sobre e Contato: linha do tempo e listas enxutas */
+.about-body {
+  padding-top: 8px;
+}
+
+.about-body > * {
+  max-width: 920px;
+}
+
+.about-title {
+  margin: 48px 0 14px;
+  font-size: 1.35rem;
+}
+
+.about-body > .about-title:first-child {
+  margin-top: 0;
+}
+
+.cv-timeline {
+  position: relative;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-timeline::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 50%;
+  width: 2px;
+  background: var(--line);
+  transform: translateX(-1px);
+}
+
+.cv-item {
+  position: relative;
+  width: 50%;
+  padding: 0 40px 34px 0;
+  text-align: right;
+}
+
+.cv-item:nth-child(even) {
+  margin-left: 50%;
+  padding: 0 0 34px 40px;
+  text-align: left;
+}
+
+.cv-item::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--muted);
+  border-radius: 50%;
+  background: var(--bg);
+  box-sizing: border-box;
+}
+
+.cv-item:nth-child(even)::before {
+  right: auto;
+  left: -8px;
+}
+
+.cv-item.is-current::before {
+  border-color: var(--coral);
+  background: var(--coral);
+}
+
+.cv-when {
+  display: inline-block;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.cv-item.is-current .cv-when {
+  color: var(--coral);
+}
+
+.cv-what h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.cv-org {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.cv-desc {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.cv-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-list li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 24px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+
+.cv-list .cv-when {
+  margin: 0;
+}
+
+.contact-list a {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.about-areas {
+  margin: 0;
+  max-width: 760px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .cv-timeline::before {
+    left: 7px;
+  }
+
+  .cv-item,
+  .cv-item:nth-child(even) {
+    width: auto;
+    margin-left: 0;
+    padding: 0 0 26px 34px;
+    text-align: left;
+  }
+
+  .cv-item::before,
+  .cv-item:nth-child(even)::before {
+    right: auto;
+    left: 0;
+  }
+
+  .cv-list li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
