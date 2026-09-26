@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Trilha dos Juízes: jogo da revista Lições Bíblicas Jovens, 3º trimestre de 2026.">
+<title>Trilha dos Juízes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ceu1:#1d4a6e; --ceu2:#0c1e31; --painel:#fffaf0; --painel2:#f3ead7; --tinta:#2a2118; --tinta2:#6a5a46; --linha:#e0d2b6;
+  --ouro:#f2b233; --ouro-esc:#b97f14; --ouro-tinta:#3a2600; --azul:#2f7fd0; --bom:#2e8b4a; --mal:#c8412f; --claro:#f2f5fb; --claro2:#b8c7da;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0}
+html,body{min-height:100%}
+body{background:radial-gradient(1000px 600px at 50% -10%,#2d6a96,var(--ceu1) 45%,var(--ceu2));background-attachment:fixed;color:var(--claro);
+  font-family:"Nunito",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-inline:16px}
+.px{font-family:"Pixelify Sans","Nunito",sans-serif;font-variant-ligatures:none;font-feature-settings:"liga" 0}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto;padding-block:12px 48px}
+.barra{display:flex;align-items:center;gap:12px;padding-block:6px 14px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.marca{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.marca b{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.3rem;color:#fff;letter-spacing:.02em}
+.marca small{display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--claro2);font-weight:800}
+.chip{font-size:.85rem;color:var(--claro2);max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.som{font-size:.85rem;font-weight:800;padding:6px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);white-space:nowrap}
+.som:hover{background:rgba(255,255,255,.16)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ouro);color:var(--ouro-tinta);font-weight:800;padding:12px 22px;border-radius:11px;box-shadow:0 4px 0 var(--ouro-esc);transition:transform .1s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ouro-esc)}
+.btn.sec{background:#fff;color:var(--tinta);box-shadow:0 4px 0 #c9bb9f;border:2px solid var(--linha)}
+.btn.esc{background:#1f3b58;color:#fff;box-shadow:0 4px 0 #0c1d30}
+.btn.mini{padding:7px 12px;font-size:.85rem;border-radius:9px}
+.kicker{font-family:"Pixelify Sans",sans-serif;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#9fd4ff;margin-bottom:6px}
+.titulo{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:clamp(1.9rem,5vw,2.8rem);color:#fff}
+.lead{color:var(--claro2);max-width:62ch;margin-top:8px;font-size:1.02rem}
+.card{background:var(--painel);color:var(--tinta);border-radius:16px;padding:22px;box-shadow:0 6px 0 rgba(0,0,0,.25),0 18px 40px -20px rgba(0,0,0,.6)}
+.lbl{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta2);font-weight:800}
+input[type=text]{font:inherit;color:var(--tinta);background:#fff;border:2px solid var(--linha);border-radius:10px;padding:11px 14px;width:100%;margin-top:6px}
+input[type=text]:focus{outline:none;border-color:var(--azul)}
+
+/* inicial */
+.inicio{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center}
+#heroi{width:100%;aspect-ratio:4/3;border-radius:16px;background:#8fc7e8;display:block}
+.form{display:grid;gap:14px;margin-top:18px}
+.nota{font-size:.85rem;color:var(--tinta2)}
+
+/* escolha */
+.ciclo{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px;font-size:.85rem;font-weight:800}
+.ciclo span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:3px 10px;border-radius:99px}
+.ciclo i{color:var(--ouro);font-style:normal}
+.placar{display:flex;flex-wrap:wrap;gap:6px 18px;margin:16px 0;color:var(--claro2);font-size:.92rem}
+.placar b{color:#fff;font-variant-numeric:tabular-nums}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:14px}
+.juiz{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center;text-align:left;background:var(--painel);color:var(--tinta);border-radius:14px;padding:12px;box-shadow:0 4px 0 rgba(0,0,0,.25);border:3px solid transparent;transition:transform .12s,border-color .12s}
+.juiz:hover{transform:translateY(-3px);border-color:var(--ouro)}
+.juiz canvas{width:84px;height:96px;border-radius:10px;background:linear-gradient(180deg,#cfe8f5,#f6efdf)}
+.juiz .n{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.3rem;line-height:1.1}
+.juiz .s{font-size:.8rem;color:var(--tinta2);line-height:1.35;margin-top:2px}
+.juiz .d{font-size:.76rem;font-weight:800;margin-top:6px;display:inline-block;padding:3px 9px;border-radius:99px;background:var(--painel2);color:var(--tinta2)}
+.juiz .d.feito{background:#dcf1e2;color:#1d6a37}
+
+/* jogo */
+.topo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.topo .quem{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.3rem;color:#fff;flex:1;min-width:0}
+.passos{display:flex;gap:6px}
+.passos span{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;font-weight:800;background:rgba(255,255,255,.1);color:var(--claro2);border:1px solid rgba(255,255,255,.16)}
+.passos span.atual{background:var(--ouro);color:var(--ouro-tinta);border-color:var(--ouro)}
+.passos span.feito{background:#2e8b4a;color:#fff;border-color:#2e8b4a}
+#palco{position:relative;border-radius:16px;overflow:hidden;background:#0a1624;box-shadow:0 0 0 3px #0b1a2c,0 0 0 5px #2a4d73,0 20px 40px -18px rgba(0,0,0,.8)}
+#cv{display:block;width:100%;height:clamp(330px,64vh,600px);touch-action:manipulation}
+.hud{position:absolute;left:10px;top:10px;right:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none;align-items:flex-start}
+.hud .obj{background:rgba(9,22,40,.86);color:#fff;border-radius:11px;padding:8px 12px;max-width:min(430px,70%);font-size:.88rem;line-height:1.35}
+.hud .obj b{display:block;font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:.95rem;color:var(--ouro)}
+.hud .cont{background:rgba(9,22,40,.86);color:#fff;border-radius:11px;padding:8px 12px;font-weight:800;font-size:.9rem;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hud .cont small{display:block;font-weight:700;color:var(--claro2);font-size:.75rem}
+.barra-jogo{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.dica{font-size:.82rem;color:var(--claro2);flex:1;min-width:200px}
+#toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%) translateY(90px);background:#0e2036;color:#fff;border:2px solid #2e5a88;border-radius:12px;padding:10px 16px;font-weight:800;font-size:.9rem;transition:transform .25s;max-width:92%;text-align:center;pointer-events:none}
+#toast.on{transform:translateX(-50%) translateY(0)}
+#toast.ruim{border-color:var(--mal)}
+#forca{position:absolute;inset:auto 0 0 0;padding:14px;display:grid;justify-items:center;gap:10px;background:linear-gradient(0deg,rgba(9,22,40,.92),rgba(9,22,40,0))}
+#forca .rot{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.2rem;color:#fff}
+#forca .medidor{width:min(360px,86%);height:18px;border-radius:9px;background:rgba(255,255,255,.15);overflow:hidden;border:2px solid rgba(255,255,255,.3)}
+#forca .medidor span{display:block;height:100%;width:0;background:linear-gradient(90deg,#f2b233,#ff7a3d)}
+#forca .btn{font-size:1.15rem;padding:14px 34px}
+
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(4,10,20,.66);display:flex;align-items:flex-start;justify-content:center;z-index:80;padding:24px 14px;overflow-y:auto}
+#mbox{background:var(--painel);color:var(--tinta);border-radius:16px;max-width:640px;width:100%;padding:22px;box-shadow:0 8px 0 rgba(0,0,0,.3);margin:auto 0}
+.m-head{display:flex;gap:14px;align-items:center}
+.m-head canvas{border-radius:12px;background:linear-gradient(180deg,#cfe8f5,#f6efdf);border:2px solid var(--linha);flex:0 0 auto;width:72px;height:84px}
+.m-head .n{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.3rem;line-height:1.1}
+.m-head .c{font-size:.8rem;color:var(--tinta2);font-weight:700}
+.tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7a4c00;background:#fdecc4;border-radius:6px;padding:4px 8px;margin-bottom:6px}
+.m-tit{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.6rem;margin:2px 0 10px}
+.historia{font-size:1.03rem;line-height:1.65}
+.objetivo{margin-top:14px;background:#eef6ff;border:2px solid #c7ddf7;border-radius:11px;padding:12px 14px;color:#173a5e;font-size:.95rem}
+.objetivo b{display:block;font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;color:#0d4f8b}
+.fala{position:relative;background:var(--painel2);border:2px solid var(--linha);border-radius:12px;padding:12px 14px;margin-top:14px}
+.fala::before{content:'';position:absolute;left:28px;top:-10px;border:8px solid transparent;border-bottom-color:var(--linha);border-top:0}
+.perg{font-weight:800;font-size:1.06rem;margin-top:16px}
+.opts{display:grid;gap:9px;margin-top:10px}
+.opt{text-align:left;border:2px solid var(--linha);background:#fff;border-radius:11px;padding:11px 13px;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;font-size:.97rem;color:var(--tinta);font-weight:700}
+.opt:hover:not(:disabled){border-color:var(--azul);background:#f6faff}
+.opt .l{font-family:"Pixelify Sans",sans-serif;width:28px;height:28px;border-radius:7px;display:grid;place-items:center;background:var(--painel2);color:var(--tinta2)}
+.opt.certa{border-color:var(--bom);background:#eaf7ef}.opt.certa .l{background:var(--bom);color:#fff}
+.opt.errada{border-color:var(--mal);background:#fdeeec}.opt.errada .l{background:var(--mal);color:#fff}
+.opt:disabled{cursor:default}
+.opt.apagada{opacity:.55}
+.fb{margin-top:12px;border-radius:11px;padding:12px 14px;border:2px solid var(--bom);background:#eaf7ef;color:#11552d}
+.fb.mal{border-color:var(--mal);background:#fdeeec;color:#7c1f18}
+.fb b{display:block}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.estrelas{font-size:2rem;letter-spacing:4px;color:var(--ouro)}
+.estrelas .vazia{color:#d8ccb4}
+
+/* fim */
+.res{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.res canvas{width:110px;height:128px;border-radius:14px;background:linear-gradient(180deg,#cfe8f5,#f6efdf)}
+.big{font-family:"Pixelify Sans",sans-serif;font-size:3rem;line-height:1;color:#7a2e4a;font-variant-numeric:tabular-nums}
+.big small{font-size:1.1rem;color:var(--tinta2)}
+.ponto{margin-top:16px;background:#fff6dd;border:2px solid var(--ouro);border-radius:12px;padding:14px 16px;font-size:1.05rem}
+.status-envio{font-size:.85rem;color:var(--tinta2);margin-top:10px}
+
+/* linha do tempo */
+.tl{margin:18px 0 22px;background:rgba(6,16,30,.55);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px 16px 12px}
+.tl-top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.tl-top h2{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.35rem;color:#fff}
+.tl-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--claro2);font-weight:700}
+.tl-leg i{display:inline-block;width:14px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tl-scroll{overflow-x:auto;margin-top:10px;padding-bottom:6px;scrollbar-color:#2e5a88 transparent}
+.tl-in{position:relative;height:214px}
+.tl-mk{position:absolute;top:0;width:76px;white-space:nowrap;display:grid;justify-items:center;gap:2px;transform:translateX(-50%);color:#fff;border-radius:10px;padding:2px 0 4px;transition:transform .12s}
+.tl-mk:hover{transform:translateX(-50%) translateY(-3px)}
+.tl-mk canvas{border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff3c4,#e9c46a);border:3px solid #fff}
+.tl-mk.feito canvas{border-color:#2ecc71}
+.tl-mk b{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:.85rem;line-height:1}
+.tl-mk small{font-size:.66rem;color:var(--claro2);font-weight:800;line-height:1}
+.tl-mk::after{content:"";position:absolute;left:50%;top:84px;width:2px;height:20px;background:rgba(255,255,255,.5)}
+.tl-lane{position:absolute;left:0;right:0;height:30px}
+.tl-lane-rot{position:sticky;left:0;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--claro2);z-index:2}
+.tl-seg{position:absolute;height:30px;border-radius:6px;font-size:.72rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;border:2px solid rgba(0,0,0,.25);padding:0 4px;cursor:pointer}
+.tl-seg:hover,.tl-seg.sel{outline:3px solid #FFE066;outline-offset:1px;z-index:3}
+.tl-seg.op{background:repeating-linear-gradient(135deg,#b8402e 0 6px,#a33727 6px 12px)}
+.tl-seg.paz{background:#2e8b4a}
+.tl-seg.menor{background:#5f7184}
+.tl-seg.abim{background:#6a2447}
+.tl-seg.incerto{background:transparent;border:2px dashed #7fd08f;color:#bff0c8}
+.tl-ax{position:absolute;left:0;right:0;top:188px;height:24px;border-top:2px solid rgba(255,255,255,.35)}
+.tl-ax span{position:absolute;top:2px;transform:translateX(-50%);font-size:.68rem;color:var(--claro2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tl-ax span::before{content:"";position:absolute;left:50%;top:-6px;width:1px;height:6px;background:rgba(255,255,255,.5)}
+.tl-info{margin-top:8px;background:var(--painel);color:var(--tinta);border-radius:11px;padding:10px 14px;font-size:.92rem;min-height:44px}
+.tl-info b{color:#7a2e4a}
+.tl-nota{font-size:.76rem;color:var(--claro2);margin-top:8px}
+.sub-t{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.2rem;color:#fff;margin:4px 0 10px}
+/* fechamento */
+.banner-final{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:linear-gradient(90deg,#3a2600,#6a4500);border:2px solid var(--ouro);border-radius:14px;padding:14px 18px;margin-bottom:16px}
+.banner-final b{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.25rem;color:#FFE066;display:block}
+.banner-final span{color:#f3e2b8;font-size:.92rem}
+.banner-final div{flex:1;min-width:220px}
+#final-cv{width:100%;aspect-ratio:2/1;border-radius:14px;display:block;background:#0c1633}
+.numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.numeros div{background:var(--painel2);border-radius:12px;padding:12px 14px}
+.numeros b{display:block;font-family:"Pixelify Sans",sans-serif;font-size:2rem;line-height:1.1;color:#7a2e4a;font-variant-numeric:tabular-nums}
+.numeros span{font-size:.8rem;font-weight:800;color:var(--tinta2);text-transform:uppercase;letter-spacing:.06em}
+.medalhas{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-top:16px}
+.medalha{background:#fff;border:2px solid var(--linha);border-radius:12px;padding:10px 8px;text-align:center;display:grid;justify-items:center;gap:2px}
+.medalha canvas{border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff3c4,#f2b233);border:3px solid #b97f14}
+.medalha b{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1rem}
+.medalha small{font-size:.75rem;color:var(--tinta2);font-weight:700}
+.reflexao{margin-top:18px;border-left:5px solid var(--ouro);background:#fff6dd;border-radius:0 12px 12px 0;padding:14px 18px;font-size:1.02rem;line-height:1.65}
+.reflexao blockquote{margin:10px 0;font-style:italic;color:#5a3a1a}
+@media (max-width:760px){
+  .inicio{grid-template-columns:1fr}
+  .hud .obj{max-width:64%;font-size:.8rem}
+  #mbox{padding:18px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="barra">
+    <div class="marca">
+      <canvas id="logo" width="34" height="34" aria-hidden="true"></canvas>
+      <div><b>Trilha dos Juízes</b><small>Lições Bíblicas · Jovens</small></div>
+    </div>
+    <span class="chip" id="chip-nome"></span>
+    <button class="som" id="btn-som" aria-pressed="false">♪ Som: não</button>
+  </header>
+
+  <section id="tela-nome" hidden>
+    <div class="inicio">
+      <canvas id="heroi" width="640" height="480" aria-hidden="true"></canvas>
+      <div>
+        <div class="kicker">Livro de Juízes · 3º trimestre 2026</div>
+        <h1 class="titulo">Trilha dos Juízes</h1>
+        <p class="lead">Escolha um juiz de Israel e viva a história dele. Recolha o trigo escondido dos midianitas, escape dos guardas de Eglom, reúna as tropas de Baraque, derrube o altar de Baal e empurre as colunas do templo.</p>
+        <form class="card form" id="form-nome" autocomplete="off">
+          <label class="lbl" for="in-nome">Seu nome<input type="text" id="in-nome" maxlength="40" required placeholder="Ex.: Ana Beatriz"></label>
+          <label class="lbl" for="in-turma">Classe ou igreja (opcional)<input type="text" id="in-turma" maxlength="40" placeholder="Ex.: Jovens, sede"></label>
+          <p class="nota">É só identificação para o placar, não precisa de senha.</p>
+          <div><button class="btn" type="submit">Começar a trilha</button></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="tela-escolha" hidden>
+    <div class="kicker">Escolha seu juiz</div>
+    <h1 class="titulo">Quem você vai ser?</h1>
+    <p class="lead">O livro de Juízes gira num ciclo que se repete. Cada juiz tem seus próprios desafios, tirados das lições da revista.</p>
+    <div class="ciclo" aria-label="Ciclo do livro de Juízes"><span>Apostasia</span><i>→</i><span>Opressão</span><i>→</i><span>Clamor</span><i>→</i><span>Libertação</span><i>→</i><span>Paz</span><i>↺</i></div>
+    <div class="placar" id="placar"></div>
+    <div id="banner-final" hidden></div>
+    <div class="tl" aria-labelledby="tl-h">
+      <div class="tl-top">
+        <h2 id="tl-h">Linha do tempo dos juízes</h2>
+        <div class="tl-leg"><span><i style="background:#b8402e"></i>Opressão</span><span><i style="background:#2e8b4a"></i>Juízo e paz</span><span><i style="background:#5f7184"></i>Juízes menores</span><span><i style="background:#6a2447"></i>Abimeleque</span></div>
+      </div>
+      <div class="tl-scroll"><div class="tl-in" id="tl-in"></div></div>
+      <div class="tl-info" id="tl-info" aria-live="polite">Toque num trecho da linha para ver os detalhes. Toque no rosto de um juiz para jogar com ele.</div>
+      <p class="tl-nota">Os anos são os que o livro de Juízes registra, somados em sequência. Alguns estudiosos entendem que certos períodos se sobrepuseram, por isso a soma serve para comparar e não é uma data exata.</p>
+    </div>
+    <div class="sub-t">Os juízes e seus desafios</div>
+    <div class="grade" id="grade"></div>
+  </section>
+
+  <section id="tela-jogo" hidden>
+    <div class="topo">
+      <button class="btn esc mini" id="btn-voltar">← Juízes</button>
+      <div class="quem" id="quem"></div>
+      <div class="passos" id="passos" aria-label="Desafios"></div>
+    </div>
+    <div id="palco">
+      <canvas id="cv" aria-label="Mapa do desafio"></canvas>
+      <div class="hud"><div class="obj" id="hud-obj"></div><div class="cont" id="hud-cont"></div></div>
+      <div id="forca" hidden><div class="rot" id="forca-rot"></div><div class="medidor"><span id="forca-bar"></span></div><button class="btn" id="forca-btn">Toque rápido!</button></div>
+      <div id="toast"></div>
+    </div>
+    <div class="barra-jogo">
+      <p class="dica">Toque ou clique no chão para andar. No teclado, use as setas. Toque nas pessoas e nos objetos para interagir.</p>
+      <button class="btn sec mini" id="btn-historia">Rever história</button>
+      <button class="btn sec mini" id="btn-reiniciar">Recomeçar desafio</button>
+    </div>
+  </section>
+
+  <section id="tela-fim" hidden>
+    <div class="card">
+      <div class="tag">Trilha concluída</div>
+      <h2 class="m-tit" id="fim-t"></h2>
+      <div class="res">
+        <canvas id="fim-cv" width="220" height="256" aria-hidden="true"></canvas>
+        <div>
+          <div class="big" id="fim-num"></div>
+          <div class="estrelas" id="fim-est"></div>
+          <div id="fim-sub" style="max-width:40ch"></div>
+        </div>
+      </div>
+      <div class="ponto"><div class="lbl">Ponto importante da lição</div><div id="fim-ponto"></div></div>
+      <p class="status-envio" id="status-envio"></p>
+      <div class="acoes">
+        <button class="btn" id="btn-fechamento" hidden>Ver o fechamento da trilha ✦</button>
+        <button class="btn" id="btn-outro">Escolher outro juiz</button>
+        <button class="btn sec" id="btn-refazer">Refazer esta trilha</button>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="wrap" style="padding-top:0"><section id="tela-final" hidden>
+  <div class="card">
+    <canvas id="final-cv" width="960" height="480" aria-hidden="true"></canvas>
+    <div class="tag" style="margin-top:16px">Trilha completa</div>
+    <h2 class="m-tit" id="final-t"></h2>
+    <div class="numeros" id="final-num"></div>
+    <div class="medalhas" id="final-med"></div>
+    <div class="reflexao">
+      <b>Sete juízes, um mesmo ciclo.</b> Apostasia, opressão, clamor, libertação e paz. E depois tudo de novo. Os juízes só podiam salvar algumas pessoas, de alguns inimigos, por algum tempo. Eles, como nós, precisavam de algo muito mais poderoso, e Deus proveu isso em Cristo (lição 4).
+      <blockquote>"Naqueles dias, não havia rei em Israel; cada qual fazia o que parecia direito aos seus olhos." (Jz 17.6)</blockquote>
+      O livro termina esperando um rei. A lição 13 fecha o trimestre com esperança em meio ao caos, aguardando a vinda do Rei: Jesus, o libertador definitivo, que não falha como Sansão nem se desvia como Gideão.
+    </div>
+    <div class="acoes">
+      <button class="btn" id="btn-final-voltar">Voltar aos juízes</button>
+      <button class="btn sec" id="btn-zerar">Jogar tudo de novo</button>
+    </div>
+  </div>
+</section></div>
+<div id="modal" hidden role="dialog" aria-modal="true"><div id="mbox"></div></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   CONFIGURAÇÃO
+   ===================================================================== */
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const DISCIPLINA = 'Lições Bíblicas Jovens · 3º trimestre 2026';
+
+/* =====================================================================
+   VISUAIS DOS PERSONAGENS
+   ===================================================================== */
+const LOOKS = {
+  otniel:{pele:'#C68642',cabelo:'#2B1B12',estilo:'curto',barba:true,roupa:'#C0612B',faixa:'#E8B53A',item:'espada'},
+  eude:{pele:'#B97D4F',cabelo:'#1F140D',estilo:'curto',barba:true,roupa:'#2F6FA0',faixa:'#D8B25A'},
+  sangar:{pele:'#A8704A',cabelo:'#2A1A10',estilo:'curto',barba:true,roupa:'#8A7440',faixa:'#4A3522',turbante:'#E4D6AE',item:'aguilhada'},
+  debora:{pele:'#C99466',cabelo:'#2B1B12',estilo:'longo',roupa:'#2F7B7B',faixa:'#E8B53A',veu:'#EFE3C6',item:'cajado'},
+  gideao:{pele:'#C4885A',cabelo:'#3A2414',estilo:'curto',barba:true,roupa:'#8A5A2E',faixa:'#6E9A36'},
+  jefte:{pele:'#A86E45',cabelo:'#141010',estilo:'curto',barba:true,roupa:'#46435A',faixa:'#B0382E',item:'espada'},
+  sansao:{pele:'#C08050',cabelo:'#1E120A',estilo:'longo',barba:true,roupa:'#B08A4C',faixa:'#6A3A1A',forte:true},
+  jael:{pele:'#B87A50',cabelo:'#1E120A',estilo:'longo',roupa:'#8A4A2A',faixa:'#E0B060',veu:'#C0563A'}
+};
+const TIPOS = {
+  anciao:{pele:'#B9855C',cabelo:'#DCD6C8',estilo:'curto',barba:true,barbaCor:'#E6E0D2',roupa:'#6B5A44',faixa:'#3A2E22',item:'cajado'},
+  calebe:{pele:'#B07A50',cabelo:'#E0DACB',estilo:'curto',barba:true,barbaCor:'#EDE7D8',roupa:'#7A3A5A',faixa:'#E0B040',item:'cajado'},
+  povo:{pele:'#B88256',cabelo:'#2A1A10',estilo:'curto',barba:true,roupa:'#6F8A5A',faixa:'#C9A35A'},
+  povo2:{pele:'#C9956A',cabelo:'#3A2A1A',estilo:'curto',roupa:'#A0704A',faixa:'#E8D6A6'},
+  mulher:{pele:'#C9956A',cabelo:'#2A1A10',estilo:'longo',roupa:'#9A4A6A',faixa:'#E0C080',veu:'#E9DCC0'},
+  mulher2:{pele:'#B07A4E',cabelo:'#2A1A10',estilo:'longo',roupa:'#4A6A9A',faixa:'#E0C080',veu:'#D8A04A'},
+  crianca:{pele:'#C9956A',cabelo:'#2A1A10',estilo:'curto',roupa:'#D08A3A',faixa:'#6A4A2A',pequeno:true},
+  jovem:{pele:'#B88256',cabelo:'#1E140E',estilo:'curto',roupa:'#5A7AA0',faixa:'#D8B25A'},
+  anjo:{pele:'#F0D6B4',cabelo:'#F3E7B8',estilo:'longo',roupa:'#FBF8EE',faixa:'#E9C85A',brilho:true},
+  rei:{pele:'#C08A60',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#6A2447',faixa:'#E0B43A',coroa:true},
+  reiGordo:{pele:'#C8905E',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#6A2447',faixa:'#E0B43A',coroa:true,gordo:true},
+  guardaCusa:{pele:'#B27A4E',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#4A4A6A',faixa:'#A08050',capacete:'#8C8C92',item:'lanca'},
+  moabita:{pele:'#B27A4E',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#7A3030',faixa:'#D0A050',capacete:'#A07A40',item:'lanca'},
+  filisteu:{pele:'#C8905E',cabelo:'#6A3A1A',estilo:'curto',roupa:'#B84A2A',faixa:'#E0C070',capacete:'#D8C080',penacho:true,item:'lanca'},
+  amonita:{pele:'#A86E45',cabelo:'#141010',estilo:'curto',barba:true,roupa:'#5A6A3A',faixa:'#C0A050',capacete:'#7A7A62',item:'lanca'},
+  soldado:{pele:'#B27A4E',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#7A5A34',faixa:'#3A2A1A',capacete:'#A89060',item:'lanca'},
+  baraque:{pele:'#B27A4E',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#5A3A6A',faixa:'#E0B040',capacete:'#C0A060',item:'espada'},
+  sisera:{pele:'#B88256',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#3A3A3A',faixa:'#C04030',capacete:'#909090'},
+  vigia:{pele:'#B88256',cabelo:'#2A1A10',estilo:'curto',barba:true,roupa:'#5A4A3A',faixa:'#8A6A3A',item:'tocha'},
+  espiao:{pele:'#C8905E',cabelo:'#6A3A1A',estilo:'curto',roupa:'#6A3A2A',faixa:'#3A2A1A',capacete:'#C8B070',item:'tocha'},
+  mensageiro:{pele:'#B88256',cabelo:'#2A1A10',estilo:'curto',roupa:'#D0B070',faixa:'#7A4A2A',item:'cajado'},
+  sacerdote:{pele:'#B88256',cabelo:'#E0DACB',estilo:'curto',barba:true,barbaCor:'#EDE7D8',roupa:'#F2EEE0',faixa:'#3A6AB0',turbante:'#F2EEE0'},
+  profeta:{pele:'#A87A50',cabelo:'#6A6A6A',estilo:'longo',barba:true,barbaCor:'#8A8A8A',roupa:'#6A5030',faixa:'#3A2A1A',item:'cajado'}
+};
+function lookDe(q){ if (!q) return TIPOS.povo; if (typeof q === 'string') return LOOKS[q] || TIPOS[q] || TIPOS.povo; return q; }
+
+/* =====================================================================
+   CONTEÚDO: Revista Lições Bíblicas Jovens, 3º tri 2026, lições 3 a 10.
+   Cada pergunta: e = enunciado, o = opções (a primeira é a correta; o jogo embaralha), x = explicação.
+   ===================================================================== */
+const JUIZES = [
+{ id:'otniel', nome:'Otniel', licao:'3', ref:'Jz 3.5-11', opressor:'Cusã-Risataim, rei da Mesopotâmia', musica:'otniel',
+  ponto:'Reconhecer a nossa fraqueza é o primeiro passo para receber o poder que vem do alto.',
+  desafios:[
+  { titulo:'Treinar a nova geração', ref:'Jz 3.1-4', icone:'espada',
+    historia:'Josué morreu e uma nova geração cresceu em Canaã sem conhecer as guerras dos pais. Deus deixou alguns povos na terra de propósito: para provar Israel e ensinar a guerra aos jovens.',
+    objetivo:'Recolha as 4 espadas espalhadas pela aldeia e leve até os jovens no campo de treino.',
+    mapa:{base:'areia', ter:[['estrada',0,4,11,1],['grama',7,6,4,3]], decor:[['casa',0,0,2,2],['casa',3,0,2,2],['casa',0,6,2,2],['palmeira',6,1],['palmeira',9,1],['poco',4,6]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Espadas',
+    alvos:[{x:2,y:3,item:'espada',pegar:true},{x:8,y:2,item:'espada',pegar:true},{x:3,y:8,item:'espada',pegar:true},{x:10,y:5,item:'espada',pegar:true}],
+    entregar:{x:9,y:6,rotulo:'Campo de treino'},
+    npcs:[{x:10,y:7,tipo:'jovem',nome:'Jovem',fala:'Nunca segurei uma espada. Você me ensina?'},{x:8,y:8,tipo:'povo2',nome:'Jovem',fala:'Meu avô lutou com Josué!'}],
+    perguntas:[{quem:'anciao',nome:'Ancião da aldeia',fala:'Josué já morreu, e ainda tem povos inimigos morando no meio de nós. Por quê?',
+      e:'Por que Deus deixou povos inimigos na terra?', o:['Para provar e treinar a nova geração','Para castigar Josué por um erro antigo','Para Israel aprender os costumes deles','Porque Israel fez um acordo de paz'],
+      x:'Os inimigos ficaram para que Israel fosse provado e a nova geração aprendesse a guerrear. Deus não nos poupa de toda adversidade, mas dá graça e força para enfrentá-la (Is 41.10).'}]},
+  { titulo:'Clamor na escravidão', ref:'Jz 3.6-9', icone:'altar',
+    historia:'Israel casou com os povos de Canaã, serviu aos baalins e a Astarote e esqueceu o Senhor. Por oito anos, os soldados de Cusã-Risataim dominaram a terra. Chegou a hora de clamar.',
+    objetivo:'Chame as 3 famílias e leve todos ao altar para clamar ao Senhor. Não entre no campo de visão dos soldados.',
+    mapa:{base:'areia', ceu:'tarde', ter:[['estrada',5,0,1,9],['estrada',0,4,11,1]], decor:[['casa',0,0,2,2],['casa',8,0,2,2],['casa',0,7,2,2],['casa',9,7,2,2],['altar',10,3,1,1,{fogo:true}],['palmeira',4,8]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Famílias',
+    alvos:[{x:2,y:1,pessoa:'mulher',pegar:true},{x:9,y:2,pessoa:'povo',pegar:true},{x:2,y:7,pessoa:'anciao',pegar:true}],
+    entregar:{x:9,y:4,rotulo:'Altar'},
+    guardas:[{tipo:'guardaCusa',rota:[[3,1],[3,7]],visao:2,vel:1.3},{tipo:'guardaCusa',rota:[[7,7],[7,1]],visao:2,vel:1.1}],
+    perguntas:[
+      {quem:'sacerdote',nome:'Sacerdote',fala:'Deus tinha proibido casamento com os povos de Canaã (Dt 7).',
+       e:'A ordem de não casar com os cananeus era de que tipo?', o:['Espiritual: evitar a porta da idolatria','Étnica: manter o sangue do povo puro','Política: impedir alianças de guerra','Econômica: proteger a herança das terras'],
+       x:'A ordem não era étnica, era espiritual. Casar com os povos de Canaã abria a porta para a idolatria, e foi o que aconteceu. O princípio segue no Novo Testamento: nada de jugo desigual (2 Co 6.14).'},
+      {quem:'mulher',nome:'Mãe de família',fala:'Oito anos servindo a Cusã-Risataim. Até quando?',
+       e:'O que o povo fez para Deus levantar um libertador?', o:['Clamou ao Senhor em sua aflição','Pagou tributos maiores ao rei Cusã','Fez aliança com os povos vizinhos','Ergueu novos altares aos baalins'],
+       x:'Israel clamou e o Senhor levantou um libertador (Jz 3.9). Clamor é pedido de socorro em grande aflição. Quando o povo precisa de libertação, quem provê o libertador é Deus.'}]},
+  { titulo:'O sobrinho de Calebe', ref:'Jz 1.12-15; 3.9', icone:'conversa',
+    historia:'O libertador escolhido foi Otniel, filho de Quenaz, irmão mais novo de Calebe. Anos antes ele conquistou a cidade de Debir e casou com Acsa, filha de Calebe. Ele já liderava antes de ter qualquer cargo.',
+    objetivo:'Converse com Calebe, com Acsa e com o jovem perto das fontes de água.',
+    mapa:{base:'grama', ter:[['agua',7,5,2,2],['areia',0,0,3,3]], decor:[['tenda',0,0,2,2],['palmeira',5,0],['arvore',9,1],['rocha',0,8],['palmeira',10,8]]},
+    inicio:[0,4], tipo:'conversar',
+    npcs:[
+      {x:4,y:3,tipo:'calebe',nome:'Calebe',pergunta:{fala:'Quem conquistasse Debir casaria com minha filha Acsa. Foi você, Otniel!',
+        e:'O que significa o nome Otniel?', o:['Leão ou Força de Deus','Deus é o meu juízo','Servo fiel do Senhor','Aquele que ouve a Deus'],
+        x:'Otniel quer dizer "Leão ou Força de Deus". Ele herdou a coragem de Calebe, um dos espias que enfrentaram Canaã (Nm 13 e 14).'}},
+      {x:6,y:7,tipo:'mulher2',nome:'Acsa',pergunta:{fala:'Meu pai Calebe nos deu um campo com fontes de água.',
+        e:'O casal Otniel e Acsa ilustra um casamento baseado em quê?', o:['Fé, parceria e propósito comum','Riqueza, terras e boa família','Beleza, fama e muitas vitórias','Acordo político entre as tribos'],
+        x:'O casal mostra fé, diálogo, sabedoria e propósito comum diante de Deus. Diferente de muitos israelitas, Otniel casou com alguém que tinha a mesma fé.'}},
+      {x:3,y:7,tipo:'jovem',nome:'Jovem',pergunta:{fala:'Você nem era juiz e todo mundo já seguia seu exemplo.',
+        e:'Na perspectiva bíblica da lição, onde começa a liderança?', o:['No serviço humilde ao próximo','No cargo e no título recebido','Na força e na fama de guerreiro','Na herança da família de Calebe'],
+        x:'A liderança começa com o serviço humilde (Mc 10.42-45; Jo 13.12-17). Antes de ser rei, Davi liderou no aprisco. Antes de governar, José liderou na prisão.'}}]},
+  { titulo:'O Espírito do Senhor', ref:'Jz 3.10-11', icone:'batalha',
+    historia:'Veio sobre Otniel o Espírito do Senhor. Ele julgou Israel e saiu à peleja contra Cusã-Risataim. Os soldados da Mesopotâmia avançam sobre a aldeia.',
+    objetivo:'Intercepte os soldados de Cusã antes que cheguem à aldeia. Toque neles ou corra até eles.',
+    mapa:{base:'grama', ter:[['areia',3,0,5,2]], decor:[['casa',0,0,2,2],['casa',8,0,2,2],['palmeira',2,0],['rocha',10,4],['arvore',0,5]]},
+    inicio:[5,3], tipo:'defender',
+    inimigos:{tipo:'guardaCusa', qtd:10, por:1, rotulo:'soldados vencidos', alvo:[5,1], spawns:[[1,8],[4,8],[7,8],[10,8],[10,6]], intervalo:1.7, vel:0.85},
+    perguntas:[{quem:'povo',nome:'Homem de Israel',fala:'Cusã-Risataim foi vencido! E agora, quanto tempo de paz teremos?',
+      e:'O que a terra viveu depois da vitória de Otniel?', o:['Quarenta anos de sossego','Oitenta anos de sossego','Vinte anos de guerra civil','Oito anos de nova opressão'],
+      x:'A terra sossegou quarenta anos (Jz 3.11). Shaqat não é só ausência de guerra: é repouso e fim da agitação. Gente cheia do Espírito também traz paz ao dia a dia.'}]}
+  ]},
+
+{ id:'eude', nome:'Eúde', licao:'4', ref:'Jz 3.12-30', opressor:'Eglom, rei dos moabitas', musica:'eude',
+  ponto:'Deus tem um propósito em usar pessoas improváveis para realizar grandes feitos.',
+  desafios:[
+  { titulo:'O tributo de Israel', ref:'Jz 3.12-15', icone:'cesto',
+    historia:'Depois da morte de Otniel, Israel voltou a fazer o mal. Eglom, rei dos moabitas, se juntou aos amonitas e amalequitas e tomou a cidade das Palmeiras. Por dezoito anos Israel pagou tributo. Agora quem vai levar o tributo é Eúde, um benjamita canhoto.',
+    objetivo:'Junte os 4 cestos do tributo e leve até a porta do palácio de Eglom.',
+    mapa:{base:'areia', ter:[['estrada',0,4,9,1],['estrada',8,1,1,4]], decor:[['palacio',9,0,2,3],['palmeira',1,1],['palmeira',4,0],['palmeira',6,2],['palmeira',1,7],['palmeira',6,7],['palmeira',10,6],['poco',3,6]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Cestos',
+    alvos:[{x:2,y:2,item:'cesto',pegar:true},{x:5,y:6,item:'cesto',pegar:true},{x:3,y:8,item:'cesto',pegar:true},{x:7,y:1,item:'cesto',pegar:true}],
+    entregar:{x:8,y:1,rotulo:'Porta do palácio'},
+    perguntas:[
+      {quem:'povo',nome:'Carregador',fala:'Esta cidade das Palmeiras já foi nossa um dia.',
+       e:'Por qual nome a cidade das Palmeiras era conhecida antes?', o:['Jericó','Hebrom','Siquém','Betel'],
+       x:'Era Jericó, conquistada no tempo de Josué (Js 6). Fora da direção de Deus, até o que foi alcançado pela graça pode ser perdido.'},
+      {quem:'anciao',nome:'Ancião de Benjamim',fala:'Logo Eúde, um benjamita canhoto, foi o escolhido de Deus?',
+       e:'O que o fato de Eúde ser canhoto destaca?', o:['Que ele era um libertador improvável','Que ele era o mais forte da tribo','Que ele vinha de família de reis','Que ele tinha sido treinado no Egito'],
+       x:'Ser canhoto marcava Eúde como alguém fora do padrão. Deus escolhe o que o mundo não escolheria (1 Co 1.27-29).'}]},
+  { titulo:'Uma palavra secreta', ref:'Jz 3.16-23', icone:'coroa',
+    historia:'Eúde fez uma espada de dois fios, de um côvado, e a escondeu por baixo das vestes. Entregou o tributo, despediu os carregadores e voltou sozinho: "Tenho uma palavra secreta para ti, ó rei."',
+    objetivo:'Atravesse o salão sem ser visto pelos guardas e chegue até Eglom, no trono.',
+    mapa:{base:'piso', interior:true, decor:[['coluna',2,1],['coluna',2,7],['coluna',6,1],['coluna',6,7],['trono',10,4],['tapete',8,3,2,3]]},
+    inicio:[0,4], tipo:'mapa',
+    alvos:[{x:9,y:4,pessoa:'reiGordo',solido:true,rotulo:'Eglom',fala:'Tenho para ti uma palavra de Deus.'}],
+    guardas:[{tipo:'moabita',rota:[[4,0],[4,8]],visao:2,vel:1.4},{tipo:'moabita',rota:[[8,8],[8,0]],visao:2,vel:1.2}],
+    perguntas:[
+      {quem:'eude',nome:'Eúde',fala:'Entrei no palácio armado e ninguém percebeu nada.',
+       e:'Onde Eúde escondeu a espada?', o:['Na coxa direita, sob as vestes','Dentro do presente para o rei','Na coxa esquerda, sobre o manto','Na bainha das suas sandálias'],
+       x:'Ele cingiu a espada na coxa direita, por baixo das roupas (Jz 3.16). Como era canhoto, podia sacá-la com a mão esquerda sem levantar suspeita.'},
+      {quem:'anciao',nome:'Ancião de Benjamim',fala:'Tem gente que chama isso de assassinato. O que a lição ensina?',
+       e:'Como a lição explica a ação de Eúde contra Eglom?', o:['Ato de guerra por ordem de Deus','Vingança pessoal contra o rei Eglom','Crime cometido por ambição','Acidente durante a audiência'],
+       x:'Eúde agiu como juiz levantado por Deus, numa guerra contra um opressor, e não por motivo pessoal. Para o cristão hoje, a guerra é espiritual, contra as forças do mal.'}]},
+  { titulo:'Os vaus do Jordão', ref:'Jz 3.27-30', icone:'batalha',
+    historia:'Eúde fugiu e tocou a trombeta nos montes de Efraim: "Segui-me, porque o Senhor vos entregou os moabitas!" Israel tomou os vaus do Jordão para que nenhum moabita escapasse para casa.',
+    objetivo:'Impeça os moabitas de atravessar o Jordão pelos vaus (as partes rasas do rio).',
+    mapa:{base:'grama', ter:[['agua',7,0,2,9],['vau',7,2,2,1],['vau',7,6,2,1],['areia',9,0,2,9]], decor:[['rocha',0,0],['palmeira',10,0],['palmeira',10,8],['arvore',3,0]]},
+    inicio:[6,4], tipo:'defender',
+    inimigos:{tipo:'moabita', qtd:10, por:1000, rotulo:'moabitas', alvos:[[10,2],[10,6]], spawns:[[0,2],[0,5],[0,8],[3,8]], intervalo:1.6, vel:0.9},
+    perguntas:[
+      {quem:'povo',nome:'Homem de Efraim',fala:'Moabe foi subjugado naquele dia!',
+       e:'Por quanto tempo a terra sossegou depois de Eúde?', o:['Oitenta anos','Quarenta anos','Dezoito anos','Sessenta anos'],
+       x:'A terra sossegou oitenta anos (Jz 3.30), quase duas gerações de paz.'},
+      {quem:'sacerdote',nome:'Sacerdote',fala:'Críticos dizem que Deus é injusto por causa das guerras. A lição responde com a revelação progressiva.',
+       e:'O que quer dizer "revelação progressiva"?', o:['Deus se revelou aos poucos, até Cristo','A Bíblia muda conforme cada época','Cada leitor cria a sua própria verdade','Só o Antigo Testamento tem autoridade'],
+       x:'Deus se revelou de forma gradual, culminando em Cristo (Jo 1.17). Por isso o juízo por meio de guerras não é transportado para a era da Nova Aliança.'}]}
+  ]},
+
+{ id:'sangar', nome:'Sangar', licao:'4', ref:'Jz 3.31', opressor:'os filisteus', musica:'sangar',
+  ponto:'Não despreze aquilo que parece irrelevante, nem os pequenos começos.',
+  desafios:[
+  { titulo:'O homem do campo', ref:'Jz 3.31', icone:'boi',
+    historia:'Depois de oitenta anos de paz, a Bíblia registra em um só versículo o feito de Sangar, filho de Anate. Ele era um homem do campo, e sua ferramenta de trabalho era uma aguilhada de bois.',
+    objetivo:'Conduza os 3 bois até o curral. Eles vão seguir você.',
+    mapa:{base:'grama', ter:[['trigo',0,6,4,3],['estrada',4,0,1,9]], decor:[['arvore',0,0],['rocha',7,3],['curral',8,6,3,3],['casa',9,0,2,2]]},
+    inicio:[4,4], tipo:'mapa', contagem:'Bois',
+    alvos:[{x:1,y:2,animal:'boi',pegar:true},{x:6,y:1,animal:'boi',pegar:true},{x:2,y:5,animal:'boi',pegar:true}],
+    entregar:{x:9,y:7,rotulo:'Curral'},
+    perguntas:[{quem:'povo',nome:'Vizinho',fala:'Sua aguilhada não parece arma de guerra.',
+      e:'O que era a aguilhada de bois que Sangar usou?', o:['Vara longa e pontiaguda','Lança curta de bronze','Arco leve de caçador','Funda de couro de pastor'],
+      x:'A aguilhada era uma vara longa e pontiaguda usada para tocar o gado. Uma ferramenta de trabalho virou instrumento de vitória.'}]},
+  { titulo:'Seiscentos filisteus', ref:'Jz 3.31', icone:'batalha',
+    historia:'Os filisteus avançam sobre a aldeia. Sangar não tem exército nem armas de guerra. Tem só o que está nas suas mãos.',
+    objetivo:'Proteja a aldeia: intercepte os filisteus com a aguilhada antes que cheguem às casas.',
+    mapa:{base:'grama', ter:[['areia',2,0,6,2],['trigo',8,4,3,3]], decor:[['casa',0,0,2,2],['casa',8,0,2,2],['arvore',0,6],['rocha',5,5]]},
+    inicio:[5,3], tipo:'defender',
+    inimigos:{tipo:'filisteu', qtd:12, por:50, rotulo:'filisteus', alvo:[5,1], spawns:[[1,8],[4,8],[8,8],[10,8],[10,4]], intervalo:1.5, vel:0.9},
+    perguntas:[
+      {quem:'anciao',nome:'Ancião',fala:'Sangar não é nome hebraico. É um nome estrangeiro.',
+       e:'O que a origem estrangeira de Sangar ensina?', o:['Deus não se limita a rótulos nem a etnias','Só israelitas de sangue podiam ser juízes','Estrangeiros lutavam melhor que israelitas','Deus escolhe pelo status social da pessoa'],
+       x:'Deus é soberano e usa quem quiser, como fez com Ciro e com Raabe. Sua graça transforma gentios em instrumentos do plano de redenção (Ef 3.6).'},
+      {quem:'sangar',nome:'Sangar',fala:'Seiscentos filisteus! E eu nem era soldado.',
+       e:'Qual desculpa a história de Sangar derruba?', o:['"Não tenho as ferramentas certas"','"Não gosto de trabalhar no campo"','"Não conheço a lei de Moisés"','"Não moro perto do tabernáculo"'],
+       x:'Muitos deixam de servir alegando falta de condições. Sangar mostra que Deus nos usa com aquilo que temos à mão. Não despreze os pequenos começos (Zc 4.10).'}]}
+  ]},
+
+{ id:'debora', nome:'Débora', nomeLongo:'Débora e Baraque', licao:'5', ref:'Jz 4 e 5', opressor:'Jabim, rei de Canaã, e Sísera', musica:'debora',
+  ponto:'A obra de Deus é feita em cooperação, cada pessoa contribuindo com os talentos que o Senhor lhe concedeu.',
+  desafios:[
+  { titulo:'Debaixo da palmeira', ref:'Jz 4.1-5', icone:'conversa',
+    historia:'Depois da morte de Eúde, Israel voltou ao mal. Jabim, rei de Canaã, oprimia Israel havia vinte anos. Débora, mulher de Lapidote, atendia o povo debaixo de uma palmeira, entre Ramá e Betel.',
+    objetivo:'Atenda as pessoas que vieram até a palmeira.',
+    mapa:{base:'grama', ter:[['estrada',0,4,11,1],['areia',4,2,3,3]], decor:[['palmeiraG',5,2],['rocha',0,0],['arvore',10,0],['casa',9,7,2,2],['palmeira',1,8]]},
+    inicio:[5,4], tipo:'conversar',
+    npcs:[
+      {x:2,y:5,tipo:'mulher',nome:'Mulher de Efraim',pergunta:{fala:'Os cananeus nos oprimem com violência. Ninguém enfrenta o exército de Sísera!',
+        e:'Qual era a grande força militar de Jabim?', o:['Novecentos carros de ferro','Trezentos arqueiros de elite','Mil camelos de guerra','Uma muralha de pedra dupla'],
+        x:'Eram 900 carros de ferro puxados por cavalos, os tanques da época. Como Israel não eliminou os cananeus, eles se fortaleceram. O pecado é igual: se não for combatido, cresce até dominar.'}},
+      {x:8,y:3,tipo:'anciao',nome:'Ancião de Betel',pergunta:{fala:'Todo Israel sobe até esta palmeira, Débora.',
+        e:'Quais papéis Débora exercia em Israel?', o:['Profetisa e juíza','Rainha e sacerdotisa','Guerreira e general','Escriba e mestra'],
+        x:'Débora era profetisa e juíza. Entre todos os juízes, é a única descrita resolvendo disputas do povo. A influência dela vinha de um relacionamento íntimo com Deus.'}}]},
+  { titulo:'Convocar os dez mil', ref:'Jz 4.6-10', icone:'tropas',
+    historia:'Débora mandou chamar Baraque, de Quedes de Naftali, com uma ordem de Deus: reunir dez mil homens de Naftali e Zebulom no monte Tabor.',
+    objetivo:'Fale com Baraque, reúna as 5 tropas e leve todos ao pé do monte Tabor.',
+    mapa:{base:'grama', ter:[['estrada',0,4,8,1]], decor:[['monte',8,0,3,3],['arvore',0,0],['tenda',0,7,2,2],['rocha',5,1],['palmeira',10,8]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Tropas',
+    alvos:[{x:3,y:2,pessoa:'baraque',pegar:true,grupo:0,rotulo:'Baraque',pergunta:{quem:'baraque',nome:'Baraque',fala:'Se fores comigo, irei; porém, se não fores comigo, não irei.',
+        e:'O que Débora respondeu a Baraque?', o:['Irei, mas a honra será de uma mulher','Não irei, vai sozinho com o Senhor','Irei, e toda a honra será sua','Chama outro comandante para o teu lugar'],
+        x:'Ela aceitou ir, mas avisou que Deus entregaria Sísera nas mãos de uma mulher (Jz 4.9). Na obra de Deus ninguém caminha sozinho: precisamos uns dos outros (Gl 6.2).'}},
+      {x:1,y:6,pessoa:'soldado',pegar:true,grupo:1},{x:4,y:7,pessoa:'soldado',pegar:true,grupo:1},{x:6,y:6,pessoa:'soldado',pegar:true,grupo:1},{x:6,y:2,pessoa:'soldado',pegar:true,grupo:1},{x:3,y:0,pessoa:'soldado',pegar:true,grupo:1}],
+    entregar:{x:9,y:4,rotulo:'Monte Tabor',grupo:1},
+    perguntas:[]},
+  { titulo:'Os carros de ferro', ref:'Jz 4.12-16', icone:'carro',
+    historia:'Sísera juntou os carros no ribeiro de Quisom. Débora disse: "Levanta-te, porque este é o dia em que o Senhor tem dado a Sísera na tua mão." Baraque desceu do Tabor com dez mil homens.',
+    objetivo:'Desça do Tabor até o ribeiro de Quisom sem ser atropelado pelos carros de ferro.',
+    mapa:{base:'grama', ter:[['agua',0,8,11,1],['areia',0,2,11,1],['areia',0,4,11,1],['areia',0,6,11,1]], decor:[['rocha',0,0],['rocha',10,0],['arvore',9,7]]},
+    inicio:[5,0], tipo:'mapa',
+    alvos:[{x:5,y:7,marca:true,rotulo:'Ribeiro de Quisom'}],
+    guardas:[{tipo:'carro',rota:[[0,2],[10,2]],visao:0,vel:2.4,vai:true},{tipo:'carro',rota:[[10,4],[0,4]],visao:0,vel:2.0,vai:true},{tipo:'carro',rota:[[0,6],[10,6]],visao:0,vel:2.8,vai:true},{tipo:'carro',rota:[[10,6],[0,6]],visao:0,vel:2.8,vai:true,atraso:1.9}],
+    perguntas:[{quem:'baraque',nome:'Baraque',fala:'O Senhor derrotou o exército! Mas Sísera desceu do carro e fugiu a pé.',
+      e:'Para onde Sísera fugiu depois da derrota?', o:['Para a tenda de Jael','Para o palácio de Hazor','Para o alto do Tabor','Para o ribeiro Quisom'],
+      x:'Sísera fugiu a pé até a tenda de Jael, mulher de Heber, o queneu. Havia paz entre Jabim e a casa de Heber, e ele achou que estaria seguro.'}]},
+  { titulo:'A tenda de Jael', ref:'Jz 4.17-21', icone:'tenda', jogarComo:'jael', nomeJogador:'Jael',
+    historia:'Neste desafio você é Jael. Sísera chegou cansado à sua tenda e pediu água. Ela deu leite, cobriu-o com uma coberta e esperou o momento certo. O opressor de Israel caiu pelas mãos de uma mulher, como Débora tinha dito.',
+    objetivo:'Pegue o odre de leite e a coberta e leve até a entrada da tenda.',
+    mapa:{base:'areia', ceu:'tarde', ter:[['grama',0,6,4,3]], decor:[['tenda',7,1,2,2],['palmeira',1,1],['rocha',10,7],['fogueira',4,4]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Itens',
+    alvos:[{x:2,y:7,item:'odre',pegar:true},{x:5,y:1,item:'coberta',pegar:true}],
+    entregar:{x:7,y:3,rotulo:'Tenda de Jael'},
+    perguntas:[
+      {quem:'jael',nome:'Jael',fala:'Sísera achou que estaria seguro na minha tenda.',
+       e:'Quem era Jael?', o:['Mulher de Heber, o queneu','Filha do rei Jabim de Hazor','Irmã mais nova de Baraque','Serva de Débora em Efraim'],
+       x:'Jael não era juíza, mas foi o instrumento do juízo divino. Sísera confiou numa falsa paz, como o ímpio de Provérbios 12.19,20.'},
+      {quem:'debora',nome:'Débora',fala:'Juízes 5 traz o nosso cântico de louvor ao Senhor.',
+       e:'Qual é a principal lição dessa vitória?', o:['A obra de Deus se faz em cooperação','Um bom líder resolve tudo sempre sozinho','A vitória vem do melhor exército','Só guerreiros devem liderar o povo'],
+       x:'Débora liderou e encorajou, Baraque comandou a batalha e Jael executou o juízo. Paulo compara a igreja a um corpo em que cada membro tem sua função (1 Co 12.12-27).'}]}
+  ]},
+
+{ id:'gideao', nome:'Gideão', licao:'6 e 7', ref:'Jz 6 a 9', opressor:'os midianitas', musica:'gideao',
+  ponto:'Quando Deus está conosco, o tamanho do desafio perde a força. Mas é preciso vigiar, porque a vitória pode levar à soberba.',
+  desafios:[
+  { titulo:'Trigo escondido', ref:'Jz 6.1-14', icone:'trigo',
+    historia:'Por sete anos, midianitas e amalequitas vinham como gafanhotos com seus camelos e destruíam as colheitas. Gideão, filho de Joás, malhava o trigo escondido num lagar, para salvar um pouco da colheita.',
+    objetivo:'Recolha os 5 feixes de trigo e leve ao lagar sem ser visto pelos midianitas nos camelos.',
+    mapa:{base:'grama', ter:[['trigo',0,0,4,9]], decor:[['arvore',10,5],['lagar',9,7],['rocha',6,0],['casa',9,0,2,2]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Feixes',
+    alvos:[{x:1,y:1,item:'feixe',pegar:true},{x:3,y:2,item:'feixe',pegar:true},{x:2,y:4,item:'feixe',pegar:true},{x:1,y:6,item:'feixe',pegar:true},{x:3,y:8,item:'feixe',pegar:true}],
+    entregar:{x:8,y:7,rotulo:'Lagar'},
+    guardas:[{tipo:'camelo',rota:[[5,0],[5,8]],visao:2,vel:1.5},{tipo:'camelo',rota:[[7,8],[7,1]],visao:2,vel:1.25}],
+    perguntas:[
+      {quem:'profeta',nome:'Profeta',fala:'Eu vos fiz subir do Egito, mas não destes ouvidos à minha voz (Jz 6.8-10).',
+       e:'Quando o povo clamou, o que Deus fez antes de levantar um libertador?', o:['Enviou um profeta para confrontar o povo','Mandou chuva para salvar as plantações','Enviou um anjo para destruir os camelos','Mandou o povo fugir de volta para o Egito'],
+       x:'Antes do libertador veio um profeta que confrontou o povo com o seu pecado. A profecia verdadeira não suaviza a mensagem com autoajuda: ela chama ao arrependimento.'},
+      {quem:'anjo',nome:'Anjo do Senhor',fala:'O Senhor é contigo, varão valoroso. Vai nesta tua força.',
+       e:'Por que Gideão se achava incapaz para a missão?', o:['Era o menor da família mais pobre','Nunca tinha segurado uma espada','Tinha medo de falar diante do povo','Achava que era velho demais para lutar'],
+       x:'Ele disse que sua família era a mais pobre de Manassés e ele, o menor da casa do pai (Jz 6.15). Deus respondeu com uma promessa: "Eu hei de ser contigo."'}]},
+  { titulo:'O altar de Baal', ref:'Jz 6.25-32', icone:'altar',
+    historia:'O fogo saiu da rocha e consumiu a oferta de Gideão. Naquela noite veio a primeira missão: derrubar o altar de Baal do próprio pai, cortar o poste-ídolo e erguer um altar ao Senhor.',
+    objetivo:'À noite, derrube o altar de Baal e o poste-ídolo sem ser visto pelos vigias. Depois vá ao lugar do novo altar.',
+    mapa:{base:'grama', ceu:'noite', ter:[['estrada',0,4,11,1]], decor:[['casa',0,0,2,2],['casa',0,7,2,2],['arvore',5,0],['casa',9,7,2,2]]},
+    inicio:[0,5], tipo:'mapa',
+    alvos:[{x:9,y:2,obj:'altarBaal',solido:true,grupo:0,rotulo:'Altar de Baal',forca:{n:10,rotulo:'Derrubar o altar de Baal'}},
+      {x:9,y:5,obj:'poste',solido:true,grupo:0,rotulo:'Poste-ídolo',forca:{n:8,rotulo:'Cortar o poste-ídolo'}},
+      {x:6,y:7,marca:true,grupo:1,rotulo:'Altar ao Senhor',vira:'altar'}],
+    guardas:[{tipo:'vigia',rota:[[3,2],[7,2]],visao:2,vel:1.1},{tipo:'vigia',rota:[[7,6],[3,6]],visao:2,vel:1.0}],
+    perguntas:[{quem:'anciao',nome:'Joás, pai de Gideão',fala:'Os homens da cidade querem matar meu filho pelo que ele fez esta noite!',
+      e:'Depois disso, Gideão ganhou o nome Jerubaal. O que ele significa?', o:['Aquele que combate contra Baal','Aquele que foi chamado por Baal','O menor da casa de Joás','O guerreiro do vale de Jezreel'],
+      x:'Jerubaal quer dizer "aquele que combate contra Baal". Antes de enfrentar os midianitas, Gideão precisou derrubar a falsa religião da própria casa.'}]},
+  { titulo:'De 32 mil para 300', ref:'Jz 7.1-8', icone:'agua',
+    historia:'Deus mandou reduzir o exército. Primeiro, os medrosos voltaram para casa. Depois, o Senhor mandou levar os homens até as águas: ficariam só os que levassem a água à boca com a mão, sem se curvar. De 32 mil, ficaram 300.',
+    objetivo:'Toque nos soldados que bebem em pé, levando a água à boca com a mão. Deixe de fora os que se curvaram até a água.',
+    mapa:{base:'grama', ter:[['agua',0,0,11,2],['areia',0,2,11,1]], decor:[['arvore',0,8],['rocha',10,8],['tenda',9,5,2,2]]},
+    inicio:[5,6], tipo:'selecionar',
+    selecao:[{x:0,y:2,certo:false},{x:1,y:2,certo:true},{x:2,y:2,certo:false},{x:3,y:2,certo:false},{x:4,y:2,certo:true},{x:5,y:2,certo:false},{x:6,y:2,certo:false},{x:7,y:2,certo:true},{x:8,y:2,certo:false},{x:9,y:2,certo:true},{x:10,y:2,certo:false}],
+    dicaErro:'Esse soldado se curvou para beber. Fiquem só os que levaram a água à boca com a mão.',
+    perguntas:[{quem:'anjo',nome:'Anjo do Senhor',fala:'Ainda é gente demais, Gideão. De 32 mil, só 300 vão ficar.',
+      e:'Por que Deus mandou diminuir tanto o exército?', o:['Para Israel não se gloriar na própria força','Porque não havia comida para tanta gente assim','Para os midianitas não perceberem o ataque','Porque muitos homens eram de outra tribo'],
+      x:'Com obediência e fé, o pouco nas mãos de Deus basta. Com 300 homens, os inimigos entraram em confusão e fugiram (Jz 7.22).'}]},
+  { titulo:'Depois da vitória', ref:'Jz 8.22 a 9.57', icone:'conversa',
+    historia:'Os midianitas fugiram e Israel venceu. Mas a história de Gideão não termina bem: ele fez um éfode que virou ídolo, e depois da sua morte o filho Abimeleque tomou o poder à força. Só Jotão, o filho mais novo, escapou.',
+    objetivo:'Converse com o homem de Israel e com Jotão.',
+    mapa:{base:'areia', ter:[['estrada',0,4,11,1]], decor:[['casa',0,0,2,2],['casa',3,0,2,2],['efode',6,1],['arvore',9,1],['espinheiro',9,8],['palmeira',0,8]]},
+    inicio:[0,4], tipo:'conversar',
+    npcs:[
+      {x:4,y:3,tipo:'povo',nome:'Homem de Israel',pergunta:{fala:'Domina sobre nós, tu e teus filhos! Você recusou, mas pediu o ouro do despojo...',
+        e:'O que era o éfode e no que ele se tornou?', o:['Veste do sumo sacerdote que virou ídolo','Coroa de rei que dividiu as doze tribos','Escudo de guerra guardado no tabernáculo','Tapete de oração usado pelos profetas'],
+        x:'O éfode era veste sagrada do sumo sacerdote. Em Ofra virou centro rival de adoração: "todo o Israel prostituiu-se ali após ele" (Jz 8.27). Heróis na batalha precisam vigiar na vida diária.'}},
+      {x:8,y:6,tipo:'jovem',nome:'Jotão',pergunta:{fala:'As árvores pediram rei. A oliveira, a figueira e a videira recusaram. Só o espinheiro aceitou.',
+        e:'Na parábola de Jotão, quem representa o espinheiro?', o:['Abimeleque, o falso rei','Gideão, que recusou a coroa','Jotão, o filho que escapou','Os cidadãos de Siquém'],
+        x:'O espinheiro é Abimeleque: inútil, sem frutos e perigoso. Ele matou os irmãos para reinar, e três anos depois uma mulher lançou uma pedra de moinho da torre de Tebes sobre ele.'}}]}
+  ]},
+
+{ id:'jefte', nome:'Jefté', licao:'8', ref:'Jz 10 a 12', opressor:'os amonitas', musica:'jefte',
+  ponto:'Antes de falar, pense! Em momentos de euforia ou de angústia, as emoções podem nos levar a agir sem pensar.',
+  desafios:[
+  { titulo:'Fora com os deuses estranhos', ref:'Jz 10.6-16', icone:'idolo',
+    historia:'Israel se curvou a baalins, Astarote e deuses da Síria, de Sidom, de Moabe, de Amom e dos filisteus. Depois de dezoito anos de opressão, o povo clamou. Deus respondeu: "Clamai aos deuses que escolhestes." Então o povo agiu.',
+    objetivo:'Recolha os 5 ídolos da aldeia e jogue todos na fogueira.',
+    mapa:{base:'areia', ter:[['estrada',0,4,11,1],['grama',8,6,3,3]], decor:[['casa',0,0,2,2],['casa',4,0,2,2],['casa',0,7,2,2],['fogueira',9,7],['palmeira',8,1]]},
+    inicio:[0,4], tipo:'mapa', contagem:'Ídolos',
+    alvos:[{x:2,y:2,item:'idolo',pegar:true},{x:6,y:3,item:'idolo',pegar:true},{x:3,y:7,item:'idolo',pegar:true},{x:9,y:3,item:'idolo',pegar:true},{x:7,y:0,item:'idolo',pegar:true}],
+    entregar:{x:8,y:7,rotulo:'Fogueira'},
+    perguntas:[{quem:'anciao',nome:'Ancião de Gileade',fala:'Deus respondeu ao nosso clamor: clamai aos deuses que escolhestes.',
+      e:'O que provou que o arrependimento do povo era real?', o:['Tiraram os deuses alheios do meio deles','Fizeram um grande banquete ao Senhor','Ofereceram ouro aos sacerdotes de Siló','Prometeram que nunca mais iam pecar contra Deus'],
+      x:'Eles confessaram e também tiraram os deuses estranhos (Jz 10.16). A prova do arrependimento está nas atitudes: quem confessa e deixa alcança misericórdia (Pv 28.13).'}]},
+  { titulo:'Os anciãos em Tobe', ref:'Jz 11.1-11', icone:'conversa',
+    historia:'Jefté era filho de uma prostituta. Os meios-irmãos o expulsaram e ele foi viver na terra de Tobe, entre homens levianos. Agora os amonitas atacam Gileade, e os mesmos anciãos que o rejeitaram vieram buscá-lo.',
+    objetivo:'Converse com os dois anciãos de Gileade.',
+    mapa:{base:'areia', ter:[['pedra',0,0,3,3]], decor:[['tenda',0,0,2,2],['tenda',8,0,2,2],['rocha',4,0],['fogueira',5,5],['palmeira',10,8]]},
+    inicio:[2,4], tipo:'conversar',
+    npcs:[
+      {x:7,y:4,tipo:'anciao',nome:'Ancião de Gileade',pergunta:{fala:'Você foi deserdado, mas seu nome diz muito.',
+        e:'O que significa o nome Jefté em hebraico?', o:['Ele abre ou ele liberta','O rejeitado de Gileade','Guerreiro da terra de Tobe','O filho sem herança do pai'],
+        x:'Jefté quer dizer "ele abre ou ele liberta". A graça de Deus alcançou um marginalizado e o colocou no comando de Israel. É misericórdia divina, não teologia da prosperidade.'}},
+      {x:6,y:7,tipo:'calebe',nome:'Outro ancião',pergunta:{fala:'Vem e sê-nos por cabeça contra os filhos de Amom.',
+        e:'O que foi preciso para Jefté assumir o comando?', o:['Todos deixarem o orgulho de lado','Jefté receber a herança do pai','Os anciãos pagarem um alto preço','Um profeta ungir Jefté como rei'],
+        x:'Jefté reconsiderou e firmou um compromisso com eles diante do Senhor, em Mispá. Muitas vezes deixamos de fazer grandes coisas porque não abrimos mão do orgulho (1 Pe 5.5).'}}],
+    extraNpcs:[{x:1,y:6,tipo:'povo2',nome:'Homem de Tobe',fala:'Aonde você for, a gente vai junto.'}]},
+  { titulo:'Primeiro, a paz', ref:'Jz 11.12-28', icone:'carta',
+    historia:'Antes de lutar, Jefté mandou mensageiros ao rei de Amom. O rei dizia que Israel tinha roubado suas terras no êxodo. Jefté respondeu com a história: a terra foi tomada dos amorreus, e Israel vivia ali havia uns trezentos anos.',
+    objetivo:'Pegue a carta na sua tenda e entregue ao mensageiro na estrada.',
+    mapa:{base:'areia', ter:[['estrada',2,4,9,1],['grama',0,6,3,3]], decor:[['tenda',0,1,2,2],['rocha',5,1],['rocha',7,7],['palmeira',4,8],['arvore',10,0]]},
+    inicio:[3,5], tipo:'mapa', contagem:'Carta',
+    alvos:[{x:2,y:2,item:'carta',pegar:true}],
+    entregar:{x:9,y:4,rotulo:'Mensageiro',npc:'mensageiro'},
+    perguntas:[{quem:'mensageiro',nome:'Mensageiro',fala:'Levei sua carta ao rei de Amom.',
+      e:'O que essa atitude de Jefté mostra?', o:['Buscou resolver o conflito em paz','Tentou comprar a terra dos amonitas','Queria adiar a guerra por ter medo','Pediu ajuda militar ao rei do Egito'],
+      x:'Jefté tentou resolver o conflito pacificamente e mostrou conhecimento da história e da ação de Deus. Só depois da recusa a batalha ficou inevitável.'}]},
+  { titulo:'A batalha e o voto', ref:'Jz 11.29 a 12.7', icone:'batalha',
+    historia:'O Espírito do Senhor veio sobre Jefté. Perto do inimigo, ele fez um voto impulsivo: o que primeiro saísse da porta da sua casa seria do Senhor. Os amonitas avançam contra Mispá.',
+    objetivo:'Defenda o acampamento de Mispá dos amonitas.',
+    mapa:{base:'grama', ter:[['areia',3,0,5,2]], decor:[['tenda',0,0,2,2],['tenda',8,0,2,2],['rocha',5,5],['arvore',0,6]]},
+    inicio:[5,3], tipo:'defender',
+    inimigos:{tipo:'amonita', qtd:10, por:1, rotulo:'amonitas vencidos', alvo:[5,1], spawns:[[1,8],[5,8],[9,8],[10,5],[0,5]], intervalo:1.5, vel:0.95},
+    perguntas:[
+      {quem:'jefte',nome:'Jefté',fala:'Na volta, quem saiu da porta ao meu encontro foi a minha única filha.',
+       e:'Por que o voto de Jefté foi imprudente?', o:['Deus não pediu voto para dar a vitória','Jefté não tinha dinheiro para cumpri-lo','Votos eram proibidos a quem não era rei','Ele fez o voto depois da batalha acabar'],
+       x:'Deus não exigiu promessa nenhuma: bastava confiar na Palavra. Voto não é barganha. Os estudiosos divergem sobre o destino da filha (sacrifício, substituição ou celibato), mas a lição é clara: não decida no calor da emoção.'},
+      {quem:'soldado',nome:'Soldado de Gileade',fala:'No Jordão, quem dizia "Sibolete" em vez de "Chibolete" era descoberto.',
+       e:'O que o episódio do Chibolete revela?', o:['A desunião crescente entre as tribos','A força crescente do exército de Amom','A sabedoria dos anciãos de Efraim','O fim das guerras no tempo dos juízes'],
+       x:'As maiores ameaças à obra de Deus podem vir de dentro: ciúme e orgulho dividem o povo (Tg 3.14-16). Jefté julgou Israel seis anos.'}]}
+  ]},
+
+{ id:'sansao', nome:'Sansão', licao:'9 e 10', ref:'Jz 13 a 16', opressor:'os filisteus', musica:'sansao',
+  ponto:'Na vida cristã, a verdadeira vitória não está em conquistar o mundo, mas em permanecer fiel a Cristo até o fim.',
+  desafios:[
+  { titulo:'O leão de Timna', ref:'Jz 13 e 14', icone:'leao',
+    historia:'Israel serviu aos filisteus por quarenta anos e já nem clamava. O anjo anunciou a Manoá e à sua mulher um filho nazireu. Sansão cresceu e, em Timna, viu uma filisteia que agradou aos seus olhos. No caminho, um leão rugiu contra ele.',
+    objetivo:'Enfrente o leão no caminho e depois siga até o portão de Timna.',
+    mapa:{base:'grama', ter:[['estrada',0,4,11,1],['vinha',0,0,4,3],['vinha',6,6,5,3]], decor:[['rocha',5,1],['arvore',1,7],['muroPortao',10,3]]},
+    inicio:[0,4], tipo:'mapa',
+    alvos:[{x:5,y:4,animal:'leao',solido:true,grupo:0,rotulo:'Leão',forca:{n:12,rotulo:'O Espírito do Senhor veio sobre Sansão!'}},{x:9,y:4,marca:true,grupo:1,rotulo:'Portão de Timna'}],
+    perguntas:[
+      {quem:'mulher',nome:'Mãe de Sansão',fala:'O anjo disse que navalha não passaria na cabeça do menino.',
+       e:'O que era um nazireu?', o:['Alguém separado e consagrado a Deus','Um guerreiro escolhido da tribo de Dã','Um sacerdote que servia no tabernáculo','Um profeta que vivia sozinho no deserto'],
+       x:'Nazireu vem de nazir, separado: alguém consagrado a Deus por toda a vida ou por um tempo. Sansão seria nazireu desde o ventre.'},
+      {quem:'anciao',nome:'Manoá, pai de Sansão',fala:'Não há mulher entre as filhas do nosso povo? E ele respondeu: "Tomai-me esta."',
+       e:'Qual foi o critério de Sansão para escolher a esposa?', o:['Apenas a aparência dela','A fé que ela tinha em Deus','O conselho dos seus pais','Uma ordem direta do anjo'],
+       x:'Ele disse: "ela agrada aos meus olhos" (Jz 14.3). É um alerta contra decisões baseadas só na atração física (1 Jo 2.16).'},
+      {quem:'profeta',nome:'Narrador',fala:'Depois, Sansão achou abelhas e mel dentro do leão morto. Comeu e não contou de onde veio.',
+       e:'O que Sansão quebrou ao tocar no cadáver do leão?', o:['O preceito do nazireado','A aliança com os filisteus','O juramento feito à esposa','A lei do descanso no sábado'],
+       x:'O nazireu não podia tocar em nada morto (Nm 6.6,7). Desde cedo Sansão começou a desprezar os limites do seu chamado.'}]},
+  { titulo:'A queixada de jumento', ref:'Jz 15', icone:'batalha',
+    historia:'O casamento em Timna terminou em traição e vingança: Sansão soltou raposas com tições nos campos filisteus. Três mil homens de Judá o amarraram e o entregaram. Mas o Espírito veio sobre ele, as cordas se romperam e ele pegou uma queixada de jumento.',
+    objetivo:'Enfrente os filisteus que avançam sobre a rocha de Etã.',
+    mapa:{base:'pedra', ter:[['grama',6,5,5,4]], decor:[['rochaG',0,0,2,2],['rocha',9,1],['arvore',10,8]]},
+    inicio:[3,3], tipo:'defender', item:'queixada',
+    inimigos:{tipo:'filisteu', qtd:20, por:50, rotulo:'filisteus', alvo:[2,2], spawns:[[10,3],[10,6],[8,8],[5,8],[1,8]], intervalo:1.0, vel:0.95},
+    perguntas:[
+      {quem:'povo',nome:'Homem de Judá',fala:'Três mil de nós fomos até a rocha de Etã atrás de você.',
+       e:'Que alerta a atitude da tribo de Judá traz?', o:['Podemos ser cúmplices ao trair um irmão','É melhor viver em paz com o inimigo forte','Nenhuma tribo deve ajudar a outra','Só um grande exército vence a guerra'],
+       x:'Judá preferiu viver dominado e entregou o próprio libertador. Mesmo sem ferir, podemos ajudar o inimigo ao trair um irmão. O chamado é proteger uns aos outros (Gl 6.1,2).'},
+      {quem:'profeta',nome:'Narrador',fala:'Antes disso, a vingança de Sansão queimou as searas dos filisteus.',
+       e:'Quantas raposas Sansão soltou nas plantações?', o:['Trezentas raposas','Seiscentas raposas','Duzentas raposas','Quinhentas raposas'],
+       x:'Foram trezentas (Jz 15.4). Daí em diante foi retaliação atrás de retaliação: violência gera violência. Com sede, Sansão clamou pela primeira vez, e Deus abriu uma fonte.'}]},
+  { titulo:'Os portões de Gaza', ref:'Jz 16.1-3', icone:'portao',
+    historia:'Em Gaza, os filisteus cercaram a cidade e esperaram a manhã para matar Sansão. À meia-noite ele se levantou, arrancou as portas da cidade com as ombreiras e a tranca e levou tudo até o alto do monte diante de Hebrom.',
+    objetivo:'À noite, pegue as portas da cidade e leve até o monte, longe dos vigias.',
+    mapa:{base:'pedra', ceu:'noite', ter:[['estrada',5,0,1,5],['grama',7,6,4,3]], decor:[['muro',0,0,5,1],['muro',6,0,5,1],['casa',0,2,2,2],['casa',8,2,2,2],['monte',9,7,2,2]]},
+    inicio:[1,5], tipo:'mapa', contagem:'Portas',
+    alvos:[{x:5,y:0,item:'portao',pegar:true}],
+    entregar:{x:8,y:8,rotulo:'Monte diante de Hebrom'},
+    guardas:[{tipo:'espiao',rota:[[2,1],[8,1]],visao:2,vel:1.2},{tipo:'espiao',rota:[[9,5],[2,5]],visao:2,vel:1.0}],
+    perguntas:[{quem:'profeta',nome:'Narrador',fala:'Depois, Dalila foi subornada. Sansão abriu o coração e cortaram seu cabelo. Ele acordou dizendo: "Sairei ainda esta vez como dantes."',
+      e:'Segundo a lição, onde estava a força de Sansão?', o:['No poder de Deus sobre ele','Nos cabelos longos e fortes','Nos músculos que treinava','No mel que tinha comido'],
+      x:'Ele não sabia que o Senhor tinha se retirado dele (Jz 16.20). A força não estava no cabelo, mas no poder de Deus. Cego, foi posto a girar um moinho em Gaza.'}]},
+  { titulo:'Entre as colunas', ref:'Jz 16.23-30', icone:'coluna', cego:true,
+    historia:'Os filisteus fizeram festa ao deus Dagom e trouxeram Sansão, cego, para zombar dele. Um moço o guiava pela mão. Ele pediu para tocar as colunas que sustentavam a casa e clamou: "Senhor Jeová, lembra-te de mim e esforça-me agora, só esta vez."',
+    objetivo:'Sansão está cego. Siga o brilho fraco até ficar entre as duas colunas e empurre.',
+    mapa:{base:'piso', interior:true, decor:[['colunaG',4,2],['colunaG',6,2],['banco',1,5],['banco',8,5],['banco',3,6],['banco',7,7]]},
+    inicio:[5,8], tipo:'mapa',
+    alvos:[{x:5,y:2,marca:true,rotulo:'Entre as colunas',forca:{n:14,rotulo:'Morra eu com os filisteus!'}}],
+    extraNpcs:[{x:4,y:8,tipo:'crianca',nome:'Moço que guiava Sansão',fala:'As colunas do meio estão bem à sua frente.'}],
+    perguntas:[{quem:'profeta',nome:'Narrador',fala:'Foram mais os mortos na sua morte do que os que matara em vida (Jz 16.30).',
+      e:'Por que Sansão aparece entre os heróis da fé em Hebreus 11?', o:['Pela graça de Deus, apesar das falhas','Porque nunca quebrou o voto de nazireu','Porque foi o juiz mais santo de Israel','Porque matou mais filisteus que Davi'],
+      x:'Sansão não é modelo de conduta, mas da fraqueza tirou força (Hb 11.34), pela graça. A maioria dos teólogos entende que ele não cometeu suicídio: morreu lutando contra o inimigo do seu povo.'}]}
+  ]}
+];
+
+/* =====================================================================
+   ESTADO SALVO
+   ===================================================================== */
+const CHAVE = 'trilhaJuizes.v2';
+let S = { nome:'', turma:'', som:false, res:{} };
+try { const s = JSON.parse(localStorage.getItem(CHAVE) || 'null'); if (s) S = Object.assign(S, s); } catch (e) {}
+function salvar(){ try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch (e) {} }
+
+const $ = (id) => document.getElementById(id);
+function esc(s){ return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function embaralhar(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function tela(id){ ['tela-nome','tela-escolha','tela-jogo','tela-fim','tela-final'].forEach((t) => $(t).hidden = t !== id); window.scrollTo(0, 0); }
+
+/* =====================================================================
+   DESENHO: utilitários
+   ===================================================================== */
+function shade(hex, amt){
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.min(255, (n >> 16) + amt)), g = Math.max(0, Math.min(255, ((n >> 8) & 255) + amt)), b = Math.max(0, Math.min(255, (n & 255) + amt));
+  return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+function rr(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath(); }
+function circ(ctx, x, y, r, c){ ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+function elip(ctx, x, y, rx, ry, c){ ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); }
+const TW = 64, TH = 32;
+function iso(x, y, z){ return { x: (x - y) * TW / 2, y: (x + y) * TH / 2 - (z || 0) }; }
+function poly(ctx, pts, fill, stroke){ ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.closePath(); if (fill){ ctx.fillStyle = fill; ctx.fill(); } if (stroke){ ctx.strokeStyle = stroke; ctx.stroke(); } }
+function caixa(ctx, x0, y0, x1, y1, z, h, cor){
+  const s = 'rgba(0,0,0,.25)';
+  poly(ctx, [iso(x0, y1, z + h), iso(x1, y1, z + h), iso(x1, y1, z), iso(x0, y1, z)], shade(cor, -28), s);
+  poly(ctx, [iso(x1, y0, z + h), iso(x1, y1, z + h), iso(x1, y1, z), iso(x1, y0, z)], shade(cor, -12), s);
+  poly(ctx, [iso(x0, y0, z + h), iso(x1, y0, z + h), iso(x1, y1, z + h), iso(x0, y1, z + h)], shade(cor, 14), s);
+}
+
+/* ---------- boneco no estilo Habbo, com túnica. Pés em (0,0). dir: 0 frente-dir, 1 frente-esq, 2 costas-esq, 3 costas-dir ---------- */
+function drawAvatar(ctx, L, dir, t, walking, pose){
+  const front = dir === 0 || dir === 1, flip = dir === 1 || dir === 2;
+  const sw = walking ? Math.sin(t * 11) : 0;
+  const bob = walking ? Math.abs(Math.sin(t * 11)) * 1.6 : Math.sin(t * 2.2) * 0.5;
+  ctx.save();
+  if (L.pequeno) ctx.scale(0.78, 0.78);
+  if (flip) ctx.scale(-1, 1);
+  if (L.brilho){ const g = ctx.createRadialGradient(0, -34, 4, 0, -34, 46); g.addColorStop(0, 'rgba(255,240,170,.75)'); g.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = g; ctx.fillRect(-50, -84, 100, 100); }
+  elip(ctx, 0, 0, 13, 5, 'rgba(0,0,0,.22)');
+  const aj = pose === 'ajoelha';
+  if (aj){ ctx.translate(2, 10); ctx.rotate(0.35); }
+  ctx.translate(0, -bob);
+  const pele = L.pele, rou = L.roupa, lw = L.gordo ? 12 : (L.forte ? 11 : 9);
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,.3)';
+  // braço de trás
+  ctx.save(); ctx.translate(0, -sw * 2);
+  ctx.fillStyle = shade(rou, -32); rr(ctx, -lw - 3, -41, 5, 15, 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(pele, -20); ctx.fillRect(-lw - 3, -27, 5, 4);
+  ctx.restore();
+  // pés
+  if (!aj){
+    ctx.fillStyle = '#5A3A22';
+    rr(ctx, -6 - sw * 3, -4, 6, 4, 1.5); ctx.fill();
+    rr(ctx, 1 + sw * 3, -4, 6, 4, 1.5); ctx.fill();
+    ctx.fillStyle = pele; ctx.fillRect(-5 - sw * 3, -7, 4, 3); ctx.fillRect(2 + sw * 3, -7, 4, 3);
+  }
+  // túnica
+  ctx.beginPath(); ctx.moveTo(-lw, -43); ctx.lineTo(lw, -43); ctx.lineTo(lw + 3, -6); ctx.quadraticCurveTo(0, -3, -lw - 3, -6); ctx.closePath();
+  ctx.fillStyle = rou; ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(rou, -22); ctx.beginPath(); ctx.moveTo(-lw, -40); ctx.lineTo(-lw + 3, -40); ctx.lineTo(-lw, -6); ctx.lineTo(-lw - 3, -6); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = shade(rou, -30); ctx.fillRect(-lw - 2, -9, (lw + 2) * 2 + 1, 2);
+  if (L.gordo){ elip(ctx, 3, -24, lw - 1, 9, shade(rou, 8)); }
+  ctx.fillStyle = L.faixa; ctx.fillRect(-lw, -26, lw * 2, 3.5);
+  if (front){ ctx.fillStyle = shade(rou, 22); ctx.fillRect(1, -42, 5, 3); }
+  // braço da frente
+  const lambe = pose === 'lambe';
+  ctx.save(); ctx.translate(0, sw * 2);
+  if (lambe){
+    ctx.fillStyle = shade(rou, -8); rr(ctx, lw - 3, -48, 5, 14, 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = pele; ctx.fillRect(lw - 5, -52, 6, 5);
+    circ(ctx, lw - 2, -50, 1.6, '#7fc3ea');
+  } else {
+    ctx.fillStyle = shade(rou, -8); rr(ctx, lw - 1.5, -41, 5, 15, 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = pele; ctx.fillRect(lw - 1.5, -27, 5, 4);
+  }
+  ctx.restore();
+  // pescoço e cabeça
+  ctx.fillStyle = shade(pele, -25); ctx.fillRect(-3, -46, 6, 4);
+  ctx.fillStyle = pele; rr(ctx, -8, -62, 17, 18, 5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = shade(pele, -18); ctx.fillRect(-8, -56, 3, 8);
+  const hc = L.cabelo, bc = L.barbaCor || L.cabelo;
+  if (front){
+    ctx.fillStyle = '#1B1B1B';
+    if (L.cego){ ctx.fillStyle = '#6a4a3a'; ctx.fillRect(1, -53, 8, 2); }
+    else { ctx.fillRect(2, -54, 2, 3.2); ctx.fillRect(6, -54, 2, 3.2); }
+    ctx.fillStyle = shade(pele, -12); ctx.fillRect(-6, -54, 3, 4);
+    if (L.barba){ ctx.fillStyle = bc; rr(ctx, -2, -50, 11, 7, 3); ctx.fill(); ctx.fillRect(-3, -54, 2, 6); }
+    else { ctx.fillStyle = shade(pele, -45); ctx.fillRect(3, -48, 4, 1.3); }
+    if (!L.veu && !L.turbante){
+      ctx.fillStyle = hc;
+      if (L.estilo === 'longo'){ ctx.fillStyle = shade(hc, -12); rr(ctx, -11, -60, 8, 30, 3); ctx.fill(); ctx.fillStyle = hc; rr(ctx, -9, -65, 19, 8, 4); ctx.fill(); ctx.fillRect(7, -60, 3, 14); }
+      else if (L.estilo === 'curto'){ rr(ctx, -9, -65, 19, 8, 4); ctx.fill(); ctx.fillRect(-9, -60, 5, 9); }
+    }
+  } else {
+    ctx.fillStyle = hc;
+    if (!L.veu && !L.turbante){
+      if (L.estilo === 'longo'){ rr(ctx, -10, -65, 21, 36, 5); ctx.fill(); }
+      else if (L.estilo === 'curto'){ rr(ctx, -9, -65, 19, 18, 5); ctx.fill(); }
+    }
+  }
+  if (L.veu){
+    ctx.fillStyle = L.veu;
+    rr(ctx, -10, -66, 21, 9, 4); ctx.fill(); ctx.stroke();
+    if (front){ rr(ctx, -12, -60, 7, 26, 3); ctx.fill(); ctx.stroke(); }
+    else { rr(ctx, -11, -62, 23, 28, 5); ctx.fill(); ctx.stroke(); }
+  }
+  if (L.turbante){ ctx.fillStyle = L.turbante; rr(ctx, -10, -68, 21, 10, 5); ctx.fill(); ctx.stroke(); ctx.fillStyle = shade(L.turbante, -25); ctx.fillRect(-9, -62, 19, 2); }
+  if (L.capacete){ ctx.fillStyle = L.capacete; ctx.beginPath(); ctx.arc(0.5, -58, 10, Math.PI, 0); ctx.fill(); ctx.stroke(); ctx.fillStyle = shade(L.capacete, -30); ctx.fillRect(-9.5, -59, 20, 3);
+    if (L.penacho){ ctx.fillStyle = '#D84A2A'; rr(ctx, -3, -76, 7, 10, 3); ctx.fill(); } }
+  if (L.coroa){ ctx.fillStyle = '#F2C23A'; ctx.beginPath(); ctx.moveTo(-8, -63); ctx.lineTo(-8, -71); ctx.lineTo(-4, -66); ctx.lineTo(0.5, -73); ctx.lineTo(5, -66); ctx.lineTo(9, -71); ctx.lineTo(9, -63); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  // item na mão da frente
+  const hx = lw + 1, hy = -25;
+  const it = pose === 'lambe' ? null : L.item;
+  if (it === 'espada'){ ctx.fillStyle = '#DCE3E8'; ctx.fillRect(hx, hy - 24, 3, 22); ctx.fillStyle = '#8A6A2A'; ctx.fillRect(hx - 2, hy - 3, 7, 3); }
+  if (it === 'lanca'){ ctx.fillStyle = '#6B4A2A'; ctx.fillRect(hx + 1, hy - 52, 2.5, 60); ctx.fillStyle = '#C8CCD0'; ctx.beginPath(); ctx.moveTo(hx + 2.2, hy - 62); ctx.lineTo(hx + 5, hy - 52); ctx.lineTo(hx - 0.5, hy - 52); ctx.closePath(); ctx.fill(); }
+  if (it === 'cajado'){ ctx.fillStyle = '#7A5230'; ctx.fillRect(hx + 1, hy - 42, 3, 50); ctx.beginPath(); ctx.arc(hx - 2, hy - 42, 5, Math.PI * 1.1, 0); ctx.lineWidth = 3; ctx.strokeStyle = '#7A5230'; ctx.stroke(); ctx.lineWidth = 1; }
+  if (it === 'aguilhada'){ ctx.fillStyle = '#8A5A2B'; ctx.fillRect(hx + 1, hy - 60, 2.5, 72); ctx.fillStyle = '#D0D0C8'; ctx.fillRect(hx + 1, hy - 66, 2.5, 6); }
+  if (it === 'tocha'){ ctx.fillStyle = '#6B4524'; ctx.fillRect(hx + 1, hy - 14, 3, 16); const f = Math.sin(t * 14) * 1.5; circ(ctx, hx + 2.5, hy - 18, 5 + f * 0.3, '#F2A33A'); circ(ctx, hx + 2.5, hy - 20, 3, '#FBE08A'); }
+  if (it === 'queixada'){ ctx.fillStyle = '#EDE3C8'; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + 4, hy - 20); ctx.lineTo(hx + 12, hy - 22); ctx.lineTo(hx + 6, hy - 16); ctx.lineTo(hx + 4, hy); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  ctx.restore();
+}
+
+/* ---------- animais e objetos ---------- */
+function drawBoi(ctx, dir, t, walking){
+  const flip = dir === 1 || dir === 2; ctx.save(); if (flip) ctx.scale(-1, 1);
+  const b = walking ? Math.abs(Math.sin(t * 9)) * 1.5 : 0;
+  elip(ctx, 0, 0, 20, 7, 'rgba(0,0,0,.22)'); ctx.translate(0, -b); ctx.strokeStyle = 'rgba(0,0,0,.3)';
+  [-12, -5, 6, 12].forEach((lx, i) => { ctx.fillStyle = '#5A3E26'; ctx.fillRect(lx, -12 + (walking && i % 2 ? 1 : 0), 4, 12); });
+  ctx.fillStyle = '#8A5E3A'; rr(ctx, -16, -30, 30, 20, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#F1E6D0'; elip(ctx, -2, -24, 6, 4, '#F1E6D0');
+  ctx.fillStyle = '#8A5E3A'; rr(ctx, 10, -36, 14, 14, 5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#E9DCC0'; ctx.fillRect(10, -40, 3, 5); ctx.fillRect(20, -40, 3, 5);
+  ctx.fillStyle = '#C89A7A'; rr(ctx, 17, -28, 8, 6, 2); ctx.fill();
+  ctx.fillStyle = '#1b1b1b'; ctx.fillRect(18, -33, 2, 2);
+  ctx.restore();
+}
+function drawLeao(ctx, dir, t){
+  const flip = dir === 1 || dir === 2; ctx.save(); if (flip) ctx.scale(-1, 1);
+  elip(ctx, 0, 0, 20, 7, 'rgba(0,0,0,.22)'); ctx.strokeStyle = 'rgba(0,0,0,.3)';
+  [-12, -5, 6, 12].forEach((lx) => { ctx.fillStyle = '#B07A30'; ctx.fillRect(lx, -12, 4, 12); });
+  ctx.fillStyle = '#D8A04A'; rr(ctx, -18, -28, 30, 18, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#D8A04A'; ctx.fillRect(-24, -26, 8, 3); circ(ctx, -25, -25, 3, '#7A4A1A');
+  circ(ctx, 14, -30, 13, '#8A4A1A'); circ(ctx, 16, -30, 8, '#E0AA55');
+  ctx.fillStyle = '#1b1b1b'; ctx.fillRect(17, -33, 2, 2); ctx.fillRect(21, -28, 3, 2);
+  const r = Math.sin(t * 5) > 0.3; if (r){ ctx.fillStyle = '#fff'; ctx.font = '800 11px Nunito,sans-serif'; ctx.fillText('RRR', 18, -46); }
+  ctx.restore();
+}
+function drawCamelo(ctx, dir, t, walking){
+  const flip = dir === 1 || dir === 2; ctx.save(); if (flip) ctx.scale(-1, 1);
+  const b = walking ? Math.abs(Math.sin(t * 7)) * 1.5 : 0;
+  elip(ctx, 0, 0, 22, 7, 'rgba(0,0,0,.22)'); ctx.translate(0, -b); ctx.strokeStyle = 'rgba(0,0,0,.3)';
+  [-12, -6, 8, 13].forEach((lx, i) => { ctx.fillStyle = '#A07844'; ctx.fillRect(lx, -24 + (walking && i % 2 ? 1 : 0), 4, 24); });
+  ctx.fillStyle = '#C79B5E'; rr(ctx, -16, -40, 32, 18, 8); ctx.fill(); ctx.stroke();
+  circ(ctx, -3, -42, 8, '#C79B5E');
+  ctx.fillStyle = '#C79B5E'; ctx.fillRect(13, -56, 6, 22); rr(ctx, 13, -62, 14, 8, 3); ctx.fill();
+  ctx.fillStyle = '#1b1b1b'; ctx.fillRect(21, -60, 2, 2);
+  ctx.fillStyle = '#9A3A2A'; ctx.fillRect(-10, -44, 16, 5);
+  ctx.save(); ctx.translate(-2, -40); ctx.scale(0.8, 0.8);
+  drawAvatar(ctx, {pele:'#A8704A',cabelo:'#1E140E',estilo:'curto',barba:true,roupa:'#3A5A7A',faixa:'#E0B040',turbante:'#E0D0A0',item:'lanca'}, 0, t, false);
+  ctx.restore(); ctx.restore();
+}
+function drawCarro(ctx, dir, t){
+  const flip = dir === 1 || dir === 2; ctx.save(); if (flip) ctx.scale(-1, 1);
+  elip(ctx, 0, 0, 30, 8, 'rgba(0,0,0,.22)'); ctx.strokeStyle = 'rgba(0,0,0,.35)';
+  // cavalo
+  const g = Math.sin(t * 16) * 2;
+  [14, 19, 28, 33].forEach((lx, i) => { ctx.fillStyle = '#3A2A1E'; ctx.fillRect(lx, -18 + (i % 2 ? g : -g) * 0.5, 3, 18); });
+  ctx.fillStyle = '#4A3424'; rr(ctx, 12, -30, 26, 14, 6); ctx.fill(); ctx.stroke();
+  ctx.fillRect(34, -42, 6, 16); rr(ctx, 34, -46, 12, 7, 3); ctx.fill();
+  // carro
+  ctx.fillStyle = '#7A7E86'; rr(ctx, -22, -32, 26, 20, 3); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#A8ACB4'; ctx.fillRect(-22, -32, 26, 3);
+  circ(ctx, -9, -8, 9, '#3A3A40'); circ(ctx, -9, -8, 3, '#9A9AA0');
+  ctx.strokeStyle = '#C8C8CE'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-18, -8); ctx.lineTo(-26, -8); ctx.stroke(); ctx.lineWidth = 1;
+  ctx.save(); ctx.translate(-10, -22); ctx.scale(0.8, 0.8); drawAvatar(ctx, TIPOS.sisera, 0, t, false); ctx.restore();
+  ctx.restore();
+}
+function drawItem(ctx, tipo, t){
+  const b = Math.sin(t * 3) * 1.5;
+  elip(ctx, 0, 0, 11, 4, 'rgba(0,0,0,.2)');
+  ctx.save(); ctx.translate(0, -4 - b); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
+  if (tipo === 'espada'){ ctx.rotate(-0.6); ctx.fillStyle = '#DCE3E8'; ctx.fillRect(-2, -22, 4, 20); ctx.fillStyle = '#8A6A2A'; ctx.fillRect(-6, -3, 12, 3); ctx.fillRect(-1.5, 0, 3, 6); }
+  else if (tipo === 'cesto'){ ctx.fillStyle = '#B98A4A'; rr(ctx, -10, -14, 20, 14, 4); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#E3C060'; elip(ctx, 0, -14, 9, 4, '#E3C060'); circ(ctx, -3, -16, 3, '#C84A3A'); circ(ctx, 3, -17, 3, '#7AA040'); ctx.strokeStyle = '#8A5E2A'; ctx.beginPath(); ctx.moveTo(-10, -9); ctx.lineTo(10, -9); ctx.stroke(); }
+  else if (tipo === 'feixe'){ ctx.fillStyle = '#E3C060'; for (let i = -3; i <= 3; i++){ ctx.save(); ctx.rotate(i * 0.1); ctx.fillRect(-1.5, -24, 3, 24); ctx.restore(); } ctx.fillStyle = '#F2D27A'; elip(ctx, 0, -24, 7, 5, '#F2D27A'); ctx.fillStyle = '#8A5E2A'; ctx.fillRect(-5, -12, 10, 3); }
+  else if (tipo === 'idolo'){ ctx.fillStyle = '#8A6A3A'; rr(ctx, -6, -8, 12, 8, 2); ctx.fill(); ctx.fillStyle = '#C8A040'; rr(ctx, -4, -24, 8, 17, 3); ctx.fill(); ctx.stroke(); circ(ctx, 0, -27, 4, '#C8A040'); ctx.fillStyle = '#6A4A1A'; ctx.fillRect(-1, -28, 2, 1.5); }
+  else if (tipo === 'odre'){ ctx.fillStyle = '#A8784A'; ctx.beginPath(); ctx.ellipse(0, -9, 9, 8, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#8A5E3A'; ctx.fillRect(-2, -20, 4, 5); circ(ctx, 0, -21, 2.5, '#F4F0E6'); }
+  else if (tipo === 'coberta'){ ctx.fillStyle = '#6A3A7A'; rr(ctx, -11, -8, 22, 8, 3); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#E0B060'; ctx.fillRect(-11, -5, 22, 2); }
+  else if (tipo === 'carta'){ ctx.fillStyle = '#F2E6C4'; rr(ctx, -10, -10, 20, 9, 4); ctx.fill(); ctx.stroke(); circ(ctx, -10, -5.5, 4.5, '#E0CFA0'); circ(ctx, 10, -5.5, 4.5, '#E0CFA0'); ctx.fillStyle = '#B03A2E'; circ(ctx, 0, -5, 2.5, '#B03A2E'); }
+  else if (tipo === 'portao'){ ctx.fillStyle = '#7A5230'; rr(ctx, -14, -34, 12, 34, 2); ctx.fill(); ctx.stroke(); rr(ctx, 2, -34, 12, 34, 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#4A3018'; ctx.fillRect(-14, -20, 28, 3); ctx.fillStyle = '#C0A060'; circ(ctx, -4, -16, 1.5, '#C0A060'); circ(ctx, 4, -16, 1.5, '#C0A060'); }
+  ctx.restore();
+}
+
+/* =====================================================================
+   MOTOR DO DESAFIO
+   ===================================================================== */
+const TERRENOS = {
+  areia:['#E6C88E','#DFC084'], grama:['#95BD5C','#8CB454'], pedra:['#BBB29F','#B2A994'], estrada:['#D2B68C','#CBAE83'],
+  agua:['#4C9ACB','#4692C3'], vau:['#86C0DA','#7EB8D2'], trigo:['#DDBB55','#D6B34C'], piso:['#DCCBAA','#D2C09C'], vinha:['#7EA84E','#76A046']
+};
+const M = { cv:null, ctx:null, dpr:1, cw:0, ch:0, scale:1, offX:0, offY:0, raf:0, last:0, t:0, luz:null };
+let G = null;        // estado do desafio em andamento
+let J = null, DI = 0; // juiz e índice do desafio
+let R = null;        // resultado acumulado do juiz
+
+function montarMapa(D){
+  const W = D.mapa.W || 11, H = D.mapa.H || 9;
+  const ter = Array.from({length:H}, () => Array(W).fill(D.mapa.base));
+  (D.mapa.ter || []).forEach(([t, x, y, w, h]) => { for (let yy = y; yy < y + h; yy++) for (let xx = x; xx < x + w; xx++) if (ter[yy] && xx < W) ter[yy][xx] = t; });
+  const decor = (D.mapa.decor || []).map(([t, x, y, w, d, o]) => Object.assign({ t, x, y, w: w || 1, d: d || 1 }, o || {}));
+  const bloq = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => ter[y][x] === 'agua'));
+  decor.forEach((f) => { if (f.t === 'tapete' || f.t === 'curral') return; for (let yy = f.y; yy < f.y + f.d; yy++) for (let xx = f.x; xx < f.x + f.w; xx++) if (bloq[yy] && xx < W) bloq[yy][xx] = true; });
+  return { W, H, ter, decor, bloq };
+}
+
+function iniciarDesafio(){
+  const D = J.desafios[DI];
+  const m = montarMapa(D);
+  G = Object.assign(m, {
+    D, pausa:true, falhas:0, inv:0, t:0,
+    player:{ x:D.inicio[0], y:D.inicio[1], dir:0, path:[], walking:false, acao:null, look: lookDe(D.jogarComo || J.id) },
+    seg:[], trilha:[], alvos:(D.alvos || []).map((a) => Object.assign({ feito:false }, a)),
+    guardas:(D.guardas || []).map((g) => ({ ...g, x:g.rota[0][0], y:g.rota[0][1], i:1, dir:0, dx:0, dy:0, espera:g.atraso || 0, vis:[] })),
+    npcs:[].concat((D.npcs || []).map((n) => ({ ...n, respondida:false })), (D.extraNpcs || []).map((n) => ({ ...n, respondida:true }))),
+    inimigos:[], spawnados:0, timerSpawn:1.2, contador:0, escaparam:0,
+    sel:(D.selecao || []).map((s) => ({ ...s, estado:null })),
+    bolhas:[], floats:[], poeira:[], marcas:[], brilhos:[], hover:null, hoverEnt:null, concluido:false, forca:null, festa:null, guia:null, avisou:null
+  });
+  if (D.item) G.player.look = Object.assign({}, G.player.look, { item: D.item });
+  if (D.cego) G.player.look = Object.assign({}, G.player.look, { cego:true });
+  G.player.look.nomeJ = D.nomeJogador || J.nome;
+  G.trilha = [[G.player.x, G.player.y]];
+  G.alvos.forEach((a) => { if (a.solido) G.bloq[a.y][a.x] = true; });
+  G.npcs.forEach((n) => { G.bloq[n.y][n.x] = true; });
+  G.sel.forEach((s) => { G.bloq[s.y][s.x] = true; });
+  if (D.entregar && D.entregar.npc){ G.bloq[D.entregar.y][D.entregar.x] = true; }
+  G.r0 = Object.assign({}, R);
+  redimensionar();
+  atualizarHud(); desenharPassos();
+  musica(J.musica);
+  abrirIntro();
+}
+
+function livre(x, y){ return x >= 0 && y >= 0 && x < G.W && y < G.H && !G.bloq[y][x]; }
+function bfs(sx, sy, pass){
+  const ok = pass || livre;
+  const dist = Array.from({length:G.H}, () => Array(G.W).fill(-1)), prev = {};
+  const q = [[sx, sy]]; dist[sy][sx] = 0;
+  const dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+  while (q.length){
+    const [x, y] = q.shift();
+    for (const [dx, dy] of dirs){
+      const nx = x + dx, ny = y + dy;
+      if (!ok(nx, ny) || dist[ny][nx] !== -1) continue;
+      if (dx && dy && (!ok(x + dx, y) || !ok(x, y + dy))) continue;
+      dist[ny][nx] = dist[y][x] + 1; prev[nx + ',' + ny] = [x, y]; q.push([nx, ny]);
+    }
+  }
+  return { dist, prev };
+}
+function caminho(prev, sx, sy, tx, ty){ const p = []; let c = [tx, ty]; while (!(c[0] === sx && c[1] === sy)){ p.unshift(c); c = prev[c[0] + ',' + c[1]]; if (!c) return null; } return p; }
+function andarAte(alvos, acao){
+  const p = G.player, sx = Math.round(p.x), sy = Math.round(p.y);
+  const { dist, prev } = bfs(sx, sy);
+  let melhor = null, md = Infinity;
+  alvos.forEach(([x, y]) => { if (x === sx && y === sy){ melhor = [x, y]; md = 0; return; } if (x < 0 || y < 0 || x >= G.W || y >= G.H) return; if (dist[y][x] >= 0 && dist[y][x] < md){ md = dist[y][x]; melhor = [x, y]; } });
+  if (!melhor) return false;
+  const path = md === 0 ? [] : caminho(prev, sx, sy, melhor[0], melhor[1]);
+  if (path === null) return false;
+  if (Math.abs(p.x - sx) > 0.01 || Math.abs(p.y - sy) > 0.01) path.unshift([sx, sy]);
+  p.path = path; p.acao = acao || null;
+  if (!path.length && acao){ p.acao = null; acao(); }
+  return true;
+}
+function vizinhos(x, y){ const r = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (dx || dy) r.push([x + dx, y + dy]); return r; }
+function dirPara(dx, dy, atual){
+  const sdx = dx - dy, sdy = dx + dy;
+  let frente = atual === 0 || atual === 1, esq = atual === 1 || atual === 2;
+  if (sdy > 0.01) frente = true; else if (sdy < -0.01) frente = false;
+  if (sdx > 0.01) esq = false; else if (sdx < -0.01) esq = true;
+  return frente ? (esq ? 1 : 0) : (esq ? 2 : 3);
+}
+
+/* ---------- regras ---------- */
+function grupoAtivo(){ const pend = G.alvos.filter((a) => !a.feito); if (!pend.length) return Infinity; return Math.min(...pend.map((a) => a.grupo || 0)); }
+function alvosAtivos(){ const g = grupoAtivo(); return G.alvos.filter((a) => !a.feito && (a.grupo || 0) === g); }
+function entregaAtiva(){ return !!G.D.entregar && G.alvos.every((a) => a.feito); }
+function perto(a, r){ return Math.max(Math.abs(G.player.x - a.x), Math.abs(G.player.y - a.y)) <= r; }
+
+function destino(){
+  if (!G || G.concluido) return null;
+  if (entregaAtiva()) return G.D.entregar;
+  const m = alvosAtivos().filter((a) => a.marca);
+  return m.length ? m[0] : null;
+}
+function checarGatilhos(){
+  if (G.pausa || G.concluido) return;
+  const p = G.player;
+  const dst = destino();
+  if (dst && G.avisou !== dst){
+    G.avisou = dst;
+    const pronto = dst === G.D.entregar;
+    toast((pronto ? 'Tudo pronto! ' : '') + 'Siga a trilha dourada até: ' + dst.rotulo);
+    if (pronto){ falar(p, 'Agora, para: ' + dst.rotulo + '!'); sfx('ok'); }
+  }
+  for (const a of alvosAtivos()){
+    if (perto(a, a.solido ? 1.05 : 0.5) && (a.solido ? !p.path.length : true)){ acionarAlvo(a); return; }
+  }
+  const e = G.D.entregar;
+  if (e && entregaAtiva() && perto(e, e.npc ? 1.05 : 0.5)){ concluirAcao(); }
+}
+function acionarAlvo(a){
+  if (a.fala){ falar(a, a.fala); }
+  if (a.forca){ abrirForca(a.forca, () => finalizarAlvo(a)); return; }
+  if (a.pergunta){ G.pausa = true; perguntar(a.pergunta, () => { G.pausa = false; finalizarAlvo(a); }); return; }
+  finalizarAlvo(a);
+}
+function finalizarAlvo(a){
+  a.feito = true;
+  if (a.solido) G.bloq[a.y][a.x] = false;
+  G.brilhos.push({ x:a.x, y:a.y, t:0 });
+  if (a.pegar){ G.seg.push({ a, x:a.x, y:a.y, dir:0, walking:false }); sfx('pegar'); flutuar(a.x, a.y, '+1'); }
+  else { sfx('ok'); flutuar(a.x, a.y, '✓'); }
+  if (a.vira) G.decor.push({ t:a.vira, x:a.x, y:a.y, w:1, d:1, fogo:true, novo:true });
+  if (a.obj) a.derrubado = true;
+  atualizarHud();
+  if (!G.D.entregar && G.alvos.every((x) => x.feito)) setTimeout(concluirAcao, 450);
+}
+function pego(msg){
+  if (G.inv > 0 || G.concluido) return;
+  G.falhas++; G.inv = 1.4; sfx('pego');
+  toast(msg || 'Você foi visto! Volte e tente por outro caminho.', true);
+  const D = G.D, p = G.player;
+  p.x = D.inicio[0]; p.y = D.inicio[1]; p.path = []; p.acao = null;
+  G.alvos.forEach((a) => { if (a.pegar && a.feito && !a.pergunta){ a.feito = false; } });
+  G.seg = G.seg.filter((s) => s.a.feito);
+  G.seg.forEach((s) => { s.x = p.x; s.y = p.y; });
+  G.trilha = [[p.x, p.y]];
+  atualizarHud();
+}
+function concluirAcao(){
+  if (G.concluido) return;
+  G.concluido = true; G.pausa = true; G.player.path = [];
+  sfx('vitoria');
+  const cores = ['#F2B233', '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6', '#FFFFFF'];
+  G.festa = { t:0, est:estrelasDe(), texto:'Desafio cumprido!', conf:Array.from({ length:90 }, () => ({ x:M.cw / 2 + (Math.random() - 0.5) * 120, y:M.ch * 0.34, vx:(Math.random() - 0.5) * 520, vy:-180 - Math.random() * 320, r:Math.random() * 6, vr:(Math.random() - 0.5) * 12, cor:cores[Math.floor(Math.random() * cores.length)] })) };
+  if (G.D.entregar) G.seg.forEach((s) => s.indo = true);
+  falar(G.player, G.D.tipo === 'defender' ? 'Vitória! O Senhor nos livrou!' : 'Consegui!');
+  atualizarHud();
+  setTimeout(() => {
+    const qs = G.D.perguntas || [];
+    let i = 0;
+    const prox = () => { if (i < qs.length) perguntar(qs[i++], prox); else abrirConcluido(); };
+    prox();
+  }, 2500);
+}
+function estrelasDe(){ const f = G.D.tipo === 'defender' ? G.escaparam : G.falhas; return f === 0 ? 3 : f <= 2 ? 2 : 1; }
+
+/* ---------- atualização por quadro ---------- */
+function atualizar(dt){
+  G.t += dt;
+  if (G.inv > 0) G.inv -= dt;
+  const p = G.player;
+  if (!G.pausa && p.path.length){
+    const [nx, ny] = p.path[0];
+    const dx = nx - p.x, dy = ny - p.y, d = Math.hypot(dx, dy), passo = 3.3 * dt;
+    if (d > 0.001) p.dir = dirPara(dx, dy, p.dir);
+    p.walking = true;
+    if (d <= passo){
+      p.x = nx; p.y = ny; p.path.shift();
+      const ult = G.trilha[G.trilha.length - 1];
+      if (!ult || ult[0] !== nx || ult[1] !== ny){ G.trilha.push([nx, ny]); if (G.trilha.length > 40) G.trilha.shift(); }
+      if (!p.path.length){ p.walking = false; if (p.acao){ const a = p.acao; p.acao = null; a(); } }
+    } else { p.x += dx / d * passo; p.y += dy / d * passo; }
+  } else p.walking = false;
+  // seguidores
+  const ent = G.D.entregar;
+  G.seg.forEach((s) => { if (!s.indo) return; const dx = ent.x - s.x, dy = ent.y - s.y, d = Math.hypot(dx, dy); if (d < 0.15){ s.sumiu = true; G.poeira.push({ x:ent.x, y:ent.y, t:0 }); G.brilhos.push({ x:ent.x, y:ent.y, t:0 }); sfx('pegar'); } else { const v = Math.min(d, 2.6 * dt); s.x += dx / d * v; s.y += dy / d * v; s.dir = dirPara(dx, dy, s.dir); s.walking = true; } });
+  G.seg = G.seg.filter((s) => !s.sumiu);
+  G.seg.forEach((s, i) => {
+    if (s.indo) return;
+    const alvo = G.trilha[Math.max(0, G.trilha.length - 2 - i)] || [p.x, p.y];
+    const dx = alvo[0] - s.x, dy = alvo[1] - s.y, d = Math.hypot(dx, dy);
+    if (d > 0.05){ const v = Math.min(d, 3.3 * dt); s.x += dx / d * v; s.y += dy / d * v; s.dir = dirPara(dx, dy, s.dir); s.walking = true; } else s.walking = false;
+  });
+  G.guiaT = (G.guiaT || 0) - dt;
+  if (G.guiaT <= 0){
+    G.guiaT = 0.25; const dst = destino();
+    if (dst && !G.D.cego){ const sx = Math.round(p.x), sy = Math.round(p.y); const { prev } = bfs(sx, sy, (x, y) => livre(x, y) || (x === dst.x && y === dst.y)); G.guia = caminho(prev, sx, sy, dst.x, dst.y) || []; }
+    else G.guia = null;
+  }
+  if (G.festa){ G.festa.t += dt; G.festa.conf.forEach((c) => { c.vy += 260 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt; }); }
+  G.brilhos.forEach((b) => b.t += dt); G.brilhos = G.brilhos.filter((b) => b.t < 0.8);
+  if (!G.pausa){
+    checarGatilhos();
+    atualizarGuardas(dt);
+    if (G.D.tipo === 'defender') atualizarInimigos(dt);
+  }
+  G.bolhas.forEach((b) => b.idade += dt); G.bolhas = G.bolhas.filter((b) => b.idade < 4.5);
+  G.floats.forEach((f) => f.t += dt); G.floats = G.floats.filter((f) => f.t < 1.2);
+  G.poeira.forEach((f) => f.t += dt); G.poeira = G.poeira.filter((f) => f.t < 0.6);
+  G.marcas.forEach((m) => m.t += dt); G.marcas = G.marcas.filter((m) => m.t < 0.6);
+  if (G.forca){ G.forca.v = Math.max(0, G.forca.v - dt * 0.14); $('forca-bar').style.width = (G.forca.v * 100) + '%'; }
+}
+function atualizarGuardas(dt){
+  const p = G.player, pt = [Math.round(p.x), Math.round(p.y)];
+  G.guardas.forEach((g) => {
+    if (g.espera > 0){ g.espera -= dt; }
+    else {
+      const [tx, ty] = g.rota[g.i];
+      const dx = tx - g.x, dy = ty - g.y, d = Math.hypot(dx, dy), v = g.vel * dt;
+      g.dx = Math.sign(Math.round(dx * 10)); g.dy = Math.sign(Math.round(dy * 10));
+      if (d > 0.001) g.dir = dirPara(dx, dy, g.dir);
+      if (d <= v){
+        g.x = tx; g.y = ty;
+        if (g.vai){ g.x = g.rota[0][0]; g.y = g.rota[0][1]; g.i = 1; g.espera = 0.3; }
+        else { g.i = (g.i + 1) % g.rota.length; g.espera = 0.7; const [nx, ny] = g.rota[g.i]; g.dx = Math.sign(nx - g.x); g.dy = Math.sign(ny - g.y); g.dir = dirPara(g.dx, g.dy, g.dir); }
+      } else { g.x += dx / d * v; g.y += dy / d * v; }
+    }
+    // campo de visão
+    g.vis = [];
+    const gx = Math.round(g.x), gy = Math.round(g.y);
+    for (let k = 1; k <= g.visao; k++){ const vx = gx + g.dx * k, vy = gy + g.dy * k; if (vx < 0 || vy < 0 || vx >= G.W || vy >= G.H) break; if (G.bloq[vy][vx] && !(G.npcs.some((n) => n.x === vx && n.y === vy))) break; g.vis.push([vx, vy]); }
+    if (g.visao > 0){ for (const [vx, vy] of g.vis) if (vx === pt[0] && vy === pt[1]) pego(g.tipo === 'camelo' ? 'Um midianita viu você! O trigo voltou para o campo.' : undefined); }
+    const raio = g.tipo === 'carro' ? 0.85 : 0.6;
+    if (Math.hypot(g.x - p.x, g.y - p.y) < raio) pego(g.tipo === 'carro' ? 'Cuidado com os carros de ferro! Tente de novo.' : undefined);
+  });
+}
+function atualizarInimigos(dt){
+  const I = G.D.inimigos, p = G.player;
+  if (G.spawnados < I.qtd){
+    G.timerSpawn -= dt;
+    if (G.timerSpawn <= 0){
+      G.timerSpawn = I.intervalo * (0.7 + Math.random() * 0.6);
+      const [sx, sy] = I.spawns[Math.floor(Math.random() * I.spawns.length)];
+      const destinos = I.alvos || [I.alvo];
+      const [tx, ty] = destinos[Math.floor(Math.random() * destinos.length)];
+      const { prev } = bfs(sx, sy, (x, y) => x >= 0 && y >= 0 && x < G.W && y < G.H && (!G.bloq[y][x] || (x === tx && y === ty)));
+      const path = caminho(prev, sx, sy, tx, ty) || [];
+      G.inimigos.push({ x:sx, y:sy, path, dir:0, walking:true });
+      G.spawnados++;
+    }
+  }
+  G.inimigos.forEach((e) => {
+    if (!e.path.length){ e.fim = true; return; }
+    const [nx, ny] = e.path[0]; const dx = nx - e.x, dy = ny - e.y, d = Math.hypot(dx, dy), v = I.vel * dt;
+    if (d > 0.001) e.dir = dirPara(dx, dy, e.dir);
+    if (d <= v){ e.x = nx; e.y = ny; e.path.shift(); } else { e.x += dx / d * v; e.y += dy / d * v; }
+  });
+  G.inimigos = G.inimigos.filter((e) => {
+    if (Math.hypot(e.x - p.x, e.y - p.y) < 0.75){ G.contador += I.por; sfx('golpe'); G.poeira.push({ x:e.x, y:e.y, t:0 }); flutuar(e.x, e.y, '+' + I.por.toLocaleString('pt-BR')); atualizarHud(); return false; }
+    if (e.fim){ G.escaparam++; sfx('erro'); toast('Um inimigo passou! Corra para interceptar.', true); atualizarHud(); return false; }
+    return true;
+  });
+  if (G.spawnados >= I.qtd && !G.inimigos.length) concluirAcao();
+}
+
+/* ---------- entrada ---------- */
+function posMouse(e){ const r = M.cv.getBoundingClientRect(); return { x:e.clientX - r.left, y:e.clientY - r.top }; }
+function telaParaIso(mx, my){ return { x:(mx - M.offX) / M.scale, y:(my - M.offY) / M.scale }; }
+function isoParaTela(ix, iy){ return { x:M.offX + ix * M.scale, y:M.offY + iy * M.scale }; }
+function tileEm(ix, iy){ const x = (iy / (TH / 2) + ix / (TW / 2)) / 2, y = (iy / (TH / 2) - ix / (TW / 2)) / 2; return { x:Math.floor(x), y:Math.floor(y) }; }
+function entidadeEm(ix, iy){
+  const cands = [];
+  G.npcs.forEach((n) => cands.push({ k:'npc', o:n }));
+  G.sel.forEach((s) => cands.push({ k:'sel', o:s }));
+  G.alvos.forEach((a) => { if (!a.feito && a.solido) cands.push({ k:'alvo', o:a }); });
+  if (G.D.entregar && G.D.entregar.npc) cands.push({ k:'entrega', o:G.D.entregar });
+  G.inimigos.forEach((e) => cands.push({ k:'ini', o:e }));
+  let achou = null, md = Infinity;
+  cands.forEach((c) => { const q = iso(c.o.x + 0.5, c.o.y + 0.5); if (Math.abs(ix - q.x) < 20 && iy > q.y - 74 && iy < q.y + 14){ const d = Math.hypot(ix - q.x, (iy - (q.y - 32)) * 0.6); if (d < md){ md = d; achou = c; } } });
+  if (!achou){ const t = tileEm(ix, iy); const c = cands.find((c) => c.k !== 'ini' && c.o.x === t.x && c.o.y === t.y); if (c) achou = c; }
+  return achou;
+}
+function aoMover(e){
+  if (!G) return;
+  const m = posMouse(e), i = telaParaIso(m.x, m.y), t = tileEm(i.x, i.y);
+  G.hover = (t.x >= 0 && t.y >= 0 && t.x < G.W && t.y < G.H) ? t : null;
+  G.hoverEnt = entidadeEm(i.x, i.y);
+  M.cv.style.cursor = (G.hoverEnt || G.hover) ? 'pointer' : 'default';
+}
+function aoClicar(e){
+  if (!G || G.pausa || !$('modal').hidden || G.forca) return;
+  audioDesbloquear();
+  const m = posMouse(e), i = telaParaIso(m.x, m.y);
+  const ent = entidadeEm(i.x, i.y);
+  if (ent){
+    const o = ent.o;
+    if (ent.k === 'ini'){ andarAte([[Math.round(o.x), Math.round(o.y)]].concat(vizinhos(Math.round(o.x), Math.round(o.y)))); return; }
+    if (ent.k === 'entrega'){ andarAte(vizinhos(o.x, o.y)); return; }
+    andarAte(vizinhos(o.x, o.y), () => interagir(ent));
+    return;
+  }
+  const t = tileEm(i.x, i.y);
+  if (t.x < 0 || t.y < 0 || t.x >= G.W || t.y >= G.H) return;
+  const alvos = livre(t.x, t.y) ? [[t.x, t.y]] : vizinhos(t.x, t.y);
+  if (andarAte(alvos)) G.marcas.push({ x:t.x, y:t.y, t:0 });
+}
+function interagir(ent){
+  const p = G.player, o = ent.o;
+  p.dir = dirPara(o.x - p.x, o.y - p.y, p.dir);
+  if (ent.k === 'npc'){
+    o.dir = dirPara(p.x - o.x, p.y - o.y, o.dir || 0);
+    if (o.pergunta && !o.respondida){
+      G.pausa = true;
+      perguntar(Object.assign({ quem:o.tipo, nome:o.nome }, o.pergunta), () => {
+        o.respondida = true; G.pausa = false; sfx('ok'); G.brilhos.push({ x:o.x, y:o.y, t:0 }); atualizarHud();
+        if (G.D.tipo === 'conversar' && G.npcs.every((n) => n.respondida)) setTimeout(concluirAcao, 300);
+      });
+    } else falar(o, o.fala || 'Que o Senhor esteja com você!');
+  } else if (ent.k === 'sel'){
+    if (o.estado) return;
+    if (o.certo){ o.estado = 'ok'; sfx('pegar'); flutuar(o.x, o.y, '✓'); G.brilhos.push({ x:o.x, y:o.y, t:0 }); }
+    else { o.estado = 'erro'; G.falhas++; sfx('erro'); flutuar(o.x, o.y, '✗'); toast(G.D.dicaErro, true); }
+    atualizarHud();
+    if (G.sel.filter((s) => s.certo).every((s) => s.estado === 'ok')) setTimeout(concluirAcao, 400);
+  } else if (ent.k === 'alvo'){
+    if (alvosAtivos().includes(o)) acionarAlvo(o);
+    else toast('Primeiro faça a outra parte da missão.');
+  }
+}
+document.addEventListener('keydown', (e) => {
+  if (!G || $('tela-jogo').hidden || !$('modal').hidden) return;
+  if (G.forca && (e.key === ' ' || e.key === 'Enter')){ e.preventDefault(); tocarForca(); return; }
+  const mapa = { ArrowUp:[-1,-1], ArrowDown:[1,1], ArrowLeft:[-1,1], ArrowRight:[1,-1], w:[-1,-1], s:[1,1], a:[-1,1], d:[1,-1] };
+  const v = mapa[e.key]; if (!v || G.pausa) return;
+  e.preventDefault(); audioDesbloquear();
+  const p = G.player, bx = Math.round(p.path.length ? p.path[0][0] : p.x), by = Math.round(p.path.length ? p.path[0][1] : p.y);
+  let [nx, ny] = [bx + v[0], by + v[1]];
+  if (!livre(nx, ny) || !livre(bx + v[0], by) || !livre(bx, by + v[1])){
+    if (livre(bx + v[0], by)) { nx = bx + v[0]; ny = by; } else if (livre(bx, by + v[1])) { nx = bx; ny = by + v[1]; } else return;
+  }
+  p.path = p.path.length ? [p.path[0], [nx, ny]] : [[nx, ny]];
+  // interagir com vizinho sólido na direção
+  const ent = [...G.npcs.map((o) => ({ k:'npc', o })), ...G.sel.map((o) => ({ k:'sel', o })), ...G.alvos.filter((a) => a.solido && !a.feito).map((o) => ({ k:'alvo', o }))].find((c) => c.o.x === bx + v[0] && c.o.y === by + v[1]);
+  if (ent){ p.path = []; interagir(ent); }
+});
+
+/* ---------- força (toques rápidos) ---------- */
+function abrirForca(f, cb){
+  G.pausa = true; G.player.path = [];
+  G.forca = { v:0, n:f.n, cb };
+  $('forca-rot').textContent = f.rotulo; $('forca-bar').style.width = '0%'; $('forca').hidden = false;
+  $('forca-btn').focus({ preventScroll:true });
+}
+function tocarForca(){
+  if (!G || !G.forca) return;
+  G.forca.v = Math.min(1, G.forca.v + 1 / G.forca.n); sfx('forca');
+  G.poeira.push({ x:G.player.x + (Math.random() - 0.5), y:G.player.y - 0.5, t:0 });
+  if (G.forca.v >= 1){ const cb = G.forca.cb; G.forca = null; $('forca').hidden = true; G.pausa = false; cb(); }
+}
+$('forca-btn').addEventListener('pointerdown', (e) => { e.preventDefault(); tocarForca(); });
+$('forca-btn').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); } });
+
+/* ---------- falas e efeitos ---------- */
+function falar(ref, texto){ G.bolhas = G.bolhas.filter((b) => b.ref !== ref); G.bolhas.push({ ref, texto, idade:0 }); }
+function flutuar(x, y, txt){ G.floats.push({ x, y, txt, t:0 }); }
+let toastT = 0;
+function toast(msg, ruim){ const t = $('toast'); t.textContent = msg; t.className = 'on' + (ruim ? ' ruim' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 2600); }
+
+/* =====================================================================
+   RENDERIZAÇÃO
+   ===================================================================== */
+function redimensionar(){
+  if (!M.cv || !G) return;
+  M.dpr = window.devicePixelRatio || 1;
+  M.cw = M.cv.clientWidth || 800; M.ch = M.cv.clientHeight || 500;
+  M.cv.width = Math.round(M.cw * M.dpr); M.cv.height = Math.round(M.ch * M.dpr);
+  const minX = -G.H * TW / 2 - 10, maxX = G.W * TW / 2 + 10, minY = -90, maxY = (G.W + G.H) * TH / 2 + 16;
+  M.scale = Math.min(M.cw / (maxX - minX), (M.ch - 50) / (maxY - minY), 1.6);
+  M.offX = M.cw / 2 - M.scale * (maxX + minX) / 2;
+  M.offY = (M.ch + 44) / 2 - M.scale * (maxY + minY) / 2;
+  if (!M.luz) M.luz = document.createElement('canvas');
+  M.luz.width = M.cv.width; M.luz.height = M.cv.height;
+}
+window.addEventListener('resize', () => { if (G && !$('tela-jogo').hidden) redimensionar(); });
+
+function ceuDe(){ const c = G.D.mapa.ceu || 'dia'; if (G.D.mapa.interior) return ['#3a2a1e', '#1e150e']; return { dia:['#9fd3ef','#e6f3f7'], tarde:['#e9895a','#f6d59a'], noite:['#0c1633','#22305a'] }[c]; }
+function noite(){ return G.D.mapa.ceu === 'noite' || G.D.cego; }
+
+function desenharDecor(ctx, f){
+  const x = f.x, y = f.y, w = f.w, d = f.d, t = M.t;
+  if (f.t === 'casa'){
+    caixa(ctx, x + .05, y + .05, x + w - .05, y + d - .05, 0, 46, '#C99A66');
+    caixa(ctx, x + .05, y + .05, x + w - .05, y + .18, 46, 6, '#B8885A'); caixa(ctx, x + .05, y + .05, x + .18, y + d - .05, 46, 6, '#B8885A');
+    const pm = x + w * 0.45;
+    poly(ctx, [iso(pm - .22, y + d - .05, 0), iso(pm + .22, y + d - .05, 0), iso(pm + .22, y + d - .05, 26), iso(pm - .22, y + d - .05, 26)], '#4A2E1C');
+    poly(ctx, [iso(x + w - .05, y + d * .35, 24), iso(x + w - .05, y + d * .65, 24), iso(x + w - .05, y + d * .65, 34), iso(x + w - .05, y + d * .35, 34)], noite() ? '#F5C860' : '#4A2E1C');
+  } else if (f.t === 'palacio'){
+    caixa(ctx, x, y, x + w, y + d, 0, 70, '#E2D0A8');
+    [.2, .5, .8].forEach((k) => caixa(ctx, x - .12, y + d * k - .08, x - .02, y + d * k + .08, 0, 64, '#F2E6C8'));
+    caixa(ctx, x - .15, y, x + w, y + d, 70, 8, '#8A3A5A');
+    poly(ctx, [iso(x, y + d * .4, 0), iso(x, y + d * .6, 0), iso(x, y + d * .6, 36), iso(x, y + d * .4, 36)], '#4A2E1C');
+  } else if (f.t === 'tenda'){
+    const cx = x + w / 2, cy = y + d / 2, top = iso(cx, cy, 58);
+    poly(ctx, [iso(x, y + d), iso(x + w, y + d), top], '#7A4A32', 'rgba(0,0,0,.3)');
+    poly(ctx, [iso(x + w, y), iso(x + w, y + d), top], '#9A6040', 'rgba(0,0,0,.3)');
+    for (let k = 1; k < 4; k++){ const a = iso(x + w * k / 4, y + d), b = top; ctx.strokeStyle = 'rgba(40,20,10,.35)'; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    const e1 = iso(cx - .2, y + d), e2 = iso(cx + .2, y + d), e3 = iso(cx, y + d, 30); poly(ctx, [e1, e2, e3], '#2A1A10');
+  } else if (f.t === 'palmeira' || f.t === 'palmeiraG'){
+    const g = f.t === 'palmeiraG' ? 1.5 : 1, b = iso(x + .5, y + .5);
+    elip(ctx, b.x, b.y, 14 * g, 6 * g, 'rgba(0,0,0,.2)');
+    for (let i = 0; i < 10; i++){ const k = i / 10; ctx.fillStyle = i % 2 ? '#8A6440' : '#7A5634'; rr(ctx, b.x - 4 * g + Math.sin(k * 1.6) * 8 * g, b.y - (i + 1) * 9 * g, 8 * g, 10 * g, 3); ctx.fill(); }
+    const tx = b.x + Math.sin(1.6) * 8 * g, ty = b.y - 92 * g, sw = Math.sin(t * 1.5) * 2;
+    [[-1, 0.2], [1, 0.2], [-0.7, 0.7], [0.7, 0.7], [-0.3, -0.4], [0.35, -0.4]].forEach(([dx, dy], i) => {
+      ctx.fillStyle = i % 2 ? '#4E8A36' : '#3F7A2C';
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.quadraticCurveTo(tx + dx * 26 * g + sw, ty + dy * 18 * g - 16 * g, tx + dx * 40 * g + sw, ty + dy * 26 * g + 10 * g); ctx.quadraticCurveTo(tx + dx * 22 * g, ty + dy * 14 * g, tx, ty + 4); ctx.fill();
+    });
+    circ(ctx, tx, ty + 2, 5 * g, '#6A4A22');
+  } else if (f.t === 'arvore'){
+    const b = iso(x + .5, y + .5); elip(ctx, b.x, b.y, 20, 8, 'rgba(0,0,0,.2)');
+    ctx.fillStyle = '#6B4424'; rr(ctx, b.x - 5, b.y - 40, 10, 40, 3); ctx.fill();
+    [[0, -58, 22], [-16, -48, 15], [16, -50, 16], [-6, -72, 15], [9, -68, 14]].forEach(([dx, dy, r], i) => circ(ctx, b.x + dx, b.y + dy, r, ['#4F7F2F', '#5E9238', '#46742A', '#6AA043', '#578A33'][i]));
+  } else if (f.t === 'rocha' || f.t === 'rochaG'){
+    if (f.t === 'rochaG'){ caixa(ctx, x + .05, y + .05, x + w - .05, y + d - .05, 0, 48, '#9A8E7C'); caixa(ctx, x + .3, y + .3, x + w - .4, y + d - .4, 48, 18, '#A89C88'); }
+    else { caixa(ctx, x + .15, y + .2, x + .85, y + .85, 0, 16, '#A0968A'); caixa(ctx, x + .3, y + .3, x + .7, y + .65, 16, 8, '#B0A696'); }
+  } else if (f.t === 'poco'){
+    caixa(ctx, x + .15, y + .15, x + .85, y + .85, 0, 20, '#A89C88'); poly(ctx, [iso(x + .25, y + .25, 20), iso(x + .75, y + .25, 20), iso(x + .75, y + .75, 20), iso(x + .25, y + .75, 20)], '#2A3A4A');
+    caixa(ctx, x + .15, y + .45, x + .22, y + .55, 20, 26, '#7A5230'); caixa(ctx, x + .78, y + .45, x + .85, y + .55, 20, 26, '#7A5230'); caixa(ctx, x + .15, y + .47, x + .85, y + .53, 46, 3, '#7A5230');
+  } else if (f.t === 'altar'){
+    caixa(ctx, x + .15, y + .15, x + .85, y + .85, 0, 22, '#B8AE9C');
+    if (f.fogo) fogo(ctx, iso(x + .5, y + .5, 22), 1);
+  } else if (f.t === 'fogueira'){
+    const b = iso(x + .5, y + .5); [0, 1, 2, 3, 4, 5].forEach((i) => { const a = i / 6 * Math.PI * 2; elip(ctx, b.x + Math.cos(a) * 14, b.y + Math.sin(a) * 7, 5, 3, '#8A8070'); }); fogo(ctx, b, 1.2);
+  } else if (f.t === 'coluna' || f.t === 'colunaG'){
+    const hgt = f.t === 'colunaG' ? 150 : 110;
+    caixa(ctx, x + .15, y + .15, x + .85, y + .85, 0, 8, '#C8B892'); caixa(ctx, x + .28, y + .28, x + .72, y + .72, 8, hgt - 20, '#E4D6B4'); caixa(ctx, x + .1, y + .1, x + .9, y + .9, hgt - 12, 12, '#D4C49E');
+  } else if (f.t === 'trono'){
+    caixa(ctx, x + .15, y + .1, x + .85, y + .9, 0, 20, '#8A6A2A'); caixa(ctx, x + .7, y + .1, x + .9, y + .9, 20, 40, '#9A7A30'); caixa(ctx, x + .2, y + .2, x + .7, y + .8, 20, 4, '#8A2A4A');
+  } else if (f.t === 'tapete'){
+    poly(ctx, [iso(x + .08, y + .08), iso(x + w - .08, y + .08), iso(x + w - .08, y + d - .08), iso(x + .08, y + d - .08)], '#8A2A4A');
+    poly(ctx, [iso(x + .3, y + .3), iso(x + w - .3, y + .3), iso(x + w - .3, y + d - .3), iso(x + .3, y + d - .3)], null, 'rgba(255,220,120,.6)');
+  } else if (f.t === 'lagar'){
+    caixa(ctx, x + .08, y + .08, x + .92, y + .92, 0, 16, '#9D9282'); poly(ctx, [iso(x + .22, y + .22, 16), iso(x + .78, y + .22, 16), iso(x + .78, y + .78, 16), iso(x + .22, y + .78, 16)], '#5E5648');
+    if (G && G.concluido && G.D.entregar) poly(ctx, [iso(x + .25, y + .25, 17), iso(x + .75, y + .25, 17), iso(x + .75, y + .75, 17), iso(x + .25, y + .75, 17)], '#E3C060');
+  } else if (f.t === 'curral'){
+    ctx.strokeStyle = '#7A5230'; ctx.lineWidth = 3;
+    const cantos = [[x, y], [x + w, y], [x + w, y + d], [x, y + d]];
+    for (let i = 0; i < 4; i++){ if (i === 3) continue; const [ax, ay] = cantos[i], [bx, by] = cantos[(i + 1) % 4]; [10, 20].forEach((z) => { const a = iso(ax, ay, z), b = iso(bx, by, z); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }); }
+    ctx.lineWidth = 1;
+    cantos.forEach(([cx, cy]) => caixa(ctx, cx - .05, cy - .05, cx + .05, cy + .05, 0, 24, '#6A4424'));
+  } else if (f.t === 'monte'){
+    caixa(ctx, x, y, x + w, y + d, 0, 30, '#7FA04A'); caixa(ctx, x + .3, y + .3, x + w - .3, y + d - .3, 30, 28, '#8DAE56'); caixa(ctx, x + .7, y + .7, x + w - .7, y + d - .7, 58, 22, '#9ABB60');
+  } else if (f.t === 'muro'){
+    caixa(ctx, x, y + .1, x + w, y + d - .1, 0, 54, '#B8A07A');
+    for (let k = 0; k < w * 2; k++) caixa(ctx, x + k * .5, y + .1, x + k * .5 + .25, y + d - .1, 54, 8, '#B8A07A');
+  } else if (f.t === 'muroPortao'){
+    caixa(ctx, x + .1, y - .9, x + .9, y + .05, 0, 64, '#B8A07A'); caixa(ctx, x + .1, y + .95, x + .9, y + 1.9, 0, 64, '#B8A07A');
+  } else if (f.t === 'altarBaal' || f.t === 'poste'){ /* desenhados como alvos */ }
+  else if (f.t === 'efode'){
+    caixa(ctx, x + .2, y + .2, x + .8, y + .8, 0, 18, '#9A8A70'); const b = iso(x + .5, y + .5, 18);
+    ctx.fillStyle = '#E8C03A'; rr(ctx, b.x - 9, b.y - 34, 18, 32, 4); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.stroke();
+    [[-4, -26], [4, -26], [-4, -18], [4, -18]].forEach(([dx, dy], i) => circ(ctx, b.x + dx, b.y + dy, 2.5, ['#C0392B', '#2E86C1', '#27AE60', '#8E44AD'][i]));
+    const br = 0.5 + 0.5 * Math.sin(t * 3); circ(ctx, b.x + 6, b.y - 36, 2 + br, 'rgba(255,255,220,.8)');
+  } else if (f.t === 'espinheiro'){
+    const b = iso(x + .5, y + .5); ctx.strokeStyle = '#5A4424'; ctx.lineWidth = 2;
+    for (let i = 0; i < 14; i++){ const a = -Math.PI * (i / 13); ctx.beginPath(); ctx.moveTo(b.x, b.y - 4); ctx.lineTo(b.x + Math.cos(a) * 20, b.y - 4 + Math.sin(a) * 22); ctx.stroke(); }
+    ctx.lineWidth = 1; for (let i = 0; i < 10; i++) circ(ctx, b.x - 16 + i * 3.5, b.y - 12 - (i % 3) * 5, 1.5, '#3A2A14');
+  } else if (f.t === 'banco'){
+    caixa(ctx, x + .1, y + .2, x + .9, y + .8, 0, 16, '#8A6A44');
+  }
+}
+function fogo(ctx, b, s){
+  const t = M.t;
+  for (let i = 0; i < 5; i++){ const h = (14 + Math.sin(t * 12 + i * 2) * 5) * s; ctx.fillStyle = i % 2 ? '#F2A33A' : '#F7D25A'; ctx.beginPath(); ctx.moveTo(b.x - 9 * s + i * 4 * s, b.y); ctx.quadraticCurveTo(b.x - 7 * s + i * 4 * s, b.y - h * 0.6, b.x - 5 * s + i * 3.5 * s, b.y - h); ctx.quadraticCurveTo(b.x - 3 * s + i * 4 * s, b.y - h * 0.5, b.x - 1 * s + i * 4 * s, b.y); ctx.fill(); }
+}
+function desenharAlvoObj(ctx, a){
+  const b = iso(a.x + .5, a.y + .5), t = M.t;
+  if (a.item){ ctx.save(); ctx.translate(b.x, b.y); drawItem(ctx, a.item, t + a.x); ctx.restore(); }
+  else if (a.pessoa){ ctx.save(); ctx.translate(b.x, b.y); drawAvatar(ctx, lookDe(a.pessoa), 0, t + a.x, false); ctx.restore(); }
+  else if (a.animal === 'boi'){ ctx.save(); ctx.translate(b.x, b.y); drawBoi(ctx, 0, t, false); ctx.restore(); }
+  else if (a.animal === 'leao'){ ctx.save(); ctx.translate(b.x, b.y); drawLeao(ctx, 1, t); ctx.restore(); }
+  else if (a.obj === 'altarBaal'){ caixa(ctx, a.x + .12, a.y + .12, a.x + .88, a.y + .88, 0, 26, '#7A6A5A'); const c = iso(a.x + .5, a.y + .5, 26); ctx.fillStyle = '#5A4A3A'; ctx.beginPath(); ctx.moveTo(c.x - 12, c.y); ctx.lineTo(c.x - 16, c.y - 16); ctx.lineTo(c.x - 6, c.y - 4); ctx.lineTo(c.x + 6, c.y - 4); ctx.lineTo(c.x + 16, c.y - 16); ctx.lineTo(c.x + 12, c.y); ctx.closePath(); ctx.fill(); }
+  else if (a.obj === 'poste'){ caixa(ctx, a.x + .38, a.y + .38, a.x + .62, a.y + .62, 0, 80, '#6A4A2A'); const c = iso(a.x + .5, a.y + .5, 80); circ(ctx, c.x, c.y - 4, 8, '#8A6A3A'); ctx.fillStyle = '#2a1a0a'; ctx.fillRect(c.x - 4, c.y - 7, 2, 2); ctx.fillRect(c.x + 2, c.y - 7, 2, 2); }
+}
+function marcador(ctx, x, y, cor){
+  const bob = Math.sin(M.t * 4) * 3;
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; rr(ctx, x - 9, y - 19 + bob + 2, 18, 18, 5); ctx.fill();
+  ctx.fillStyle = cor || '#F2B233'; rr(ctx, x - 9, y - 21 + bob, 18, 18, 5); ctx.fill(); ctx.strokeStyle = '#8A6500'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x - 3, y - 4 + bob); ctx.lineTo(x + 3, y - 4 + bob); ctx.lineTo(x, y + 1 + bob); ctx.closePath(); ctx.fillStyle = cor || '#F2B233'; ctx.fill();
+  ctx.fillStyle = '#3A2A00'; ctx.font = '800 14px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('!', x, y - 12 + bob);
+}
+function etiqueta(ctx, x, y, txt){
+  ctx.font = '800 11px Nunito, sans-serif'; const w = ctx.measureText(txt).width + 14;
+  ctx.fillStyle = 'rgba(9,22,40,.88)'; rr(ctx, x - w / 2, y - 10, w, 20, 6); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+}
+
+function desenhar(){
+  const ctx = M.ctx, D = G.D;
+  ctx.setTransform(M.dpr, 0, 0, M.dpr, 0, 0);
+  const [c1, c2] = ceuDe(); const g = ctx.createLinearGradient(0, 0, 0, M.ch); g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, M.cw, M.ch);
+  if (D.mapa.ceu === 'noite' && !D.mapa.interior){ for (let i = 0; i < 60; i++){ const sx = (i * 137.5) % M.cw, sy = (i * 71.3) % (M.ch * 0.5); ctx.fillStyle = Math.sin(M.t * 2 + i) > 0.5 ? '#fff6d0' : '#8a8ac0'; ctx.fillRect(sx, sy, 1.5, 1.5); } }
+  else if (!D.mapa.interior){ ctx.fillStyle = 'rgba(255,255,255,.7)'; for (let i = 0; i < 3; i++){ const cx = ((M.t * 12 + i * 260) % (M.cw + 200)) - 100, cy = 30 + i * 26; rr(ctx, cx, cy, 90, 18, 9); ctx.fill(); rr(ctx, cx + 20, cy - 10, 50, 18, 9); ctx.fill(); } }
+  ctx.setTransform(M.dpr * M.scale, 0, 0, M.dpr * M.scale, M.dpr * M.offX, M.dpr * M.offY);
+  const W = G.W, H = G.H;
+  // bordas do terreno
+  const base = TERRENOS[D.mapa.base][1];
+  poly(ctx, [iso(0, H), iso(W, H), iso(W, H, -14), iso(0, H, -14)], shade(base, -70));
+  poly(ctx, [iso(W, 0), iso(W, H), iso(W, H, -14), iso(W, 0, -14)], shade(base, -50));
+  if (D.mapa.interior){
+    const pc = '#6A4A34';
+    poly(ctx, [iso(0, 0), iso(0, H), iso(0, H, 120), iso(0, 0, 120)], pc, 'rgba(0,0,0,.2)');
+    poly(ctx, [iso(0, 0), iso(W, 0), iso(W, 0, 120), iso(0, 0, 120)], shade(pc, 12), 'rgba(0,0,0,.2)');
+    for (let k = 1; k < W; k += 3) poly(ctx, [iso(k, 0, 40), iso(k + 1, 0, 40), iso(k + 1, 0, 90), iso(k, 0, 90)], '#8A2A4A');
+  }
+  // piso
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){
+    const tp = G.ter[y][x], cs = TERRENOS[tp];
+    let cor = cs[(x + y) % 2];
+    if (tp === 'agua') cor = shade(cor, Math.round(Math.sin(M.t * 2 + x * 0.8 + y * 0.6) * 8));
+    poly(ctx, [iso(x, y), iso(x + 1, y), iso(x + 1, y + 1), iso(x, y + 1)], cor, 'rgba(0,0,0,.06)');
+    if (tp === 'trigo' || tp === 'vinha'){ const c = iso(x + .5, y + .5); ctx.strokeStyle = tp === 'trigo' ? '#B8942E' : '#4E7A2E'; for (let k = -2; k <= 2; k++){ ctx.beginPath(); ctx.moveTo(c.x + k * 8, c.y + 4); ctx.lineTo(c.x + k * 8 + Math.sin(M.t * 2 + x + k) * 2, c.y - 9); ctx.stroke(); } if (tp === 'vinha'){ circ(ctx, c.x - 6, c.y - 6, 2.5, '#6A2A5A'); circ(ctx, c.x + 7, c.y - 4, 2.5, '#6A2A5A'); } }
+    if (tp === 'agua' || tp === 'vau'){ const c = iso(x + .5, y + .5); ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); const o = (M.t * 10 + x * 7) % 20 - 10; ctx.moveTo(c.x + o - 6, c.y); ctx.lineTo(c.x + o + 6, c.y); ctx.stroke(); }
+  }
+  // entregar
+  const e = D.entregar;
+  if (e){
+    const ativo = entregaAtiva() && !G.concluido, k = 0.5 + 0.5 * Math.sin(M.t * 4);
+    ctx.lineWidth = 2.5;
+    poly(ctx, [iso(e.x + .08, e.y + .08), iso(e.x + .92, e.y + .08), iso(e.x + .92, e.y + .92), iso(e.x + .08, e.y + .92)], ativo ? `rgba(242,178,51,${0.2 + k * 0.25})` : 'rgba(255,255,255,.12)', ativo ? '#F2B233' : 'rgba(255,255,255,.4)');
+    ctx.lineWidth = 1;
+  }
+  // campo de visão dos guardas
+  ctx.lineWidth = 1.5; G.guardas.forEach((gd) => gd.vis.forEach(([vx, vy], k) => poly(ctx, [iso(vx + .04, vy + .04), iso(vx + .96, vy + .04), iso(vx + .96, vy + .96), iso(vx + .04, vy + .96)], `rgba(235,55,40,${0.5 - k * 0.15})`, 'rgba(255,90,70,.8)'))); ctx.lineWidth = 1;
+  // hover e marcas
+  if (G.hover && !G.pausa){ const h = G.hover; ctx.lineWidth = 2; poly(ctx, [iso(h.x, h.y), iso(h.x + 1, h.y), iso(h.x + 1, h.y + 1), iso(h.x, h.y + 1)], 'rgba(255,224,102,.15)', livre(h.x, h.y) ? '#FFE066' : 'rgba(255,255,255,.3)'); ctx.lineWidth = 1; }
+  G.marcas.forEach((m) => { const k = m.t / 0.6, i = 0.5 - 0.5 * (1 - k) * 0.6; ctx.globalAlpha = 1 - k; ctx.lineWidth = 2; poly(ctx, [iso(m.x + .5, m.y + .5 - i), iso(m.x + .5 + i, m.y + .5), iso(m.x + .5, m.y + .5 + i), iso(m.x + .5 - i, m.y + .5)], null, '#fff'); ctx.globalAlpha = 1; ctx.lineWidth = 1; });
+  if (G.hoverEnt && G.hoverEnt.k !== 'ini' && !G.pausa){ const o = G.hoverEnt.o, c = iso(o.x + .5, o.y + .5); ctx.lineWidth = 3; ctx.strokeStyle = '#FFE066'; ctx.beginPath(); ctx.ellipse(c.x, c.y, 20, 9, 0, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1; }
+  // seleção: anel no chão
+  G.sel.forEach((s) => { if (s.estado){ const c = iso(s.x + .5, s.y + .5); ctx.lineWidth = 3; ctx.strokeStyle = s.estado === 'ok' ? '#2ECC71' : '#E74C3C'; ctx.beginPath(); ctx.ellipse(c.x, c.y, 18, 8, 0, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1; } });
+
+  // trilha dourada até o destino
+  if (G.guia && G.guia.length > 1){
+    G.guia.slice(0, -1).forEach(([gx, gy], i) => { const c = iso(gx + .5, gy + .5); const a = 0.35 + 0.65 * (Math.sin(M.t * 7 - i * 0.9) + 1) / 2; ctx.globalAlpha = a; poly(ctx, [{x:c.x, y:c.y - 5}, {x:c.x + 9, y:c.y}, {x:c.x, y:c.y + 5}, {x:c.x - 9, y:c.y}], '#FFD24A', 'rgba(120,80,0,.6)'); ctx.globalAlpha = 1; });
+  }
+  // ordem de profundidade
+  const itens = [];
+  G.decor.forEach((f) => itens.push({ z:(f.x + f.w - 1) + (f.y + f.d - 1) + (f.t === 'tapete' ? -5 : 0.4), fn:() => desenharDecor(ctx, f) }));
+  const ativos = alvosAtivos();
+  G.alvos.forEach((a) => {
+    if (a.feito && a.pegar) return;
+    itens.push({ z:a.x + a.y + (a.item ? 0.2 : 0.5), fn:() => {
+      if (a.marca){ if (a.feito) return; const c = iso(a.x + .5, a.y + .5); const k = 0.5 + 0.5 * Math.sin(M.t * 4); ctx.lineWidth = 2.5; poly(ctx, [iso(a.x + .1, a.y + .1), iso(a.x + .9, a.y + .1), iso(a.x + .9, a.y + .9), iso(a.x + .1, a.y + .9)], ativos.includes(a) ? `rgba(242,178,51,${0.2 + k * 0.3})` : 'rgba(255,255,255,.1)', ativos.includes(a) ? '#F2B233' : 'rgba(255,255,255,.3)'); ctx.lineWidth = 1; return; }
+      if (a.obj && a.feito){ const c = iso(a.x + .5, a.y + .5); elip(ctx, c.x, c.y, 16, 7, 'rgba(90,70,50,.6)'); for (let i = 0; i < 5; i++) caixa(ctx, a.x + .2 + (i % 3) * .2, a.y + .25 + Math.floor(i / 3) * .3, a.x + .32 + (i % 3) * .2, a.y + .4 + Math.floor(i / 3) * .3, 0, 5, a.obj === 'poste' ? '#6A4A2A' : '#7A6A5A'); return; }
+      if (a.feito) return;
+      desenharAlvoObj(ctx, a);
+      const c = iso(a.x + .5, a.y + .5);
+      if (ativos.includes(a)) marcador(ctx, c.x, c.y - (a.item ? 42 : a.obj === 'poste' ? 98 : 80));
+    } });
+  });
+  G.npcs.forEach((n) => itens.push({ z:n.x + n.y + .5, fn:() => {
+    const c = iso(n.x + .5, n.y + .5); ctx.save(); ctx.translate(c.x, c.y); if (G.festa && G.festa.t < 2.4) ctx.translate(0, -Math.abs(Math.sin(G.festa.t * 9 + n.x)) * 8); drawAvatar(ctx, lookDe(n.tipo), n.dir || 0, M.t + n.x, false); ctx.restore();
+    if (n.pergunta && !n.respondida) marcador(ctx, c.x, c.y - 80);
+  } }));
+  if (e && e.npc) itens.push({ z:e.x + e.y + .5, fn:() => { const c = iso(e.x + .5, e.y + .5); ctx.save(); ctx.translate(c.x, c.y); drawAvatar(ctx, lookDe(e.npc), 1, M.t, false); ctx.restore(); if (entregaAtiva() && !G.concluido) marcador(ctx, c.x, c.y - 80); } });
+  G.sel.forEach((s) => itens.push({ z:s.x + s.y + .5, fn:() => { const c = iso(s.x + .5, s.y + .5); ctx.save(); ctx.translate(c.x, c.y); drawAvatar(ctx, TIPOS.soldado, s.certo ? 0 : 3, M.t + s.x, false, s.certo ? 'lambe' : 'ajoelha'); ctx.restore();
+    if (s.estado){ ctx.font = '800 16px Nunito,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = s.estado === 'ok' ? '#2ECC71' : '#E74C3C'; ctx.fillText(s.estado === 'ok' ? '✓' : '✗', c.x, c.y - 76); } } }));
+  G.guardas.forEach((gd) => itens.push({ z:gd.x + gd.y + .5, fn:() => { const c = iso(gd.x + .5, gd.y + .5); ctx.save(); ctx.translate(c.x, c.y);
+    if (gd.tipo === 'camelo') drawCamelo(ctx, gd.dir, M.t, gd.espera <= 0); else if (gd.tipo === 'carro') drawCarro(ctx, gd.dir, M.t); else drawAvatar(ctx, lookDe(gd.tipo), gd.dir, M.t, gd.espera <= 0);
+    ctx.restore(); } }));
+  G.inimigos.forEach((en) => itens.push({ z:en.x + en.y + .5, fn:() => { const c = iso(en.x + .5, en.y + .5); ctx.save(); ctx.translate(c.x, c.y); drawAvatar(ctx, lookDe(D.inimigos.tipo), en.dir, M.t * 1.1 + en.x, true); ctx.restore(); } }));
+  G.seg.forEach((s) => itens.push({ z:s.x + s.y + .45, fn:() => { const c = iso(s.x + .5, s.y + .5); ctx.save(); ctx.translate(c.x, c.y);
+    const a = s.a;
+    if (a.pessoa) drawAvatar(ctx, lookDe(a.pessoa), s.dir, M.t + a.x, s.walking);
+    else if (a.animal === 'boi') drawBoi(ctx, s.dir, M.t + a.x, s.walking);
+    else if (a.item){ ctx.scale(0.8, 0.8); drawItem(ctx, a.item, 0); }
+    ctx.restore(); } }));
+  const p = G.player;
+  itens.push({ z:p.x + p.y + .5, fn:() => { const c = iso(p.x + .5, p.y + .5); ctx.save(); ctx.translate(c.x, c.y); if (G.inv > 0 && Math.floor(G.t * 10) % 2) ctx.globalAlpha = 0.4; if (G.festa && G.festa.t < 2.4) ctx.translate(0, -Math.abs(Math.sin(G.festa.t * 9)) * 12); drawAvatar(ctx, p.look, p.dir, M.t, p.walking); ctx.restore();
+  } });
+  itens.sort((a, b) => a.z - b.z).forEach((i) => i.fn());
+  const dst = destino(); if (dst) farol(ctx, dst);
+  G.brilhos.forEach((b) => { const c = iso(b.x + .5, b.y + .5), k = b.t / 0.8; ctx.globalAlpha = 1 - k; for (let i = 0; i < 8; i++){ const a = i / 8 * Math.PI * 2; estrela(ctx, c.x + Math.cos(a) * 34 * k, c.y - 30 + Math.sin(a) * 22 * k, 5 * (1 - k) + 2, '#FFE066'); } ctx.globalAlpha = 1; });
+  { const c = iso(p.x + .5, p.y + .5); ctx.save(); ctx.globalAlpha = 0.9; etiqueta(ctx, c.x, c.y + 14, p.look.nomeJ || J.nome); ctx.restore(); }
+  // poeira e números
+  G.poeira.forEach((f) => { const c = iso(f.x + .5, f.y + .5); const k = f.t / 0.6; ctx.globalAlpha = 1 - k; for (let i = 0; i < 6; i++){ const a = i / 6 * Math.PI * 2; circ(ctx, c.x + Math.cos(a) * 20 * k, c.y - 20 + Math.sin(a) * 12 * k, 5 * (1 - k) + 1, '#F4E6C0'); } ctx.globalAlpha = 1; });
+  G.floats.forEach((f) => { const c = iso(f.x + .5, f.y + .5); ctx.globalAlpha = 1 - f.t / 1.2; ctx.font = '800 16px Nunito,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#1b2233'; ctx.strokeText(f.txt, c.x, c.y - 70 - f.t * 30); ctx.fillStyle = '#FFE066'; ctx.fillText(f.txt, c.x, c.y - 70 - f.t * 30); ctx.globalAlpha = 1; ctx.lineWidth = 1; });
+  // escuridão (noite e cegueira)
+  if (noite()) desenharEscuridao();
+  // balões em coordenadas de tela
+  ctx.setTransform(M.dpr, 0, 0, M.dpr, 0, 0);
+  G.bolhas.forEach((b) => desenharBolha(ctx, b));
+  desenharFesta(ctx);
+}
+function estrela(ctx, x, y, r, cor){ ctx.fillStyle = cor; ctx.beginPath(); for (let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, rr_ = i % 2 ? r * 0.45 : r; ctx.lineTo(x + Math.cos(a) * rr_, y + Math.sin(a) * rr_); } ctx.closePath(); ctx.fill(); }
+function farol(ctx, d){
+  const c = iso(d.x + .5, d.y + .5), t = M.t;
+  const g = ctx.createLinearGradient(0, c.y, 0, c.y - 170); g.addColorStop(0, 'rgba(255,214,74,.55)'); g.addColorStop(1, 'rgba(255,214,74,0)');
+  ctx.fillStyle = g; ctx.fillRect(c.x - 20, c.y - 170, 40, 170);
+  for (let k = 0; k < 3; k++){ const f = (t * 0.8 + k / 3) % 1; ctx.globalAlpha = 1 - f; ctx.lineWidth = 3; ctx.strokeStyle = '#FFD24A'; ctx.beginPath(); ctx.ellipse(c.x, c.y, 10 + 34 * f, (10 + 34 * f) / 2, 0, 0, Math.PI * 2); ctx.stroke(); }
+  ctx.globalAlpha = 1; ctx.lineWidth = 1;
+  const ay = c.y - 118 + Math.sin(t * 5) * 9;
+  ctx.fillStyle = '#FFD24A'; ctx.strokeStyle = '#7a4c00'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(c.x - 8, ay - 22); ctx.lineTo(c.x + 8, ay - 22); ctx.lineTo(c.x + 8, ay - 6); ctx.lineTo(c.x + 17, ay - 6); ctx.lineTo(c.x, ay + 10); ctx.lineTo(c.x - 17, ay - 6); ctx.lineTo(c.x - 8, ay - 6); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.lineWidth = 1;
+  etiqueta(ctx, c.x, ay - 36, d.rotulo || 'Aqui');
+}
+function desenharFesta(ctx){
+  const f = G.festa; if (!f) return;
+  f.conf.forEach((c) => { if (c.y > M.ch + 20) return; ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.r); ctx.fillStyle = c.cor; ctx.fillRect(-4, -2.5, 8, 5); ctx.restore(); });
+  if (f.t > 2.6) return;
+  const a = f.t < 0.25 ? f.t / 0.25 : f.t > 2.2 ? Math.max(0, 1 - (f.t - 2.2) / 0.4) : 1;
+  const sc = f.t < 0.3 ? 0.6 + f.t / 0.3 * 0.55 : f.t < 0.45 ? 1.15 - (f.t - 0.3) / 0.15 * 0.15 : 1;
+  ctx.save(); ctx.globalAlpha = a; ctx.translate(M.cw / 2, M.ch * 0.34); ctx.scale(sc, sc);
+  ctx.fillStyle = 'rgba(9,22,40,.9)'; rr(ctx, -170, -46, 340, 96, 18); ctx.fill(); ctx.strokeStyle = '#F2B233'; ctx.lineWidth = 3; ctx.stroke(); ctx.lineWidth = 1;
+  ctx.fillStyle = '#FFE066'; ctx.font = '700 28px "Pixelify Sans", Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(f.texto, 0, -16);
+  for (let i = 0; i < 3; i++){ const ti = f.t - 0.5 - i * 0.22; if (ti < 0) continue; const s2 = ti < 0.15 ? ti / 0.15 * 1.4 : Math.max(1, 1.4 - (ti - 0.15) * 3); estrela(ctx, (i - 1) * 40, 24, 15 * s2, i < f.est ? '#F2B233' : 'rgba(255,255,255,.25)'); }
+  ctx.restore();
+}
+function desenharEscuridao(){
+  const L = M.luz, lc = L.getContext('2d');
+  lc.setTransform(1, 0, 0, 1, 0, 0); lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, L.width, L.height);
+  lc.fillStyle = G.D.cego ? 'rgba(4,4,10,.95)' : 'rgba(6,10,30,.62)'; lc.fillRect(0, 0, L.width, L.height);
+  lc.globalCompositeOperation = 'destination-out';
+  const luz = (ix, iy, r) => { const s = isoParaTela(ix, iy); const x = s.x * M.dpr, y = s.y * M.dpr, R = r * M.scale * M.dpr; const g = lc.createRadialGradient(x, y, R * 0.2, x, y, R); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)'); lc.fillStyle = g; lc.beginPath(); lc.arc(x, y, R, 0, Math.PI * 2); lc.fill(); };
+  const p = G.player, pc = iso(p.x + .5, p.y + .5);
+  luz(pc.x, pc.y - 30, G.D.cego ? 70 : 120);
+  if (!G.D.cego){
+    G.guardas.forEach((g) => { const c = iso(g.x + .5, g.y + .5); luz(c.x, c.y - 40, 110); });
+    G.decor.forEach((f) => { if (f.t === 'fogueira' || f.fogo || f.t === 'casa'){ const c = iso(f.x + f.w / 2, f.y + f.d / 2); luz(c.x, c.y - 20, f.t === 'casa' ? 60 : 110); } });
+  }
+  alvosAtivos().forEach((a) => { const c = iso(a.x + .5, a.y + .5); luz(c.x, c.y - 20, G.D.cego ? 42 : 70); });
+  if (G.D.entregar && entregaAtiva()){ const c = iso(G.D.entregar.x + .5, G.D.entregar.y + .5); luz(c.x, c.y, 70); }
+  const ctx = M.ctx; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(L, 0, 0); ctx.restore();
+}
+function desenharBolha(ctx, b){
+  const r = b.ref, pos = iso((r.x ?? 0) + .5, (r.y ?? 0) + .5), s = isoParaTela(pos.x, pos.y - 82);
+  ctx.font = '700 13px Nunito, sans-serif';
+  const palavras = b.texto.split(' '), linhas = []; let at = '';
+  const maxW = Math.min(260, M.cw - 40);
+  palavras.forEach((w) => { const tt = at ? at + ' ' + w : w; if (ctx.measureText(tt).width > maxW && at){ linhas.push(at); at = w; } else at = tt; }); if (at) linhas.push(at);
+  const larg = Math.max(...linhas.map((l) => ctx.measureText(l).width)) + 20, alt = 10 + linhas.length * 16;
+  const x = Math.max(6, Math.min(M.cw - larg - 6, s.x - larg / 2)), y = Math.max(50, s.y - alt);
+  ctx.globalAlpha = b.idade > 3.8 ? Math.max(0, 1 - (b.idade - 3.8) / 0.7) : 1;
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; rr(ctx, x + 2, y + 3, larg, alt, 7); ctx.fill();
+  ctx.fillStyle = '#fff'; rr(ctx, x, y, larg, alt, 7); ctx.fill(); ctx.strokeStyle = '#23262E'; ctx.lineWidth = 1.2; ctx.stroke();
+  const tx = Math.max(x + 10, Math.min(x + larg - 10, s.x));
+  ctx.beginPath(); ctx.moveTo(tx - 5, y + alt - .5); ctx.lineTo(tx, y + alt + 6); ctx.lineTo(tx + 5, y + alt - .5); ctx.closePath(); ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.fillStyle = '#23262E'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; linhas.forEach((l, i) => ctx.fillText(l, x + 10, y + 6 + i * 16));
+  ctx.globalAlpha = 1; ctx.lineWidth = 1;
+}
+
+function loop(ts){
+  if (!G || $('tela-jogo').hidden){ M.raf = 0; return; }
+  const dt = M.last ? Math.min(0.05, (ts - M.last) / 1000) : 0.016; M.last = ts; M.t += dt;
+  atualizar(dt); desenhar();
+  M.raf = requestAnimationFrame(loop);
+}
+function ligarMotor(){ M.last = 0; if (!M.raf) M.raf = requestAnimationFrame(loop); }
+
+/* =====================================================================
+   HUD, MODAIS E TELAS
+   ===================================================================== */
+function atualizarHud(){
+  if (!G) return;
+  const D = G.D;
+  $('hud-obj').innerHTML = '<b>' + esc(D.titulo) + '</b>' + esc(D.objetivo);
+  let c = '';
+  if (D.tipo === 'defender'){ const I = D.inimigos; c = G.contador.toLocaleString('pt-BR') + ' ' + esc(I.rotulo) + '<small>Escaparam: ' + G.escaparam + '</small>'; }
+  else if (D.tipo === 'conversar'){ const n = G.npcs.filter((x) => x.pergunta); c = n.filter((x) => x.respondida).length + ' de ' + n.length + ' conversas'; }
+  else if (D.tipo === 'selecionar'){ const n = G.sel.filter((s) => s.certo); c = n.filter((s) => s.estado === 'ok').length + ' de ' + n.length + ' escolhidos<small>Erros: ' + G.falhas + '</small>'; }
+  else { const pg = G.alvos.filter((a) => a.pegar); c = (D.contagem ? esc(D.contagem) + ': ' + pg.filter((a) => a.feito).length + ' de ' + pg.length : G.alvos.filter((a) => a.feito).length + ' de ' + G.alvos.length + ' etapas') + (D.guardas ? '<small>Vezes visto: ' + G.falhas + '</small>' : ''); }
+  $('hud-cont').innerHTML = c;
+}
+function desenharPassos(){
+  $('passos').innerHTML = J.desafios.map((d, i) => `<span class="${i === DI ? 'atual' : i < DI ? 'feito' : ''}" title="${esc(d.titulo)}">${i < DI ? '✓' : i + 1}</span>`).join('');
+}
+function retrato(look, w, h, dir){
+  const c = document.createElement('canvas'); const dpr = window.devicePixelRatio || 1;
+  c.width = w * dpr; c.height = h * dpr; c.style.width = w + 'px'; c.style.height = h + 'px';
+  const ctx = c.getContext('2d'); const s = h / 82;
+  ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * w / 2, dpr * (h - 6 * s));
+  drawAvatar(ctx, look, dir == null ? 0 : dir, 0, false);
+  return c;
+}
+function abrirModal(html){ $('mbox').innerHTML = html; $('modal').hidden = false; $('modal').scrollTop = 0; }
+function fecharModal(){ $('modal').hidden = true; $('mbox').innerHTML = ''; }
+
+function abrirIntro(soLer){
+  const D = G.D;
+  G.pausa = true;
+  abrirModal(`<div class="tag">Desafio ${DI + 1} de ${J.desafios.length} · ${esc(D.ref)}</div>
+    <h2 class="m-tit">${esc(D.titulo)}</h2>
+    <p class="historia">${esc(D.historia)}</p>
+    <div class="objetivo"><b>Sua missão</b>${esc(D.objetivo)}</div>
+    <div class="acoes"><button class="btn" id="m-ok">${soLer ? 'Voltar ao jogo' : 'Começar'}</button><button class="btn sec" id="m-sair">Voltar aos juízes</button></div>`);
+  $('m-sair').onclick = () => $('btn-voltar').onclick();
+  $('m-ok').onclick = () => { fecharModal(); if (!G.concluido && !G.forca) G.pausa = false; audioDesbloquear(); if (!soLer) falar(G.player, D.tipo === 'defender' ? 'Pelo Senhor!' : 'Vamos lá!'); };
+  $('m-ok').focus();
+}
+function perguntar(q, cb){
+  G.pausa = true;
+  const look = lookDe(q.quem);
+  const ordem = embaralhar(q.o.map((t, i) => ({ t, i })));
+  abrirModal(`<div class="m-head"><span id="m-ret"></span><div><div class="n">${esc(q.nome || 'Narrador')}</div><div class="c">Pergunta da trilha</div></div></div>
+    ${q.fala ? `<div class="fala">${esc(q.fala)}</div>` : ''}
+    <div class="perg">${esc(q.e)}</div>
+    <div class="opts" id="m-opts">${ordem.map((o, n) => `<button class="opt" data-n="${n}"><span class="l">${'ABCD'[n]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+    <div id="m-fb"></div><div class="acoes" id="m-ac"></div>`);
+  $('m-ret').append(retrato(look, 72, 84, 0));
+  const bts = [...document.querySelectorAll('#m-opts .opt')];
+  bts.forEach((b) => b.onclick = () => {
+    const n = +b.dataset.n, certo = ordem[n].i === 0;
+    bts.forEach((x, k) => { x.disabled = true; if (ordem[k].i === 0) x.classList.add('certa'); else if (k === n) x.classList.add('errada'); else x.classList.add('apagada'); });
+    R.total++; if (certo) R.acertos++;
+    sfx(certo ? 'ok' : 'erro');
+    $('m-fb').innerHTML = `<div class="fb ${certo ? '' : 'mal'}"><b>${certo ? 'Isso mesmo!' : 'Não foi bem assim.'}</b>${esc(q.x)}</div>`;
+    $('m-ac').innerHTML = '<button class="btn" id="m-seg">Continuar</button>';
+    $('m-seg').onclick = () => { fecharModal(); cb(); };
+    $('m-seg').focus();
+  });
+  bts[0].focus();
+}
+function abrirConcluido(){
+  const est = estrelasDe(); R.estrelas += est; R.max += 3;
+  const ult = DI === J.desafios.length - 1;
+  const msg = est === 3 ? 'Perfeito!' : est === 2 ? 'Muito bem!' : 'Desafio vencido!';
+  abrirModal(`<div class="tag">Desafio concluído</div><h2 class="m-tit">${esc(G.D.titulo)}</h2>
+    <div class="estrelas" aria-label="${est} de 3 estrelas">${'★'.repeat(est)}<span class="vazia">${'★'.repeat(3 - est)}</span></div>
+    <p class="historia">${msg} ${G.D.tipo === 'defender' ? (G.escaparam ? G.escaparam + ' inimigo(s) escaparam.' : 'Nenhum inimigo escapou.') : G.falhas ? 'Tentativas extras: ' + G.falhas + '.' : 'Sem nenhum erro.'}</p>
+    <div class="acoes"><button class="btn" id="m-prox">${ult ? 'Ver resultado' : 'Próximo desafio →'}</button></div>`);
+  $('m-prox').onclick = () => { fecharModal(); if (ult) terminarJuiz(); else { DI++; iniciarDesafio(); } };
+  $('m-prox').focus();
+}
+
+/* ---------- linha do tempo ---------- */
+const LINHA = [
+  { t:'op', anos:8, rot:'Cusã-Risataim', info:'Opressão de Cusã-Risataim, rei da Mesopotâmia: 8 anos', ref:'Jz 3.8' },
+  { t:'juiz', id:'otniel', anos:40, rot:'40 anos de paz', info:'Otniel, o primeiro juiz, vence Cusã-Risataim. A terra sossega 40 anos', ref:'Jz 3.9-11' },
+  { t:'op', anos:18, rot:'Eglom', info:'Opressão de Eglom, rei dos moabitas: 18 anos', ref:'Jz 3.14' },
+  { t:'juiz', id:'eude', anos:80, rot:'80 anos de paz', info:'Eúde, o benjamita canhoto, liberta Israel. A terra sossega 80 anos, o período de paz mais longo do livro', ref:'Jz 3.15-30' },
+  { t:'incerto', id:'sangar', anos:5, rot:'?', info:'Sangar, filho de Anate, fere 600 filisteus com uma aguilhada. A Bíblia não informa quanto tempo ele julgou', ref:'Jz 3.31' },
+  { t:'op', anos:20, rot:'Jabim e Sísera', info:'Opressão de Jabim, rei de Canaã, com 900 carros de ferro: 20 anos', ref:'Jz 4.3' },
+  { t:'juiz', id:'debora', anos:40, rot:'40 anos de paz', info:'Débora e Baraque vencem Sísera. A terra sossega 40 anos', ref:'Jz 4 e 5; 5.31' },
+  { t:'op', anos:7, rot:'Midiã', info:'Opressão dos midianitas: 7 anos', ref:'Jz 6.1' },
+  { t:'juiz', id:'gideao', anos:40, rot:'40 anos de paz', info:'Gideão vence Midiã com 300 homens. A terra sossega 40 anos nos dias de Gideão', ref:'Jz 8.28' },
+  { t:'abim', anos:3, rot:'3', info:'Abimeleque, filho de Gideão, governa 3 anos. Não é juiz: é o "rei espinheiro" da parábola de Jotão', ref:'Jz 9.22' },
+  { t:'menor', anos:23, rot:'Tola', info:'Tola julga Israel 23 anos', ref:'Jz 10.1,2' },
+  { t:'menor', anos:22, rot:'Jair', info:'Jair julga Israel 22 anos', ref:'Jz 10.3' },
+  { t:'op', anos:18, rot:'Amom e filisteus', info:'Opressão dos amonitas e dos filisteus: 18 anos', ref:'Jz 10.7,8' },
+  { t:'juiz', id:'jefte', anos:6, rot:'6', info:'Jefté, o filho rejeitado, vence Amom e julga Israel 6 anos', ref:'Jz 12.7' },
+  { t:'menor', anos:7, rot:'Ibsã', info:'Ibsã julga Israel 7 anos', ref:'Jz 12.8,9' },
+  { t:'menor', anos:10, rot:'Elom', info:'Elom julga Israel 10 anos', ref:'Jz 12.11' },
+  { t:'menor', anos:8, rot:'Abdom', info:'Abdom julga Israel 8 anos', ref:'Jz 12.14' },
+  { t:'op', anos:40, rot:'Filisteus: 40 anos', info:'Domínio dos filisteus: 40 anos. O povo nem clamava mais', ref:'Jz 13.1' },
+  { t:'juiz', id:'sansao', anos:20, rot:'Sansão: 20', info:'Sansão julga Israel 20 anos, durante o domínio dos filisteus', ref:'Jz 15.20; 16.31', dentroDoAnterior:true }
+];
+function montarLinha(){
+  const K = 3.3, PAD = 34, alt = { op:106, juiz:154, menor:154, abim:154, incerto:154 };
+  const box = $('tl-in'); box.innerHTML = '';
+  let cur = 0, fim = 0, ini = {};
+  const segs = LINHA.map((it) => { let x0 = cur; if (it.dentroDoAnterior){ x0 = ini.ultimoOp; } else { if (it.t === 'op') ini.ultimoOp = cur; cur += it.anos; } fim = Math.max(fim, x0 + it.anos); return { ...it, x0 }; });
+  box.style.width = (PAD * 2 + fim * K + 20) + 'px';
+  ['Opressão', 'Juízes'].forEach((r, i) => { const l = document.createElement('div'); l.className = 'tl-lane-rot'; l.style.position = 'absolute'; l.style.top = (i ? 140 : 92) + 'px'; l.style.left = '0'; l.textContent = r; box.append(l); });
+  segs.forEach((it) => {
+    const d = document.createElement('button'); d.type = 'button'; d.className = 'tl-seg ' + (it.t === 'juiz' ? 'paz' : it.t);
+    const w = Math.max(it.anos * K, 14);
+    d.style.left = (PAD + it.x0 * K) + 'px'; d.style.width = w + 'px'; d.style.top = alt[it.t] + 'px';
+    if (it.dentroDoAnterior) d.style.top = '154px';
+    const rot = w > 70 ? (it.t === 'op' ? it.rot + ' · ' + it.anos : it.rot) : (w > 22 ? String(it.t === 'incerto' ? '?' : it.anos) : '');
+    d.textContent = rot; d.title = it.info + ' (' + it.ref + ')';
+    d.setAttribute('aria-label', it.info + ', ' + it.ref);
+    d.onclick = () => { box.querySelectorAll('.tl-seg.sel').forEach((x) => x.classList.remove('sel')); d.classList.add('sel'); const j = it.id && JUIZES.find((jj) => jj.id === it.id);
+      $('tl-info').innerHTML = '<b>' + esc(it.ref) + '</b> · ' + esc(it.info) + '.' + (j ? ' <button class="btn mini" id="tl-jogar" style="margin-left:6px">Jogar com ' + esc(j.nome) + '</button>' : '');
+      if (j) $('tl-jogar').onclick = () => { sfx('clique'); comecarJuiz(j); }; };
+    box.append(d);
+    if (it.id){
+      const j = JUIZES.find((jj) => jj.id === it.id), r = S.res[j.id];
+      const m = document.createElement('button'); m.type = 'button'; m.className = 'tl-mk' + (r ? ' feito' : '');
+      m.style.left = (PAD + it.x0 * K + Math.min(w / 2, 20)) + 'px';
+      m.append(retrato(LOOKS[j.id], 44, 44, 0));
+      m.insertAdjacentHTML('beforeend', '<b>' + esc(j.nome) + '</b><small>' + (r ? '★ ' + r.estrelas : 'Lição ' + esc(j.licao)) + '</small>');
+      m.title = 'Jogar com ' + j.nome; m.onclick = () => { sfx('clique'); comecarJuiz(j); };
+      box.append(m);
+    }
+  });
+  const ax = document.createElement('div'); ax.className = 'tl-ax';
+  for (let a = 0; a <= fim; a += 50){ const sp = document.createElement('span'); sp.style.left = (PAD + a * K) + 'px'; sp.textContent = a === 0 ? 'ano 0' : a + ' anos'; ax.append(sp); }
+  box.append(ax);
+}
+
+/* ---------- telas ---------- */
+function montarEscolha(){
+  montarLinha();
+  const grade = $('grade'); grade.innerHTML = '';
+  let ac = 0, tot = 0, est = 0, feitos = 0;
+  JUIZES.forEach((j) => {
+    const r = S.res[j.id]; if (r){ ac += r.acertos; tot += r.total; est += r.estrelas; feitos++; }
+    const b = document.createElement('button'); b.className = 'juiz'; b.type = 'button';
+    const cv = retrato(LOOKS[j.id], 84, 96, 0);
+    const info = document.createElement('div');
+    info.innerHTML = `<div class="n">${esc(j.nomeLongo || j.nome)}</div><div class="s">Lição ${esc(j.licao)} · ${esc(j.ref)}<br>Contra ${esc(j.opressor)}</div>
+      <span class="d ${r ? 'feito' : ''}">${r ? '★ ' + r.estrelas + ' · ' + r.acertos + '/' + r.total + ' acertos' : j.desafios.length + ' desafios'}</span>`;
+    b.append(cv, info);
+    b.onclick = () => { sfx('clique'); comecarJuiz(j); };
+    grade.append(b);
+  });
+  const bf = $('banner-final'); bf.hidden = feitos !== JUIZES.length;
+  if (feitos === JUIZES.length){ bf.innerHTML = '<div class="banner-final"><div><b>Você completou a Trilha dos Juízes!</b><span>Os sete juízes foram percorridos. Veja o fechamento.</span></div><button class="btn" id="btn-ver-final">Ver fechamento ✦</button></div>'; $('btn-ver-final').onclick = abrirFinal; }
+  $('placar').innerHTML = `<span>Jogador: <b>${esc(S.nome)}</b></span><span>Juízes: <b>${feitos} de ${JUIZES.length}</b></span><span>Estrelas: <b>${est}</b></span><span>Acertos: <b>${ac} de ${tot}</b></span>${feitos === JUIZES.length ? '<span><b>Trilha completa ✦</b></span>' : ''}`;
+}
+function comecarJuiz(j){
+  J = j; DI = 0; R = { acertos:0, total:0, estrelas:0, max:0 };
+  $('quem').textContent = j.nomeLongo || j.nome;
+  tela('tela-jogo');
+  M.cv = $('cv'); M.ctx = M.cv.getContext('2d');
+  iniciarDesafio(); ligarMotor();
+}
+function terminarJuiz(){
+  const pct = R.total ? Math.round(R.acertos / R.total * 100) : 0;
+  S.res[J.id] = { acertos:R.acertos, total:R.total, estrelas:R.estrelas, max:R.max, quando:new Date().toISOString() }; salvar();
+  $('fim-t').textContent = 'Você completou a trilha de ' + (J.nomeLongo || J.nome);
+  $('fim-num').innerHTML = R.acertos + '<small> de ' + R.total + ' perguntas · ' + pct + '%</small>';
+  $('fim-est').innerHTML = '★ ' + R.estrelas + '<span class="vazia" style="font-size:1rem;letter-spacing:0"> de ' + R.max + ' estrelas</span>';
+  $('fim-sub').textContent = pct === 100 ? 'Você conhece essa história de ponta a ponta.' : pct >= 60 ? 'Boa caminhada! Releia na revista as partes que errou.' : 'Vale refazer a trilha e reler a lição ' + J.licao + ' na revista.';
+  $('fim-ponto').textContent = J.ponto;
+  const c = $('fim-cv'), ctx = c.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); ctx.setTransform(2.8, 0, 0, 2.8, 110, 244); drawAvatar(ctx, LOOKS[J.id], 0, 0, false);
+  const todos = JUIZES.every((j) => S.res[j.id]);
+  $('btn-fechamento').hidden = !todos; $('btn-outro').className = todos ? 'btn sec' : 'btn';
+  tela('tela-fim'); sfx('vitoria'); musica('selecao');
+  enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Lição ' + J.licao + ' · ' + (J.nomeLongo || J.nome), juiz:J.nomeLongo || J.nome, acertos:R.acertos, total:R.total, pontuacao:pct, estrelas:R.estrelas, maxEstrelas:R.max });
+  G = null;
+}
+function enviarResultado(dados){
+  const st = $('tela-final').hidden ? $('status-envio') : { set textContent(v){} };
+  if (!WEBAPP_URL){ st.textContent = 'Resultado registrado nesta tela e no placar dos juízes.'; return; }
+  fetch(WEBAPP_URL, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain' }, body:JSON.stringify(dados) })
+    .then(() => st.textContent = 'Resultado enviado.').catch(() => st.textContent = 'Não consegui enviar agora. Mostre esta tela ao professor.');
+}
+
+$('btn-voltar').onclick = () => { fecharModal(); $('forca').hidden = true; G = null; montarEscolha(); tela('tela-escolha'); musica('selecao'); };
+$('btn-historia').onclick = () => { if (G && $('modal').hidden) abrirIntro(true); };
+$('btn-reiniciar').onclick = () => { if (!G || !$('modal').hidden) return; $('forca').hidden = true; Object.assign(R, G.r0); iniciarDesafio(); };
+$('btn-outro').onclick = () => { montarEscolha(); tela('tela-escolha'); };
+$('btn-fechamento').onclick = () => abrirFinal();
+$('btn-final-voltar').onclick = () => { montarEscolha(); tela('tela-escolha'); };
+$('btn-zerar').onclick = () => {
+  const b = $('btn-zerar');
+  if (!b.dataset.conf){ b.dataset.conf = '1'; b.textContent = 'Confirmar: apagar meu placar'; setTimeout(() => { b.dataset.conf = ''; b.textContent = 'Jogar tudo de novo'; }, 4000); return; }
+  b.dataset.conf = ''; b.textContent = 'Jogar tudo de novo'; S.res = {}; salvar(); montarEscolha(); tela('tela-escolha');
+};
+let finalRaf = 0, finalT0 = 0;
+function abrirFinal(){
+  let ac = 0, tot = 0, est = 0, mx = 0;
+  JUIZES.forEach((j) => { const r = S.res[j.id] || { acertos:0, total:0, estrelas:0, max:0 }; ac += r.acertos; tot += r.total; est += r.estrelas; mx += r.max; });
+  $('final-t').textContent = 'Parabéns, ' + S.nome + '! Você viveu a história dos sete juízes.';
+  $('final-num').innerHTML = `<div><b>${ac}/${tot}</b><span>Perguntas certas</span></div><div><b>${tot ? Math.round(ac / tot * 100) : 0}%</b><span>Aproveitamento</span></div><div><b>★ ${est}</b><span>de ${mx} estrelas</span></div><div><b>${JUIZES.reduce((n, j) => n + j.desafios.length, 0)}</b><span>Desafios cumpridos</span></div>`;
+  const med = $('final-med'); med.innerHTML = '';
+  JUIZES.forEach((j) => { const r = S.res[j.id]; const d = document.createElement('div'); d.className = 'medalha'; const c = retrato(LOOKS[j.id], 64, 64, 0); d.append(c); d.insertAdjacentHTML('beforeend', `<b>${esc(j.nome)}</b><small>★ ${r ? r.estrelas : 0} · ${r ? r.acertos + '/' + r.total : '0'}</small>`); med.append(d); });
+  tela('tela-final'); sfx('vitoria'); musica('selecao');
+  finalT0 = performance.now(); if (!finalRaf) finalRaf = requestAnimationFrame(cenaFinal);
+  enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Trilha completa (7 juízes)', juiz:'Trilha completa (7 juízes)', acertos:ac, total:tot, pontuacao:tot ? Math.round(ac / tot * 100) : 0, estrelas:est, maxEstrelas:mx });
+}
+const confFinal = Array.from({ length:110 }, (_, i) => ({ x:Math.random() * 960, y:-Math.random() * 600, v:60 + Math.random() * 90, r:Math.random() * 6, vr:(Math.random() - 0.5) * 4, cor:['#F2B233','#E74C3C','#2ECC71','#3498DB','#9B59B6','#FFFFFF'][i % 6] }));
+function cenaFinal(ts){
+  if ($('tela-final').hidden){ finalRaf = 0; return; }
+  const c = $('final-cv'), ctx = c.getContext('2d'), t = (ts - finalT0) / 1000;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const g = ctx.createLinearGradient(0, 0, 0, 480); g.addColorStop(0, '#1a2a5a'); g.addColorStop(0.6, '#e9895a'); g.addColorStop(1, '#f6d59a'); ctx.fillStyle = g; ctx.fillRect(0, 0, 960, 480);
+  // raios de luz saindo da coroa
+  ctx.save(); ctx.translate(480, 150); for (let i = 0; i < 14; i++){ ctx.rotate(Math.PI * 2 / 14); ctx.fillStyle = `rgba(255,230,150,${0.10 + 0.05 * Math.sin(t * 2 + i)})`; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-30, -520); ctx.lineTo(30, -520); ctx.closePath(); ctx.fill(); } ctx.restore();
+  ctx.setTransform(1.05, 0, 0, 1.05, 480, 110);
+  const C = iso(4.5, 2.5);
+  for (let y = 0; y < 5; y++) for (let x = 0; x < 9; x++){ const q = (a, b) => { const r = iso(a, b); return { x:r.x - C.x, y:r.y - C.y + 150 }; }; poly(ctx, [q(x, y), q(x + 1, y), q(x + 1, y + 1), q(x, y + 1)], (x + y) % 2 ? '#95BD5C' : '#8CB454', 'rgba(0,0,0,.06)'); }
+  // pedestal e coroa no centro
+  ctx.save(); ctx.translate(-C.x, -C.y + 150 - 40); const pd0 = iso(4.5, 2.5); caixa(ctx, 4.1, 2.1, 4.9, 2.9, 0, 34, '#E4D6B4'); ctx.restore();
+  const pd = { x:0, y:150 - 40 };
+  const cy = pd.y - 58 + Math.sin(t * 2) * 5; const gl = ctx.createRadialGradient(pd.x, cy, 4, pd.x, cy, 60); gl.addColorStop(0, 'rgba(255,240,170,.9)'); gl.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = gl; ctx.fillRect(pd.x - 60, cy - 60, 120, 120);
+  ctx.fillStyle = '#F2C23A'; ctx.strokeStyle = '#8a5a00'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(pd.x - 22, cy + 10); ctx.lineTo(pd.x - 24, cy - 14); ctx.lineTo(pd.x - 11, cy - 2); ctx.lineTo(pd.x, cy - 20); ctx.lineTo(pd.x + 11, cy - 2); ctx.lineTo(pd.x + 24, cy - 14); ctx.lineTo(pd.x + 22, cy + 10); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.lineWidth = 1;
+  [-12, 0, 12].forEach((dx, i) => circ(ctx, pd.x + dx, cy + 3, 3, ['#C0392B', '#2E86C1', '#27AE60'][i]));
+  // os sete juízes em arco diante da coroa, pulando em onda
+  JUIZES.forEach((j, i) => { const k = i - 3, qx = k * 72, qy = 190 + Math.abs(k) * -9; const pulo = Math.max(0, Math.sin(t * 5 - i * 0.7)) * 14; ctx.save(); ctx.translate(qx, qy - pulo); drawAvatar(ctx, LOOKS[j.id], k < 0 ? 0 : 1, t + i, false); ctx.restore(); etiqueta(ctx, qx, qy + 14, j.nome); });
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  confFinal.forEach((f) => { f.y += f.v / 60; f.r += f.vr / 60; if (f.y > 500){ f.y = -10; f.x = Math.random() * 960; } ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.r); ctx.fillStyle = f.cor; ctx.fillRect(-5, -3, 10, 6); ctx.restore(); });
+  finalRaf = requestAnimationFrame(cenaFinal);
+}
+$('btn-refazer').onclick = () => comecarJuiz(J);
+$('form-nome').addEventListener('submit', (e) => { e.preventDefault(); S.nome = $('in-nome').value.trim() || 'Visitante'; S.turma = $('in-turma').value.trim(); salvar(); $('chip-nome').textContent = S.nome; audioDesbloquear(); montarEscolha(); tela('tela-escolha'); musica('selecao'); });
+$('cv').addEventListener('mousemove', aoMover);
+$('cv').addEventListener('mouseleave', () => { if (G) G.hover = null; });
+$('cv').addEventListener('click', aoClicar);
+
+/* =====================================================================
+   SOM (Web Audio, gerado na hora, sem arquivos)
+   ===================================================================== */
+const PRESETS = {
+  selecao:{bpm:92,root:57,esc:[0,2,4,7,9],onda:'triangle',prog:[0,3,4,3]},
+  otniel:{bpm:96,root:62,esc:[0,2,3,5,7,9,10],onda:'triangle',prog:[0,3,4,0]},
+  eude:{bpm:104,root:60,esc:[0,1,4,5,7,8,10],onda:'square',prog:[0,1,0,5]},
+  sangar:{bpm:100,root:64,esc:[0,2,4,7,9],onda:'triangle',prog:[0,2,3,0]},
+  debora:{bpm:100,root:65,esc:[0,2,4,5,7,9,10],onda:'square',prog:[0,4,6,4]},
+  gideao:{bpm:90,root:57,esc:[0,2,3,5,7,8,10],onda:'triangle',prog:[0,5,6,4]},
+  jefte:{bpm:84,root:55,esc:[0,2,3,5,7,8,11],onda:'triangle',prog:[0,3,4,4]},
+  sansao:{bpm:112,root:52,esc:[0,1,3,5,7,8,10],onda:'square',prog:[0,1,0,4]}
+};
+let AC = null, master = null, ruido = null, timer = 0, preset = PRESETS.selecao, pNome = 'selecao', passo = 0, prox = 0, melodia = [];
+function mtof(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+function rnd(seed){ let s = seed >>> 0 || 1; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+function audioDesbloquear(){
+  if (!S.som) return;
+  if (!AC){ try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e){ return; }
+    master = AC.createGain(); master.gain.value = 0.5; master.connect(AC.destination);
+    ruido = AC.createBuffer(1, AC.sampleRate * 0.2, AC.sampleRate); const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  if (AC.state === 'suspended') AC.resume();
+  if (!timer) musica(pNome);
+}
+function nota(f, t, dur, onda, vol){ const o = AC.createOscillator(), g = AC.createGain(); o.type = onda; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05); }
+function chimbal(t, vol){ const s = AC.createBufferSource(); s.buffer = ruido; const f = AC.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 6000; const g = AC.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05); s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + 0.06); }
+function grau(p, g, oit){ const n = p.esc.length, o = Math.floor(g / n); return p.root + p.esc[((g % n) + n) % n] + 12 * (o + oit); }
+function geraMelodia(nome){ const r = rnd([...nome].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7)); let g = 4; melodia = []; for (let i = 0; i < 32; i++){ if (r() < 0.36 && i % 4 !== 0){ melodia.push(null); continue; } g += Math.round((r() - 0.5) * 4); g = Math.max(0, Math.min(9, g)); melodia.push(g); } }
+function tocaPasso(t){
+  const p = preset, col = 60 / p.bpm / 2, ac = p.prog[Math.floor(passo / 8) % 4], m = melodia[passo];
+  if (m !== null) nota(mtof(grau(p, m + ac, 1)), t, col * 1.8, p.onda, p.onda === 'square' ? 0.022 : 0.045);
+  if (passo % 8 === 0) nota(mtof(grau(p, ac, -1)), t, col * 6, 'triangle', 0.07);
+  if (passo % 8 === 4) nota(mtof(grau(p, ac + 4, -1)), t, col * 3, 'triangle', 0.045);
+  if (passo % 2 === 1) chimbal(t, 0.01);
+}
+function musica(nome){
+  pNome = nome; preset = PRESETS[nome] || PRESETS.selecao; geraMelodia(nome); passo = 0;
+  if (!AC || !S.som) return;
+  prox = AC.currentTime + 0.05;
+  if (!timer) timer = setInterval(() => { if (!AC || !S.som) return; while (prox < AC.currentTime + 0.2){ tocaPasso(prox); prox += 60 / preset.bpm / 2; passo = (passo + 1) % 32; } }, 50);
+}
+function sfx(tipo){
+  if (!AC || !S.som) return; const t = AC.currentTime;
+  const T = {
+    ok:() => [660, 880, 1320].forEach((f, i) => nota(f, t + i * 0.07, 0.18, 'triangle', 0.09)),
+    erro:() => { nota(220, t, 0.18, 'square', 0.04); nota(165, t + 0.12, 0.25, 'square', 0.04); },
+    pegar:() => { nota(880, t, 0.08, 'square', 0.035); nota(1175, t + 0.06, 0.12, 'square', 0.035); },
+    pego:() => { nota(392, t, 0.12, 'square', 0.05); nota(311, t + 0.12, 0.12, 'square', 0.05); nota(233, t + 0.24, 0.3, 'square', 0.05); },
+    golpe:() => { chimbal(t, 0.12); nota(140, t, 0.12, 'triangle', 0.12); },
+    forca:() => nota(200 + Math.random() * 60, t, 0.08, 'square', 0.04),
+    clique:() => nota(520, t, 0.06, 'triangle', 0.05),
+    vitoria:() => [523, 659, 784, 1046].forEach((f, i) => nota(f, t + i * 0.12, 0.35, 'triangle', 0.08))
+  };
+  (T[tipo] || (() => {}))();
+}
+function atualizaSom(){ $('btn-som').textContent = '♪ Som: ' + (S.som ? 'sim' : 'não'); $('btn-som').setAttribute('aria-pressed', S.som ? 'true' : 'false'); if (AC && master) master.gain.setTargetAtTime(S.som ? 0.5 : 0, AC.currentTime, 0.05); }
+$('btn-som').onclick = () => { S.som = !S.som; salvar(); atualizaSom(); if (S.som) audioDesbloquear(); };
+
+/* =====================================================================
+   TELA INICIAL (cena de apresentação) E LOGO
+   ===================================================================== */
+function logo(){
+  const c = $('logo').getContext('2d');
+  const p = (pts, cor) => { c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach(([x, y]) => c.lineTo(x, y)); c.closePath(); c.fillStyle = cor; c.fill(); };
+  p([[17,3],[31,10],[17,17],[3,10]], '#F2B233'); p([[3,10],[17,17],[17,31],[3,24]], '#C0612B'); p([[31,10],[17,17],[17,31],[31,24]], '#8A3A1A');
+  c.fillStyle = '#fff'; c.fillRect(16, 6, 2, 8); c.fillRect(12, 9, 10, 2);
+}
+let heroiRaf = 0;
+function heroi(ts){
+  if ($('tela-nome').hidden){ heroiRaf = 0; return; }
+  const c = $('heroi'), ctx = c.getContext('2d'), t = (ts || 0) / 1000;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const g = ctx.createLinearGradient(0, 0, 0, 480); g.addColorStop(0, '#9fd3ef'); g.addColorStop(1, '#f3e4c0'); ctx.fillStyle = g; ctx.fillRect(0, 0, 640, 480);
+  ctx.setTransform(1, 0, 0, 1, 320, 150);
+  for (let y = 0; y < 6; y++) for (let x = 0; x < 6; x++) poly(ctx, [iso(x, y), iso(x + 1, y), iso(x + 1, y + 1), iso(x, y + 1)], (x + y) % 2 ? '#95BD5C' : '#8CB454', 'rgba(0,0,0,.06)');
+  poly(ctx, [iso(0, 6), iso(6, 6), iso(6, 6, -14), iso(0, 6, -14)], '#4E6A2A'); poly(ctx, [iso(6, 0), iso(6, 6), iso(6, 6, -14), iso(6, 0, -14)], '#5E7A36');
+  M.t = t;
+  desenharDecor(ctx, { t:'palmeiraG', x:0, y:0, w:1, d:1 });
+  desenharDecor(ctx, { t:'tenda', x:4, y:0, w:2, d:1 });
+  const pos = [[1.5,2.5],[2.8,1.6],[3.9,2.4],[2,4],[3.4,3.6],[4.6,4],[1,5]];
+  pos.map((p, i) => ({ p, j:JUIZES[i] })).sort((a, b) => (a.p[0] + a.p[1]) - (b.p[0] + b.p[1])).forEach(({ p, j }, i) => {
+    const q = iso(p[0], p[1]); ctx.save(); ctx.translate(q.x, q.y); drawAvatar(ctx, LOOKS[j.id], i % 2, t + i, false); ctx.restore();
+    etiqueta(ctx, q.x, q.y + 12, j.nome);
+  });
+  heroiRaf = requestAnimationFrame(heroi);
+}
+
+function start(){
+  logo(); atualizaSom();
+  if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; $('in-turma').value = S.turma || ''; montarEscolha(); tela('tela-escolha'); }
+  else { tela('tela-nome'); heroiRaf = requestAnimationFrame(heroi); }
+  $('chip-nome').title = 'Clique para trocar o nome';
+  $('chip-nome').style.cursor = 'pointer';
+  $('chip-nome').onclick = () => { if ($('tela-escolha').hidden) return; tela('tela-nome'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi); };
+}
+window.__trilha = { JUIZES, get G(){ return G; }, completar(){ if (G){ G.alvos.forEach((a) => a.feito = true); G.npcs.forEach((n) => n.respondida = true); G.sel.forEach((s) => { if (s.certo) s.estado = 'ok'; }); G.spawnados = G.D.inimigos ? G.D.inimigos.qtd : 0; G.inimigos = []; G.pausa = false; concluirAcao(); } } };
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+
+</body>
+</html>
