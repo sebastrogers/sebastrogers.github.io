@@ -180,6 +180,38 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
 .medalha small{font-size:.75rem;color:var(--tinta2);font-weight:700}
 .reflexao{margin-top:18px;border-left:5px solid var(--ouro);background:#fff6dd;border-radius:0 12px 12px 0;padding:14px 18px;font-size:1.02rem;line-height:1.65}
 .reflexao blockquote{margin:10px 0;font-style:italic;color:#5a3a1a}
+.som-ic{font-size:1.15rem;line-height:1;padding:6px 10px;min-width:44px}
+.som-ic.ligado{background:rgba(242,178,51,.22);border-color:var(--ouro)}
+/* menu */
+.menu-op{display:grid;gap:10px;margin-top:14px}
+.menu-op button{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;text-align:left;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:12px 14px;color:var(--tinta)}
+.menu-op button:hover{border-color:var(--azul);background:#f6faff}
+.menu-op .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1.2rem;background:var(--painel2)}
+.menu-op b{display:block;font-size:1rem}
+.menu-op small{display:block;font-size:.82rem;color:var(--tinta2);font-weight:700;line-height:1.3}
+.menu-op button.perigo{border-color:#f0c8c0}
+.menu-op button.perigo.conf{border-color:var(--mal);background:#fdeeec}
+@media (max-width:560px){
+  body{padding-inline:10px}
+  .barra{padding-block:4px 8px;margin-bottom:10px;gap:8px}
+  .marca canvas{width:26px;height:26px}
+  .marca b{font-size:1.05rem}
+  .marca small{display:none}
+  .chip{display:none}
+  .btn-menu{font-size:.78rem;padding:5px 8px}
+  .som-ic{font-size:1rem;padding:5px 8px;min-width:38px}
+  .topo{margin-bottom:6px;gap:8px}
+  .topo .quem{font-size:1.05rem}
+  .passos span{width:22px;height:22px;font-size:.7rem}
+  #palco{border-radius:12px}
+  #cv{height:clamp(340px,96vw,76svh)}
+  .hud{left:6px;top:6px;right:6px}
+  .hud .obj{font-size:.74rem;padding:6px 9px;max-width:66%}
+  .hud .obj b{font-size:.82rem}
+  .hud .cont{font-size:.78rem;padding:6px 9px}
+  .dica{display:none}
+  .barra-jogo{justify-content:flex-end}
+}
 @media (max-width:760px){
   .inicio{grid-template-columns:1fr}
   .hud .obj{max-width:64%;font-size:.8rem}
@@ -197,7 +229,8 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
       <div><b>Trilha dos Juízes</b><small>Lições Bíblicas · Jovens</small></div>
     </div>
     <span class="chip" id="chip-nome"></span>
-    <button class="som" id="btn-som" aria-pressed="false">♪ Som: não</button>
+    <button class="som som-ic" id="btn-som" aria-pressed="false" aria-label="Ligar o som" title="Ligar o som">🔇</button>
+    <button class="som btn-menu" id="btn-menu" hidden aria-haspopup="dialog">☰ Menu</button>
   </header>
 
   <section id="tela-nome" hidden>
@@ -211,7 +244,7 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
           <label class="lbl" for="in-nome">Seu nome<input type="text" id="in-nome" maxlength="40" required placeholder="Ex.: Ana Beatriz"></label>
           <label class="lbl" for="in-turma">Classe ou igreja (opcional)<input type="text" id="in-turma" maxlength="40" placeholder="Ex.: Jovens, sede"></label>
           <p class="nota">É só identificação para o placar, não precisa de senha.</p>
-          <div><button class="btn" type="submit">Começar a trilha</button></div>
+          <div><button class="btn" type="submit" id="btn-entrar">Começar a trilha</button></div>
         </form>
       </div>
     </div>
@@ -704,7 +737,7 @@ function salvar(){ try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch
 const $ = (id) => document.getElementById(id);
 function esc(s){ return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function embaralhar(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function tela(id){ ['tela-nome','tela-escolha','tela-jogo','tela-fim','tela-final'].forEach((t) => $(t).hidden = t !== id); window.scrollTo(0, 0); }
+function tela(id){ ['tela-nome','tela-escolha','tela-jogo','tela-fim','tela-final'].forEach((t) => $(t).hidden = t !== id); window.scrollTo(0, 0); const bm = $('btn-menu'); if (bm) bm.hidden = !S.nome; }
 
 /* =====================================================================
    DESENHO: utilitários
@@ -1266,9 +1299,10 @@ function redimensionar(){
   M.cw = M.cv.clientWidth || 800; M.ch = M.cv.clientHeight || 500;
   M.cv.width = Math.round(M.cw * M.dpr); M.cv.height = Math.round(M.ch * M.dpr);
   const minX = -G.H * TW / 2 - 10, maxX = G.W * TW / 2 + 10, minY = -90, maxY = (G.W + G.H) * TH / 2 + 16;
-  M.scale = Math.min(M.cw / (maxX - minX), (M.ch - 50) / (maxY - minY), 1.6);
+  const hudH = Math.min(M.ch * 0.3, (document.querySelector('.hud') || { offsetHeight:44 }).offsetHeight + 8);
+  M.scale = Math.min(M.cw / (maxX - minX), (M.ch - hudH - 6) / (maxY - minY), 1.6);
   M.offX = M.cw / 2 - M.scale * (maxX + minX) / 2;
-  M.offY = (M.ch + 44) / 2 - M.scale * (maxY + minY) / 2;
+  M.offY = (M.ch + hudH) / 2 - M.scale * (maxY + minY) / 2;
   if (!M.luz) M.luz = document.createElement('canvas');
   M.luz.width = M.cv.width; M.luz.height = M.cv.height;
 }
@@ -1728,7 +1762,7 @@ function enviarResultado(dados){
     .then(() => st.textContent = 'Resultado enviado.').catch(() => st.textContent = 'Não consegui enviar agora. Mostre esta tela ao professor.');
 }
 
-$('btn-voltar').onclick = () => { fecharModal(); $('forca').hidden = true; G = null; montarEscolha(); tela('tela-escolha'); musica('selecao'); };
+$('btn-voltar').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('selecao'); };
 $('btn-historia').onclick = () => { if (G && $('modal').hidden) abrirIntro(true); };
 $('btn-reiniciar').onclick = () => { if (!G || !$('modal').hidden) return; $('forca').hidden = true; Object.assign(R, G.r0); iniciarDesafio(); };
 $('btn-outro').onclick = () => { montarEscolha(); tela('tela-escolha'); };
@@ -1835,7 +1869,7 @@ function sfx(tipo){
   };
   (T[tipo] || (() => {}))();
 }
-function atualizaSom(){ $('btn-som').textContent = '♪ Som: ' + (S.som ? 'sim' : 'não'); $('btn-som').setAttribute('aria-pressed', S.som ? 'true' : 'false'); if (AC && master) master.gain.setTargetAtTime(S.som ? 0.5 : 0, AC.currentTime, 0.05); }
+function atualizaSom(){ const b = $('btn-som'); b.textContent = S.som ? '🔊' : '🔇'; b.setAttribute('aria-pressed', S.som ? 'true' : 'false'); const t = S.som ? 'Desligar o som' : 'Ligar o som'; b.setAttribute('aria-label', t); b.title = t; b.classList.toggle('ligado', S.som); if (AC && master) master.gain.setTargetAtTime(S.som ? 0.5 : 0, AC.currentTime, 0.05); }
 $('btn-som').onclick = () => { S.som = !S.som; salvar(); atualizaSom(); if (S.som) audioDesbloquear(); };
 
 /* =====================================================================
@@ -1847,6 +1881,43 @@ function logo(){
   p([[17,3],[31,10],[17,17],[3,10]], '#F2B233'); p([[3,10],[17,17],[17,31],[3,24]], '#C0612B'); p([[31,10],[17,17],[17,31],[31,24]], '#8A3A1A');
   c.fillStyle = '#fff'; c.fillRect(16, 6, 2, 8); c.fillRect(12, 9, 10, 2);
 }
+/* ---------- menu ---------- */
+function sairDoJogo(){ fecharModal(); $('forca').hidden = true; G = null; }
+function irTelaInicial(){
+  sairDoJogo();
+  $('in-nome').value = S.nome || ''; $('in-turma').value = S.turma || '';
+  $('btn-entrar').textContent = S.nome ? 'Continuar a trilha' : 'Começar a trilha';
+  tela('tela-nome'); musica('selecao'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi);
+}
+function abrirMenu(){
+  const emJogo = !!G && !$('tela-jogo').hidden;
+  const pausado = emJogo ? G.pausa : false;
+  if (emJogo) G.pausa = true;
+  const feitos = JUIZES.filter((j) => S.res[j.id]).length;
+  abrirModal(`<div class="tag">Menu</div><h2 class="m-tit">Olá, ${esc(S.nome)}!</h2>
+    <p class="nota">${feitos} de ${JUIZES.length} juízes percorridos.${emJogo ? ' Se sair agora, o desafio em andamento recomeça do início.' : ''}</p>
+    <div class="menu-op">
+      ${emJogo ? '<button id="mn-voltar"><span class="ic">▶</span><span><b>Voltar ao jogo</b><small>Continuar o desafio de onde parou</small></span></button>' : ''}
+      <button id="mn-juizes"><span class="ic">⚖</span><span><b>Escolher juiz</b><small>Linha do tempo e cartões dos juízes</small></span></button>
+      <button id="mn-inicio"><span class="ic">⌂</span><span><b>Tela inicial</b><small>Volta para a apresentação do jogo</small></span></button>
+      <button id="mn-trocar" class="perigo"><span class="ic">👤</span><span><b>Trocar de jogador</b><small>Outra pessoa vai jogar neste aparelho. Apaga nome e placar daqui.</small></span></button>
+      <button id="mn-zerar" class="perigo"><span class="ic">↺</span><span><b>Recomeçar a trilha</b><small>Mantém seu nome e apaga as estrelas e acertos</small></span></button>
+    </div>
+    <div class="acoes"><button class="btn sec" id="mn-fechar">Fechar</button></div>`);
+  const fechar = () => { fecharModal(); if (emJogo && G) G.pausa = pausado; };
+  if (emJogo) $('mn-voltar').onclick = fechar;
+  $('mn-fechar').onclick = fechar;
+  $('mn-juizes').onclick = () => { sairDoJogo(); montarEscolha(); tela('tela-escolha'); musica('selecao'); };
+  $('mn-inicio').onclick = irTelaInicial;
+  const confirmar = (btn, acao) => { btn.onclick = () => {
+    if (!btn.classList.contains('conf')){ btn.classList.add('conf'); btn.querySelector('b').textContent = 'Toque de novo para confirmar'; setTimeout(() => { if (btn.isConnected){ btn.classList.remove('conf'); abrirMenuTextos(btn); } }, 4000); return; }
+    acao(); }; };
+  const abrirMenuTextos = (btn) => { btn.querySelector('b').textContent = btn.id === 'mn-trocar' ? 'Trocar de jogador' : 'Recomeçar a trilha'; };
+  confirmar($('mn-trocar'), () => { S.nome = ''; S.turma = ''; S.res = {}; salvar(); $('chip-nome').textContent = ''; irTelaInicial(); });
+  confirmar($('mn-zerar'), () => { S.res = {}; salvar(); sairDoJogo(); montarEscolha(); tela('tela-escolha'); toastPagina('Placar apagado. Boa trilha!'); });
+  (emJogo ? $('mn-voltar') : $('mn-juizes')).focus();
+}
+function toastPagina(msg){ const t = document.createElement('div'); t.textContent = msg; t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e2036;color:#fff;border:2px solid #2e5a88;border-radius:12px;padding:10px 16px;font-weight:800;z-index:90'; document.body.append(t); setTimeout(() => t.remove(), 2600); }
 let heroiRaf = 0;
 function heroi(ts){
   if ($('tela-nome').hidden){ heroiRaf = 0; return; }
@@ -1871,9 +1942,8 @@ function start(){
   logo(); atualizaSom();
   if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; $('in-turma').value = S.turma || ''; montarEscolha(); tela('tela-escolha'); }
   else { tela('tela-nome'); heroiRaf = requestAnimationFrame(heroi); }
-  $('chip-nome').title = 'Clique para trocar o nome';
-  $('chip-nome').style.cursor = 'pointer';
-  $('chip-nome').onclick = () => { if ($('tela-escolha').hidden) return; tela('tela-nome'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi); };
+  $('btn-menu').onclick = abrirMenu;
+  $('btn-menu').hidden = !S.nome;
 }
 window.__trilha = { JUIZES, get G(){ return G; }, completar(){ if (G){ G.alvos.forEach((a) => a.feito = true); G.npcs.forEach((n) => n.respondida = true); G.sel.forEach((s) => { if (s.certo) s.estado = 'ok'; }); G.spawnados = G.D.inimigos ? G.D.inimigos.qtd : 0; G.inimigos = []; G.pausa = false; concluirAcao(); } } };
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
