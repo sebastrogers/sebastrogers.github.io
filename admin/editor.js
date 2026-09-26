@@ -238,10 +238,26 @@
   }
   const metaLine = (m) => `${esc(m.category)} · ${fmtDate(m.date)} · ${m.minutes} min de leitura`;
 
+  // Indenta o HTML do corpo do post pra ficar legível no fonte da página,
+  // mas sem tocar no conteúdo que está dentro de <pre> (blocos de código),
+  // já que ali qualquer espaço extra é whitespace visível de verdade.
+  function indentBody(html) {
+    let inPre = false;
+    return html
+      .split("\n")
+      .map((l) => {
+        const indentThisLine = !inPre;
+        if (/<pre[\s>]/i.test(l)) inPre = true;
+        if (/<\/pre>/i.test(l)) inPre = false;
+        return l && indentThisLine ? "          " + l : l;
+      })
+      .join("\n");
+  }
+
   function postPage(m, bodyHtml) {
     const url = `${CFG.site}/posts/${m.slug}.html`;
     const ogImg = m.cover ? `\n    <meta property="og:image" content="${CFG.site}/${esc(m.cover)}" />` : "";
-    const body = bodyHtml.split("\n").map((l) => (l ? "          " + l : l)).join("\n");
+    const body = indentBody(bodyHtml);
     return `<!doctype html>
 <html lang="pt-BR">
   <head>
