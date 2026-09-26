@@ -180,11 +180,9 @@ def item(y, t, a, vpt, ven, link, doi, lang):
     if a:
         lines.append(f'  <p class="pub-authors">{authors_html(a)}</p>')
     v = e(ven if (lang == "en" and ven) else vpt)
+    if doi:
+        v += f'. DOI: <a href="https://doi.org/{ea(doi)}" target="_blank" rel="noreferrer">{e(doi)}</a>'
     lines.append(f'  <p class="pub-venue">{v}.</p>')
-    if url:
-        label = {"pt": "Acessar publicação", "en": "View publication"}[lang]
-        extra = f' <span class="pub-doi">DOI {e(doi)}</span>' if doi else ""
-        lines.append(f'  <p class="pub-link"><a href="{ea(url)}" target="_blank" rel="noreferrer">{label} <span aria-hidden="true">↗</span></a>{extra}</p>')
     lines.append("</article>")
     return lines
 
@@ -212,7 +210,7 @@ for path, lang in (("publicacoes.html", "pt"), ("en/publications.html", "en")):
     start = s.index('<div class="publication-list')
     end = s.rindex("</section>", 0, s.index("</main>"))
     s = s[:start] + block(lang) + s[end:]
-    s = re.sub(r'href="((?:\.\./)?styles\.css)(\?v=[^"]*)?"', r'href="\1?v=20260926b"', s)
+    s = re.sub(r'href="((?:\.\./)?styles\.css)(\?v=[^"]*)?"', r'href="\1?v=20260926c"', s)
     open(path, "w", encoding="utf-8").write(s)
     print(path, "ok")
 print(len(P), "publicações")

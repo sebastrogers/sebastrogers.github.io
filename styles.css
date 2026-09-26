@@ -1092,32 +1092,6 @@ h3 {
   text-decoration-color: currentColor;
 }
 
-.publication-list .pub-link {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 14px;
-  margin: 10px 0 0;
-  font-size: 0.9rem;
-}
-
-.publication-list .pub-link a {
-  font-weight: 700;
-  color: #f0b56d;
-  text-decoration: none;
-}
-
-.publication-list .pub-link a:hover,
-.publication-list .pub-link a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.publication-list .pub-doi {
-  font-size: 0.82rem;
-  overflow-wrap: anywhere;
-}
-
 .publication-list .pub-authors {
   margin: 0 0 4px;
   font-size: 0.93rem;
