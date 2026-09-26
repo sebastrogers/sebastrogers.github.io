@@ -3,7 +3,7 @@ titulo: "O que é um embedding, afinal?"
 categoria: "Busca semântica"
 data: "2026-09-26"
 resumo: "Primeiro post da série sobre busca semântica: por que \"dor atrás dos olhos\" não encontra \"dor retro-orbitária\", o que é um embedding e como transformar texto em vetores que carregam significado."
-capa: ""
+capa: "assets/blog/o-que-e-um-embedding-afinal/busca-semantica-e-geometria-5fgr.webp"
 rascunho: true
 ---
 
@@ -31,15 +31,11 @@ O que a gente quer é uma forma de representar o texto que capture o **significa
 
 Um embedding é uma lista de números que representa um texto. Algo como `[0.12, -0.48, 0.91, ...]`, com algumas centenas ou milhares de números. A ideia central é simples: **textos com significados parecidos viram listas de números parecidas.**
 
-![Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA](../assets/blog/o-que-e-um-embedding-afinal/transformacao-texto-vetor-v2-1za2.webp "Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA")
-
-
+![Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)](../assets/blog/o-que-e-um-embedding-afinal/embedding-fluxo-6lj8.jpg "Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)")
 
 Uma forma de visualizar isso é imaginar um mapa. Cada texto vira um ponto nesse mapa, e o modelo de embeddings é quem decide onde colocar cada ponto. Um bom modelo coloca "dor atrás dos olhos", "dor retro-orbitária" e "dor ao mexer os olhos" bem perto uns dos outros, e bem longe de "pressão alta".
 
-![Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA](../assets/blog/o-que-e-um-embedding-afinal/espaco-vetorial-embeddings-v2-v1rf.webp "Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA")
-
-
+![Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini)](../assets/blog/o-que-e-um-embedding-afinal/embedding-mapa-crls.jpg "Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini)")
 
 A diferença para um mapa de verdade é que ele não tem duas dimensões, tem centenas. Não dá para desenhar, mas a matemática funciona igual: dá para medir a distância entre dois pontos. E buscar passa a ser isso. Você transforma a pergunta em um ponto e procura os documentos que estão mais perto dela.
 
