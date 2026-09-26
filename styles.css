@@ -1025,9 +1025,9 @@ h3 {
   gap: 0;
 }
 
-.pub-group {
+.publication-list .pub-group {
   display: grid;
-  grid-template-columns: 150px 1fr;
+  grid-template-columns: 150px minmax(0, 1fr);
   gap: 26px;
   padding: 28px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -1050,34 +1050,67 @@ h3 {
   font-size: 0.85rem;
 }
 
-.pub-items {
+.publication-list .pub-items {
   display: grid;
   gap: 0;
+  min-width: 0;
 }
 
-.publication-list .pub-items article {
+.publication-list .pub-items article.pub {
   display: block;
-  padding: 0 0 18px;
-  border-top: 0;
-}
-
-.publication-list .pub-items article + article {
-  padding-top: 18px;
+  grid-template-columns: none;
+  padding: 18px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.publication-list .pub-items article:last-child {
+.publication-list .pub-items article.pub:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.publication-list .pub-items article.pub:last-child {
   padding-bottom: 0;
 }
 
-.publication-list .pub-items h3 {
-  margin: 0 0 6px;
+.publication-list .pub h3 {
+  margin: 0 0 8px;
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.publication-list .pub h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.publication-list .pub h3 a:hover,
+.publication-list .pub h3 a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.publication-list .pub-authors {
+  margin: 0 0 4px;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.publication-list .pub-venue {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.publication-list .pub-venue a {
+  font-style: normal;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 860px) {
-  .pub-group {
+  .publication-list .pub-group {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 
   .pub-group-head {
