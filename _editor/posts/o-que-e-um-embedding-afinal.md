@@ -4,7 +4,7 @@ categoria: "Busca semântica"
 data: "2026-09-26"
 resumo: "Primeiro post da série sobre busca semântica: por que \"dor atrás dos olhos\" não encontra \"dor retro-orbitária\", o que é um embedding e como transformar texto em vetores que carregam significado."
 capa: "assets/blog/o-que-e-um-embedding-afinal/busca-semantica-e-geometria-5fgr.webp"
-rascunho: true
+rascunho: false
 ---
 
 Imagine alguém em casa, no terceiro dia de febre, digitando no celular: "dor atrás dos olhos e manchas vermelhas no corpo". A resposta existe. Está no protocolo de manejo clínico da dengue, que descreve exatamente esse quadro como **dor retro-orbitária** e **exantema**. Mas uma busca por palavras não liga uma coisa à outra. O problema não é falta de informação. É que o paciente e quem escreveu o protocolo usam palavras diferentes para dizer a mesma coisa.

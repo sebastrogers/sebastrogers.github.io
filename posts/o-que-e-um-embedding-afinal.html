@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>O que é um embedding, afinal? | Sebastião Rogério</title>
+    <meta name="description" content="Primeiro post da série sobre busca semântica: por que &quot;dor atrás dos olhos&quot; não encontra &quot;dor retro-orbitária&quot;, o que é um embedding e como transformar texto em vetores que carregam significado." />
+    <meta property="og:title" content="O que é um embedding, afinal?" />
+    <meta property="og:description" content="Primeiro post da série sobre busca semântica: por que &quot;dor atrás dos olhos&quot; não encontra &quot;dor retro-orbitária&quot;, o que é um embedding e como transformar texto em vetores que carregam significado." />
+    <meta property="og:image" content="https://sebastrogers.github.io/assets/blog/o-que-e-um-embedding-afinal/busca-semantica-e-geometria-5fgr.webp" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://sebastrogers.github.io/posts/o-que-e-um-embedding-afinal.html" />
+    <link rel="canonical" href="https://sebastrogers.github.io/posts/o-que-e-um-embedding-afinal.html" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      .post-header { text-align: center; }
+      .post-header h1 { max-width: none; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.1; margin: 14px auto 0; text-wrap: balance; }
+      .post-content h2 { margin: 18px 0 0; font-size: 1.75rem; line-height: 1.2; color: var(--ink); }
+      .post-content h3 { margin: 18px 0 0; font-size: 1.45rem; line-height: 1.25; color: var(--ink); }
+      .post-content h4 { margin: 12px 0 0; font-size: 1.15rem; color: var(--ink); }
+      .post-content a { color: var(--teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+      .post-content a.button { text-decoration: none; }
+      .post-content a.button.primary { color: var(--bg); }
+      .post-content ol { margin: 0; }
+      .post-content strong { color: var(--ink); }
+      .post-content hr { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 8px 0; }
+      .post-content code { padding: 2px 6px; border-radius: 5px; background: var(--surface); border: 1px solid var(--line); font-size: 0.88em; }
+      .post-content pre { margin: 0; padding: 16px 18px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font-size: 0.9rem; line-height: 1.55; }
+      .post-content pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+      .post-content table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+      .post-content th, .post-content td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+      .post-content th { color: var(--ink); }
+      .post-figure, .post-video { margin: 8px 0 0; }
+      .post-figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+      .post-video video, .post-video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; background: #111820; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+      .post-figure figcaption, .post-video figcaption { margin-top: 10px; color: var(--muted); font-size: 0.94rem; font-weight: 700; }
+      .post-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+      .post-note { padding: 14px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font-size: 0.98rem; }
+      .post-ref { padding-top: 22px; border-top: 1px solid var(--line); font-size: 0.92rem; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" id="topo">
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="brand" href="../index.html"><span class="brand-mark">SR</span><span>Sebastião Rogério</span></a>
+        <div class="menu" id="menu">
+          <a href="../sobre.html">Sobre</a><a href="../materiais.html">Materiais</a><a href="../blog.html">Blog</a><a href="../publicacoes.html">Publicações</a><a href="../contato.html">Contato</a>
+        </div>
+        <div class="nav-tools">
+          <a class="lang-switch" href="../en/blog.html" aria-label="View English version">EN</a>
+          <button class="theme-toggle" type="button" aria-label="Alternar tema claro ou escuro"><span class="theme-icon" aria-hidden="true">☾</span></button>
+          <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+        </div>
+      </nav>
+    </header>
+    <main class="post-shell">
+      <article>
+        <header class="post-header">
+          <p class="post-meta">Busca semântica · 26 set 2026 · 11 min de leitura</p>
+          <h1>O que é um embedding, afinal?</h1>
+        </header>
+        <div class="post-content">
+          <p>Imagine alguém em casa, no terceiro dia de febre, digitando no celular: "dor atrás dos olhos e manchas vermelhas no corpo". A resposta existe. Está no protocolo de manejo clínico da dengue, que descreve exatamente esse quadro como <strong>dor retro-orbitária</strong> e <strong>exantema</strong>. Mas uma busca por palavras não liga uma coisa à outra. O problema não é falta de informação. É que o paciente e quem escreveu o protocolo usam palavras diferentes para dizer a mesma coisa.</p>
+          <p>Arboviroses são um tema que me acompanha há anos na pesquisa, e essa distância entre a língua de quem sente e a língua de quem trata sempre me chamou atenção. É um dos melhores exemplos que conheço de por que buscar só por palavras não basta.</p>
+          <p>Tenho trabalhado bastante com esse problema nos últimos meses, e resolvi transformar o que venho aprendendo numa série de posts sobre <strong>busca semântica</strong>: buscar pelo significado, e não só pelas palavras. Este é o primeiro, e começa pela peça que sustenta todo o resto: o embedding.</p>
+          <p class="post-note"><strong>Série: busca semântica, do zero à produção.</strong> 1. O que é um embedding (este post) · 2. Como um modelo aprende a gerar embeddings · 3. Buscando de verdade: similaridade e índices vetoriais · 4. BM25 não morreu: busca híbrida e reranking · 5. Como saber se a busca está boa · 6. Um benchmark de modelos em português · 7. Do protótipo à produção</p>
+
+          <h2>O limite da busca por palavras</h2>
+          <p>A busca tradicional, a que está por trás da maioria dos campos de pesquisa que usamos, funciona mais ou menos assim: quebra o texto em palavras, conta quais aparecem em cada documento e dá mais peso às palavras raras. Funciona muito bem, é rápida e, como vamos ver no quarto post, ainda é difícil de bater em vários cenários.</p>
+          <p>Mas ela tropeça em três situações bem comuns:</p>
+          <ul>
+          <li><strong>Sinônimos e paráfrases</strong>: "dor atrás dos olhos" e "dor retro-orbitária" descrevem a mesma coisa sem uma palavra em comum.</li>
+          <li><strong>Palavras iguais com sentidos diferentes</strong>: "pressão" pode ser a arterial ou a do chefe no trabalho.</li>
+          <li><strong>Perguntas em linguagem natural</strong>: "minha barriga dói muito e não paro de vomitar, é grave?" contra um texto chamado "Sinais de alarme na dengue".</li>
+          </ul>
+          <p>O que a gente quer é uma forma de representar o texto que capture o <strong>significado</strong>. Aí entram os embeddings.</p>
+          <h2>Texto vira coordenada</h2>
+          <p>Um embedding é uma lista de números que representa um texto. Algo como <code>[0.12, -0.45, 0.89, ...]</code>, com algumas centenas ou milhares de números. A ideia central é simples: <strong>textos com significados parecidos viram listas de números parecidas.</strong></p>
+          <figure class="post-figure"><img src="../assets/blog/o-que-e-um-embedding-afinal/embedding-fluxo-8khz.jpg" alt="Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)" loading="lazy"><figcaption>Do texto ao vetor: o modelo de embeddings transforma uma frase em uma lista de números. Ilustração criada com IA (Gemini)</figcaption></figure>
+          <p>Uma forma de visualizar isso é imaginar um mapa. Cada texto vira um ponto nesse mapa, e o modelo de embeddings é quem decide onde colocar cada ponto. Um bom modelo coloca "dor atrás dos olhos", "dor retro-orbitária" e "dor ao mexer os olhos" bem perto uns dos outros, e bem longe de "pressão alta".</p>
+          <figure class="post-figure"><img src="../assets/blog/o-que-e-um-embedding-afinal/embedding-mapa-an9b.jpg" alt="Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini)." loading="lazy"><figcaption>Textos com o mesmo significado ficam próximos no espaço, mesmo sem nenhuma palavra em comum. Na prática são centenas de dimensões, não três. Ilustração criada com IA (Gemini).</figcaption></figure>
+          <p>A diferença para um mapa de verdade é que ele não tem duas dimensões, tem centenas. Não dá para desenhar, mas a matemática funciona igual: dá para medir a distância entre dois pontos. E buscar passa a ser isso. Você transforma a pergunta em um ponto e procura os documentos que estão mais perto dela.</p>
+          <h2>Um exemplo com três dimensões</h2>
+          <p>Para ficar concreto, vou inventar um modelo bem simplificado, com só três números por texto. Cada número mede o quanto o texto fala de um assunto: <strong>arbovirose</strong>, <strong>quadro respiratório</strong> e <strong>quadro cardiovascular</strong>.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Texto</th>
+          <th>arbovirose</th>
+          <th>respiratório</th>
+          <th>cardiovascular</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>"Dengue: febre alta, dor retro-orbitária e exantema"</td>
+          <td>0.9</td>
+          <td>0.1</td>
+          <td>0.0</td>
+          </tr>
+          <tr>
+          <td>"Síndrome gripal: febre, tosse e coriza"</td>
+          <td>0.1</td>
+          <td>0.9</td>
+          <td>0.0</td>
+          </tr>
+          <tr>
+          <td>"Hipertensão arterial na atenção primária"</td>
+          <td>0.0</td>
+          <td>0.0</td>
+          <td>0.95</td>
+          </tr>
+          <tr>
+          <td><strong>Pergunta</strong>: "dor atrás dos olhos e manchas vermelhas no corpo"</td>
+          <td>0.8</td>
+          <td>0.2</td>
+          <td>0.0</td>
+          </tr>
+          </tbody></table>
+          <p>Repare que a pergunta tem um pouquinho de "respiratório": quem está com febre pode estar com muita coisa, e o modelo não tem certeza absoluta. Nenhuma palavra da pergunta aparece no texto sobre dengue, mas os números dos dois são quase iguais. Para medir essa semelhança, a medida mais usada é a <strong>similaridade de cosseno</strong>: ela compara a direção dos dois vetores e vai de −1 (opostos) a 1 (mesma direção). Fazendo a conta:</p>
+          <ul>
+          <li>pergunta × dengue: <strong>0.99</strong></li>
+          <li>pergunta × síndrome gripal: <strong>0.35</strong></li>
+          <li>pergunta × hipertensão: <strong>0.00</strong></li>
+          </ul>
+          <p>O texto certo fica em primeiro, sem nenhuma palavra em comum com a pergunta. Os modelos reais fazem exatamente isso, só que ninguém escolhe à mão o que cada dimensão significa: o modelo aprende sozinho, a partir de muitos exemplos, e as dimensões não têm um nome que a gente consiga ler. Como esse aprendizado acontece é o assunto do próximo post.</p>
+          <h2>Um pouco de história, bem rápido</h2>
+          <p>A ideia é mais antiga do que parece. Em 1957, o linguista J. R. Firth resumiu a chamada hipótese distribucional numa frase que virou lema da área: <em>"you shall know a word by the company it keeps"</em>, ou seja, você conhece uma palavra pelas companhias que ela tem. Palavras que aparecem em contextos parecidos tendem a ter significados parecidos. Os embeddings são, no fundo, essa ideia transformada em conta.</p>
+          <p>Em 2013, o <strong>word2vec</strong> mostrou que dava para aprender vetores para palavras a partir de texto comum, e ficou famoso pela conta "rei − homem + mulher ≈ rainha". O problema é que cada palavra tinha um vetor só, então "banco" era sempre o mesmo ponto, fosse de praça ou de dinheiro.</p>
+          <p>Em 2018 veio o <strong>BERT</strong>, que gera representações que dependem do contexto: a mesma palavra ganha vetores diferentes em frases diferentes. E em 2019 o <strong>Sentence-BERT</strong> mostrou como treinar esses modelos para gerar um vetor por frase inteira, pronto para comparar. No português, o NILC-USP publicou em 2017 um conjunto de embeddings de palavras treinados em textos brasileiros e europeus, e em 2020 a NeuralMind lançou o BERTimbau, um BERT treinado para o português do Brasil. Boa parte dos modelos de embeddings abertos disponíveis hoje, como o bge-m3, a família multilingual-e5 e o Qwen3-Embedding, descende dessa linha. Vários deles vão aparecer no benchmark do post 6.</p>
+          <h2>Mão na massa</h2>
+          <p>Chega de teoria. O código abaixo usa a biblioteca <code>sentence-transformers</code> e um modelo pequeno e multilíngue que funciona bem em português. Roda num notebook comum ou no Google Colab (<code>pip install sentence-transformers</code>):</p>
+          <pre><code class="language-python">from sentence_transformers import SentenceTransformer
+
+          modelo = SentenceTransformer("intfloat/multilingual-e5-small")
+
+          documentos = [
+              "Dengue: febre alta, dor retro-orbitária, dor muscular e exantema",
+              "Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas",
+              "Chikungunya: febre e dor intensa nas articulações, que pode durar meses",
+              "Síndrome gripal: febre, tosse, coriza e dor de garganta",
+              "Hipertensão arterial: diagnóstico e acompanhamento na atenção primária",
+          ]
+          pergunta = "dor atrás dos olhos e manchas vermelhas no corpo"
+
+          # este modelo espera os prefixos "query:" e "passage:"
+          docs_vec = modelo.encode(["passage: " + d for d in documentos], normalize_embeddings=True)
+          perg_vec = modelo.encode("query: " + pergunta, normalize_embeddings=True)
+
+          similaridades = docs_vec @ perg_vec   # com vetores normalizados, isso já é o cosseno
+          for doc, sim in sorted(zip(documentos, similaridades), key=lambda x: -x[1]):
+              print(f"{sim:.3f}  {doc}")</code></pre>
+          <p>Quando rodei aqui, o resultado foi este:</p>
+          <pre><code>0.873  Dengue: febre alta, dor retro-orbitária, dor muscular e exantema
+          0.867  Chikungunya: febre e dor intensa nas articulações, que pode durar meses
+          0.866  Sinais de alarme na dengue: dor abdominal intensa, vômitos persistentes e sangramento de mucosas
+          0.855  Síndrome gripal: febre, tosse, coriza e dor de garganta
+          0.843  Hipertensão arterial: diagnóstico e acompanhamento na atenção primária</code></pre>
+          <p>A ordem faz sentido: dengue em primeiro, chikungunya logo atrás (outra arbovirose, também com febre e dor) e hipertensão por último. Mas repare nos números: estão todos entre 0,84 e 0,87, bem longe do 0,99 contra 0,00 do exemplo inventado lá em cima, com três dimensões. Isso não é defeito. Os modelos e5 foram treinados de um jeito que espreme as similaridades numa faixa estreita, perto de 0,7 a 1,0, e os próprios autores avisam isso <a href="https://huggingface.co/intfloat/multilingual-e5-small" target="_blank" rel="noopener">no FAQ do modelo</a>. Cada modelo tem a sua "escala", então um valor como 0,85 não quer dizer nada sozinho.</p>
+          <p>Mais três coisas para reparar. Primeiro, cada documento virou um vetor de 384 números (<code>docs_vec.shape</code> mostra isso). Segundo, os prefixos <code>query:</code> e <code>passage:</code>: esse modelo foi treinado assim, e cada família de modelos tem sua convenção, um detalhe que faz diferença de verdade e que volta no próximo post. Terceiro, e mais importante: na busca, o que interessa é a <strong>ordem</strong>, e não o número absoluto. Aqui a ordem saiu certa, mas com uma margem pequena entre os primeiros colocados. Com outros modelos a escala e a margem mudam, e comparar vários deles em português é o assunto do post 6.</p>
+          <p>Vale brincar um pouco: troque a pergunta por "minha barriga dói muito e não paro de vomitar", "meus joelhos e punhos doem demais depois da febre" ou "tô com tosse e nariz escorrendo" e veja o ranking mudar.</p>
+          <p class="post-note">Os exemplos de saúde deste post são didáticos e simplificados. Não são orientação médica: diante de sintomas, procure um serviço de saúde.</p>
+
+          <h2>O que embeddings não resolvem</h2>
+          <p>Seria desonesto terminar sem as limitações, porque elas são o gancho para o resto da série:</p>
+          <ul>
+          <li><strong>Nomes, códigos e termos exatos.</strong> Quem busca "CID A90" quer aquele código exato, e a busca por palavras costuma se sair melhor. Por isso tanta gente combina as duas (post 4).</li>
+          <li><strong>Similar não é o mesmo que relevante.</strong> "Dengue com sinais de alarme" e "dengue sem sinais de alarme" ficam muito perto no mapa, mas a conduta clínica de um e de outro é bem diferente. Um erro aqui não é só um resultado ruim de busca.</li>
+          <li><strong>O modelo importa, e o idioma também.</strong> Um modelo treinado só em inglês vai mal em português, e modelos maiores são melhores mas mais lentos e caros. Medir isso em português é justamente o objetivo do post 6.</li>
+          </ul>
+          <h2>Para fechar</h2>
+          <p>Se tiver que guardar uma frase deste post, é esta: <strong>um embedding transforma significado em geometria.</strong> Textos parecidos viram pontos próximos, e buscar vira procurar vizinhos. Todo o resto da série (treinar, indexar, combinar, avaliar e colocar em produção) é sobre fazer isso funcionar bem, rápido e em escala.</p>
+          <p>No próximo post a gente abre a caixa: como um modelo aprende onde colocar cada ponto, e por que nem todo modelo de linguagem serve para isso.</p>
+          <h2>Para ir mais fundo</h2>
+          <p>Separei o que li (e reli) para escrever este post, com uma linha sobre por que vale a pena.</p>
+          <p><strong>Livros</strong></p>
+          <ul>
+          <li>Jurafsky, D.; Martin, J. H. <em>Speech and Language Processing</em>, 3ª ed. (rascunho, 2026), cap. 5, "Embeddings". <a href="https://web.stanford.edu/~jurafsky/slp3/" target="_blank" rel="noopener">Online e gratuito</a>. A melhor explicação didática que conheço de vetores, cosseno e word2vec. O cap. 11 ("Information Retrieval and RAG") vai servir para os próximos posts.</li>
+          <li>Manning, C. D.; Raghavan, P.; Schütze, H. <em>Introduction to Information Retrieval</em>. Cambridge University Press, 2008. <a href="https://nlp.stanford.edu/IR-book/" target="_blank" rel="noopener">Online e gratuito</a>. O clássico da recuperação de informação: modelo vetorial, TF-IDF e avaliação. Anterior aos embeddings neurais, mas a base continua a mesma.</li>
+          </ul>
+          <p><strong>Artigos</strong></p>
+          <ul>
+          <li>Mikolov, T. et al. <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Efficient Estimation of Word Representations in Vector Space</a>. 2013. O artigo do word2vec.</li>
+          <li>Devlin, J. et al. <a href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noopener">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a>. NAACL, 2019. Representações que dependem do contexto.</li>
+          <li>Reimers, N.; Gurevych, I. <a href="https://arxiv.org/abs/1908.10084" target="_blank" rel="noopener">Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks</a>. EMNLP, 2019. Como sair de um vetor por palavra para um vetor por frase, pronto para busca.</li>
+          <li>Wang, L. et al. <a href="https://arxiv.org/abs/2402.05672" target="_blank" rel="noopener">Multilingual E5 Text Embeddings: A Technical Report</a>. 2024. O relatório do modelo usado no exemplo, curto e direto.</li>
+          </ul>
+          <p><strong>Em português</strong></p>
+          <ul>
+          <li>Ministério da Saúde. <a href="https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/svsa/dengue/dengue-diagnostico-e-manejo-clinico-adulto-e-crianca/view" target="_blank" rel="noopener">Dengue: diagnóstico e manejo clínico: adulto e criança</a>. 6. ed., 2024. A fonte dos termos clínicos usados nos exemplos, e um bom retrato de como o texto técnico se distancia da fala do paciente.</li>
+          <li>Hartmann, N. et al. <a href="https://aclanthology.org/W17-6615/" target="_blank" rel="noopener">Portuguese Word Embeddings: Evaluating on Word Analogies and Natural Language Tasks</a>. STIL, 2017. Os embeddings do NILC-USP para o português, com os <a href="https://github.com/nathanshartmann/portuguese_word_embeddings" target="_blank" rel="noopener">vetores disponíveis no GitHub</a>.</li>
+          <li>Souza, F.; Nogueira, R.; Lotufo, R. <a href="https://link.springer.com/chapter/10.1007/978-3-030-61377-8_28" target="_blank" rel="noopener">BERTimbau: Pretrained BERT Models for Brazilian Portuguese</a>. BRACIS, 2020. O BERT brasileiro; os modelos estão <a href="https://huggingface.co/neuralmind/bert-base-portuguese-cased" target="_blank" rel="noopener">no Hugging Face</a>.</li>
+          </ul>
+          <p><strong>Blogs e documentação</strong></p>
+          <ul>
+          <li>Alammar, J. <a href="https://jalammar.github.io/illustrated-word2vec/" target="_blank" rel="noopener">The Illustrated Word2vec</a>. O texto mais visual sobre embeddings de palavras; ótimo para quem aprende vendo.</li>
+          <li>Sentence Transformers. <a href="https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html" target="_blank" rel="noopener">Semantic Search</a>. A documentação da biblioteca usada no exemplo, com a diferença entre busca simétrica e assimétrica (o motivo dos prefixos <code>query:</code> e <code>passage:</code>).</li>
+          </ul>
+        </div>
+      </article>
+      <a class="section-link" href="../blog.html">Voltar ao blog</a>
+    </main>
+    <footer class="footer"><p>© <span id="year"></span> Sebastião Rogério.</p><a href="../index.html">Início</a></footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
