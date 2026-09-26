@@ -182,6 +182,23 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
 .reflexao blockquote{margin:10px 0;font-style:italic;color:#5a3a1a}
 .som-ic{font-size:1.15rem;line-height:1;padding:6px 10px;min-width:44px}
 .som-ic.ligado{background:rgba(242,178,51,.22);border-color:var(--ouro)}
+/* ranking */
+.ranking{margin-top:18px}
+.rank-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.rank-top h3{font-family:"Pixelify Sans",sans-serif;font-variant-ligatures:none;font-size:1.35rem}
+.rank-abas{display:flex;gap:6px}
+.rank-abas button{border:2px solid var(--linha);background:#fff;border-radius:99px;padding:5px 12px;font-weight:800;font-size:.82rem;color:var(--tinta2)}
+.rank-abas button[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.rank-tab{width:100%;border-collapse:collapse;margin-top:10px;font-size:.95rem}
+.rank-tab th{text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta2);padding:6px 8px;border-bottom:2px solid var(--linha)}
+.rank-tab td{padding:8px;border-bottom:1px solid var(--linha);font-variant-numeric:tabular-nums}
+.rank-tab td.num,.rank-tab th.num{text-align:right}
+.rank-tab tr.eu td{background:#fff3c4;font-weight:800}
+.rank-pos{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--painel2);font-weight:800;font-size:.85rem}
+.rank-pos.p1{background:#f2c23a;color:#3a2600}.rank-pos.p2{background:#d6dbe2;color:#2a2f38}.rank-pos.p3{background:#d99a62;color:#3a1e00}
+.rank-turma{display:block;font-size:.75rem;color:var(--tinta2);font-weight:700}
+.rank-msg{margin-top:10px;font-size:.92rem;color:var(--tinta2)}
+.rank-wrap{overflow-x:auto}
 /* menu */
 .menu-op{display:grid;gap:10px;margin-top:14px}
 .menu-op button{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;text-align:left;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:12px 14px;color:var(--tinta)}
@@ -242,7 +259,6 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
         <p class="lead">Escolha um juiz de Israel e viva a história dele. Recolha o trigo escondido dos midianitas, escape dos guardas de Eglom, reúna as tropas de Baraque, derrube o altar de Baal e empurre as colunas do templo.</p>
         <form class="card form" id="form-nome" autocomplete="off">
           <label class="lbl" for="in-nome">Seu nome<input type="text" id="in-nome" maxlength="40" required placeholder="Ex.: Ana Beatriz"></label>
-          <label class="lbl" for="in-turma">Classe ou igreja (opcional)<input type="text" id="in-turma" maxlength="40" placeholder="Ex.: Jovens, sede"></label>
           <p class="nota">É só identificação para o placar, não precisa de senha.</p>
           <div><button class="btn" type="submit" id="btn-entrar">Começar a trilha</button></div>
         </form>
@@ -318,6 +334,11 @@ input[type=text]:focus{outline:none;border-color:var(--azul)}
     <h2 class="m-tit" id="final-t"></h2>
     <div class="numeros" id="final-num"></div>
     <div class="medalhas" id="final-med"></div>
+    <div class="ranking" id="final-rank" hidden>
+      <div class="rank-top"><h3>Ranking da trilha</h3></div>
+      <div class="rank-wrap" id="rank-corpo"><p class="rank-msg">Carregando ranking...</p></div>
+      <p class="rank-msg">Pontos: 10 por pergunta certa e 1 por estrela. Vale o melhor resultado de cada jogador. Os nomes aparecem abreviados.</p>
+    </div>
     <div class="reflexao">
       <b>Sete juízes, um mesmo ciclo.</b> Apostasia, opressão, clamor, libertação e paz. E depois tudo de novo. Os juízes só podiam salvar algumas pessoas, de alguns inimigos, por algum tempo. Eles, como nós, precisavam de algo muito mais poderoso, e Deus proveu isso em Cristo (lição 4).
       <blockquote>"Naqueles dias, não havia rei em Israel; cada qual fazia o que parecia direito aos seus olhos." (Jz 17.6)</blockquote>
@@ -730,7 +751,7 @@ const JUIZES = [
    ESTADO SALVO
    ===================================================================== */
 const CHAVE = 'trilhaJuizes.v2';
-let S = { nome:'', turma:'', som:true, res:{} };
+let S = { nome:'', som:true, res:{} };
 try { const s = JSON.parse(localStorage.getItem(CHAVE) || 'null'); if (s) S = Object.assign(S, s); } catch (e) {}
 function salvar(){ try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch (e) {} }
 
@@ -1752,7 +1773,7 @@ function terminarJuiz(){
   const todos = JUIZES.every((j) => S.res[j.id]);
   $('btn-fechamento').hidden = !todos; $('btn-outro').className = todos ? 'btn sec' : 'btn';
   tela('tela-fim'); sfx('vitoria'); musica('escolha');
-  enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Lição ' + J.licao + ' · ' + (J.nomeLongo || J.nome), juiz:J.nomeLongo || J.nome, acertos:R.acertos, total:R.total, pontuacao:pct, estrelas:R.estrelas, maxEstrelas:R.max });
+  enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, disciplina:DISCIPLINA, aula:'Lição ' + J.licao + ' · ' + (J.nomeLongo || J.nome), juiz:J.nomeLongo || J.nome, acertos:R.acertos, total:R.total, pontuacao:pct, estrelas:R.estrelas, maxEstrelas:R.max });
   G = null;
 }
 function enviarResultado(dados){
@@ -1773,7 +1794,41 @@ $('btn-zerar').onclick = () => {
   if (!b.dataset.conf){ b.dataset.conf = '1'; b.textContent = 'Confirmar: apagar meu placar'; setTimeout(() => { b.dataset.conf = ''; b.textContent = 'Jogar tudo de novo'; }, 4000); return; }
   b.dataset.conf = ''; b.textContent = 'Jogar tudo de novo'; S.res = {}; salvar(); montarEscolha(); tela('tela-escolha');
 };
-let finalRaf = 0, finalT0 = 0;
+let finalRaf = 0, finalT0 = 0, rankDados = null;
+function abreviarNome(n){ const p = String(n || '').trim().split(/\s+/).filter(Boolean); if (!p.length) return 'Anônimo'; const f = p[0].charAt(0).toUpperCase() + p[0].slice(1).toLowerCase(); return p.length === 1 ? f : f + ' ' + p[p.length - 1].charAt(0).toUpperCase() + '.'; }
+function buscarRanking(){
+  return new Promise((ok, falha) => {
+    const url = WEBAPP_URL + '?acao=ranking&t=' + Date.now();
+    fetch(url).then((r) => r.json()).then(ok).catch(() => {
+      // plano B: JSONP, caso o navegador bloqueie a leitura direta
+      const cb = 'rank_' + Date.now(), sc = document.createElement('script');
+      const limpa = () => { delete window[cb]; sc.remove(); };
+      window[cb] = (d) => { limpa(); ok(d); };
+      sc.onerror = () => { limpa(); falha(); };
+      sc.src = url + '&callback=' + cb; document.head.append(sc);
+      setTimeout(() => { if (window[cb]){ limpa(); falha(); } }, 12000);
+    });
+  });
+}
+function carregarRanking(espera){
+  const box = $('final-rank');
+  if (!WEBAPP_URL){ box.hidden = true; return; }
+  box.hidden = false; $('rank-corpo').innerHTML = '<p class="rank-msg">Carregando ranking...</p>';
+  setTimeout(() => buscarRanking().then((d) => { rankDados = (d && d.ranking) || []; desenharRanking(); })
+    .catch(() => { $('rank-corpo').innerHTML = '<p class="rank-msg">Não consegui carregar o ranking agora. <button class="btn mini sec" id="rank-tentar">Tentar de novo</button></p>'; $('rank-tentar').onclick = () => carregarRanking(0); }), espera);
+}
+function desenharRanking(){
+  const eu = abreviarNome(S.nome), lista = rankDados.slice();
+  if (!lista.length){ $('rank-corpo').innerHTML = '<p class="rank-msg">Ainda não há ninguém no ranking. Você pode ser o primeiro!</p>'; return; }
+  const ehEu = (r) => r.nome === eu;
+  const minhaPos = lista.findIndex(ehEu);
+  const mostrar = lista.slice(0, 10).map((r, i) => ({ r, i }));
+  if (minhaPos >= 10) mostrar.push({ r:lista[minhaPos], i:minhaPos, sep:true });
+  $('rank-corpo').innerHTML = `<table class="rank-tab"><thead><tr><th>#</th><th>Jogador</th><th class="num">Acertos</th><th class="num">Estrelas</th><th class="num">Pontos</th></tr></thead><tbody>
+    ${mostrar.map(({ r, i, sep }) => `${sep ? '<tr><td colspan="5" style="text-align:center;color:var(--tinta2)">···</td></tr>' : ''}<tr class="${ehEu(r) ? 'eu' : ''}"><td><span class="rank-pos ${i < 3 ? 'p' + (i + 1) : ''}">${i + 1}</span></td><td>${esc(r.nome)}${ehEu(r) ? ' (você)' : ''}</td><td class="num">${r.acertos}/${r.total}</td><td class="num">★ ${r.estrelas}</td><td class="num"><b>${r.pontos}</b></td></tr>`).join('')}
+  </tbody></table>${minhaPos >= 0 ? `<p class="rank-msg">Você está em <b>${minhaPos + 1}º lugar</b> de ${lista.length}.</p>` : ''}`;
+}
+
 function abrirFinal(){
   let ac = 0, tot = 0, est = 0, mx = 0;
   JUIZES.forEach((j) => { const r = S.res[j.id] || { acertos:0, total:0, estrelas:0, max:0 }; ac += r.acertos; tot += r.total; est += r.estrelas; mx += r.max; });
@@ -1783,7 +1838,9 @@ function abrirFinal(){
   JUIZES.forEach((j) => { const r = S.res[j.id]; const d = document.createElement('div'); d.className = 'medalha'; const c = retrato(LOOKS[j.id], 64, 64, 0); d.append(c); d.insertAdjacentHTML('beforeend', `<b>${esc(j.nome)}</b><small>★ ${r ? r.estrelas : 0} · ${r ? r.acertos + '/' + r.total : '0'}</small>`); med.append(d); });
   tela('tela-final'); sfx('vitoria'); musica('final');
   finalT0 = performance.now(); if (!finalRaf) finalRaf = requestAnimationFrame(cenaFinal);
-  enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, matricula:S.turma, disciplina:DISCIPLINA, aula:'Trilha completa (7 juízes)', juiz:'Trilha completa (7 juízes)', acertos:ac, total:tot, pontuacao:tot ? Math.round(ac / tot * 100) : 0, estrelas:est, maxEstrelas:mx });
+  carregarRanking(2500);
+  const assinatura = [S.nome, ac, tot, est].join('|');
+  if (S.envioFinal !== assinatura){ S.envioFinal = assinatura; salvar(); enviarResultado({ jogo:'trilha-juizes', timestamp:new Date().toISOString(), nome:S.nome, disciplina:DISCIPLINA, aula:'Trilha completa (7 juízes)', juiz:'Trilha completa (7 juízes)', acertos:ac, total:tot, pontuacao:tot ? Math.round(ac / tot * 100) : 0, estrelas:est, maxEstrelas:mx }); }
 }
 const confFinal = Array.from({ length:110 }, (_, i) => ({ x:Math.random() * 960, y:-Math.random() * 600, v:60 + Math.random() * 90, r:Math.random() * 6, vr:(Math.random() - 0.5) * 4, cor:['#F2B233','#E74C3C','#2ECC71','#3498DB','#9B59B6','#FFFFFF'][i % 6] }));
 function cenaFinal(ts){
@@ -1809,7 +1866,7 @@ function cenaFinal(ts){
   finalRaf = requestAnimationFrame(cenaFinal);
 }
 $('btn-refazer').onclick = () => comecarJuiz(J);
-$('form-nome').addEventListener('submit', (e) => { e.preventDefault(); S.nome = $('in-nome').value.trim() || 'Visitante'; S.turma = $('in-turma').value.trim(); salvar(); $('chip-nome').textContent = S.nome; audioDesbloquear(); montarEscolha(); tela('tela-escolha'); musica('escolha'); });
+$('form-nome').addEventListener('submit', (e) => { e.preventDefault(); S.nome = $('in-nome').value.trim() || 'Visitante'; salvar(); $('chip-nome').textContent = S.nome; audioDesbloquear(); montarEscolha(); tela('tela-escolha'); musica('escolha'); });
 $('cv').addEventListener('mousemove', aoMover);
 $('cv').addEventListener('mouseleave', () => { if (G) G.hover = null; });
 $('cv').addEventListener('click', aoClicar);
@@ -1912,7 +1969,7 @@ function logo(){
 function sairDoJogo(){ fecharModal(); $('forca').hidden = true; G = null; }
 function irTelaInicial(){
   sairDoJogo();
-  $('in-nome').value = S.nome || ''; $('in-turma').value = S.turma || '';
+  $('in-nome').value = S.nome || '';
   $('btn-entrar').textContent = S.nome ? 'Continuar a trilha' : 'Começar a trilha';
   tela('tela-nome'); musica('abertura'); if (!heroiRaf) heroiRaf = requestAnimationFrame(heroi);
 }
@@ -1940,7 +1997,7 @@ function abrirMenu(){
     if (!btn.classList.contains('conf')){ btn.classList.add('conf'); btn.querySelector('b').textContent = 'Toque de novo para confirmar'; setTimeout(() => { if (btn.isConnected){ btn.classList.remove('conf'); abrirMenuTextos(btn); } }, 4000); return; }
     acao(); }; };
   const abrirMenuTextos = (btn) => { btn.querySelector('b').textContent = btn.id === 'mn-trocar' ? 'Trocar de jogador' : 'Recomeçar a trilha'; };
-  confirmar($('mn-trocar'), () => { S.nome = ''; S.turma = ''; S.res = {}; salvar(); $('chip-nome').textContent = ''; irTelaInicial(); });
+  confirmar($('mn-trocar'), () => { S.nome = ''; S.res = {}; salvar(); $('chip-nome').textContent = ''; irTelaInicial(); });
   confirmar($('mn-zerar'), () => { S.res = {}; salvar(); sairDoJogo(); montarEscolha(); tela('tela-escolha'); toastPagina('Placar apagado. Boa trilha!'); });
   (emJogo ? $('mn-voltar') : $('mn-juizes')).focus();
 }
@@ -1967,7 +2024,7 @@ function heroi(ts){
 
 function start(){
   logo(); atualizaSom();
-  if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; $('in-turma').value = S.turma || ''; montarEscolha(); tela('tela-escolha');  musica('escolha'); }
+  if (S.nome){ $('chip-nome').textContent = S.nome; $('in-nome').value = S.nome; montarEscolha(); tela('tela-escolha');  musica('escolha'); }
   else { tela('tela-nome'); musica('abertura'); heroiRaf = requestAnimationFrame(heroi); }
   $('btn-menu').onclick = abrirMenu;
   $('btn-menu').hidden = !S.nome;
