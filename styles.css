@@ -318,12 +318,16 @@ h3 {
   display: block;
 }
 
-.profile-socials .brand-icon--linkedin {
-  color: #0a66c2;
+.profile-socials a {
+  color: var(--ink);
 }
 
-.profile-socials .brand-icon--scholar {
-  color: #4285f4;
+.profile-socials .brand-cut {
+  fill: var(--bg);
+}
+
+.profile-socials .brand-cut-line {
+  stroke: var(--bg);
 }
 
 .profile-socials .brand-icon--orcid {
@@ -1219,8 +1223,14 @@ h3 {
   line-height: 1.35;
 }
 
+.cv-sub {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
 .cv-org {
   margin: 2px 0 0;
+  color: var(--muted);
   font-weight: 600;
 }
 

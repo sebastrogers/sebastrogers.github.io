@@ -43,7 +43,7 @@ SOBRE = {
 # (periodo PT, periodo EN, cargo PT, cargo EN, org, detalhe PT, detalhe EN, atual)
 TRAJ = [
     ("dez/2025 – hoje", "Dec 2025 – present",
-     "System Analyst, time de IA · Tech Lead do time de busca", "System Analyst, AI team · Tech Lead of the search team",
+     "System Analyst\nTech Lead do time de busca, time de IA", "System Analyst\nTech Lead of the search team, AI team",
      "FCx Labs",
      "Busca e recuperação de informação sobre dados em larga escala.",
      "Search and information retrieval over large-scale data.", True),
@@ -63,7 +63,7 @@ TRAJ = [
      "Primeiro embaixador da rede: masterclasses internacionais com Fordham University, Osgoode Hall Law School e University of North Texas.",
      "First ambassador of the network: international masterclasses with Fordham University, Osgoode Hall Law School and University of North Texas.", False),
     ("2024 – 2025", "2024 – 2025",
-     "Curador Adjunto de TI · Analista de Qualidade Pedagógica", "Associate IT Content Curator · Instructional Quality Analyst",
+     "Curador Adjunto de TI\nAntes, Analista de Qualidade Pedagógica", "Associate IT Content Curator\nPreviously, Instructional Quality Analyst",
      "Ensineme",
      "Curadoria e validação de conteúdos de TI para cursos técnicos, graduações e MBAs.",
      "Curation and review of IT content for technical, undergraduate and MBA programs.", False),
@@ -131,7 +131,10 @@ def sobre_main(lang):
         L.append(f'          <li class="{cls}">')
         L.append('            <div class="cv-what">')
         L.append(f'              <p class="cv-when">{e(pe if en else pp)}</p>')
-        L.append(f'              <h3>{e(ce if en else cp)}</h3>')
+        cargo, _, sub = (ce if en else cp).partition("\n")
+        L.append(f'              <h3>{e(cargo)}</h3>')
+        if sub:
+            L.append(f'              <p class="cv-sub">{e(sub)}</p>')
         L.append(f'              <p class="cv-org">{e(org)}</p>')
         d = de if en else dp
         if d:
@@ -204,7 +207,7 @@ def trocar_main(path, novo):
     a = s.index("<main>") + len("<main>")
     b = s.index("</main>")
     s = s[:a] + "\n" + novo + "\n    " + s[b:]
-    s = s.replace('href="styles.css"', 'href="styles.css?v=20260926d"').replace('href="../styles.css"', 'href="../styles.css?v=20260926c"')
+    s = s.replace('href="styles.css"', 'href="styles.css?v=20260926f"').replace('href="../styles.css"', 'href="../styles.css?v=20260926c"')
     open(path, "w", encoding="utf-8").write(s)
     print(path, "ok")
 
