@@ -109,7 +109,7 @@ Mais três coisas para reparar. Primeiro, cada documento virou um vetor de 384 n
 
 Vale brincar um pouco: troque a pergunta por "minha barriga dói muito e não paro de vomitar", "meus joelhos e punhos doem demais depois da febre" ou "tô com tosse e nariz escorrendo" e veja o ranking mudar.
 
-<p class="post-note">Os exemplos de saúde deste post são didáticos e simplificados. Não são orientação médica: diante de sintomas, procure um serviço de saúde.</p>
+<p class="post-note">Os exemplos de saúde deste post são didáticos e simplificados. Não são orientação médica: diante de sintomas, procure um serviço de saúde haha.</p>
 
 ## O que embeddings não resolvem
 
