@@ -1,5 +1,5 @@
 {
-  "atualizado": "24 de setembro de 2026",
+  "atualizado": "29 de setembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -98,20 +98,20 @@
           "tags": "slides python for while funcao modulo pytest teste escopo"
         },
         {
-          "tipo": "Projeto",
-          "titulo": "Projetos do VS Code: aulas 3 e 4",
-          "descricao": "Pastas prontas para o VS Code, com o código e os exercícios.",
-          "arquivo": "assets/materiais/coding/projetos-vscode-aulas-03-04.zip",
-          "data": "01/09/2026",
-          "tags": "codigo fonte vscode python pytest projeto exercicios zip"
-        },
-        {
           "tipo": "Roteiro",
           "titulo": "Roteiro 4: Da comanda ao módulo testado",
           "descricao": "Transformar o código da Aula 3 em módulo testado com pytest.",
           "arquivo": "assets/materiais/coding/roteiro-04-comanda-modulo-testado.pdf",
           "data": "01/09/2026",
           "tags": "laboratorio pratica python pytest funcao modulo venv git"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Projetos do VS Code: aulas 3 e 4",
+          "descricao": "Pastas prontas para o VS Code, com o código e os exercícios.",
+          "arquivo": "assets/materiais/coding/projetos-vscode-aulas-03-04.zip",
+          "data": "01/09/2026",
+          "tags": "codigo fonte vscode python pytest projeto exercicios zip"
         },
         {
           "tipo": "Aula",
@@ -128,6 +128,22 @@
           "arquivo": "assets/materiais/coding/jogo-fazenda-dos-paradigmas.html",
           "data": "22/09/2026",
           "tags": "jogo revisao interativo individual fazenda pixel art personagem python poo backend api frontend javascript react git"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: Herança, composição e polimorfismo",
+          "descricao": "Quando herdar, quando compor e como um mesmo verbo ganha várias implementações, com esquemas ilustrados e a Comanda das aulas anteriores.",
+          "arquivo": "assets/materiais/coding/aula-07-heranca-composicao-polimorfismo.pdf",
+          "data": "29/09/2026",
+          "tags": "slides heranca super sobrescrita liskov composicao polimorfismo duck typing desconto comanda pytest parametrize entrega parcial"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 5: O núcleo da Comanda, do item ao desconto",
+          "descricao": "Passo a passo para montar do zero o núcleo orientado a objetos da Comanda, com esquemas, testes e o guia para adaptar ao projeto da equipe.",
+          "arquivo": "assets/materiais/coding/roteiro-05-nucleo-comanda.pdf",
+          "data": "29/09/2026",
+          "tags": "laboratorio pratica python classe heranca composicao polimorfismo pytest parametrize git entrega parcial"
         }
       ]
     },
