@@ -1,5 +1,5 @@
 {
-  "atualizado": "29 de setembro de 2026",
+  "atualizado": "1 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -242,6 +242,22 @@
           "arquivo": "assets/materiais/cloud/roteiro-completo-conta-ec2-s3.pdf",
           "data": "24/09/2026",
           "tags": "laboratorio pratica aws conta iam mfa budgets ec2 instance connect apache s3 site estatico bucket policy cloudshell cli terminal console"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: Serverless, a função como unidade de computação",
+          "descricao": "O que é uma função na nuvem, gatilhos, início a frio, cobrança por execução e quando a Lambda vale mais que um servidor, com esquemas e a arquitetura do site da equipe.",
+          "arquivo": "assets/materiais/cloud/aula-07-serverless-lambda.pdf",
+          "data": "01/10/2026",
+          "tags": "slides serverless faas lambda gatilho evento cold start inicio a frio gb segundo custo nivel gratuito function url s3 entrega parcial"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 6: A primeira função da equipe, ligada ao site",
+          "descricao": "Criar uma função Lambda em Python, abrir uma URL pública para ela e mostrar a resposta no site do S3, pela interface do console ou pelo terminal do CloudShell.",
+          "arquivo": "assets/materiais/cloud/roteiro-06-lambda-ligada-ao-site.pdf",
+          "data": "01/10/2026",
+          "tags": "laboratorio pratica aws lambda python function url cors fetch javascript s3 cloudwatch logs cloudshell cli console relatorio de custo"
         }
       ]
     },
@@ -348,6 +364,46 @@
           "arquivo": "assets/materiais/requisitos/aula-06-priorizacao-de-requisitos.pdf",
           "data": "24/09/2026",
           "tags": "slides priorizacao moscow must should could wont valor esforco kano 100 pontos backlog criterio ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: O documento que outra pessoa consegue ler, DDR v1 e revisão cruzada",
+          "descricao": "As partes do DDR e de onde veio cada uma, rastreabilidade, inspeção com checklist e um exemplo completo de revisão, do DDR com defeitos à resposta da equipe autora.",
+          "arquivo": "assets/materiais/requisitos/aula-07-ddr-e-revisao-cruzada.pdf",
+          "data": "01/10/2026",
+          "tags": "slides ddr documento rastreabilidade matriz inspecao fagan revisao por pares checklist defeito gravidade entrega parcial av1"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro da revisão cruzada do DDR v1",
+          "descricao": "O que cada equipe entrega, o checklist do DDR antes da entrega, os seis passos da revisão com o tempo de cada um e a ficha do exemplo preenchida.",
+          "arquivo": "assets/materiais/requisitos/roteiro-revisao-cruzada-ddr-v1.pdf",
+          "data": "01/10/2026",
+          "tags": "laboratorio pratica revisao cruzada ddr checklist ficha defeito resposta do autor v2"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Exemplo de DDR v1: Barbearia Navalha",
+          "descricao": "Modelo do formato da entrega, com as seis seções preenchidas. É um v1 real, com 8 defeitos deixados de propósito para treinar a revisão.",
+          "arquivo": "assets/materiais/requisitos/exemplo-ddr-v1-barbearia.pdf",
+          "data": "01/10/2026",
+          "tags": "modelo exemplo ddr barbearia interessados requisitos historias backlog matriz rastreabilidade"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Ficha de Revisão Cruzada (PDF para imprimir)",
+          "descricao": "Checklist com as 8 características e tabela para registrar os defeitos, com a coluna de resposta da equipe autora.",
+          "arquivo": "assets/materiais/requisitos/ficha-revisao-cruzada-ddr.pdf",
+          "data": "01/10/2026",
+          "tags": "ficha revisao checklist defeito gravidade imprimir"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Ficha de Revisão Cruzada (Word para preencher)",
+          "descricao": "A mesma ficha em formato editável, para preencher no computador e enviar no AVA.",
+          "arquivo": "assets/materiais/requisitos/ficha-revisao-cruzada-ddr.docx",
+          "data": "01/10/2026",
+          "tags": "ficha revisao checklist defeito editavel word docx"
         }
       ]
     }
