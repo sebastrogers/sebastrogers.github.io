@@ -38,7 +38,7 @@ body{overflow:hidden}
 button{font-family:inherit}
 
 /* HUD */
-.hud{position:absolute;top:12px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;pointer-events:none;transition:opacity .4s}
+.hud{position:absolute;top:12px;left:16px;right:76px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;pointer-events:none;transition:opacity .4s}
 .life{display:flex;gap:10px;align-items:center;min-width:0}
 .portrait{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#2c3a6e,#141a36);box-shadow:0 0 0 2px var(--night),0 0 0 4px var(--gold-deep),0 4px 14px rgba(0,0,0,.6);flex:none;overflow:hidden}
 .portrait canvas{width:52px;height:52px;display:block}
@@ -86,7 +86,17 @@ button{font-family:inherit}
 .gem.mini{width:26px;height:26px;box-shadow:inset 0 -3px 5px rgba(0,0,0,.45),0 0 0 1.5px var(--night),0 0 0 2.5px var(--gold-deep)}
 .gemwrap kbd{font-weight:800;font-size:12px;color:var(--gold);line-height:1}
 .gemwrap small{font-size:11px;color:var(--muted);line-height:1}
-#wrap.cine .hud,#wrap.cine .spellbar,#wrap.cine .bossbar,#wrap.cine .toast{opacity:0}
+#wrap.cine .sndbtn,#wrap.cine .hud,#wrap.cine .spellbar,#wrap.cine .bossbar,#wrap.cine .toast{opacity:0}
+
+.sndbtn{position:absolute;top:12px;right:16px;z-index:10;width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;background:var(--panel);color:var(--gold);box-shadow:0 0 0 1.5px var(--gold-deep),0 6px 18px rgba(0,0,0,.5);display:grid;place-items:center;transition:opacity .4s}
+.sndbtn:hover{box-shadow:0 0 0 1.5px var(--gold),0 6px 18px rgba(0,0,0,.5)}
+.sndbtn:focus-visible{outline:2px solid var(--parchment);outline-offset:3px}
+.sndbtn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sndbtn .spk{fill:currentColor}
+.sndbtn .x{display:none}
+.sndbtn.off{color:var(--muted)}
+.sndbtn.off .wv{display:none}
+.sndbtn.off .x{display:inline}
 
 /* Telas */
 .overlay{position:absolute;inset:0;display:flex;align-items:center;padding:24px 16px;background:linear-gradient(90deg,rgba(8,9,18,.92) 0%,rgba(8,9,18,.7) 48%,rgba(8,9,18,.12) 100%);overflow:auto}
@@ -94,7 +104,7 @@ button{font-family:inherit}
 .card{max-width:600px;width:100%;margin-left:clamp(0px,5vw,72px);display:flex;flex-direction:column;gap:16px}
 .overlay.center .card{margin:auto;background:var(--panel);padding:28px;border-radius:18px;box-shadow:0 0 0 1.5px var(--gold-deep),0 20px 60px rgba(0,0,0,.6)}
 .overlay.center .card.wide{max-width:900px}
-.title{display:inline-block;align-self:flex-start;max-width:100%;padding:0 .12em .06em 0;font-family:var(--display);font-weight:400;font-size:clamp(40px,7vw,78px);line-height:1;margin:0;letter-spacing:.01em;background:linear-gradient(180deg,#fff2c2 0%,#f2c14e 45%,#c27a1a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #3b220a) drop-shadow(0 10px 22px rgba(0,0,0,.7))}
+.title{display:inline-block;align-self:flex-start;white-space:nowrap;padding:0 .18em .08em 0;font-family:var(--display);font-weight:400;font-size:78px;line-height:1;margin:0;letter-spacing:.01em;background:linear-gradient(180deg,#fff2c2 0%,#f2c14e 45%,#c27a1a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #3b220a) drop-shadow(0 10px 22px rgba(0,0,0,.7))}
 .card h2{font-family:var(--display);font-weight:400;font-size:32px;margin:0;color:var(--gold)}
 .lead{margin:0;line-height:1.5;font-size:17px;max-width:52ch}
 .card p{margin:0;line-height:1.5;max-width:60ch}
@@ -170,7 +180,6 @@ button{font-family:inherit}
     </div>
     <div class="hudright">
       <div class="score"><div><small>Capítulo</small><b id="cp">1</b></div><div><small>Onda</small><b id="wv">1</b></div><div><small>Abatidos</small><b id="kc">0</b></div></div>
-      <button class="iconbtn" id="btnSound"><span id="sndLbl">Som ligado</span><small id="musicName">♪</small></button>
       <button class="iconbtn" id="btnHudBook"><span>Grimório</span><small>tecla G</small></button>
     </div>
   </div>
@@ -206,9 +215,8 @@ button{font-family:inherit}
         <button class="btn" id="btnStart">Entrar na mata</button>
         <button class="btn ghost" id="btnLook">Personalizar</button>
         <button class="btn ghost" id="btnBook">Grimório</button>
-        <button class="btn ghost" id="btnStartSound">Ligar o som</button>
       </div>
-      <div class="note">Precisa de teclado e mouse. O navegador só deixa tocar som depois do primeiro clique na página.</div>
+      <div class="note">Precisa de teclado e mouse. O som liga no primeiro clique ou no botão do canto.</div>
     </div>
   </div>
 
@@ -262,6 +270,10 @@ button{font-family:inherit}
     </div>
   </div>
 </div>
+
+<button class="sndbtn off" id="sndBtn" aria-label="Ligar o som" title="Ligar o som">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wv" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+</button>
 
 <script>
 (()=>{
@@ -764,7 +776,7 @@ function updateHUD(){
   if(boss&&!boss.dead){if(bb.hidden){bb.hidden=false;$('#bossName').innerHTML=`${boss.t.n}<em>${boss.t.title}</em>`;}const k=Math.max(0,boss.hp/boss.max);if(Math.abs(k-lastBoss)>.002){lastBoss=k;$('#bossFill').style.transform=`scaleX(${k})`;}}
   else if(!bb.hidden)bb.hidden=true;
 }
-function updateSoundUI(){const sb=$('#btnStartSound'),st=!Music.started()?'Ligar o som':Music.muted()?'Som desligado':'♪ '+Music.name();if(sb.textContent!==st)sb.textContent=st;$('#sndLbl').textContent=Music.muted()?'Som desligado':'Som ligado';const n='♪ '+Music.name();if(n!==lastMusic){lastMusic=n;$('#musicName').textContent=n;}}
+function updateSoundUI(){const on=Music.started()&&!Music.muted(),b=$('#sndBtn');if(b.classList.contains('off')===on){b.classList.toggle('off',!on);const l=on?'Desligar o som':'Ligar o som';b.setAttribute('aria-label',l);b.title=on?l+' ('+Music.name()+')':l;}}
 function say(o,t,life=1.5){o.say={t,life};}
 
 /* ================= Montar feitiço ================= */
@@ -1617,7 +1629,7 @@ function begin(){
 }
 function toMenu(){
   [ovOver,ovPause,ovWin,ovBook].forEach(o=>o.hidden=true);hud.hidden=true;spellbar.hidden=true;$('#bossbar').hidden=true;wrap.classList.remove('cine');cine=null;
-  clearWorld();genScene('mata');P=newPlayer(1170,790);state='menu';ovStart.hidden=false;
+  clearWorld();genScene('mata');P=newPlayer(1170,790);state='menu';ovStart.hidden=false;fitTitle();
 }
 function pause(){if(state!=='play')return;state='paused';mouse.l=false;if(cast){cast=null;clearQ();}ovPause.hidden=false;}
 function resume(){if(state!=='paused')return;state='play';ovPause.hidden=true;last=performance.now();}
@@ -1631,8 +1643,7 @@ function gameOver(){
 function endless(){ovWin.hidden=true;mode='endless';state='play';P.hp=P.max;boss=null;last=performance.now();nextWave();}
 $('#btnStart').onclick=begin;$('#btnAgain').onclick=begin;$('#btnResume').onclick=resume;
 $('#btnOverMenu').onclick=toMenu;$('#btnWinMenu').onclick=toMenu;$('#btnEndless').onclick=endless;
-$('#btnSound').onclick=()=>{Music.init();Music.toggle();};
-$('#btnStartSound').onclick=()=>{const was=Music.started();Music.init();if(was||Music.muted())Music.toggle();};
+$('#sndBtn').addEventListener('click',ev=>{ev.stopPropagation();const was=Music.started();Music.init();if(was||Music.muted())Music.toggle();});
 
 /* ================= Entrada ================= */
 function setMouse(ev){const r=cv.getBoundingClientRect();mouse.sx=ev.clientX-r.left;mouse.sy=ev.clientY-r.top;}
@@ -1644,7 +1655,7 @@ cv.addEventListener('mousedown',ev=>{
   else if(ev.button===2){if(ev.shiftKey)castArea();else startCast();}
   else if(ev.button===1){ev.preventDefault();castSelf();}
 });
-window.addEventListener('pointerdown',()=>Music.init());
+window.addEventListener('pointerdown',ev=>{if(!ev.target.closest||!ev.target.closest('#sndBtn'))Music.init();});
 window.addEventListener('mouseup',ev=>{if(ev.button===0)mouse.l=false;if(ev.button===2)endCast();});
 cv.addEventListener('contextmenu',ev=>ev.preventDefault());
 window.addEventListener('keydown',ev=>{
@@ -1662,7 +1673,8 @@ window.addEventListener('keydown',ev=>{
 });
 window.addEventListener('blur',()=>{mouse.l=false;if(state==='play')pause();});
 
-function resize(){
+function fitTitle(){const t=$('.title');if(!t||!t.offsetParent)return;t.style.fontSize='78px';const avail=Math.min(wrap.clientWidth-40,760),w=t.scrollWidth;if(w>avail)t.style.fontSize=Math.floor(78*avail/w)+'px';}
+function resize(){fitTitle();
   const r=wrap.getBoundingClientRect();
   W=Math.max(320,r.width);H=Math.max(300,r.height);DPR=Math.min(2,window.devicePixelRatio||1);
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);lcv.width=Math.ceil(W*LS);lcv.height=Math.ceil(H*LS);
@@ -1673,7 +1685,7 @@ buildPatterns();buildSprites();
 W=Math.max(320,wrap.getBoundingClientRect().width);H=Math.max(300,wrap.getBoundingClientRect().height);zoom=clamp(Math.min(W/1150,H/740),.6,1.5);
 genScene('mata');P=newPlayer(1170,790);
 let rt=null;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(resize,120);});
-resize();renderQ();
+resize();renderQ();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);setTimeout(fitTitle,600);
 requestAnimationFrame(loop);
 })();
 </script>
