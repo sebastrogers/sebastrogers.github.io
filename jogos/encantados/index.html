@@ -206,8 +206,9 @@ button{font-family:inherit}
         <button class="btn" id="btnStart">Entrar na mata</button>
         <button class="btn ghost" id="btnLook">Personalizar</button>
         <button class="btn ghost" id="btnBook">Grimório</button>
+        <button class="btn ghost" id="btnStartSound">Ligar o som</button>
       </div>
-      <div class="note">Precisa de teclado e mouse. A música começa no primeiro clique.</div>
+      <div class="note">Precisa de teclado e mouse. O navegador só deixa tocar som depois do primeiro clique na página.</div>
     </div>
   </div>
 
@@ -482,6 +483,7 @@ const Music=(()=>{
     setTheme(n){if(!TH[n])return;if(!ac){cur=n;return;}if(n===cur){pending=null;return;}pending=n;},
     name(){return TH[pending||cur].name;},
     muted(){return muted;},
+    started(){return !!ac&&ac.state==='running';},
     toggle(){muted=!muted;store.set('mute',muted);if(ac)master.gain.setTargetAtTime(muted?0:.8,ac.currentTime,.05);},
     sfx(name,arg){
       if(!ac||muted)return;const t=ac.currentTime;
@@ -762,7 +764,7 @@ function updateHUD(){
   if(boss&&!boss.dead){if(bb.hidden){bb.hidden=false;$('#bossName').innerHTML=`${boss.t.n}<em>${boss.t.title}</em>`;}const k=Math.max(0,boss.hp/boss.max);if(Math.abs(k-lastBoss)>.002){lastBoss=k;$('#bossFill').style.transform=`scaleX(${k})`;}}
   else if(!bb.hidden)bb.hidden=true;
 }
-function updateSoundUI(){$('#sndLbl').textContent=Music.muted()?'Som desligado':'Som ligado';const n='♪ '+Music.name();if(n!==lastMusic){lastMusic=n;$('#musicName').textContent=n;}}
+function updateSoundUI(){const sb=$('#btnStartSound'),st=!Music.started()?'Ligar o som':Music.muted()?'Som desligado':'♪ '+Music.name();if(sb.textContent!==st)sb.textContent=st;$('#sndLbl').textContent=Music.muted()?'Som desligado':'Som ligado';const n='♪ '+Music.name();if(n!==lastMusic){lastMusic=n;$('#musicName').textContent=n;}}
 function say(o,t,life=1.5){o.say={t,life};}
 
 /* ================= Montar feitiço ================= */
@@ -1630,6 +1632,7 @@ function endless(){ovWin.hidden=true;mode='endless';state='play';P.hp=P.max;boss
 $('#btnStart').onclick=begin;$('#btnAgain').onclick=begin;$('#btnResume').onclick=resume;
 $('#btnOverMenu').onclick=toMenu;$('#btnWinMenu').onclick=toMenu;$('#btnEndless').onclick=endless;
 $('#btnSound').onclick=()=>{Music.init();Music.toggle();};
+$('#btnStartSound').onclick=()=>{const was=Music.started();Music.init();if(was||Music.muted())Music.toggle();};
 
 /* ================= Entrada ================= */
 function setMouse(ev){const r=cv.getBoundingClientRect();mouse.sx=ev.clientX-r.left;mouse.sy=ev.clientY-r.top;}
