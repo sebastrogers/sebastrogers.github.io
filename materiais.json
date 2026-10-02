@@ -383,6 +383,14 @@
         },
         {
           "tipo": "Apoio",
+          "titulo": "Modelo de DDR (Word para preencher)",
+          "descricao": "O documento em branco para a equipe construir o DDR: as seis seções com tabelas prontas, orientações de cada aula e o checklist de entrega.",
+          "arquivo": "assets/materiais/requisitos/modelo-ddr.docx",
+          "data": "01/10/2026",
+          "tags": "modelo template ddr documento definicao requisitos word docx preencher entrega av1"
+        },
+        {
+          "tipo": "Apoio",
           "titulo": "Exemplo de DDR v1: Barbearia Navalha",
           "descricao": "Modelo do formato da entrega, com as seis seções preenchidas. É um v1 real, com 8 defeitos deixados de propósito para treinar a revisão.",
           "arquivo": "assets/materiais/requisitos/exemplo-ddr-v1-barbearia.pdf",
