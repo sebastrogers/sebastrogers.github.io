@@ -74,7 +74,7 @@ section{padding:36px 0}
 
 /* topo das páginas */
 .acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.acoes.centro,
+.acoes.centro{justify-content:center}
 /* botões */
 .botao{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 20px;border-radius:999px;border:2px solid var(--purpura);background:var(--purpura);color:var(--papel);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 .botao:hover{background:var(--purpura-2);border-color:var(--purpura-2);color:var(--papel)}
@@ -89,7 +89,8 @@ section{padding:36px 0}
 .mapa .rota-desenho{fill:none;stroke:var(--purpura);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
 .mapa .ponto{fill:var(--papel);stroke:var(--tinta);stroke-width:1.4}
 .mapa .ponto.destino{fill:var(--purpura);stroke:var(--papel);stroke-width:2}
-.mapa text{font-family:"Atkinson Hyperlegible",sans-serif;font-size:10px;fill:var(--tinta)}
+.mapa text{font-family:"Atkinson Hyperlegible",sans-serif;font-size:10px;fill:var(--tinta);paint-order:stroke;stroke:var(--egeu-claro);stroke-width:3px;stroke-linejoin:round}
+.mapa g[transform] text{stroke:none}
 .mapa text.mar{font-family:"Cinzel",serif;font-size:11px;fill:var(--egeu);letter-spacing:.2em;opacity:.8}
 .mapa text.destaque{font-family:"Cinzel",serif;font-size:13px;font-weight:700;fill:var(--purpura)}
 .mapa .mapa-legenda{fill:var(--papel);opacity:.92}
@@ -330,9 +331,14 @@ textarea{width:100%;min-height:120px;font:inherit;padding:12px;border-radius:var
 .licao-tema{font-family:"Literata",Georgia,serif;font-size:clamp(1.25rem,3.4vw,1.75rem);line-height:1.3;color:#fff}
 .heroi-inicio .licao-tema{font-size:clamp(1.05rem,2.6vw,1.3rem);color:rgba(255,255,255,.92)}
 .heroi-texto .acoes{margin-top:22px}
+.heroi-foto .acoes{gap:12px;margin-top:22px}
+.heroi-foto .botao{min-height:50px;padding:12px 24px;letter-spacing:.01em;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .2s ease,background .2s ease}
+.heroi-foto .botao:hover{transform:translateY(-2px)}
+.heroi-foto .botao svg{width:18px;height:18px;transition:transform .2s ease}
+.heroi-foto .botao:hover svg{transform:translateX(3px)}
 .botao.claro{background:#F4EDF2;border-color:#F4EDF2;color:#3A1832}
 .botao.claro:hover{background:#E7C98A;border-color:#E7C98A;color:#1D1B26}
-.botao.vazado-claro{background:transparent;border-color:rgba(244,237,242,.8);color:#F4EDF2}
+.botao.vazado-claro{background:rgba(20,14,22,.28);border-color:rgba(244,237,242,.55);color:#F4EDF2;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .botao.vazado-claro:hover{background:rgba(244,237,242,.15);color:#fff}
 @media (max-width:620px){.heroi-foto{height:clamp(460px,82vh,620px)}.kb-slide figcaption{display:none}}
 
@@ -366,3 +372,4 @@ textarea{width:100%;min-height:120px;font:inherit;padding:12px;border-radius:var
 .capa-foto-livro img{width:100%;aspect-ratio:3/4;object-fit:contain}
 .livro .autor{font-weight:700;color:var(--tinta);margin:0}
 @media (max-width:420px){.livro{grid-template-columns:86px 1fr}.capa-foto-livro{width:86px}}
+.nas-paradas{font-size:.85rem;color:var(--tinta-2);margin:6px 0 2px}.nas-paradas a{font-weight:700}

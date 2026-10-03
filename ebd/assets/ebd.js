@@ -88,7 +88,7 @@
   const ilha = (lon, lat, rx, ry) => { const [x, y] = P(lon, lat); return `<ellipse class="terra" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`; };
   const LUGARES = {
     troade: [26.16, 39.75, 'Trôade', -6, 4, 'end'], samotracia: [25.53, 40.47, 'Samotrácia', 8, 4, 'start'],
-    neapolis: [24.41, 40.93, 'Neápolis', 6, 17, 'start'], filipos: [24.29, 41.01, 'Filipos', 0, -11, 'middle'],
+    neapolis: [24.41, 40.93, 'Neápolis', -2, 16, 'end'], filipos: [24.29, 41.01, 'Filipos', 0, -11, 'middle'],
     anfipolis: [23.85, 40.82, 'Anfípolis', -4, -8, 'middle'], apolonia: [23.46, 40.64, 'Apolônia', 0, 15, 'middle'],
     tessalonica: [22.95, 40.63, 'Tessalônica', 2, -8, 'start'],
   };
