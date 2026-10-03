@@ -480,3 +480,4 @@ body.menu-aberto{overflow:hidden}
 .nota-prod li{margin-bottom:6px}
 .nota-ia{border-top:5px solid var(--egeu)}
 .credito-prod{font-size:.82rem;color:var(--tinta-2)}
+.bio-foto{width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:center 20%;box-shadow:0 0 0 3px var(--papel),0 0 0 5px #E7C98A,var(--sombra)}
