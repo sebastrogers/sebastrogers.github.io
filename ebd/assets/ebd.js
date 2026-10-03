@@ -6,30 +6,12 @@
   const DISCIPLINA = 'EBD Jovens 4º Tri 2026';
   const CHAVE = 'expedicaoFilipos_v1';
 
-  // As 13 paradas da viagem, uma por domingo
-  const PARADAS = [
-    { n: 1,  lugar: 'Porto de Neápolis', tema: 'Carta aos Filipenses: um chamado à alegria', data: '2026-10-04', pagina: 'licao-01.html' },
-    { n: 2,  lugar: 'Portão da colônia', tema: 'Uma vida digna do evangelho', data: '2026-10-11' },
-    { n: 3,  lugar: 'Fórum', tema: 'A humildade de Cristo: o exemplo supremo', data: '2026-10-18' },
-    { n: 4,  lugar: 'Acrópole', tema: 'Brilhe a luz de Cristo em meio à geração corrompida', data: '2026-10-25' },
-    { n: 5,  lugar: 'Via Egnatia', tema: 'Exemplo de servos fiéis: Timóteo e Epafrodito', data: '2026-11-01' },
-    { n: 6,  lugar: 'Muralhas', tema: 'Guardando-se dos falsos mestres', data: '2026-11-08' },
-    { n: 7,  lugar: 'Estádio', tema: 'O alvo supremo: conhecer a Cristo', data: '2026-11-15' },
-    { n: 8,  lugar: 'Rio Gangites', tema: 'Unidade e alegria no Senhor', data: '2026-11-22' },
-    { n: 9,  lugar: 'A prisão', tema: 'A paz de Deus guarda o coração', data: '2026-11-29' },
-    { n: 10, lugar: 'Ágora', tema: 'O pensar cristão: o que ocupa a sua mente?', data: '2026-12-06' },
-    { n: 11, lugar: 'Mercado', tema: 'Contentamento em toda e qualquer situação', data: '2026-12-13' },
-    { n: 12, lugar: 'Casa de Lídia', tema: 'Generosidade e cuidado com a obra de Deus', data: '2026-12-20' },
-    { n: 13, lugar: 'As basílicas', tema: 'Saudações finais, comunhão e bênçãos', data: '2026-12-27' },
-  ];
-
   /* ---------- armazenamento (se o navegador bloquear, o site segue funcionando) ---------- */
   function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } }
   function gravar(est) { try { localStorage.setItem(CHAVE, JSON.stringify(est)); } catch (e) { /* segue sem salvar */ } }
   const estado = ler();
   estado.carimbos = estado.carimbos || {};
   estado.diario = estado.diario || {};
-  estado.reflexao = estado.reflexao || {};
 
   const $ = (s, r) => (r || document).querySelector(s);
   const el = (tag, attrs, ...filhos) => {
@@ -46,7 +28,7 @@
   const embaralhar = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   function dataBR(iso) {
     const [a, m, d] = iso.split('-').map(Number);
-    return d + ' ' + ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'][m - 1] + ' ' + a;
+    return d + ' ' + ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'][m - 1];
   }
 
   /* ---------- tema claro e escuro ---------- */
@@ -79,23 +61,20 @@
   /* ---------- quem está viajando ---------- */
   function atualizarViajante() {
     const alvo = $('#viajante');
-    if (!alvo) return;
-    alvo.textContent = estado.aluno ? 'Viajante: ' + estado.aluno.nome.split(' ')[0] : '';
+    if (alvo) alvo.textContent = estado.aluno ? 'Viajante: ' + estado.aluno.nome.split(' ')[0] : '';
   }
   function formIdentificacao(aoConcluir) {
     const f = el('form', { class: 'identifique' },
       el('h3', null, 'Identifique-se para começar'),
-      el('p', null, 'Seu nome vai junto com o resultado para o professor. É só identificação, não precisa de senha.'),
-      el('div', { class: 'campo' }, el('label', { for: 'idNome' }, 'Seu nome'), el('input', { id: 'idNome', required: true, autocomplete: 'name', maxlength: 80 })),
-      el('div', { class: 'campo' }, el('label', { for: 'idTurma' }, 'Turma ou congregação'), el('input', { id: 'idTurma', required: true, maxlength: 60, placeholder: 'Ex.: Jovens, sede' })),
-      el('div', { class: 'acoes centro' }, el('button', { class: 'botao', type: 'submit' }, 'Começar os desafios')),
-      el('p', { class: 'nota' }, 'Fica guardado neste aparelho para a próxima parada.'));
-    if (estado.aluno) { f.querySelector('#idNome').value = estado.aluno.nome; f.querySelector('#idTurma').value = estado.aluno.turma; }
+      el('p', null, 'Seu nome vai junto com o resultado para o professor.'),
+      el('div', { class: 'campo' }, el('label', { for: 'idNome' }, 'Seu nome'), el('input', { id: 'idNome', required: true, autocomplete: 'name', maxlength: 80, placeholder: 'Nome e sobrenome' })),
+      el('div', { class: 'acoes centro' }, el('button', { class: 'botao', type: 'submit' }, 'Começar os desafios')));
+    if (estado.aluno) f.querySelector('#idNome').value = estado.aluno.nome;
     f.addEventListener('submit', (ev) => {
       ev.preventDefault();
-      const nome = f.querySelector('#idNome').value.trim(), turma = f.querySelector('#idTurma').value.trim();
-      if (!nome || !turma) return;
-      estado.aluno = { nome, turma };
+      const nome = f.querySelector('#idNome').value.trim();
+      if (!nome) return;
+      estado.aluno = { nome };
       gravar(estado);
       atualizarViajante();
       aoConcluir();
@@ -103,15 +82,17 @@
     return f;
   }
 
-  /* ---------- mapa da rota (At 16.8 a 17.1) ---------- */
+  /* ---------- mapa animado da rota (At 16.8 a 17.1) ---------- */
   const P = (lon, lat) => [((lon - 22.6) * 100).toFixed(1), ((41.4 - lat) * 130).toFixed(1)];
   const caminho = (pts, fechar) => 'M' + pts.map(p => P(p[0], p[1]).join(',')).join(' L') + (fechar ? ' Z' : '');
   const ilha = (lon, lat, rx, ry) => { const [x, y] = P(lon, lat); return `<ellipse class="terra" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`; };
   const LUGARES = {
-    troade: [26.16, 39.75, 'Trôade'], samotracia: [25.53, 40.47, 'Samotrácia'], neapolis: [24.41, 40.93, 'Neápolis'],
-    filipos: [24.29, 41.01, 'Filipos'], anfipolis: [23.85, 40.82, 'Anfípolis'], apolonia: [23.46, 40.64, 'Apolônia'],
-    tessalonica: [22.95, 40.63, 'Tessalônica'],
+    troade: [26.16, 39.75, 'Trôade', -6, 4, 'end'], samotracia: [25.53, 40.47, 'Samotrácia', 8, 4, 'start'],
+    neapolis: [24.41, 40.93, 'Neápolis', 6, 17, 'start'], filipos: [24.29, 41.01, 'Filipos', 0, -11, 'middle'],
+    anfipolis: [23.85, 40.82, 'Anfípolis', -4, -8, 'middle'], apolonia: [23.46, 40.64, 'Apolônia', 0, 15, 'middle'],
+    tessalonica: [22.95, 40.63, 'Tessalônica', 2, -8, 'start'],
   };
+  const ORDEM = ['troade', 'samotracia', 'neapolis', 'filipos', 'anfipolis', 'apolonia', 'tessalonica'];
   function mapaSVG() {
     const europa = caminho([[22.6, 41.4], [22.6, 40.56], [22.95, 40.6], [23.02, 40.42], [23.3, 40.22], [23.33, 39.95], [23.48, 40.12],
       [23.62, 40.16], [23.78, 39.98], [23.95, 40.18], [24.38, 40.13], [23.95, 40.38], [23.78, 40.55], [23.86, 40.77], [24.12, 40.74],
@@ -119,52 +100,67 @@
       [26.62, 40.45], [26.6, 41.4]], true);
     const asia = caminho([[26.6, 39.4], [26.05, 39.45], [26.08, 39.75], [26.17, 40.05], [26.42, 40.17], [26.6, 40.3]], true);
     const L = LUGARES;
-    const ponto = (k, dx, dy, ancora) => {
+    const rota = caminho(ORDEM.map(k => L[k]));
+    const pontos = ORDEM.map((k, i) => {
       const [x, y] = P(L[k][0], L[k][1]);
       const destino = k === 'filipos';
-      return `<circle class="ponto${destino ? ' destino' : ''}" cx="${x}" cy="${y}" r="${destino ? 5.5 : 3.6}"/>` +
-        `<text class="${destino ? 'destaque' : ''}" x="${(+x + dx).toFixed(1)}" y="${(+y + dy).toFixed(1)}" text-anchor="${ancora || 'start'}">${L[k][2]}</text>`;
-    };
+      return `<g class="lugar" style="--d:${(0.4 + i * 0.55).toFixed(2)}s"><circle class="ponto${destino ? ' destino' : ''}" cx="${x}" cy="${y}" r="${destino ? 5.5 : 3.6}"/>` +
+        `<text class="${destino ? 'destaque' : ''}" x="${(+x + L[k][3]).toFixed(1)}" y="${(+y + L[k][4]).toFixed(1)}" text-anchor="${L[k][5]}">${L[k][2]}</text></g>`;
+    }).join('');
     return `<svg class="mapa" viewBox="0 0 400 260" role="img" aria-labelledby="mapaT mapaD">
       <title id="mapaT">Rota de Paulo até Filipos</title>
       <desc id="mapaD">Mapa do norte do mar Egeu. De Trôade, na Ásia, o barco passa por Samotrácia e chega a Neápolis. De lá, a Via Egnatia sobe até Filipos e segue para Anfípolis, Apolônia e Tessalônica.</desc>
       <path class="terra" d="${europa}"/><path class="terra" d="${asia}"/>
       ${ilha(24.7, 40.68, 11, 9)}${ilha(25.55, 40.47, 8, 5)}${ilha(25.25, 39.9, 17, 12)}${ilha(25.85, 40.18, 8, 5)}
       <text class="mar" x="215" y="190">MAR EGEU</text><text class="mar" x="330" y="175" font-size="9">ÁSIA</text><text class="mar" x="40" y="22">MACEDÔNIA</text>
-      <path class="rota-mar" d="${caminho([L.troade, L.samotracia, L.neapolis])}"/>
-      <path class="rota-via" d="${caminho([L.neapolis, L.filipos, L.anfipolis, L.apolonia, L.tessalonica])}"/>
-      ${ponto('troade', -6, 4, 'end')}${ponto('samotracia', 8, 4)}${ponto('neapolis', 8, 12)}${ponto('filipos', 0, -10, 'middle')}
-      ${ponto('anfipolis', -4, -8, 'middle')}${ponto('apolonia', 0, 14, 'middle')}${ponto('tessalonica', 2, -8, 'start')}
-      <g transform="translate(14,214)"><rect class="mapa-legenda" width="150" height="36" rx="6" fill="var(--papel)" opacity=".92"/><line x1="8" y1="12" x2="30" y2="12" class="rota-mar"/><text x="36" y="15">por mar (At 16.11)</text><line x1="8" y1="27" x2="30" y2="27" class="rota-via"/><text x="36" y="30">Via Egnatia</text></g>
-    </svg>`;
+      <path class="rota-base" d="${rota}"/>
+      <path id="rotaPaulo" class="rota-desenho" pathLength="1" d="${rota}"/>
+      ${pontos}
+      <circle class="viajante-ponto" r="4.5"><animateMotion id="movRota" dur="7s" begin="indefinite" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#rotaPaulo"/></animateMotion></circle>
+      <g transform="translate(14,222)"><rect class="mapa-legenda" width="176" height="24" rx="6"/><line x1="8" y1="12" x2="30" y2="12" class="rota-via-leg"/><text x="36" y="15.5">Rota de Paulo (At 16.8 a 17.1)</text></g>
+    </svg>
+    <div class="acoes centro"><button class="botao vazado" type="button" id="refazerRota">Ver a viagem de novo</button></div>`;
+  }
+  function animarMapa(alvo) {
+    alvo.innerHTML = mapaSVG();
+    const svg = alvo.querySelector('svg');
+    const mov = alvo.querySelector('#movRota');
+    const tocar = () => {
+      svg.classList.remove('ativo'); void svg.getBoundingClientRect(); svg.classList.add('ativo');
+      try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) mov.beginElement(); } catch (e) { /* sem SMIL */ }
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((ents) => { if (ents.some(e => e.isIntersecting)) { tocar(); io.disconnect(); } }, { threshold: 0.4 });
+      io.observe(svg);
+    } else tocar();
+    alvo.querySelector('#refazerRota').addEventListener('click', tocar);
   }
 
-  /* ---------- passaporte ---------- */
+  /* ---------- passaporte: todas as paradas abertas ---------- */
   function seloSVG(n, cls) {
     return `<svg class="${cls || 'selo'}" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="26"/><circle cx="30" cy="30" r="20" stroke-dasharray="2 3"/><text x="30" y="27" text-anchor="middle" font-size="8">FILIPOS</text><text x="30" y="40" text-anchor="middle" font-size="13">${n}</text></svg>`;
   }
   function renderPassaporte(alvo) {
-    if (!alvo) return;
+    const paradas = window.EXPEDICAO_PARADAS;
+    if (!alvo || !paradas) return;
     const lista = el('ol', { class: 'carimbos' });
     let feitos = 0;
-    for (const p of PARADAS) {
+    for (const p of paradas) {
       const c = estado.carimbos[p.n];
       if (c) feitos++;
-      const conteudo = [
-        el('span', { class: 'icone', html: window.Cenas ? Cenas.icone(p.n) : '' }),
-        el('span', { class: 'num' }, 'Parada ' + p.n),
-        el('span', { class: 'lugar' }, p.lugar),
-        el('span', { class: 'tema' }, p.tema),
-        el('span', { class: 'data' }, p.pagina ? (c ? `Carimbado: ${c.acertos} de ${c.total}` : dataBR(p.data)) : 'Abre em ' + dataBR(p.data)),
-      ];
-      const item = p.pagina ? el('a', { class: 'carimbo aberto', href: p.pagina }, ...conteudo) : el('div', { class: 'carimbo fechado' }, ...conteudo);
-      if (c) { item.classList.add('carimbado'); item.insertAdjacentHTML('beforeend', seloSVG(p.n)); }
-      lista.append(el('li', null, item));
+      const a = el('a', { class: 'carimbo' + (c ? ' carimbado' : ''), href: p.pagina },
+        el('span', { class: 'capa-foto' }, el('img', { src: p.capa, alt: '', loading: 'lazy', decoding: 'async' }), el('span', { class: 'num' }, 'Parada ' + p.n)),
+        el('span', { class: 'texto-carimbo' },
+          el('span', { class: 'lugar' }, p.lugar),
+          el('span', { class: 'tema' }, p.tema),
+          el('span', { class: 'data' }, c ? `Carimbado: ${c.acertos} de ${c.total}` : 'Lição de ' + dataBR(p.data))));
+      if (c) a.insertAdjacentHTML('beforeend', seloSVG(p.n));
+      lista.append(el('li', null, a));
     }
     alvo.innerHTML = '';
     alvo.append(lista);
     const cont = $('#contagemCarimbos');
-    if (cont) cont.textContent = `${feitos} de ${PARADAS.length} carimbos`;
+    if (cont) cont.textContent = `${feitos} de ${paradas.length} carimbos`;
   }
 
   /* ---------- envio para a planilha ---------- */
@@ -180,6 +176,7 @@
   function iniciarExpedicao(cfg) {
     const raiz = $('#expedicao');
     if (!raiz) return;
+    window.__expedicaoCfg = cfg;
     const D = cfg.desafios;
     const pontosDe = (d) => d.tipo === 'mcq' || d.tipo === 'vf' ? d.perguntas.length : d.tipo === 'categorizar' ? d.itens.length : d.tipo === 'pareamento' ? d.pares.length : 1;
     const total = D.reduce((s, d) => s + pontosDe(d), 0);
@@ -187,23 +184,16 @@
 
     const retorno = (ok, ...linhas) => el('div', { class: 'retorno ' + (ok ? 'certo' : 'errado'), role: 'status' }, ...linhas.filter(Boolean).map(l => el('p', null, ...[].concat(l))));
     const negrito = (t) => el('strong', null, t);
-
-    function barra() { return el('div', { class: 'progresso', 'aria-hidden': 'true' }, D.map((_, k) => el('span', { class: k < i ? 'feito' : k === i ? 'atual' : '' }))); }
-    function cabecalho(d) {
-      return [barra(), el('p', { class: 'nota' }, `Desafio ${i + 1} de ${D.length}`), el('h3', null, d.titulo),
-        el('p', { class: 'contexto' }, d.contexto), d.micro ? el('div', { class: 'micro' }, d.micro) : null, el('p', { class: 'instrucao' }, d.instrucao)];
-    }
+    const barra = () => el('div', { class: 'progresso', 'aria-hidden': 'true' }, D.map((_, k) => el('span', { class: k < i ? 'feito' : k === i ? 'atual' : '' })));
+    const cabecalho = (d) => [barra(), el('p', { class: 'nota' }, `Desafio ${i + 1} de ${D.length}`), el('h3', null, d.titulo),
+      el('p', { class: 'contexto' }, d.contexto), d.micro ? el('div', { class: 'micro' }, d.micro) : null, el('p', { class: 'instrucao' }, d.instrucao)];
     function botaoSeguir(caixa) {
       const ultimo = i === D.length - 1;
       caixa.append(el('div', { class: 'acoes' }, el('button', { class: 'botao', type: 'button', onclick: () => { i++; desenhar(); raiz.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }, ultimo ? 'Ver meu resultado' : 'Próximo desafio')));
     }
-
     function desenhar() {
       raiz.innerHTML = '';
-      if (!comecou) {
-        raiz.append(formIdentificacao(() => { comecou = true; desenhar(); }));
-        return;
-      }
+      if (!comecou) { raiz.append(formIdentificacao(() => { comecou = true; desenhar(); })); return; }
       if (i >= D.length) return final();
       const d = D[i];
       const caixa = el('div', { class: 'desafio' }, ...cabecalho(d));
@@ -235,13 +225,8 @@
             } else {
               b.classList.add('errado'); b.append(el('span', { class: 'marca-res' }, '✗'));
               grade.querySelectorAll('button').forEach((x, k) => { if (opcoes[k].c) x.classList.add('certo'); });
-              if (d.tipo === 'vf') {
-                area.append(retorno(false, [negrito(`Você respondeu "${o.t}", mas a frase é ${p.correta ? 'verdadeira' : 'falsa'}. `)], p.explicacao));
-              } else {
-                area.append(retorno(false,
-                  [negrito(`Você marcou "${o.t}". `), o.porque || 'Essa não é a resposta desta pergunta.'],
-                  [negrito(`A certa é "${certa.t}". `), p.explicacao]));
-              }
+              if (d.tipo === 'vf') area.append(retorno(false, [negrito(`Você respondeu "${o.t}", mas a frase é ${p.correta ? 'verdadeira' : 'falsa'}. `)], p.explicacao));
+              else area.append(retorno(false, [negrito(`Você marcou "${o.t}". `), o.porque || 'Essa não é a resposta desta pergunta.'], [negrito(`A certa é "${certa.t}". `), p.explicacao]));
             }
             if (q < d.perguntas.length - 1) area.append(el('div', { class: 'acoes' }, el('button', { class: 'botao vazado', type: 'button', onclick: () => { q++; pergunta(); } }, 'Próxima pergunta')));
             else botaoSeguir(area);
@@ -278,8 +263,7 @@
         if (ok) acertos++;
         destino[it.categoria].append(el('div', { class: 'ficha ' + (ok ? 'certo' : 'errado') }, (ok ? '✓ ' : '✗ ') + it.texto));
         ret.innerHTML = '';
-        ret.append(ok
-          ? retorno(true, [negrito('Certo. '), it.explicacao])
+        ret.append(ok ? retorno(true, [negrito('Certo. '), it.explicacao])
           : retorno(false, [negrito(`Você colocou "${it.texto}" em "${c}", mas ele vai em "${it.categoria}". `)], [negrito('Por quê? '), it.explicacao]));
         k++; mostrar();
       }
@@ -304,20 +288,13 @@
         const b = el('button', { class: 'opcao', type: 'button' }, p.b); btB[p.k] = b;
         b.onclick = () => {
           if (b.disabled) return;
-          if (sel == null) { ret.innerHTML = ''; ret.append(el('div', { class: 'retorno' }, 'Primeiro toque num nome da coluna da esquerda.')); return; }
+          if (sel == null) { ret.innerHTML = ''; ret.append(el('div', { class: 'retorno' }, 'Primeiro toque num item da coluna da esquerda.')); return; }
           const ok = sel === p.k;
           const parCerto = d.pares[sel];
           btA[sel].classList.remove('escolhida');
           ret.innerHTML = '';
-          if (ok) {
-            acertos++;
-            ret.append(retorno(true, [negrito('Par certo. '), parCerto.explicacao || '']));
-          } else {
-            ret.append(retorno(false,
-              [negrito(`Você ligou ${parCerto.a} a "${p.b}". `), `Isso descreve ${p.a}, não ${parCerto.a}.`],
-              [negrito(`${parCerto.a}: `), parCerto.b + '. ', parCerto.explicacao || '']));
-          }
-          // o par certo fica marcado, para o aluno aprender com o erro
+          if (ok) { acertos++; ret.append(retorno(true, [negrito('Par certo. '), parCerto.explicacao || ''])); }
+          else ret.append(retorno(false, [negrito(`Você ligou "${parCerto.a}" a "${p.b}". `), `Isso combina com "${p.a}", não com "${parCerto.a}".`], [negrito(`${parCerto.a}: `), parCerto.b + '. ', parCerto.explicacao || '']));
           btA[sel].disabled = true; btB[sel].disabled = true;
           btA[sel].classList.add(ok ? 'certo' : 'errado'); btB[sel].classList.add(ok ? 'certo' : 'errado');
           sel = null; feitos++;
@@ -346,19 +323,18 @@
         embaralhados.filter(t => !ordem.includes(t)).forEach(t => banco.append(el('button', { class: 'opcao', type: 'button', onclick: () => { ordem.push(t); montar(ordem.length === d.itens.length); } }, t)));
         if (ordem.length === d.itens.length) {
           tentativas++;
-          const ok = ordem.every((t, k) => t === d.itens[k]);
-          if (ok) {
+          if (ordem.every((t, k) => t === d.itens[k])) {
             if (tentativas === 1) acertos++;
-            ret.append(retorno(true, [negrito(tentativas === 1 ? 'Rota certa de primeira. ' : 'Agora sim. '), d.feedbackOk]));
+            ret.append(retorno(true, [negrito(tentativas === 1 ? 'Ordem certa de primeira. ' : 'Agora sim. '), d.feedbackOk]));
             botaoSeguir(caixa);
           } else {
             const k = ordem.findIndex((t, j) => t !== d.itens[j]);
             const certos = ordem.filter((t, j) => t === d.itens[j]).length;
+            if (tentativas === 1) ret.append(el('p', { class: 'nota' }, 'O ponto deste desafio vale só se acertar de primeira, mas refaça para fixar a ordem.'));
             ret.append(retorno(false,
               [negrito(`${certos} de ${d.itens.length} no lugar certo. `), `O primeiro erro está no passo ${k + 1}: você colocou "${ordem[k]}", mas ali vem "${d.itens[k]}".`],
               [negrito('Dica: '), d.dicas[k]]),
-              el('div', { class: 'acoes' }, el('button', { class: 'botao vazado', type: 'button', onclick: () => { ordem.length = 0; montar(); } }, 'Refazer a rota')));
-            if (tentativas === 1) ret.prepend(el('p', { class: 'nota' }, 'O ponto deste desafio vale só se acertar de primeira, mas refaça para fixar o caminho.'));
+              el('div', { class: 'acoes' }, el('button', { class: 'botao vazado', type: 'button', onclick: () => { ordem.length = 0; montar(); } }, 'Refazer a ordem')));
           }
         } else if (ordem.length) {
           ret.append(el('div', { class: 'acoes' }, el('button', { class: 'botao vazado', type: 'button', onclick: () => { ordem.pop(); montar(); } }, 'Desfazer o último')));
@@ -376,7 +352,7 @@
       }
       const status = el('p', { class: 'status-envio', role: 'status' });
       const dados = {
-        nome: estado.aluno.nome, matricula: estado.aluno.turma, disciplina: DISCIPLINA,
+        nome: estado.aluno.nome, matricula: 'EBD Jovens', disciplina: DISCIPLINA,
         aula: 'Lição ' + cfg.parada, atividade: 'Expedição Filipos: ' + cfg.lugar,
         acertos, total, pontuacao: pct, timestamp: new Date().toISOString(),
       };
@@ -387,15 +363,10 @@
         el('p', { class: 'grande' }, pct + '%'),
         el('p', null, `${estado.aluno.nome}, você acertou ${acertos} de ${total}.`),
         status,
-        el('div', { class: 'acoes', style: 'justify-content:center' },
+        el('div', { class: 'acoes centro' },
           el('button', { class: 'botao vazado', type: 'button', onclick: () => enviarResultado(dados, status) }, 'Enviar de novo'),
-          el('button', { class: 'botao vazado', type: 'button', onclick: () => { i = 0; acertos = 0; desenhar(); } }, 'Refazer a expedição'),
+          el('button', { class: 'botao vazado', type: 'button', onclick: () => { i = 0; acertos = 0; desenhar(); } }, 'Refazer os desafios'),
           el('a', { class: 'botao', href: 'index.html#passaporte-secao' }, 'Ver meu passaporte'))));
-      const s = raiz.querySelector('.selo-final');
-      s.setAttribute('width', '110'); s.setAttribute('height', '110');
-      s.style.cssText = 'margin:0 auto;display:block;transform:rotate(-10deg)';
-      s.querySelectorAll('circle').forEach(c => { c.setAttribute('fill', 'none'); c.setAttribute('stroke', 'var(--bronze)'); c.setAttribute('stroke-width', '2.5'); });
-      s.querySelectorAll('text').forEach(t => { t.setAttribute('fill', 'var(--bronze)'); t.setAttribute('font-family', 'Cinzel, serif'); t.setAttribute('font-weight', '700'); });
       enviarResultado(dados, status);
     }
 
@@ -404,37 +375,31 @@
 
   /* ---------- diário de bordo: marcar lido e ler o texto aqui mesmo ---------- */
   function iniciarDiario(parada) {
-    const lista = $('#diario');
-    if (lista) {
-      const marcados = estado.diario[parada] || [];
-      lista.querySelectorAll('.dia-item').forEach((item, k) => {
-        const cb = item.querySelector('input[type=checkbox]');
-        cb.checked = !!marcados[k];
-        cb.addEventListener('change', () => {
-          const arr = estado.diario[parada] || [];
-          arr[k] = cb.checked; estado.diario[parada] = arr; gravar(estado);
-        });
-        const bt = item.querySelector('.ler'), txt = item.querySelector('.dia-texto');
-        bt.addEventListener('click', () => {
-          const abrir = txt.hidden;
-          txt.hidden = !abrir;
-          bt.setAttribute('aria-expanded', String(abrir));
-          bt.textContent = abrir ? 'Fechar' : 'Ler aqui';
-        });
+    const lista = $('#lista-diario');
+    if (!lista) return;
+    const marcados = estado.diario[parada] || [];
+    lista.querySelectorAll('.dia-item').forEach((item, k) => {
+      const cb = item.querySelector('input[type=checkbox]');
+      cb.checked = !!marcados[k];
+      cb.addEventListener('change', () => {
+        const arr = estado.diario[parada] || [];
+        arr[k] = cb.checked; estado.diario[parada] = arr; gravar(estado);
       });
-    }
-    const ta = $('#reflexao');
-    if (ta) {
-      ta.value = estado.reflexao[parada] || '';
-      ta.addEventListener('input', () => { estado.reflexao[parada] = ta.value; gravar(estado); });
-    }
+      const bt = item.querySelector('.ler'), txt = item.querySelector('.dia-texto');
+      bt.addEventListener('click', () => {
+        const abrir = txt.hidden;
+        txt.hidden = !abrir;
+        bt.setAttribute('aria-expanded', String(abrir));
+        bt.textContent = abrir ? 'Fechar' : 'Ler aqui';
+      });
+    });
   }
 
   /* ---------- cartões que viram ---------- */
   function iniciarCartoes() {
     document.querySelectorAll('.cartao').forEach(c => {
       const virar = () => { c.classList.toggle('virado'); c.setAttribute('aria-pressed', c.classList.contains('virado')); };
-      c.addEventListener('click', (ev) => { if (!ev.target.closest('a')) virar(); }); // link no verso abre normalmente
+      c.addEventListener('click', (ev) => { if (!ev.target.closest('a')) virar(); });
       c.addEventListener('keydown', (ev) => { if ((ev.key === 'Enter' || ev.key === ' ') && !ev.target.closest('a')) { ev.preventDefault(); virar(); } });
     });
   }
@@ -454,12 +419,11 @@
   function iniciar() {
     montarTema();
     atualizarViajante();
-    document.querySelectorAll('[data-cena]').forEach(c => { if (window.Cenas) c.innerHTML = Cenas.cena(c.dataset.cena); });
-    const m = $('#mapa'); if (m) m.innerHTML = mapaSVG();
+    const m = $('#mapa'); if (m) animarMapa(m);
     renderPassaporte($('#passaporte'));
     iniciarVideos();
     iniciarCartoes();
   }
 
-  window.Expedicao = { iniciar, iniciarExpedicao, iniciarDiario, PARADAS };
+  window.Expedicao = { iniciar, iniciarExpedicao, iniciarDiario };
 })();

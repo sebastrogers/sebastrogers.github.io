@@ -72,13 +72,10 @@ section{padding:36px 0}
 .botao-tema svg{width:18px;height:18px}
 @media (max-width:520px){.botao-tema span{display:none}.botao-tema{padding:6px 10px}.marca small{max-width:16ch}}
 
-/* cena animada */
-.cena{border-radius:18px;overflow:hidden;box-shadow:var(--sombra);background:#F6D7A7}
-.cena svg{display:block;width:100%;height:auto}
+/* topo das páginas */
 .heroi{text-align:center;padding:12px 0 8px}
 .heroi h1{color:var(--purpura);margin:6px 0 10px}
 .heroi .linha-sub{font-size:1.15rem;color:var(--tinta-2);max-width:52ch;margin:0 auto 18px}
-.heroi .cena{margin-top:22px}
 .acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .acoes.centro,.heroi .acoes{justify-content:center}
 
@@ -89,35 +86,45 @@ section{padding:36px 0}
 .botao.vazado:hover{background:var(--purpura);color:var(--papel)}
 .botao[disabled]{opacity:.5;cursor:not-allowed}
 
-/* mapa */
+/* mapa que se desenha */
 .mapa{width:100%;height:auto;border-radius:var(--raio);background:var(--egeu-claro);box-shadow:var(--sombra)}
 .mapa .terra{fill:var(--terra);stroke:var(--linha);stroke-width:.8}
-.mapa .rota-mar{fill:none;stroke:var(--egeu);stroke-width:2;stroke-dasharray:5 5}
-.mapa .rota-via{fill:none;stroke:var(--purpura);stroke-width:2.6;stroke-linecap:round}
+.mapa .rota-base{fill:none;stroke:var(--tinta-2);stroke-width:1.2;stroke-dasharray:2 4;opacity:.45}
+.mapa .rota-desenho{fill:none;stroke:var(--purpura);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
 .mapa .ponto{fill:var(--papel);stroke:var(--tinta);stroke-width:1.4}
 .mapa .ponto.destino{fill:var(--purpura);stroke:var(--papel);stroke-width:2}
 .mapa text{font-family:"Atkinson Hyperlegible",sans-serif;font-size:10px;fill:var(--tinta)}
 .mapa text.mar{font-family:"Cinzel",serif;font-size:11px;fill:var(--egeu);letter-spacing:.2em;opacity:.8}
 .mapa text.destaque{font-family:"Cinzel",serif;font-size:13px;font-weight:700;fill:var(--purpura)}
-.mapa-legenda{background:var(--papel)}
+.mapa .mapa-legenda{fill:var(--papel);opacity:.92}
+.mapa .rota-mar-leg{stroke:var(--purpura);stroke-width:2.6;stroke-dasharray:4 3}
+.mapa .rota-via-leg{stroke:var(--purpura);stroke-width:2.6}
+.mapa .viajante-ponto{fill:var(--bronze);stroke:var(--papel);stroke-width:1.5;opacity:0}
+@media (prefers-reduced-motion:no-preference){
+  .mapa.ativo .rota-desenho{animation:tracar 7s linear both}
+  .mapa .lugar{opacity:0}
+  .mapa.ativo .lugar{animation:aparecer .6s ease-out var(--d) both}
+  .mapa.ativo .viajante-ponto{opacity:1}
+  @keyframes tracar{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @keyframes aparecer{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+}
 
 /* passaporte */
 .passaporte{background:var(--pass);color:var(--pass-txt);border-radius:18px;padding:22px 18px 26px;box-shadow:var(--sombra)}
 .passaporte-cab{text-align:center;border-bottom:1px solid rgba(244,237,242,.25);padding-bottom:14px;margin-bottom:18px}
 .passaporte-cab h2{color:var(--pass-txt);margin:0 0 4px}
 .passaporte-cab .contagem{font-size:.95rem;opacity:.85}
-.carimbos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.carimbo{position:relative;background:rgba(255,255,255,.06);border:1px dashed rgba(244,237,242,.35);border-radius:14px;padding:10px 12px 12px;min-height:100%;display:flex;flex-direction:column;gap:3px;color:var(--pass-txt);text-decoration:none}
-a.carimbo:hover{background:rgba(255,255,255,.12);color:#fff}
-.carimbo .icone{border-radius:10px;overflow:hidden;margin-bottom:6px;background:#F6D7A7}
-.carimbo .icone svg{display:block;width:100%;height:auto}
-.carimbo .num{font-family:"Cinzel",serif;font-size:.82rem;opacity:.75}
-.carimbo .lugar{font-family:"Cinzel",serif;font-weight:700;font-size:1rem;line-height:1.2}
+.carimbos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.carimbos li{display:flex}
+.carimbo{position:relative;flex:1;display:flex;flex-direction:column;background:rgba(255,255,255,.06);border:1px solid rgba(231,201,138,.45);border-radius:14px;overflow:hidden;color:var(--pass-txt);text-decoration:none;transition:transform .2s ease,background .2s ease}
+a.carimbo:hover{background:rgba(255,255,255,.12);color:#fff;transform:translateY(-2px)}
+.carimbo .capa-foto{position:relative;display:block;aspect-ratio:4/3;background:rgba(0,0,0,.25)}
+.carimbo .capa-foto img{width:100%;height:100%;object-fit:cover;filter:sepia(.25) saturate(.9)}
+.carimbo .num{position:absolute;left:8px;top:8px;font-family:"Cinzel",serif;font-weight:700;font-size:.78rem;background:rgba(20,14,24,.72);color:#F4EDF2;padding:3px 9px;border-radius:999px}
+.carimbo .texto-carimbo{display:flex;flex-direction:column;gap:3px;padding:10px 12px 12px;flex:1}
+.carimbo .lugar{font-family:"Cinzel",serif;font-weight:700;font-size:1.02rem;line-height:1.2}
 .carimbo .tema{font-size:.84rem;opacity:.85;line-height:1.35}
-.carimbo .data{margin-top:auto;padding-top:4px;font-size:.8rem;opacity:.75}
-.carimbo.fechado .icone{filter:grayscale(.85) brightness(.9);opacity:.75}
-.carimbo.fechado .lugar,.carimbo.fechado .tema{opacity:.7}
-.carimbo.aberto{border-style:solid;border-color:var(--ouro)}
+.carimbo .data{margin-top:auto;padding-top:6px;font-size:.8rem;opacity:.75}
 .carimbo.carimbado .data{padding-right:52px;min-height:40px}
 .carimbo .selo{position:absolute;right:6px;bottom:6px;width:50px;height:50px;transform:rotate(-14deg)}
 .carimbo .selo circle{fill:none;stroke:var(--ouro);stroke-width:2.5}
@@ -222,7 +229,7 @@ a.carimbo:hover{background:rgba(255,255,255,.12);color:#fff}
 .retorno p:last-child{margin:0}
 .retorno.certo{border-left:5px solid var(--oliva)}
 .retorno.errado{border-left:5px solid var(--erro)}
-.categorias{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.categorias{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .categoria{border:2px dashed var(--linha);border-radius:var(--raio);padding:10px;min-height:120px}
 .categoria h4{margin:0 0 8px;font-family:"Cinzel",serif;font-size:.95rem}
 .categoria .ficha{font-size:.9rem;padding:6px 8px;border-radius:6px;background:var(--pedra);margin-bottom:6px}
@@ -287,52 +294,53 @@ textarea{width:100%;min-height:120px;font:inherit;padding:12px;border-radius:var
 .creditos li{margin-bottom:4px}
 .oculto{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* animações das cenas (respeitam quem prefere menos movimento) */
+
+/* pular para o conteúdo */
+.pular{position:absolute;left:-999px;top:8px;background:var(--purpura);color:var(--papel);padding:8px 14px;border-radius:8px;z-index:99}
+.pular:focus{left:8px}
+
+/* fotos em movimento, estilo documentário */
+.kb{position:relative;aspect-ratio:16/8;border-radius:18px;overflow:hidden;box-shadow:var(--sombra);background:#1b1620;margin-top:20px}
+@media (max-width:620px){.kb{aspect-ratio:4/3}}
+.kb-slide{position:absolute;inset:0;margin:0;opacity:0}
+.kb-slide:first-child{opacity:1}
+.kb-slide img{width:100%;height:100%;object-fit:cover;transform-origin:center}
+.kb-slide figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 18px 14px;background:linear-gradient(to top,rgba(15,10,18,.85),transparent);color:#F4EDF2;font-size:.92rem;text-align:left}
 @media (prefers-reduced-motion:no-preference){
-  .a-boia{animation:boia 3.2s ease-in-out infinite}
-  .a-onda{animation:onda 6s linear infinite}
-  .a-onda.lenta{animation-duration:10s}
-  .a-nuvem{animation:nuvem 40s linear infinite}
-  .a-ave{animation:ave 14s linear infinite}
-  .a-asa{animation:asa .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
-  .a-chegada{animation:chegada 5s cubic-bezier(.25,.8,.3,1) both}
-  .a-travessia{animation:travessia 22s ease-out infinite}
-  .a-sol{animation:sol 4s ease-out both}
-  .a-traco{stroke-dasharray:900;stroke-dashoffset:900;animation:traco 3.5s ease-in-out 3.6s forwards}
-  .a-surgir{animation:surgir 1.2s ease-out 5s both}
-  .a-balanca{animation:balanca 3s ease-in-out infinite;transform-box:fill-box;transform-origin:top center}
-  .a-bandeira{animation:bandeira 1.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:left center}
-  .a-brilho{animation:brilho 2.4s ease-in-out infinite}
-  .a-pisca{animation:pisca 2s ease-in-out infinite}
-  .a-pisca.d2{animation-delay:.7s}.a-pisca.d3{animation-delay:1.3s}
-  .a-sobe{animation:sobe 3s ease-out infinite}
-  .a-sobe.d2{animation-delay:1s}.a-sobe.d3{animation-delay:2s}
-  .a-corre{animation:corre 4s linear infinite}
-  .a-anda{animation:anda 6s linear infinite}
-  .a-gira{animation:gira 18s linear infinite;transform-box:fill-box;transform-origin:center}
-  .a-chama{animation:chama .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:bottom center}
-  .a-pende{animation:pende 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}
-  .a-fala{animation:fala 3s ease-in-out infinite}
-  .a-fala.d2{animation-delay:1.5s}
+  .kb-slide{animation:kbTroca 21s linear infinite;animation-delay:calc(var(--i) * 7s - 0.01s)}
+  .kb-slide:first-child{opacity:0}
+  .kb-slide img{animation:kbZoom 21s linear infinite;animation-delay:calc(var(--i) * 7s - 0.01s)}
+  @keyframes kbTroca{0%{opacity:0}4%{opacity:1}33%{opacity:1}38%{opacity:0}100%{opacity:0}}
+  @keyframes kbZoom{0%{transform:scale(1.02) translate(0,0)}38%{transform:scale(1.14) translate(-2%,-1.5%)}100%{transform:scale(1.14) translate(-2%,-1.5%)}}
 }
-@keyframes boia{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(3px) rotate(1deg)}}
-@keyframes onda{from{transform:translateX(0)}to{transform:translateX(-80px)}}
-@keyframes nuvem{from{transform:translateX(0)}to{transform:translateX(-900px)}}
-@keyframes ave{from{transform:translate(0,0)}to{transform:translate(-1000px,-40px)}}
-@keyframes asa{from{transform:scaleY(1)}to{transform:scaleY(.4)}}
-@keyframes chegada{from{transform:translateX(460px)}to{transform:translateX(0)}}
-@keyframes travessia{0%{transform:translateX(0);opacity:1}80%{transform:translateX(-470px);opacity:1}92%{transform:translateX(-480px);opacity:0}100%{transform:translateX(0);opacity:0}}
-@keyframes sol{from{transform:translateY(50px);opacity:.3}to{transform:translateY(0);opacity:1}}
-@keyframes traco{to{stroke-dashoffset:0}}
-@keyframes surgir{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@keyframes balanca{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-@keyframes bandeira{from{transform:skewY(-4deg) scaleX(1)}to{transform:skewY(5deg) scaleX(.85)}}
-@keyframes brilho{0%,100%{opacity:.35}50%{opacity:.9}}
-@keyframes pisca{0%,100%{opacity:.2}50%{opacity:1}}
-@keyframes sobe{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-26px);opacity:0}}
-@keyframes corre{from{transform:translateX(0)}to{transform:translateX(150px)}}
-@keyframes anda{from{transform:translateX(-10px)}to{transform:translateX(110px)}}
-@keyframes gira{to{transform:rotate(360deg)}}
-@keyframes chama{from{transform:scale(1,1)}to{transform:scale(.85,1.15)}}
-@keyframes pende{from{transform:skewX(-6deg)}to{transform:skewX(6deg)}}
-@keyframes fala{0%,100%{opacity:0;transform:translateY(4px)}20%,70%{opacity:1;transform:none}}
+
+/* atalhos da parada */
+.atalhos{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0 4px}
+.atalhos a{font-size:.88rem;font-weight:700;text-decoration:none;color:var(--tinta);background:var(--papel);border:1px solid var(--linha);padding:6px 12px;border-radius:999px}
+.atalhos a:hover{border-color:var(--bronze);color:var(--purpura)}
+
+/* resumo em fluxo */
+.fluxo{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative}
+.fluxo .no{position:relative;background:var(--papel);border-radius:var(--raio);padding:16px 16px 14px;box-shadow:var(--sombra);border-top:4px solid var(--egeu);display:flex;flex-direction:column;gap:6px}
+.fluxo .no:not(:last-child)::after{content:"";position:absolute;right:-22px;top:50%;width:16px;height:16px;border-top:3px solid var(--bronze);border-right:3px solid var(--bronze);transform:translateY(-50%) rotate(45deg)}
+.fluxo .no-n{font-family:"Cinzel",serif;font-weight:700;color:var(--egeu);font-size:1.5rem;line-height:1}
+.fluxo h3{font-size:1.02rem}
+.fluxo p{margin:0;font-size:.97rem}
+.fluxo .no-ref{margin-top:auto;font-size:.82rem;font-weight:700;color:var(--bronze)}
+@media (max-width:820px){
+  .fluxo{grid-template-columns:1fr;gap:22px}
+  .fluxo .no:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-19px;transform:translateX(-50%) rotate(135deg)}
+}
+.aviso{max-width:60ch;margin:16px auto 0;font-size:.92rem;color:var(--tinta-2);background:var(--pedra-2);padding:12px 16px;border-radius:var(--raio);text-align:center}
+.versos-sub{font-family:"Cinzel",serif;font-weight:700;margin:14px 0 6px}
+
+/* paradas vizinhas */
+.vizinhas{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+.viz{flex:1;max-width:48%;text-decoration:none;background:var(--papel);border:1px solid var(--linha);border-radius:var(--raio);padding:12px 16px;color:var(--tinta)}
+.viz span{display:block;font-size:.82rem;color:var(--tinta-2)}
+.viz b{font-family:"Cinzel",serif}
+.viz.prox{text-align:right;margin-left:auto}
+.viz:hover{border-color:var(--bronze)}
+.placar .selo-final{width:110px;height:110px;margin:0 auto;display:block;transform:rotate(-10deg)}
+.placar .selo-final circle{fill:none;stroke:var(--bronze);stroke-width:2.5}
+.placar .selo-final text{fill:var(--bronze);font-family:"Cinzel",serif;font-weight:700}
