@@ -463,6 +463,8 @@
   function iniciar() {
     montarTema();
     montarMenu();
+    const fl = $('.voltar-flutuante');
+    if (fl) { const ver = () => fl.classList.toggle('visivel', window.scrollY > 600); window.addEventListener('scroll', ver, { passive: true }); ver(); }
     atualizarViajante();
     const m = $('#mapa'); if (m) animarMapa(m);
     renderPassaporte($('#passaporte'));

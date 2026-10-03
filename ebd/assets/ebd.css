@@ -436,3 +436,16 @@ body.menu-aberto{overflow:hidden}
 .tabela-licoes small{display:block;color:var(--tinta-2);font-size:.82rem}
 .tabela-licoes tr:last-child td{border-bottom:0}
 .cartao .cred-img{display:block;margin-top:8px;font-size:.72rem;line-height:1.3;opacity:.75}
+
+/* voltar à expedição */
+.trilha{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:4px 0 12px;font-size:.9rem;color:var(--tinta-2)}
+.trilha-voltar{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 14px 6px 10px;border-radius:999px;background:var(--papel);border:1px solid var(--linha);color:var(--tinta);font-weight:700;text-decoration:none;box-shadow:var(--sombra)}
+.trilha-voltar:hover{border-color:var(--purpura);color:var(--purpura)}
+.trilha-voltar svg,.voltar-flutuante svg{width:18px;height:18px;flex:none}
+.trilha-onde{font-weight:700}
+.trilha-extra{font-weight:700}
+.voltar-flutuante{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 16px 8px 12px;border-radius:999px;background:var(--purpura);color:var(--papel);font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .25s,transform .25s}
+.voltar-flutuante.visivel{opacity:1;transform:none;pointer-events:auto}
+.voltar-flutuante:hover{background:var(--purpura-2);color:var(--papel)}
+@media (prefers-reduced-motion:reduce){.voltar-flutuante{transition:none}}
+@media print{.voltar-flutuante,.trilha{display:none}}
