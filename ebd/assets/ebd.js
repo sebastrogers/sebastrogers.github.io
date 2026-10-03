@@ -47,6 +47,7 @@
       const escuro = temaAtual() === 'dark';
       b.innerHTML = (escuro ? SOL : LUA) + `<span>${escuro ? 'Modo claro' : 'Modo escuro'}</span>`;
       b.setAttribute('aria-label', escuro ? 'Mudar para o modo claro' : 'Mudar para o modo escuro');
+      b.title = escuro ? 'Modo claro' : 'Modo escuro';
     };
     b.addEventListener('click', () => {
       const novo = temaAtual() === 'dark' ? 'light' : 'dark';

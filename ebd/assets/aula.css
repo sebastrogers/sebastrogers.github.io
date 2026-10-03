@@ -151,7 +151,7 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .controles{position:fixed;right:14px;bottom:14px;z-index:11;display:flex;gap:8px;align-items:center;opacity:.25;transition:opacity .25s}
 .controles:hover,.controles:focus-within,body.mostrar-ctrl .controles{opacity:1}
 .controles button,.controles a,.controles .contador{font:inherit;font-size:14px;font-weight:700;min-height:38px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(20,14,22,.85);color:#F4EDF2;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
-.controles .botao-tema{background:rgba(20,14,22,.85);color:#F4EDF2;border-color:rgba(255,255,255,.25);min-height:38px}
+.controles .botao-tema{background:rgba(20,14,22,.85);color:#F4EDF2;border-color:rgba(255,255,255,.25);width:38px;height:38px;min-height:38px;padding:0 !important;box-shadow:none}
 .notas{position:fixed;left:14px;right:14px;bottom:62px;z-index:12;max-width:900px;margin:0 auto;max-height:42vh;overflow:auto;background:rgba(20,14,22,.96);color:#F4EDF2;border:1px solid rgba(231,201,138,.4);border-radius:14px;padding:16px 22px;font-size:17px;line-height:1.5;display:none}
 .notas.aberta{display:block}
 .notas h4{margin:0 0 6px;font-family:"Cinzel",Georgia,serif;color:#E7C98A;font-size:15px;letter-spacing:.08em;text-transform:uppercase}
