@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ebd.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235E1F4F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='serif' fill='%23E7C98A'%3EF%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -17,15 +18,47 @@
 <div class="envoltorio">
   <header class="topo">
     <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
-    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span><button class="botao-menu" type="button" id="abrirMenu" aria-expanded="false" aria-controls="menuSite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  <div class="menu-fundo" id="menuFundo" hidden></div>
+  <nav class="menu-site" id="menuSite" aria-label="Menu do site" hidden>
+    <div class="menu-cab"><span class="inscricao">Expedição Filipos</span><button type="button" class="menu-fechar" id="fecharMenu" aria-label="Fechar o menu">&times;</button></div>
+    <div class="menu-conta" id="menuConta"></div>
+    <p class="menu-rotulo">Navegar</p>
+    <ul class="menu-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#tRota">A rota de Paulo</a></li>
+      <li><a href="index.html#passaporte-secao">Meu passaporte</a></li>
+      <li><a href="index.html#conheca">Conheça Filipos</a></li>
+      <li><a href="index.html#tituloBib">Vídeos e podcasts do trimestre</a></li>
+      <li><a href="index.html#livros">Livros do trimestre</a></li>
+      <li><a href="sobre.html">Sobre a revista</a></li>
+    </ul>
+    <p class="menu-rotulo">As 13 paradas</p>
+    <ol class="menu-paradas">
+      <li><a href="licao-01.html" data-n="1"><span class="mp-n">1</span><span class="mp-t">Porto de Neápolis<small>4 out · Carta aos Filipenses: um chamado à alegria</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-02.html" data-n="2"><span class="mp-n">2</span><span class="mp-t">Portão da colônia<small>11 out · Uma vida digna do evangelho</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-03.html" data-n="3"><span class="mp-n">3</span><span class="mp-t">Fórum<small>18 out · A humildade de Cristo: o exemplo supremo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-04.html" data-n="4"><span class="mp-n">4</span><span class="mp-t">Acrópole<small>25 out · Brilhe a luz de Cristo em meio à geração corrompida</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-05.html" data-n="5"><span class="mp-n">5</span><span class="mp-t">Via Egnatia<small>1 nov · Exemplo de servos fiéis: Timóteo e Epafrodito</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-06.html" data-n="6"><span class="mp-n">6</span><span class="mp-t">Muralhas<small>8 nov · Guardando-se dos falsos mestres</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-07.html" data-n="7"><span class="mp-n">7</span><span class="mp-t">Teatro e arena<small>15 nov · O alvo supremo: conhecer a Cristo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-08.html" data-n="8" aria-current="page"><span class="mp-n">8</span><span class="mp-t">Rio Gangites<small>22 nov · Unidade e alegria no Senhor</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-09.html" data-n="9"><span class="mp-n">9</span><span class="mp-t">A prisão<small>29 nov · A paz de Deus guarda o coração</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-10.html" data-n="10"><span class="mp-n">10</span><span class="mp-t">Ágora<small>6 dez · O pensar cristão: o que ocupa a sua mente?</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-11.html" data-n="11"><span class="mp-n">11</span><span class="mp-t">Mercado<small>13 dez · Contentamento em toda e qualquer situação</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-12.html" data-n="12"><span class="mp-n">12</span><span class="mp-t">Casa de Lídia<small>20 dez · Generosidade e cuidado com a obra de Deus</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-13.html" data-n="13"><span class="mp-n">13</span><span class="mp-t">As basílicas<small>27 dez · Saudações finais, comunhão e bênçãos</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+    </ol>
+    <p class="menu-rotulo">Lição 1: para ir mais fundo</p><ul class="menu-links"><li><a href="aprofundamento-01.html">Anatomia de uma história</a></li><li><a href="aula-01.html">Slides da aula</a></li></ul>
+  </nav></div>
   </header>
 
   <main id="conteudo">
   <header class="heroi-foto">
     <div class="kb" role="img" aria-label="Fotos de Rio Gangites">
     <figure class="kb-slide" style="--i:0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/BaptistryAtPhilippi.JPG?width=1280" alt="O riacho junto ao batistério de Lídia" decoding="async" fetchpriority="high"><figcaption>O riacho junto ao batistério de Lídia</figcaption></figure>
-    <figure class="kb-slide" style="--i:1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-12-58.jpg?width=1280" alt="Igreja de Santa Lídia, construída perto do rio" decoding="async"><figcaption>Igreja de Santa Lídia, construída perto do rio</figcaption></figure>
-    <figure class="kb-slide" style="--i:2"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-15-20.jpg?width=1280" alt="Batistério de Santa Lídia, perto do rio, em Filipos" decoding="async"><figcaption>Batistério de Santa Lídia, perto do rio, em Filipos</figcaption></figure>
+    <figure class="kb-slide" style="--i:1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-12-58.jpg?width=1280" alt="Igreja moderna de Santa Lídia, construída perto do rio" decoding="async"><figcaption>Igreja moderna de Santa Lídia, construída perto do rio</figcaption></figure>
+    <figure class="kb-slide" style="--i:2"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-15-20.jpg?width=1280" alt="Igreja moderna de Santa Lídia, junto ao rio, em Filipos" decoding="async"><figcaption>Igreja moderna de Santa Lídia, junto ao rio, em Filipos</figcaption></figure>
   </div>
     <div class="heroi-texto">
       <p class="rotulo">Parada 8 de 13 · 22 de novembro de 2026</p>
@@ -47,19 +80,19 @@
     <div class="cartoes">
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/BaptistryAtPhilippi.JPG?width=960" alt="O riacho junto ao batistério de Lídia" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Oração</span><span class="frase">Fora das portas da cidade</span></span></span>
-        <span class="lado verso"><h3>At 16.13</h3><p>No sábado, Paulo saiu da cidade até a beira do rio, onde julgava haver um lugar de oração. Falou às mulheres que ali se reuniam.</p></span>
+        <span class="lado verso"><h3>At 16.13</h3><p>No sábado, Paulo saiu da cidade até a beira do rio, onde julgava haver um lugar de oração. Falou às mulheres que ali se reuniam.</p><small class="cred-img">Imagem: O riacho junto ao batistério de Lídia</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-12-58.jpg?width=960" alt="Igreja de Santa Lídia, construída perto do rio" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Evódia</span><span class="frase">"De bom aroma"</span></span></span>
-        <span class="lado verso"><h3>Uma líder</h3><p>O nome Evódia quer dizer "agradável, de bom aroma". Ela lutou ao lado de Paulo pelo evangelho (Fp 4.2 e 3).</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fayum%20mummy%20portrait%20(c.%20100-120%20AD)%20-%20British%20museum%2C%20EA63395.jpg?width=960" alt="Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época." loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Evódia</span><span class="frase">"De bom aroma"</span></span></span>
+        <span class="lado verso"><h3>Uma líder</h3><p>O nome Evódia quer dizer "agradável, de bom aroma". Ela lutou ao lado de Paulo pelo evangelho (Fp 4.2 e 3).</p><small class="cred-img">Imagem: Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época.</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-15-20.jpg?width=960" alt="Batistério de Santa Lídia, perto do rio, em Filipos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Síntique</span><span class="frase">"Afortunada"</span></span></span>
-        <span class="lado verso"><h3>Outra líder</h3><p>O nome Síntique quer dizer "afortunada". As duas tiveram uma desavença séria o bastante para chegar aos ouvidos de Paulo, preso em Roma.</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fayum%20mummy%20portrait%20(c.%20100-120%20AD)%20-%20British%20museum%2C%20EA29772.jpg?width=960" alt="Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época." loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Síntique</span><span class="frase">"Afortunada"</span></span></span>
+        <span class="lado verso"><h3>Outra líder</h3><p>O nome Síntique quer dizer "afortunada". As duas tiveram uma desavença séria o bastante para chegar aos ouvidos de Paulo, preso em Roma.</p><small class="cred-img">Imagem: Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época.</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mosaic%20in%20the%20Octagonal%20Basilica%2C%20Philippi%20(7272826928).jpg?width=960" alt="Mosaico do piso da igreja octogonal" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Equidade</span><span class="frase">Gentileza que todos veem</span></span></span>
-        <span class="lado verso"><h3>Fp 4.5</h3><p>A palavra grega "epieikes" pode significar moderação, afabilidade e gentileza. A igreja deve ser conhecida pela paciência gentil com todos.</p></span>
+        <span class="lado verso"><h3>Fp 4.5</h3><p>A palavra grega "epieikes" pode significar moderação, afabilidade e gentileza. A igreja deve ser conhecida pela paciência gentil com todos.</p><small class="cred-img">Imagem: Mosaico do piso da igreja octogonal</small></span>
       </div>
     </div>
   </section>
@@ -86,6 +119,7 @@
       <figcaption>Para pensar esta semana</figcaption>
       <blockquote>Existe alguém com quem eu preciso me reconciliar?</blockquote>
     </figure>
+    
     
   </section>
 
@@ -139,8 +173,8 @@
   </nav>
 
   <footer class="rodape">
-    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 8 (CPAD) · Bíblia Sagrada, ARC.</p>
-    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:BaptistryAtPhilippi.JPG" target="_blank" rel="noopener">O riacho junto ao batistério de Lídia</a>: Ian W. Scott, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-12-58.jpg" target="_blank" rel="noopener">Igreja de Santa Lídia, construída perto do rio</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-15-20.jpg" target="_blank" rel="noopener">Batistério de Santa Lídia, perto do rio, em Filipos</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Mosaic_in_the_Octagonal_Basilica%2C_Philippi_(7272826928).jpg" target="_blank" rel="noopener">Mosaico do piso da igreja octogonal</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
+    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 8 (CPAD) · Bíblia Sagrada, ARC. <a href="sobre.html">Sobre a revista</a>.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:BaptistryAtPhilippi.JPG" target="_blank" rel="noopener">O riacho junto ao batistério de Lídia</a>: Ian W. Scott, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-12-58.jpg" target="_blank" rel="noopener">Igreja moderna de Santa Lídia, construída perto do rio</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-15-20.jpg" target="_blank" rel="noopener">Igreja moderna de Santa Lídia, junto ao rio, em Filipos</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Fayum_mummy_portrait_(c._100-120_AD)_-_British_museum%2C_EA63395.jpg" target="_blank" rel="noopener">Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época.</a>: Autor desconhecido, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Fayum_mummy_portrait_(c._100-120_AD)_-_British_museum%2C_EA29772.jpg" target="_blank" rel="noopener">Retrato de uma mulher pintado no Egito romano, por volta de 100 a 120 d.C. (Museu Britânico). Mostra como se vestiam as mulheres da época.</a>: Autor desconhecido, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Mosaic_in_the_Octagonal_Basilica%2C_Philippi_(7272826928).jpg" target="_blank" rel="noopener">Mosaico do piso da igreja octogonal</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>
 <script src="assets/ebd.js"></script>

@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ebd.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235E1F4F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='serif' fill='%23E7C98A'%3EF%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -17,13 +18,45 @@
 <div class="envoltorio">
   <header class="topo">
     <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
-    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span><button class="botao-menu" type="button" id="abrirMenu" aria-expanded="false" aria-controls="menuSite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  <div class="menu-fundo" id="menuFundo" hidden></div>
+  <nav class="menu-site" id="menuSite" aria-label="Menu do site" hidden>
+    <div class="menu-cab"><span class="inscricao">Expedição Filipos</span><button type="button" class="menu-fechar" id="fecharMenu" aria-label="Fechar o menu">&times;</button></div>
+    <div class="menu-conta" id="menuConta"></div>
+    <p class="menu-rotulo">Navegar</p>
+    <ul class="menu-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#tRota">A rota de Paulo</a></li>
+      <li><a href="index.html#passaporte-secao">Meu passaporte</a></li>
+      <li><a href="index.html#conheca">Conheça Filipos</a></li>
+      <li><a href="index.html#tituloBib">Vídeos e podcasts do trimestre</a></li>
+      <li><a href="index.html#livros">Livros do trimestre</a></li>
+      <li><a href="sobre.html">Sobre a revista</a></li>
+    </ul>
+    <p class="menu-rotulo">As 13 paradas</p>
+    <ol class="menu-paradas">
+      <li><a href="licao-01.html" data-n="1"><span class="mp-n">1</span><span class="mp-t">Porto de Neápolis<small>4 out · Carta aos Filipenses: um chamado à alegria</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-02.html" data-n="2"><span class="mp-n">2</span><span class="mp-t">Portão da colônia<small>11 out · Uma vida digna do evangelho</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-03.html" data-n="3"><span class="mp-n">3</span><span class="mp-t">Fórum<small>18 out · A humildade de Cristo: o exemplo supremo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-04.html" data-n="4"><span class="mp-n">4</span><span class="mp-t">Acrópole<small>25 out · Brilhe a luz de Cristo em meio à geração corrompida</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-05.html" data-n="5"><span class="mp-n">5</span><span class="mp-t">Via Egnatia<small>1 nov · Exemplo de servos fiéis: Timóteo e Epafrodito</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-06.html" data-n="6"><span class="mp-n">6</span><span class="mp-t">Muralhas<small>8 nov · Guardando-se dos falsos mestres</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-07.html" data-n="7" aria-current="page"><span class="mp-n">7</span><span class="mp-t">Teatro e arena<small>15 nov · O alvo supremo: conhecer a Cristo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-08.html" data-n="8"><span class="mp-n">8</span><span class="mp-t">Rio Gangites<small>22 nov · Unidade e alegria no Senhor</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-09.html" data-n="9"><span class="mp-n">9</span><span class="mp-t">A prisão<small>29 nov · A paz de Deus guarda o coração</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-10.html" data-n="10"><span class="mp-n">10</span><span class="mp-t">Ágora<small>6 dez · O pensar cristão: o que ocupa a sua mente?</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-11.html" data-n="11"><span class="mp-n">11</span><span class="mp-t">Mercado<small>13 dez · Contentamento em toda e qualquer situação</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-12.html" data-n="12"><span class="mp-n">12</span><span class="mp-t">Casa de Lídia<small>20 dez · Generosidade e cuidado com a obra de Deus</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-13.html" data-n="13"><span class="mp-n">13</span><span class="mp-t">As basílicas<small>27 dez · Saudações finais, comunhão e bênçãos</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+    </ol>
+    <p class="menu-rotulo">Lição 1: para ir mais fundo</p><ul class="menu-links"><li><a href="aprofundamento-01.html">Anatomia de uma história</a></li><li><a href="aula-01.html">Slides da aula</a></li></ul>
+  </nav></div>
   </header>
 
   <main id="conteudo">
   <header class="heroi-foto">
     <div class="kb" role="img" aria-label="Fotos de Teatro e arena">
-    <figure class="kb-slide" style="--i:0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20theatre%20-%20Philippi.jpg?width=1280" alt="O teatro de Filipos, erguido no tempo de Filipe II" decoding="async" fetchpriority="high"><figcaption>O teatro de Filipos, erguido no tempo de Filipe II</figcaption></figure>
+    <figure class="kb-slide" style="--i:0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20theatre%20-%20Philippi.jpg?width=1280" alt="O teatro grego de Filipos, depois reformado pelos romanos" decoding="async" fetchpriority="high"><figcaption>O teatro grego de Filipos, depois reformado pelos romanos</figcaption></figure>
     <figure class="kb-slide" style="--i:1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Black-figured%20amphora%20depicting%20runners%20at%20the%20panathenaic%20games%2C%20ca.%20530%20BC%2C%20Staatliche%20Antikensammlungen%2C%20Munich%20(8958638572).jpg?width=1280" alt="Corredores pintados num vaso grego, por volta de 530 a.C." decoding="async"><figcaption>Corredores pintados num vaso grego, por volta de 530 a.C.</figcaption></figure>
     <figure class="kb-slide" style="--i:2"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20stadium%20at%20Delphi%2C%20Greece.jpg?width=1280" alt="Estádio antigo de Delfos, na Grécia" decoding="async"><figcaption>Estádio antigo de Delfos, na Grécia</figcaption></figure>
   </div>
@@ -46,20 +79,20 @@
     <div class="secao-titulo"><h2 id="tCur">O que um viajante precisa saber</h2><p>Toque num cartão para virar.</p></div>
     <div class="cartoes">
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20theatre%20-%20Philippi.jpg?width=960" alt="O teatro de Filipos, erguido no tempo de Filipe II" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Teatro</span><span class="frase">Desde Filipe II</span></span></span>
-        <span class="lado verso"><h3>Palco e arena</h3><p>Construído no século IV a.C. e reformado pelos romanos, o teatro foi adaptado mais tarde para lutas e espetáculos. Ainda hoje recebe apresentações.</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20theatre%20-%20Philippi.jpg?width=960" alt="O teatro grego de Filipos, depois reformado pelos romanos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Teatro</span><span class="frase">Desde Filipe II</span></span></span>
+        <span class="lado verso"><h3>Palco e arena</h3><p>Construído no século IV a.C. e reformado pelos romanos, o teatro foi adaptado mais tarde para lutas e espetáculos. Ainda hoje recebe apresentações.</p><small class="cred-img">Imagem: O teatro grego de Filipos, depois reformado pelos romanos</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Black-figured%20amphora%20depicting%20runners%20at%20the%20panathenaic%20games%2C%20ca.%20530%20BC%2C%20Staatliche%20Antikensammlungen%2C%20Munich%20(8958638572).jpg?width=960" alt="Corredores pintados num vaso grego, por volta de 530 a.C." loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Corrida</span><span class="frase">A paixão dos gregos</span></span></span>
-        <span class="lado verso"><h3>Nos vasos e nas cartas</h3><p>Corredores pintados em vasos mostram como os jogos eram populares. Paulo usa a imagem da corrida em várias cartas (1 Co 9.24; 2 Tm 4.7).</p></span>
+        <span class="lado verso"><h3>Nos vasos e nas cartas</h3><p>Corredores pintados em vasos mostram como os jogos eram populares. Paulo usa a imagem da corrida em várias cartas (1 Co 9.24; 2 Tm 4.7).</p><small class="cred-img">Imagem: Corredores pintados num vaso grego, por volta de 530 a.C.</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20stadium%20at%20Delphi%2C%20Greece.jpg?width=960" alt="Estádio antigo de Delfos, na Grécia" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">O prêmio</span><span class="frase">Uma coroa que não murcha</span></span></span>
-        <span class="lado verso"><h3>Fp 3.14</h3><p>O vencedor dos jogos ganhava uma coroa de folhas. Paulo corre por outro prêmio: a soberana vocação de Deus em Cristo Jesus.</p></span>
+        <span class="lado verso"><h3>Fp 3.14</h3><p>O vencedor dos jogos ganhava uma coroa de folhas. Paulo corre por outro prêmio: a soberana vocação de Deus em Cristo Jesus.</p><small class="cred-img">Imagem: Estádio antigo de Delfos, na Grécia</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Latin%20inscriptions%20found%20in%20the%20Forum%2C%20Philippi%20(7272469500).jpg?width=960" alt="Inscrição em latim encontrada no fórum" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Cidadania</span><span class="frase">Nossa cidade está nos céus</span></span></span>
-        <span class="lado verso"><h3>Fp 3.20</h3><p>Numa colônia orgulhosa de Roma, Paulo lembra que a verdadeira cidadania dos crentes é a do céu, de onde esperam o Salvador.</p></span>
+        <span class="lado verso"><h3>Fp 3.20</h3><p>Numa colônia orgulhosa de Roma, Paulo lembra que a verdadeira cidadania dos crentes é a do céu, de onde esperam o Salvador.</p><small class="cred-img">Imagem: Inscrição em latim encontrada no fórum</small></span>
       </div>
     </div>
   </section>
@@ -86,6 +119,7 @@
       <figcaption>Para pensar esta semana</figcaption>
       <blockquote>O que do meu passado está me impedindo de avançar?</blockquote>
     </figure>
+    
     
   </section>
 
@@ -139,8 +173,8 @@
   </nav>
 
   <footer class="rodape">
-    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 7 (CPAD) · Bíblia Sagrada, ARC.</p>
-    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_theatre_-_Philippi.jpg" target="_blank" rel="noopener">O teatro de Filipos, erguido no tempo de Filipe II</a>: MrPanyGoff, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Black-figured_amphora_depicting_runners_at_the_panathenaic_games%2C_ca._530_BC%2C_Staatliche_Antikensammlungen%2C_Munich_(8958638572).jpg" target="_blank" rel="noopener">Corredores pintados num vaso grego, por volta de 530 a.C.</a>: Following Hadrian, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_stadium_at_Delphi%2C_Greece.jpg" target="_blank" rel="noopener">Estádio antigo de Delfos, na Grécia</a>: Milo44, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Latin_inscriptions_found_in_the_Forum%2C_Philippi_(7272469500).jpg" target="_blank" rel="noopener">Inscrição em latim encontrada no fórum</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
+    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 7 (CPAD) · Bíblia Sagrada, ARC. <a href="sobre.html">Sobre a revista</a>.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_theatre_-_Philippi.jpg" target="_blank" rel="noopener">O teatro grego de Filipos, depois reformado pelos romanos</a>: MrPanyGoff, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Black-figured_amphora_depicting_runners_at_the_panathenaic_games%2C_ca._530_BC%2C_Staatliche_Antikensammlungen%2C_Munich_(8958638572).jpg" target="_blank" rel="noopener">Corredores pintados num vaso grego, por volta de 530 a.C.</a>: Following Hadrian, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_stadium_at_Delphi%2C_Greece.jpg" target="_blank" rel="noopener">Estádio antigo de Delfos, na Grécia</a>: Milo44, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Latin_inscriptions_found_in_the_Forum%2C_Philippi_(7272469500).jpg" target="_blank" rel="noopener">Inscrição em latim encontrada no fórum</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>
 <script src="assets/ebd.js"></script>

@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ebd.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235E1F4F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='serif' fill='%23E7C98A'%3EF%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -17,14 +18,46 @@
 <div class="envoltorio">
   <header class="topo">
     <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
-    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span><button class="botao-menu" type="button" id="abrirMenu" aria-expanded="false" aria-controls="menuSite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  <div class="menu-fundo" id="menuFundo" hidden></div>
+  <nav class="menu-site" id="menuSite" aria-label="Menu do site" hidden>
+    <div class="menu-cab"><span class="inscricao">Expedição Filipos</span><button type="button" class="menu-fechar" id="fecharMenu" aria-label="Fechar o menu">&times;</button></div>
+    <div class="menu-conta" id="menuConta"></div>
+    <p class="menu-rotulo">Navegar</p>
+    <ul class="menu-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#tRota">A rota de Paulo</a></li>
+      <li><a href="index.html#passaporte-secao">Meu passaporte</a></li>
+      <li><a href="index.html#conheca">Conheça Filipos</a></li>
+      <li><a href="index.html#tituloBib">Vídeos e podcasts do trimestre</a></li>
+      <li><a href="index.html#livros">Livros do trimestre</a></li>
+      <li><a href="sobre.html">Sobre a revista</a></li>
+    </ul>
+    <p class="menu-rotulo">As 13 paradas</p>
+    <ol class="menu-paradas">
+      <li><a href="licao-01.html" data-n="1"><span class="mp-n">1</span><span class="mp-t">Porto de Neápolis<small>4 out · Carta aos Filipenses: um chamado à alegria</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-02.html" data-n="2"><span class="mp-n">2</span><span class="mp-t">Portão da colônia<small>11 out · Uma vida digna do evangelho</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-03.html" data-n="3"><span class="mp-n">3</span><span class="mp-t">Fórum<small>18 out · A humildade de Cristo: o exemplo supremo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-04.html" data-n="4"><span class="mp-n">4</span><span class="mp-t">Acrópole<small>25 out · Brilhe a luz de Cristo em meio à geração corrompida</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-05.html" data-n="5"><span class="mp-n">5</span><span class="mp-t">Via Egnatia<small>1 nov · Exemplo de servos fiéis: Timóteo e Epafrodito</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-06.html" data-n="6"><span class="mp-n">6</span><span class="mp-t">Muralhas<small>8 nov · Guardando-se dos falsos mestres</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-07.html" data-n="7"><span class="mp-n">7</span><span class="mp-t">Teatro e arena<small>15 nov · O alvo supremo: conhecer a Cristo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-08.html" data-n="8"><span class="mp-n">8</span><span class="mp-t">Rio Gangites<small>22 nov · Unidade e alegria no Senhor</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-09.html" data-n="9"><span class="mp-n">9</span><span class="mp-t">A prisão<small>29 nov · A paz de Deus guarda o coração</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-10.html" data-n="10"><span class="mp-n">10</span><span class="mp-t">Ágora<small>6 dez · O pensar cristão: o que ocupa a sua mente?</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-11.html" data-n="11" aria-current="page"><span class="mp-n">11</span><span class="mp-t">Mercado<small>13 dez · Contentamento em toda e qualquer situação</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-12.html" data-n="12"><span class="mp-n">12</span><span class="mp-t">Casa de Lídia<small>20 dez · Generosidade e cuidado com a obra de Deus</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-13.html" data-n="13"><span class="mp-n">13</span><span class="mp-t">As basílicas<small>27 dez · Saudações finais, comunhão e bênçãos</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+    </ol>
+    <p class="menu-rotulo">Lição 1: para ir mais fundo</p><ul class="menu-links"><li><a href="aprofundamento-01.html">Anatomia de uma história</a></li><li><a href="aula-01.html">Slides da aula</a></li></ul>
+  </nav></div>
   </header>
 
   <main id="conteudo">
   <header class="heroi-foto">
     <div class="kb" role="img" aria-label="Fotos de Mercado">
     <figure class="kb-slide" style="--i:0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20Forum%2C%20Philippi%20(7272544070).jpg?width=1280" alt="A praça do fórum, onde ficavam os prédios públicos" decoding="async" fetchpriority="high"><figcaption>A praça do fórum, onde ficavam os prédios públicos</figcaption></figure>
-    <figure class="kb-slide" style="--i:1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Silver%20tetradrachm%20of%20Alexander%20the%20Great%20(336%20-%20323%20BC)%20Head%20of%20Hercules%20in%20lions%20skin%2C%20Philippi%20Museum%20(7416482770).jpg?width=1280" alt="Moeda de Alexandre, o Grande, exposta no museu de Filipos" decoding="async"><figcaption>Moeda de Alexandre, o Grande, exposta no museu de Filipos</figcaption></figure>
+    <figure class="kb-slide" style="--i:1"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi.jpg?width=1280" alt="Tetradracma cunhado pela cidade de Filipos (século IV a.C.): Hércules e, no verso, uma trípode com o nome ΦΙΛΙΠΠΩΝ, &quot;dos filipenses&quot;" decoding="async"><figcaption>Tetradracma cunhado pela cidade de Filipos (século IV a.C.): Hércules e, no verso, uma trípode com o nome ΦΙΛΙΠΠΩΝ, &quot;dos filipenses&quot;</figcaption></figure>
     <figure class="kb-slide" style="--i:2"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20-%20Forum%2C%20Basikila%20B%2C%20Balneum%2C%20Octagon.jpg?width=1280" alt="Fórum, Basílica B, termas e igreja octogonal" decoding="async"><figcaption>Fórum, Basílica B, termas e igreja octogonal</figcaption></figure>
   </div>
     <div class="heroi-texto">
@@ -46,20 +79,20 @@
     <div class="secao-titulo"><h2 id="tCur">O que um viajante precisa saber</h2><p>Toque num cartão para virar.</p></div>
     <div class="cartoes">
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Silver%20tetradrachm%20of%20Alexander%20the%20Great%20(336%20-%20323%20BC)%20Head%20of%20Hercules%20in%20lions%20skin%2C%20Philippi%20Museum%20(7416482770).jpg?width=960" alt="Moeda de Alexandre, o Grande, exposta no museu de Filipos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Moedas</span><span class="frase">O dinheiro da época</span></span></span>
-        <span class="lado verso"><h3>Prata e bronze</h3><p>Moedas de prata e de bronze circulavam pelos mercados da Macedônia. O dinheiro já movia o mundo, e a comparação também.</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi.jpg?width=960" alt="Tetradracma cunhado pela cidade de Filipos (século IV a.C.): Hércules e, no verso, uma trípode com o nome ΦΙΛΙΠΠΩΝ, &quot;dos filipenses&quot;" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Moedas</span><span class="frase">O dinheiro da época</span></span></span>
+        <span class="lado verso"><h3>Prata e bronze</h3><p>Moedas de prata e de bronze circulavam pelos mercados da Macedônia. O dinheiro já movia o mundo, e a comparação também.</p><small class="cred-img">Imagem: Tetradracma cunhado pela cidade de Filipos (século IV a.C.): Hércules e, no verso, uma trípode com o nome ΦΙΛΙΠΠΩΝ, &quot;dos filipenses&quot;</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20Forum%2C%20Philippi%20(7272544070).jpg?width=960" alt="A praça do fórum, onde ficavam os prédios públicos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Autarkes</span><span class="frase">Uma palavra dos filósofos</span></span></span>
-        <span class="lado verso"><h3>Contentamento</h3><p>Os filósofos estoicos usavam essa palavra para quem se basta a si mesmo. Para Paulo, contentamento é depender de Deus, não de si.</p></span>
+        <span class="lado verso"><h3>Contentamento</h3><p>Os filósofos estoicos usavam essa palavra para quem se basta a si mesmo. Para Paulo, contentamento é depender de Deus, não de si.</p><small class="cred-img">Imagem: A praça do fórum, onde ficavam os prédios públicos</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20-%20Forum%2C%20Basikila%20B%2C%20Balneum%2C%20Octagon.jpg?width=960" alt="Fórum, Basílica B, termas e igreja octogonal" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Já aprendi</span><span class="frase">Uma escola de vida</span></span></span>
-        <span class="lado verso"><h3>Fp 4.11 e 12</h3><p>Paulo passou por fartura e fome, abundância e necessidade. Foi assim que aprendeu a viver bem em qualquer situação.</p></span>
+        <span class="lado verso"><h3>Fp 4.11 e 12</h3><p>Paulo passou por fartura e fome, abundância e necessidade. Foi assim que aprendeu a viver bem em qualquer situação.</p><small class="cred-img">Imagem: Fórum, Basílica B, termas e igreja octogonal</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20Theatre%2C%20built%20by%20Philip%20II%20in%20the%204th%20century%20BC%20and%20later%20reconstructed%20by%20the%20Romans%2C%20Philippi%20(7272297822).jpg?width=960" alt="O teatro, reformado pelos romanos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Fp 4.13</span><span class="frase">Posso todas as coisas</span></span></span>
-        <span class="lado verso"><h3>Naquele que fortalece</h3><p>Não é promessa de conquistas sem limite. É força para enfrentar qualquer situação sem perder a fé, porque é Cristo quem fortalece.</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20V%C3%A1clav%20Halbax%20-%20St%20Paul%20and%20Silas%20in%20Prison%20-%20O%202303%20-%20National%20Gallery%20Prague.jpg?width=960" alt="Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Fp 4.13</span><span class="frase">Posso todas as coisas</span></span></span>
+        <span class="lado verso"><h3>Naquele que fortalece</h3><p>Não é promessa de conquistas sem limite. É força para enfrentar qualquer situação sem perder a fé, porque é Cristo quem fortalece.</p><small class="cred-img">Imagem: Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)</small></span>
       </div>
     </div>
   </section>
@@ -86,6 +119,7 @@
       <figcaption>Para pensar esta semana</figcaption>
       <blockquote>Meu contentamento depende do que eu tenho ou de quem me fortalece?</blockquote>
     </figure>
+    
     
   </section>
 
@@ -141,8 +175,8 @@
   </nav>
 
   <footer class="rodape">
-    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 11 (CPAD) · Bíblia Sagrada, ARC.</p>
-    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:The_Forum%2C_Philippi_(7272544070).jpg" target="_blank" rel="noopener">A praça do fórum, onde ficavam os prédios públicos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Silver_tetradrachm_of_Alexander_the_Great_(336_-_323_BC)_Head_of_Hercules_in_lions_skin%2C_Philippi_Museum_(7416482770).jpg" target="_blank" rel="noopener">Moeda de Alexandre, o Grande, exposta no museu de Filipos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_-_Forum%2C_Basikila_B%2C_Balneum%2C_Octagon.jpg" target="_blank" rel="noopener">Fórum, Basílica B, termas e igreja octogonal</a>: DocWoKav, CC BY-SA 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_Theatre%2C_built_by_Philip_II_in_the_4th_century_BC_and_later_reconstructed_by_the_Romans%2C_Philippi_(7272297822).jpg" target="_blank" rel="noopener">O teatro, reformado pelos romanos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
+    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 11 (CPAD) · Bíblia Sagrada, ARC. <a href="sobre.html">Sobre a revista</a>.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:The_Forum%2C_Philippi_(7272544070).jpg" target="_blank" rel="noopener">A praça do fórum, onde ficavam os prédios públicos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi.jpg" target="_blank" rel="noopener">Tetradracma cunhado pela cidade de Filipos (século IV a.C.): Hércules e, no verso, uma trípode com o nome ΦΙΛΙΠΠΩΝ, &quot;dos filipenses&quot;</a>: A. Mitropoulos, CC BY 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_-_Forum%2C_Basikila_B%2C_Balneum%2C_Octagon.jpg" target="_blank" rel="noopener">Fórum, Basílica B, termas e igreja octogonal</a>: DocWoKav, CC BY-SA 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Michael_V%C3%A1clav_Halbax_-_St_Paul_and_Silas_in_Prison_-_O_2303_-_National_Gallery_Prague.jpg" target="_blank" rel="noopener">Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)</a>: Michael Václav Halbax, Domínio público, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>
 <script src="assets/ebd.js"></script>

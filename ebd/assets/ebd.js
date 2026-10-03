@@ -416,8 +416,53 @@
     });
   }
 
+  /* ---------- menu do site e saída da conta ---------- */
+  function montarMenu() {
+    const botao = $('#abrirMenu'), painel = $('#menuSite'), fundo = $('#menuFundo');
+    if (!botao || !painel) return;
+    const abrir = () => { pintarConta(); marcarParadas(); painel.hidden = false; fundo.hidden = false; botao.setAttribute('aria-expanded', 'true'); document.body.classList.add('menu-aberto'); const f = $('#fecharMenu'); if (f) f.focus(); };
+    const fechar = () => { painel.hidden = true; fundo.hidden = true; botao.setAttribute('aria-expanded', 'false'); document.body.classList.remove('menu-aberto'); botao.focus(); };
+    botao.addEventListener('click', abrir);
+    fundo.addEventListener('click', fechar);
+    $('#fecharMenu').addEventListener('click', fechar);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !painel.hidden) fechar(); });
+    painel.addEventListener('click', (e) => { if (e.target.closest('a')) { painel.hidden = true; fundo.hidden = true; botao.setAttribute('aria-expanded', 'false'); document.body.classList.remove('menu-aberto'); } });
+  }
+  function marcarParadas() {
+    document.querySelectorAll('.menu-paradas a[data-n]').forEach(a => a.classList.toggle('feito', !!estado.carimbos[a.dataset.n]));
+  }
+  function pintarConta() {
+    const box = $('#menuConta'); if (!box) return;
+    box.innerHTML = '';
+    const n = Object.keys(estado.carimbos).length;
+    if (estado.aluno) {
+      box.append(el('p', null, 'Você está como ', el('b', null, estado.aluno.nome)));
+      box.append(el('p', { class: 'menu-sub' }, `${n} de 13 carimbos neste aparelho.`));
+      const sair = el('button', { class: 'botao', type: 'button' }, 'Sair');
+      sair.addEventListener('click', () => {
+        delete estado.aluno; gravar(estado); atualizarViajante();
+        if ($('#expedicao')) { location.reload(); return; }
+        pintarConta();
+        box.prepend(el('p', { class: 'menu-aviso', role: 'status' }, 'Você saiu. O nome será pedido de novo nos próximos desafios.'));
+      });
+      const apagar = el('button', { class: 'menu-apagar', type: 'button' }, 'Sair e apagar meus carimbos deste aparelho');
+      let confirmar = false;
+      apagar.addEventListener('click', () => {
+        if (!confirmar) { confirmar = true; apagar.textContent = 'Tem certeza? Toque de novo para apagar'; apagar.classList.add('confirmar'); return; }
+        try { localStorage.removeItem(CHAVE); } catch (e) { /* ok */ }
+        location.reload();
+      });
+      box.append(el('div', { class: 'menu-acoes' }, sair, apagar));
+      box.append(el('p', { class: 'menu-sub' }, 'Ao sair, seus carimbos continuam salvos neste aparelho. Use a segunda opção se o aparelho for de outra pessoa.'));
+    } else {
+      box.append(el('p', null, 'Você ainda não se identificou.'));
+      box.append(el('p', { class: 'menu-sub' }, n ? `${n} de 13 carimbos neste aparelho. O nome é pedido na hora dos desafios.` : 'O nome é pedido na hora dos desafios de cada parada.'));
+    }
+  }
+
   function iniciar() {
     montarTema();
+    montarMenu();
     atualizarViajante();
     const m = $('#mapa'); if (m) animarMapa(m);
     renderPassaporte($('#passaporte'));

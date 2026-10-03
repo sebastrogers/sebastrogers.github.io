@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ebd.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235E1F4F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='serif' fill='%23E7C98A'%3EF%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -17,7 +18,39 @@
 <div class="envoltorio">
   <header class="topo">
     <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
-    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span><button class="botao-menu" type="button" id="abrirMenu" aria-expanded="false" aria-controls="menuSite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  <div class="menu-fundo" id="menuFundo" hidden></div>
+  <nav class="menu-site" id="menuSite" aria-label="Menu do site" hidden>
+    <div class="menu-cab"><span class="inscricao">Expedição Filipos</span><button type="button" class="menu-fechar" id="fecharMenu" aria-label="Fechar o menu">&times;</button></div>
+    <div class="menu-conta" id="menuConta"></div>
+    <p class="menu-rotulo">Navegar</p>
+    <ul class="menu-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#tRota">A rota de Paulo</a></li>
+      <li><a href="index.html#passaporte-secao">Meu passaporte</a></li>
+      <li><a href="index.html#conheca">Conheça Filipos</a></li>
+      <li><a href="index.html#tituloBib">Vídeos e podcasts do trimestre</a></li>
+      <li><a href="index.html#livros">Livros do trimestre</a></li>
+      <li><a href="sobre.html">Sobre a revista</a></li>
+    </ul>
+    <p class="menu-rotulo">As 13 paradas</p>
+    <ol class="menu-paradas">
+      <li><a href="licao-01.html" data-n="1"><span class="mp-n">1</span><span class="mp-t">Porto de Neápolis<small>4 out · Carta aos Filipenses: um chamado à alegria</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-02.html" data-n="2" aria-current="page"><span class="mp-n">2</span><span class="mp-t">Portão da colônia<small>11 out · Uma vida digna do evangelho</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-03.html" data-n="3"><span class="mp-n">3</span><span class="mp-t">Fórum<small>18 out · A humildade de Cristo: o exemplo supremo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-04.html" data-n="4"><span class="mp-n">4</span><span class="mp-t">Acrópole<small>25 out · Brilhe a luz de Cristo em meio à geração corrompida</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-05.html" data-n="5"><span class="mp-n">5</span><span class="mp-t">Via Egnatia<small>1 nov · Exemplo de servos fiéis: Timóteo e Epafrodito</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-06.html" data-n="6"><span class="mp-n">6</span><span class="mp-t">Muralhas<small>8 nov · Guardando-se dos falsos mestres</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-07.html" data-n="7"><span class="mp-n">7</span><span class="mp-t">Teatro e arena<small>15 nov · O alvo supremo: conhecer a Cristo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-08.html" data-n="8"><span class="mp-n">8</span><span class="mp-t">Rio Gangites<small>22 nov · Unidade e alegria no Senhor</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-09.html" data-n="9"><span class="mp-n">9</span><span class="mp-t">A prisão<small>29 nov · A paz de Deus guarda o coração</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-10.html" data-n="10"><span class="mp-n">10</span><span class="mp-t">Ágora<small>6 dez · O pensar cristão: o que ocupa a sua mente?</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-11.html" data-n="11"><span class="mp-n">11</span><span class="mp-t">Mercado<small>13 dez · Contentamento em toda e qualquer situação</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-12.html" data-n="12"><span class="mp-n">12</span><span class="mp-t">Casa de Lídia<small>20 dez · Generosidade e cuidado com a obra de Deus</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-13.html" data-n="13"><span class="mp-n">13</span><span class="mp-t">As basílicas<small>27 dez · Saudações finais, comunhão e bênçãos</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+    </ol>
+    <p class="menu-rotulo">Lição 1: para ir mais fundo</p><ul class="menu-links"><li><a href="aprofundamento-01.html">Anatomia de uma história</a></li><li><a href="aula-01.html">Slides da aula</a></li></ul>
+  </nav></div>
   </header>
 
   <main id="conteudo">
@@ -47,19 +80,19 @@
     <div class="cartoes">
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Relief%20of%20Soldiers%20of%20the%20Praetorian%20Guard%2001%20(51220287737).jpg?width=960" alt="Relevo romano com soldados da guarda pretoriana" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Pretorianos</span><span class="frase">Os soldados do imperador</span></span></span>
-        <span class="lado verso"><h3>A guarda de elite</h3><p>A guarda pretoriana protegia o imperador e sua família e mantinha a ordem em Roma. Paulo conta que toda a guarda soube que ele estava preso por causa de Cristo (Fp 1.13).</p></span>
+        <span class="lado verso"><h3>A guarda de elite</h3><p>A guarda pretoriana protegia o imperador e sua família e mantinha a ordem em Roma. Paulo conta que toda a guarda soube que ele estava preso por causa de Cristo (Fp 1.13).</p><small class="cred-img">Imagem: Relevo romano com soldados da guarda pretoriana</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20Forum%2C%20Philippi%20(7272544070).jpg?width=960" alt="A praça do fórum, onde ficavam os prédios públicos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Cidadãos</span><span class="frase">Viver à altura da cidade</span></span></span>
-        <span class="lado verso"><h3>Fp 1.27</h3><p>"Portai-vos dignamente" traduz um verbo grego ligado a viver como cidadão. Numa colônia orgulhosa de Roma, o recado era claro: vivam como cidadãos do céu.</p></span>
+        <span class="lado verso"><h3>Fp 1.27</h3><p>"Portai-vos dignamente" traduz um verbo grego ligado a viver como cidadão. Numa colônia orgulhosa de Roma, o recado era claro: vivam como cidadãos do céu.</p><small class="cred-img">Imagem: A praça do fórum, onde ficavam os prédios públicos</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20V%C3%A1clav%20Halbax%20-%20St%20Paul%20and%20Silas%20in%20Prison%20-%20O%202303%20-%20National%20Gallery%20Prague.jpg?width=960" alt="Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Preso</span><span class="frase">Mas o evangelho não</span></span></span>
-        <span class="lado verso"><h3>Coragem que se espalha</h3><p>As correntes de Paulo deram ânimo aos irmãos, que passaram a falar da Palavra sem medo (Fp 1.14). O que parecia derrota virou avanço.</p></span>
+        <span class="lado verso"><h3>Coragem que se espalha</h3><p>As correntes de Paulo deram ânimo aos irmãos, que passaram a falar da Palavra sem medo (Fp 1.14). O que parecia derrota virou avanço.</p><small class="cred-img">Imagem: Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20upper%20city%20wall%201.JPG?width=960" alt="Trecho da muralha da cidade alta" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Fp 1.21</span><span class="frase">O viver é Cristo</span></span></span>
-        <span class="lado verso"><h3>Ganho dos dois lados</h3><p>Paulo não sabia se seria solto ou condenado. Viver era servir e dar fruto; morrer era estar com Cristo. Ele escolhe ficar pelo bem da igreja (Fp 1.22 a 25).</p></span>
+        <span class="lado verso"><h3>Ganho dos dois lados</h3><p>Paulo não sabia se seria solto ou condenado. Viver era servir e dar fruto; morrer era estar com Cristo. Ele escolhe ficar pelo bem da igreja (Fp 1.22 a 25).</p><small class="cred-img">Imagem: Trecho da muralha da cidade alta</small></span>
       </div>
     </div>
   </section>
@@ -86,6 +119,7 @@
       <figcaption>Para pensar esta semana</figcaption>
       <blockquote>Que situação difícil Deus pode estar usando para me fazer crescer?</blockquote>
     </figure>
+    
     
   </section>
 
@@ -140,7 +174,7 @@
   </nav>
 
   <footer class="rodape">
-    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 2 (CPAD) · Bíblia Sagrada, ARC.</p>
+    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 2 (CPAD) · Bíblia Sagrada, ARC. <a href="sobre.html">Sobre a revista</a>.</p>
     <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_city_wall_2.jpg" target="_blank" rel="noopener">A muralha de Filipos subindo o monte</a>: Marsyas, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:The_Forum%2C_Philippi_(7272544070).jpg" target="_blank" rel="noopener">A praça do fórum, onde ficavam os prédios públicos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Relief_of_Soldiers_of_the_Praetorian_Guard_01_(51220287737).jpg" target="_blank" rel="noopener">Relevo romano com soldados da guarda pretoriana</a>: Jamie Heath, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Michael_V%C3%A1clav_Halbax_-_St_Paul_and_Silas_in_Prison_-_O_2303_-_National_Gallery_Prague.jpg" target="_blank" rel="noopener">Paulo e Silas na prisão (pintura, Galeria Nacional de Praga)</a>: Michael Václav Halbax, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_upper_city_wall_1.JPG" target="_blank" rel="noopener">Trecho da muralha da cidade alta</a>: Marsyas, CC BY-SA 3.0, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>

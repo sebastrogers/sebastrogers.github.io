@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ebd.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235E1F4F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='serif' fill='%23E7C98A'%3EF%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -17,7 +18,39 @@
 <div class="envoltorio">
   <header class="topo">
     <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
-    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span><button class="botao-menu" type="button" id="abrirMenu" aria-expanded="false" aria-controls="menuSite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  <div class="menu-fundo" id="menuFundo" hidden></div>
+  <nav class="menu-site" id="menuSite" aria-label="Menu do site" hidden>
+    <div class="menu-cab"><span class="inscricao">Expedição Filipos</span><button type="button" class="menu-fechar" id="fecharMenu" aria-label="Fechar o menu">&times;</button></div>
+    <div class="menu-conta" id="menuConta"></div>
+    <p class="menu-rotulo">Navegar</p>
+    <ul class="menu-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#tRota">A rota de Paulo</a></li>
+      <li><a href="index.html#passaporte-secao">Meu passaporte</a></li>
+      <li><a href="index.html#conheca">Conheça Filipos</a></li>
+      <li><a href="index.html#tituloBib">Vídeos e podcasts do trimestre</a></li>
+      <li><a href="index.html#livros">Livros do trimestre</a></li>
+      <li><a href="sobre.html">Sobre a revista</a></li>
+    </ul>
+    <p class="menu-rotulo">As 13 paradas</p>
+    <ol class="menu-paradas">
+      <li><a href="licao-01.html" data-n="1"><span class="mp-n">1</span><span class="mp-t">Porto de Neápolis<small>4 out · Carta aos Filipenses: um chamado à alegria</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-02.html" data-n="2"><span class="mp-n">2</span><span class="mp-t">Portão da colônia<small>11 out · Uma vida digna do evangelho</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-03.html" data-n="3"><span class="mp-n">3</span><span class="mp-t">Fórum<small>18 out · A humildade de Cristo: o exemplo supremo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-04.html" data-n="4"><span class="mp-n">4</span><span class="mp-t">Acrópole<small>25 out · Brilhe a luz de Cristo em meio à geração corrompida</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-05.html" data-n="5" aria-current="page"><span class="mp-n">5</span><span class="mp-t">Via Egnatia<small>1 nov · Exemplo de servos fiéis: Timóteo e Epafrodito</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-06.html" data-n="6"><span class="mp-n">6</span><span class="mp-t">Muralhas<small>8 nov · Guardando-se dos falsos mestres</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-07.html" data-n="7"><span class="mp-n">7</span><span class="mp-t">Teatro e arena<small>15 nov · O alvo supremo: conhecer a Cristo</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-08.html" data-n="8"><span class="mp-n">8</span><span class="mp-t">Rio Gangites<small>22 nov · Unidade e alegria no Senhor</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-09.html" data-n="9"><span class="mp-n">9</span><span class="mp-t">A prisão<small>29 nov · A paz de Deus guarda o coração</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-10.html" data-n="10"><span class="mp-n">10</span><span class="mp-t">Ágora<small>6 dez · O pensar cristão: o que ocupa a sua mente?</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-11.html" data-n="11"><span class="mp-n">11</span><span class="mp-t">Mercado<small>13 dez · Contentamento em toda e qualquer situação</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-12.html" data-n="12"><span class="mp-n">12</span><span class="mp-t">Casa de Lídia<small>20 dez · Generosidade e cuidado com a obra de Deus</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+      <li><a href="licao-13.html" data-n="13"><span class="mp-n">13</span><span class="mp-t">As basílicas<small>27 dez · Saudações finais, comunhão e bênçãos</small></span><span class="mp-ok" title="Carimbada"></span></a></li>
+    </ol>
+    <p class="menu-rotulo">Lição 1: para ir mais fundo</p><ul class="menu-links"><li><a href="aprofundamento-01.html">Anatomia de uma história</a></li><li><a href="aula-01.html">Slides da aula</a></li></ul>
+  </nav></div>
   </header>
 
   <main id="conteudo">
@@ -47,19 +80,19 @@
     <div class="cartoes">
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Via%20Egnatia%2C%20Philippi%20(7272787450).jpg?width=960" alt="Pedras da Via Egnatia em Filipos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Mensageiros</span><span class="frase">Cartas que andavam a pé</span></span></span>
-        <span class="lado verso"><h3>Sem correio</h3><p>Para gente comum não havia correio. Cartas e ofertas viajavam nas mãos de alguém de confiança, pelas estradas romanas.</p></span>
+        <span class="lado verso"><h3>Sem correio</h3><p>Para gente comum não havia correio. Cartas e ofertas viajavam nas mãos de alguém de confiança, pelas estradas romanas.</p><small class="cred-img">Imagem: Pedras da Via Egnatia em Filipos</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Amphipolis%20Lion.jpg?width=960" alt="Leão de Anfípolis, no caminho entre Filipos e Tessalônica" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Timóteo</span><span class="frase">Filho na fé</span></span></span>
-        <span class="lado verso"><h3>O que cuida</h3><p>Entrou na equipe em Listra (At 16.1). Paulo diz que ninguém cuidava dos filipenses com tanta sinceridade e que ele serviu "como filho ao pai" (Fp 2.20 a 22).</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Saint%20Timothy%20the%20Apostle.jpg?width=960" alt="Ícone de Timóteo numa igreja ortodoxa" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Timóteo</span><span class="frase">Filho na fé</span></span></span>
+        <span class="lado verso"><h3>O que cuida</h3><p>Entrou na equipe em Listra (At 16.1). Paulo diz que ninguém cuidava dos filipenses com tanta sinceridade e que ele serviu "como filho ao pai" (Fp 2.20 a 22).</p><small class="cred-img">Imagem: Ícone de Timóteo numa igreja ortodoxa</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
-        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kavala%20old%20town%2C%20view%20from%20the%20castle.jpg?width=960" alt="Kavala, a antiga Neápolis, vista do castelo" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Epafrodito</span><span class="frase">Irmão, cooperador, soldado</span></span></span>
-        <span class="lado verso"><h3>O que se arrisca</h3><p>Levou a oferta da igreja e adoeceu quase à morte. Ficou angustiado só porque a igreja soube da doença dele (Fp 2.25 a 27).</p></span>
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Epaphroditus.jpg?width=960" alt="Epafrodito numa miniatura de manuscrito do século XV (Biblioteca Nacional da Rússia)" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Epafrodito</span><span class="frase">Irmão, cooperador, soldado</span></span></span>
+        <span class="lado verso"><h3>O que se arrisca</h3><p>Levou a oferta da igreja e adoeceu quase à morte. Ficou angustiado só porque a igreja soube da doença dele (Fp 2.25 a 27).</p><small class="cred-img">Imagem: Epafrodito numa miniatura de manuscrito do século XV (Biblioteca Nacional da Rússia)</small></span>
       </div>
       <div class="cartao" role="button" tabindex="0" aria-pressed="false">
         <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20-%20Forum%2C%20Basikila%20B%2C%20Balneum%2C%20Octagon.jpg?width=960" alt="Fórum, Basílica B, termas e igreja octogonal" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Equipe</span><span class="frase">Ninguém serve sozinho</span></span></span>
-        <span class="lado verso"><h3>O Reino é plural</h3><p>Jesus formou uma equipe de discípulos. Paulo andava cercado de cooperadores. Quando Deus quer fazer algo grande, Ele chama pessoas e forma uma equipe.</p></span>
+        <span class="lado verso"><h3>O Reino é plural</h3><p>Jesus formou uma equipe de discípulos. Paulo andava cercado de cooperadores. Quando Deus quer fazer algo grande, Ele chama pessoas e forma uma equipe.</p><small class="cred-img">Imagem: Fórum, Basílica B, termas e igreja octogonal</small></span>
       </div>
     </div>
   </section>
@@ -86,6 +119,7 @@
       <figcaption>Para pensar esta semana</figcaption>
       <blockquote>Quem caminha comigo na fé, e com quem eu tenho caminhado?</blockquote>
     </figure>
+    
     
   </section>
 
@@ -138,8 +172,8 @@
   </nav>
 
   <footer class="rodape">
-    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 5 (CPAD) · Bíblia Sagrada, ARC.</p>
-    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Via_Egnatia%2C_Philippi_(7272787450).jpg" target="_blank" rel="noopener">Pedras da Via Egnatia em Filipos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Amphipolis_Lion.jpg" target="_blank" rel="noopener">Leão de Anfípolis, no caminho entre Filipos e Tessalônica</a>: Kkonstan, CC BY 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Kavala_old_town%2C_view_from_the_castle.jpg" target="_blank" rel="noopener">Kavala, a antiga Neápolis, vista do castelo</a>: Xristoupolitis, CC BY-SA 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_-_Forum%2C_Basikila_B%2C_Balneum%2C_Octagon.jpg" target="_blank" rel="noopener">Fórum, Basílica B, termas e igreja octogonal</a>: DocWoKav, CC BY-SA 4.0, via Wikimedia Commons</li></ul></details>
+    <p>Fontes: Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 5 (CPAD) · Bíblia Sagrada, ARC. <a href="sobre.html">Sobre a revista</a>.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Via_Egnatia%2C_Philippi_(7272787450).jpg" target="_blank" rel="noopener">Pedras da Via Egnatia em Filipos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Amphipolis_Lion.jpg" target="_blank" rel="noopener">Leão de Anfípolis, no caminho entre Filipos e Tessalônica</a>: Kkonstan, CC BY 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Kavala_old_town%2C_view_from_the_castle.jpg" target="_blank" rel="noopener">Kavala, a antiga Neápolis, vista do castelo</a>: Xristoupolitis, CC BY-SA 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Saint_Timothy_the_Apostle.jpg" target="_blank" rel="noopener">Ícone de Timóteo numa igreja ortodoxa</a>: Moralmonke, CC BY-SA 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Epaphroditus.jpg" target="_blank" rel="noopener">Epafrodito numa miniatura de manuscrito do século XV (Biblioteca Nacional da Rússia)</a>: Autor desconhecido, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_-_Forum%2C_Basikila_B%2C_Balneum%2C_Octagon.jpg" target="_blank" rel="noopener">Fórum, Basílica B, termas e igreja octogonal</a>: DocWoKav, CC BY-SA 4.0, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>
 <script src="assets/ebd.js"></script>
