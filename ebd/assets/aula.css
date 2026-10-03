@@ -340,3 +340,8 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .controles .sair{border-color:rgba(231,201,138,.6);color:#E7C98A}
 @media screen and (max-width:760px) and (orientation:portrait){.controles .sair{padding:6px 10px}}
 .controles button,.controles .contador,.controles a{white-space:nowrap}
+.controles .botao-tema{display:inline-flex !important;align-items:center;justify-content:center;width:38px;height:38px;min-width:38px;padding:0 !important;line-height:0}
+.controles .botao-tema svg{display:block;margin:0;width:18px;height:18px}
+.controles #tema{display:inline-flex;align-items:center}
+.s-lado .foto figcaption{top:14px;bottom:auto}
+@media screen and (max-height:500px){.controles .botao-tema{width:32px;height:32px;min-width:32px}}
