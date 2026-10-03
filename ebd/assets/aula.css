@@ -19,8 +19,8 @@
 
 /* ================= SLIDES ================= */
 body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10}
-.palco{position:fixed;inset:0;display:grid;place-items:center}
-.tela{position:relative;width:1280px;height:720px;transform-origin:center center;flex:none;background:var(--pedra);color:var(--tinta);overflow:hidden;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.palco{position:fixed;inset:0;overflow:hidden}
+.tela{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center;transform:translate(-50%,-50%);flex:none;background:var(--pedra);color:var(--tinta);overflow:hidden;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .slide{position:absolute;inset:0;display:none;padding:64px 80px 70px;font-size:26px;line-height:1.45}
 .slide.ativo{display:flex;flex-direction:column;animation:entra .45s ease}
 @keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -228,3 +228,115 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .slide .lista-fontes{font-size:16px;columns:2;column-gap:40px}
 .slide .lista-fontes li{break-inside:avoid;margin-bottom:6px}
 .refs{margin-top:10px}
+
+/* ===== celular em pé: slides reorganizados para a tela ===== */
+@media screen and (max-width:760px) and (orientation:portrait){
+  .tela{left:0;top:0;width:100vw;height:100vh;height:100dvh;transform:none !important;border-radius:0;box-shadow:none}
+  .slide{padding:22px 18px 92px;font-size:17px;line-height:1.5;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .slide.ativo{display:flex}
+  .slide .passo{opacity:1 !important;transform:none !important}
+  .slide h2{font-size:28px;margin-bottom:12px}
+  .slide h3{font-size:20px}
+  .slide .rotulo{font-size:12px;margin-bottom:8px}
+  .slide .ref{font-size:14px}
+  .slide ul.itens{gap:10px}
+  .slide ul.itens li{padding-left:24px}
+  .slide ul.itens li::before{width:9px;height:9px}
+  .slide .citacao{font-size:19px !important;padding-left:16px;border-left-width:4px}
+  .slide .citacao cite{font-size:13px}
+  .slide p[style*="font-size"]{font-size:17px !important}
+  .slide h2[style*="font-size"]{font-size:28px !important}
+  .destaque-num{font-size:72px}
+  /* capa e fotos de fundo */
+  .s-capa .conteudo,.s-fundo .conteudo{padding:0 18px 96px;margin-top:auto}
+  .s-fundo.lado .conteudo{margin:auto 0 0;max-width:none}
+  .s-fundo.lado::after{background:linear-gradient(to top,rgba(14,9,18,.95) 0%,rgba(14,9,18,.75) 60%,rgba(14,9,18,.2) 100%)}
+  .s-capa h1{font-size:34px}
+  .s-capa .capa-licao{font-size:15px;flex-wrap:wrap}
+  .s-capa .capa-licao b{font-size:13px}
+  .slide.s-capa,.slide.s-fundo{padding:0;overflow-y:auto}
+  .s-capa .kb,.s-fundo .kb,.s-capa > img,.s-fundo > img{position:fixed}
+  .legenda-foto{font-size:11px;max-width:70%;top:10px;right:10px}
+  /* foto ao lado vira foto em cima */
+  .s-lado{flex-direction:column !important;gap:0;padding:0 0 92px !important}
+  .s-lado.inverso{flex-direction:column !important}
+  .s-lado .foto{flex:0 0 auto;height:34vh}
+  .s-lado .foto figcaption{font-size:11px;bottom:8px;left:8px;right:8px}
+  .s-lado .texto,.s-lado.inverso .texto{padding:18px 18px 0;justify-content:flex-start}
+  .s-lado .foto.contem img{padding:14px}
+  /* grades viram uma coluna */
+  .slide.ativo.com-coluna{display:flex;flex-direction:column;gap:18px;align-items:stretch}
+  .com-coluna .estratos{font-size:14px}
+  .grade-2,.grade-3,.cartoes-aula,.anatomia{grid-template-columns:1fr !important}
+  .slide .grade-3 .caixa,.caixa{font-size:16px}
+  .slide .verso{font-size:18px}
+  .cartao-aula{font-size:16px;flex-direction:row}
+  .cartao-aula img{width:110px;height:auto;min-height:110px;flex:none}
+  .cartao-aula h3{font-size:19px}
+  .anatomia > div + div{border-left:0;border-top:1px solid var(--linha)}
+  .anatomia h3{font-size:22px}
+  .anatomia ul{font-size:15px}
+  .linha-h{grid-template-columns:1fr !important;gap:14px;margin:18px 0 0 6px;padding-left:30px}
+  .linha-h::before{left:9px;right:auto;top:0;bottom:0;width:3px;height:auto}
+  .linha-h > div{padding-top:0;font-size:16px}
+  .linha-h > div::before{left:-30px;top:3px;width:18px;height:18px}
+  .linha-h b{font-size:19px}
+  .s-pergunta blockquote{font-size:28px}
+  .s-pergunta p.sub{font-size:16px}
+  .s-pergunta .chip{font-size:13px;margin-bottom:20px}
+  .s-pergunta{justify-content:center}
+  .revisao details{font-size:16px}
+  .slide .lista-fontes{columns:1;font-size:13px}
+  .slide > div[style*="grid-template-columns:auto 1fr"]{grid-template-columns:1fr !important;gap:10px !important;text-align:left}
+  /* atividade dos círculos: vira três caixas */
+  .venn{height:auto;display:grid;gap:10px;margin:8px 0}
+  .venn .zona,.venn .z-ambos{position:static;width:auto;height:auto;min-height:74px;border-radius:14px;padding:10px 12px;transform:none;display:block;text-align:left}
+  .venn .z-ambos{order:2;border-width:2px}
+  .venn .z-senhor{order:3}
+  .venn .zona > span.nome,.venn .nome-ambos{margin:0 !important;font-size:17px;display:block}
+  .venn .lista,.venn .z-mundo .lista,.venn .z-senhor .lista,.venn .z-ambos .lista{position:static;transform:none;margin:8px 0 0 !important;justify-content:flex-start;flex-direction:row;max-width:none;width:auto}
+  .dica-venn{font-size:14px;text-align:left}
+  .ficha{font-size:14px;padding:5px 11px}
+  .slide .mapa-slide .mapa{max-height:none;width:100%}
+  /* controles compactos */
+  .controles{opacity:1;left:8px;right:8px;bottom:10px;justify-content:center;gap:6px}
+  .controles a,.controles #bTela{display:none}
+  .controles .botao-tema span{display:none}
+  .controles button,.controles .contador,.controles .botao-tema{min-height:40px;font-size:13px;padding:6px 12px}
+  .notas{bottom:60px;max-height:55vh;font-size:15px}
+}
+/* celular deitado: controles menores */
+@media screen and (max-height:500px){
+  .controles{opacity:.85;gap:4px;right:6px;bottom:6px}
+  .controles a,.controles #bTela{display:none}
+  .controles .botao-tema span{display:none}
+  .controles button,.controles .contador,.controles .botao-tema{min-height:32px;font-size:12px;padding:4px 10px}
+}
+
+/* ===== PDF / impressão: um slide por página 16:9 ===== */
+@page{size:338.67mm 190.5mm;margin:0}
+@media print{
+  html,body.deck{height:auto;overflow:visible;background:#fff}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .palco{position:static;overflow:visible}
+  .tela{position:static;transform:none !important;width:1280px;height:auto;border-radius:0;box-shadow:none;overflow:visible;background:transparent}
+  .slide{display:flex !important;flex-direction:column;position:relative;width:1280px;height:720px;overflow:hidden;break-after:page;page-break-after:always;animation:none !important;background:var(--pedra)}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  .slide.com-coluna{display:grid !important}
+  .slide.s-lado{flex-direction:row !important}
+  .slide.s-lado.inverso{flex-direction:row-reverse !important}
+  .slide .passo{opacity:1 !important;transform:none !important}
+  .kb-slide{animation:none !important;opacity:0 !important}
+  .kb-slide:first-child{opacity:1 !important}
+  .kb-slide img{animation:none !important;transform:none !important}
+  .barra,.controles,.notas,.dica-venn{display:none !important}
+  .mapa .lugar,.mapa .rota-desenho{opacity:1 !important;animation:none !important;stroke-dashoffset:0 !important}
+  .mapa-slide .acoes{display:none}
+  .revisao{gap:6px}
+  .revisao details{padding:7px 16px;font-size:19px}
+  .revisao details p{margin:4px 0 0 30px}
+}
+
+.controles .sair{border-color:rgba(231,201,138,.6);color:#E7C98A}
+@media screen and (max-width:760px) and (orientation:portrait){.controles .sair{padding:6px 10px}}
+.controles button,.controles .contador,.controles a{white-space:nowrap}

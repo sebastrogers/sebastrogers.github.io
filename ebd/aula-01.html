@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="assets/ebd.css">
 <link rel="stylesheet" href="assets/aula.css">
 </head>
-<body class="deck">
+<body class="deck" data-sair="licao-01.html">
 <main class="palco">
 <div class="tela">
 <section class="slide s-capa" style="" aria-label="Capa"><div class="kb" role="img" aria-label="Filipos: o monte Pangeu, a Via Egnatia e o fórum">
@@ -166,9 +166,11 @@
 <div class="barra"><i></i></div>
 <div class="notas" id="notas" role="region" aria-label="Notas do professor"><h4>Notas do professor</h4><div class="texto-nota"></div><p class="ajuda-teclas">Setas ou toque: avançar e voltar · F: tela cheia · N: notas · Home e End: início e fim</p></div>
 <nav class="controles" aria-label="Controles da apresentação">
+  <button type="button" id="bSair" class="sair" title="Sair dos slides">&times; Sair</button>
   <a href="aprofundamento-01.html" title="Página de aprofundamento">Ler mais</a>
   <span id="tema"></span>
   <button type="button" id="bNotas">Notas</button>
+  <button type="button" id="bPdf" title="Gerar PDF dos slides">PDF</button>
   <button type="button" id="bTela">Tela cheia</button>
   <button type="button" id="bAnt" aria-label="Slide anterior">‹</button>
   <span class="contador" id="contador">1</span>

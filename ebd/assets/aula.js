@@ -64,6 +64,7 @@
     else if (k === 'End') mostrar(slides.length - 1, true);
     else if (k === 'f' || k === 'F') telaCheia();
     else if (k === 'n' || k === 'N') alternarNotas();
+    else if (k === 'p' || k === 'P') document.querySelector('#bPdf').click();
   });
   document.querySelector('.palco').addEventListener('click', (e) => {
     if (e.target.closest('button,a,summary,details,.venn,.fichas,.mapa-slide,.revisao')) return;
@@ -82,6 +83,32 @@
   document.querySelector('#bProx').addEventListener('click', avancar);
   document.querySelector('#bTela').addEventListener('click', telaCheia);
   document.querySelector('#bNotas').addEventListener('click', alternarNotas);
+  document.querySelector('#bSair').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    let mesmoSite = false;
+    try { mesmoSite = document.referrer && new URL(document.referrer).origin === location.origin && !document.referrer.includes('aula-'); } catch (e) { /* ok */ }
+    if (mesmoSite && history.length > 1) history.back();
+    else location.href = document.body.dataset.sair || 'index.html';
+  });
+  /* PDF: prepara a impressão com todos os slides */
+  let abertosAntes = [];
+  function prepararImpressao() {
+    document.body.classList.add('imprimindo');
+    slides.forEach(sl => sl.querySelectorAll('.passo').forEach(p => p.classList.add('visto')));
+    abertosAntes = [...document.querySelectorAll('.revisao details')].map(d => d.open);
+    document.querySelectorAll('.revisao details').forEach(d => { d.open = true; });
+    const m = document.querySelector('.mapa-slide #mapa');
+    if (m && !m.dataset.pronto && window.Expedicao && Expedicao.mapa) { m.dataset.pronto = '1'; Expedicao.mapa(m); }
+    if (m) { const svg = m.querySelector('svg'); if (svg) svg.classList.add('ativo'); }
+  }
+  function depoisImpressao() {
+    document.body.classList.remove('imprimindo');
+    document.querySelectorAll('.revisao details').forEach((d, i) => { d.open = !!abertosAntes[i]; });
+    mostrar(atual);
+  }
+  window.addEventListener('beforeprint', prepararImpressao);
+  window.addEventListener('afterprint', depoisImpressao);
+  document.querySelector('#bPdf').addEventListener('click', () => { prepararImpressao(); setTimeout(() => window.print(), 300); });
   let t; document.addEventListener('mousemove', () => { document.body.classList.add('mostrar-ctrl'); clearTimeout(t); t = setTimeout(() => document.body.classList.remove('mostrar-ctrl'), 1800); });
 
   /* atividade: os dois círculos */
