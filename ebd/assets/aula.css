@@ -359,3 +359,14 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .camada .duas img{width:100%;height:auto;aspect-ratio:4/3;max-height:none;object-fit:contain;background:var(--pedra-2)}
 .camada .duas figcaption{flex:1}
 @media (max-width:600px){.pagina-aula .camada p,.pagina-aula .camada li,.pagina-aula .corte p,.pagina-aula .tres-mundos p,.pagina-aula .na-carta p{text-align:left}}
+
+/* versículos no aprofundamento (proposta B) */
+.versiculo{margin:18px 0;padding:14px 20px 16px;border-left:4px solid #C9A24D;background:var(--papel);border-radius:0 12px 12px 0;box-shadow:var(--sombra)}
+.versiculo .vs-ref{display:flex;align-items:center;gap:8px;margin:0 0 6px !important;font:700 .76rem "Atkinson Hyperlegible",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9A7A2E;text-align:left !important}
+.versiculo .vs-ref svg{width:17px;height:17px;flex:none}
+.versiculo .vs-ref cite{font-style:normal}
+.versiculo .vs-texto{margin:0 !important;font-family:"Literata",Georgia,serif;font-size:1.1rem;line-height:1.62;color:var(--tinta);text-align:left !important;-webkit-hyphens:manual !important;hyphens:manual !important}
+:root[data-theme="dark"] .versiculo .vs-ref{color:#D6B06A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .versiculo .vs-ref{color:#D6B06A}}
+.na-carta .versiculo{box-shadow:none;margin:10px 0 12px}
+@media (max-width:600px){.versiculo{padding:12px 14px 14px}.versiculo .vs-texto{font-size:1.04rem}}
