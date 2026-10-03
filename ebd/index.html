@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Expedição Filipos</title>
 <meta name="description" content="EBD Jovens, 4º trimestre de 2026: uma viagem por Filipos em 13 paradas, estudando a Carta aos Filipenses.">
+<script>try{var t=localStorage.getItem('expedicaoTema');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
@@ -14,29 +15,30 @@
 <body>
 <div class="envoltorio">
   <header class="topo">
-    <a class="marca" href="index.html">
-      <span class="inscricao">Expedição Filipos<small>EBD Jovens · 4º trimestre 2026</small></span>
-    </a>
-    <div class="viajante" id="viajante"></div>
+    <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>EBD Jovens · 4º trimestre 2026</small></a>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
   </header>
 
   <section class="heroi" aria-labelledby="titulo">
-    <div class="heroi-grade">
-      <div>
-        <h1 id="titulo">Expedição Filipos</h1>
-        <p class="linha-sub">Neste trimestre vamos estudar a Carta aos Filipenses viajando pela cidade que a recebeu. São 13 domingos, um lugar de Filipos em cada um.</p>
-        <p>Em cada parada tem a história do lugar, curiosidades, um resumo da lição, desafios para fazer no celular, vídeos, podcasts e leituras. Terminou os desafios? Seu passaporte ganha um carimbo.</p>
-        <div class="acoes">
-          <a class="botao" href="licao-01.html">Começar pela parada 1</a>
-          <a class="botao vazado" href="#conheca">Conhecer Filipos</a>
-        </div>
-      </div>
-      <div id="mapaHeroi"></div>
+    <h1 id="titulo">Expedição Filipos</h1>
+    <p class="linha-sub">Neste trimestre vamos estudar a Carta aos Filipenses viajando pela cidade que a recebeu. São 13 domingos, um lugar de Filipos em cada um.</p>
+    <div class="acoes">
+      <a class="botao" href="licao-01.html">Começar pela parada 1</a>
+      <a class="botao vazado" href="#conheca">Conhecer Filipos</a>
     </div>
+    <div class="cena" data-cena="panorama"></div>
+  </section>
+
+  <section aria-labelledby="tRota">
+    <div class="secao-titulo">
+      <h2 id="tRota">A rota de Paulo</h2>
+      <p>De Trôade, na Ásia, até Filipos, a primeira cidade da Europa a ouvir o evangelho pela boca de Paulo (Atos 16).</p>
+    </div>
+    <div id="mapa"></div>
   </section>
 
   <section id="passaporte-secao" aria-labelledby="tituloPass">
-    <div class="passaporte" id="passaporte-caixa">
+    <div class="passaporte">
       <div class="passaporte-cab">
         <h2 id="tituloPass">Meu passaporte</h2>
         <span class="contagem" id="contagemCarimbos"></span>
@@ -46,52 +48,124 @@
   </section>
 
   <section id="conheca" aria-labelledby="tituloConheca">
-    <div class="coluna">
-      <div class="secao-titulo"><h2 id="tituloConheca">Conheça Filipos</h2></div>
-      <p>Filipos ficava no nordeste da Macedônia, hoje norte da Grécia, a uns 15 km do mar. Foi a primeira cidade da Europa onde Paulo pregou e fundou uma igreja. Veja como ela chegou até ali.</p>
-      <ol class="tempo">
-        <li><span class="ano">c. 360 a.C.</span><p>Colonos da ilha de Tasos fundam Crenides, nome que lembra as fontes de água do lugar, perto das minas de ouro do monte Pangeu.</p></li>
-        <li><span class="ano">356 a.C.</span><p>Filipe II da Macedônia, pai de Alexandre, o Grande, toma a cidade, fortifica e dá a ela o seu nome.</p></li>
-        <li><span class="ano">Século II a.C.</span><p>Os romanos constroem a Via Egnatia, estrada que ligava o mar Adriático a Bizâncio e passava bem no meio de Filipos.</p></li>
-        <li><span class="ano">42 a.C.</span><p>Nos campos da cidade, Marco Antônio e Otávio derrotam Brutus e Cássio, os assassinos de Júlio César. Soldados veteranos passam a morar ali.</p></li>
-        <li><span class="ano">c. 30 a.C.</span><p>Otávio, já como Augusto, refunda Filipos como colônia romana. Lei romana, magistrados romanos e latim nos documentos oficiais: uma pequena Roma na Macedônia.</p></li>
-        <li><span class="ano">c. 49 a 50 d.C.</span><p>Paulo, Silas, Timóteo e Lucas chegam. Lídia se converte, um carcereiro também, e nasce a igreja (Atos 16).</p></li>
-        <li><span class="ano">c. 61 a 62 d.C.</span><p>Preso, provavelmente em Roma, Paulo recebe a oferta trazida por Epafrodito e escreve a Carta aos Filipenses.</p></li>
-        <li><span class="ano">Séculos IV a VI</span><p>Filipos se torna um centro cristão importante, com grandes basílicas e uma igreja octogonal dedicada a Paulo.</p></li>
-        <li><span class="ano">2016</span><p>O sítio arqueológico de Filipos entra na lista de Patrimônio Mundial da UNESCO.</p></li>
-      </ol>
+    <div class="secao-titulo">
+      <h2 id="tituloConheca">Conheça Filipos</h2>
+      <p>Da vila de mineiros ao Patrimônio da Humanidade, em nove momentos.</p>
     </div>
+    <ol class="tempo">
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20upper%20city%20wall%201.JPG?width=960" alt="Trecho da muralha da cidade alta" loading="lazy" decoding="async"><figcaption>Trecho da muralha da cidade alta</figcaption></figure>
+        <div class="corpo"><span class="ano">c. 360 a.C.</span><h3>Nasce Crenides</h3>
+          <p>Colonos da ilha de Tasos fundam uma vila perto de fontes de água e das minas de ouro do monte Pangeu. O nome Crenides lembra essas fontes.</p>
+          <a href="https://pt.wikipedia.org/wiki/Filipos" target="_blank" rel="noopener">Ler sobre Filipos</a></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi.jpg?width=960" alt="Moeda de ouro cunhada em Filipos, século IV a.C." loading="lazy" decoding="async"><figcaption>Moeda de ouro cunhada em Filipos, século IV a.C.</figcaption></figure>
+        <div class="corpo"><span class="ano">356 a.C.</span><h3>Uma cidade com nome de rei</h3>
+          <p>Filipe II da Macedônia, pai de Alexandre, o Grande, toma a cidade por causa do ouro, fortifica e dá a ela o seu nome.</p></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Via%20Egnatia%2C%20Philippi%20%287272787450%29.jpg?width=960" alt="Pedras da Via Egnatia em Filipos" loading="lazy" decoding="async"><figcaption>Pedras da Via Egnatia em Filipos</figcaption></figure>
+        <div class="corpo"><span class="ano">Século II a.C.</span><h3>Chega a Via Egnatia</h3>
+          <p>Os romanos constroem uma estrada de pedra que liga o mar Adriático a Bizâncio e passa no meio de Filipos. Ainda dá para pisar nas pedras originais.</p>
+          <a href="https://pt.wikipedia.org/wiki/Via_Eg%C3%A1cia" target="_blank" rel="noopener">Ler sobre a Via Egnatia</a></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20forum%20and%20basilicas%20from%20acropolis%2001.jpg?width=960" alt="Fórum e basílicas vistos da acrópole, com a planície ao fundo" loading="lazy" decoding="async"><figcaption>Fórum e basílicas vistos da acrópole, com a planície ao fundo</figcaption></figure>
+        <div class="corpo"><span class="ano">42 a.C.</span><h3>A batalha de Filipos</h3>
+          <p>Na planície da cidade, Marco Antônio e Otávio derrotam Brutus e Cássio, os assassinos de Júlio César. Soldados veteranos passam a morar ali.</p>
+          <a href="https://pt.wikipedia.org/wiki/Batalha_de_Filipos" target="_blank" rel="noopener">Ler sobre a batalha</a></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Latin%20inscriptions%20found%20in%20the%20Forum%2C%20Philippi%20%287272469500%29.jpg?width=960" alt="Inscrição em latim encontrada no fórum" loading="lazy" decoding="async"><figcaption>Inscrição em latim encontrada no fórum</figcaption></figure>
+        <div class="corpo"><span class="ano">c. 30 a.C.</span><h3>Uma pequena Roma</h3>
+          <p>Otávio, já como Augusto, refunda Filipos como colônia romana. Lei romana, magistrados romanos e latim nos documentos, numa região que falava grego.</p></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-15-20.jpg?width=960" alt="Batistério de Santa Lídia, perto do rio, em Filipos" loading="lazy" decoding="async"><figcaption>Batistério de Santa Lídia, perto do rio, em Filipos</figcaption></figure>
+        <div class="corpo"><span class="ano">c. 49 a 50 d.C.</span><h3>Nasce a igreja</h3>
+          <p>Paulo, Silas, Timóteo e Lucas chegam. Lídia se converte à beira do rio, um carcereiro também, e nasce a primeira igreja da Europa (Atos 16).</p>
+          <a href="https://pt.wikipedia.org/wiki/L%C3%ADdia_de_Tiatira" target="_blank" rel="noopener">Ler sobre Lídia</a></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Bifolio%20from%20Paul%27s%20Letter%20to%20the%20Romans%2C%20the%20end%20of%20Paul%27s%20Letter%20to%20the%20Philippians%20and%20the%20beginning%20of%20Paul%27s%20Letter%20to%20the%20Colossians.jpg?width=960" alt="Papiro P46 (por volta de 200 d.C.): final de Filipenses e começo de Colossenses" loading="lazy" decoding="async"><figcaption>Papiro P46 (por volta de 200 d.C.): final de Filipenses e começo de Colossenses</figcaption></figure>
+        <div class="corpo"><span class="ano">c. 61 a 62 d.C.</span><h3>A carta</h3>
+          <p>Preso, provavelmente em Roma, Paulo recebe a oferta trazida por Epafrodito e escreve aos filipenses. Uma das cópias mais antigas que temos é este papiro.</p>
+          <a href="https://pt.wikipedia.org/wiki/Papiro_46" target="_blank" rel="noopener">Ler sobre o Papiro 46</a></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20imposing%20early%20Christian%20Basilica%20%28Basilica%20B%29%20next%20to%20the%20Forum%2C%20PhilippiPhilippi%20%287272631506%29.jpg?width=960" alt="Basílica B, do século VI, ao lado do fórum" loading="lazy" decoding="async"><figcaption>Basílica B, do século VI, ao lado do fórum</figcaption></figure>
+        <div class="corpo"><span class="ano">Séculos IV a VI</span><h3>Cidade de igrejas</h3>
+          <p>Filipos vira um centro cristão importante, com grandes basílicas e uma igreja octogonal dedicada a Paulo.</p></div>
+      </article></li>
+      <li><article class="marco">
+        <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ancient%20theatre%20-%20Philippi.jpg?width=960" alt="O teatro de Filipos, erguido no tempo de Filipe II" loading="lazy" decoding="async"><figcaption>O teatro de Filipos, erguido no tempo de Filipe II</figcaption></figure>
+        <div class="corpo"><span class="ano">2016</span><h3>Patrimônio da Humanidade</h3>
+          <p>O sítio arqueológico de Filipos entra na lista de Patrimônio Mundial da UNESCO. Hoje dá para visitar o fórum, o teatro e as basílicas.</p>
+          <a href="https://whc.unesco.org/en/list/1517" target="_blank" rel="noopener">Ver na UNESCO</a></div>
+      </article></li>
+    </ol>
   </section>
 
-  <section id="biblioteca" aria-labelledby="tituloBib">
+  <section aria-labelledby="tituloBib">
     <div class="secao-titulo"><h2 id="tituloBib">Para o trimestre todo</h2><p>Bons para assistir ou ouvir antes da primeira aula.</p></div>
-    <div class="extras">
-      <article class="extra">
-        <span class="tipo">Vídeo · 9 min</span>
-        <h3>Filipenses: visão geral</h3>
-        <div class="video" data-yt="OtJkruVf4b0" data-titulo="Filipenses, BibleProject Português"></div>
-        <p>BibleProject Português. A carta inteira em desenho animado, com o poema sobre Cristo no centro.</p>
-      </article>
-      <article class="extra">
-        <span class="tipo">Podcast · 48 min</span>
-        <h3>Filipenses (BTCast 341)</h3>
-        <p>Bibotalk. Carta ou epístola? De onde Paulo escreveu? Quais os grandes temas? Uma conversa para entender o livro antes de estudar.</p>
-        <a class="abrir" href="https://bibotalk.com/podcast/btcast/filipenses-btcast-341/" target="_blank" rel="noopener">Ouvir no Bibotalk</a>
-      </article>
-      <article class="extra">
-        <span class="tipo">Guia de estudo</span>
-        <h3>Guia de Filipenses do BibleProject</h3>
-        <p>A carta dividida em cinco partes, com explicações curtas e vídeos ligados a cada trecho.</p>
-        <a class="abrir" href="https://bibleproject.com/pt-br/guides/filipenses/" target="_blank" rel="noopener">Abrir o guia</a>
-      </article>
+    <div class="grupo">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Vídeos</h3>
+      <div class="extras">
+        <article class="extra">
+          <span class="tipo">BibleProject Português · 9 min</span>
+          <h4>Filipenses: visão geral</h4>
+          <div class="video" data-yt="OtJkruVf4b0" data-titulo="Filipenses, BibleProject Português"></div>
+          <p>A carta inteira em desenho animado, com o poema sobre Cristo bem no centro.</p>
+        </article>
+        <article class="extra">
+          <span class="tipo">JesusCopy · Talmidim</span>
+          <h4>Filipenses comentado #2 (Fp 1.7 a 18)</h4>
+          <div class="video" data-yt="LVmEnPXQOX0" data-titulo="Filipenses comentado 2, JesusCopy"></div>
+          <p>Douglas Gonçalves comenta, trecho por trecho, o começo da carta.</p>
+        </article>
+      </div>
+    </div>
+    <div class="grupo">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>Podcasts</h3>
+      <div class="extras">
+        <article class="extra podcast">
+          <span class="onda"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20h3M12 13v14M18 8v24M24 14v12M30 10v20M34 20h1" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>
+          <div><span class="tipo">Bibotalk · BTCast 341 · 48 min</span><h4>Filipenses</h4>
+          <p>Carta ou epístola? De onde Paulo escreveu? Quais são os grandes temas? Uma conversa para entender o livro antes de começar.</p>
+          <a class="abrir" href="https://bibotalk.com/podcast/btcast/filipenses-btcast-341/" target="_blank" rel="noopener">Ouvir no Bibotalk</a></div>
+        </article>
+        <article class="extra podcast">
+          <span class="onda"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20h3M12 13v14M18 8v24M24 14v12M30 10v20M34 20h1" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>
+          <div><span class="tipo">Bibotalk · BTCast Vida Nova 043 · 34 min</span><h4>Alegria no Senhor</h4>
+          <p>Com o pastor Leonardo Sahium: por que a alegria plena só existe quando vivemos para a glória de Deus.</p>
+          <a class="abrir" href="https://bibotalk.com/podcast/alegria-no-senhor-btcast-vida-nova-043/" target="_blank" rel="noopener">Ouvir no Bibotalk</a></div>
+        </article>
+      </div>
+    </div>
+    <div class="grupo">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5zM4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></svg>Leituras</h3>
+      <div class="extras">
+        <article class="extra">
+          <span class="tipo">Guia de estudo · BibleProject</span><h4>Filipenses em cinco partes</h4>
+          <p>A carta dividida em cinco blocos, com explicações curtas e vídeos ligados a cada trecho.</p>
+          <a class="abrir" href="https://bibleproject.com/pt-br/guides/filipenses/" target="_blank" rel="noopener">Abrir o guia</a>
+        </article>
+        <article class="extra">
+          <span class="tipo">Livros</span><h4>Comentários indicados</h4>
+          <p>Em cada parada tem uma seção de livros com um resumo e o link para comprar. Comece pela Parada 1.</p>
+          <a class="abrir" href="licao-01.html#livros">Ver os livros</a>
+        </article>
+      </div>
     </div>
   </section>
 
   <footer class="rodape">
-    <p>Material de apoio da EBD, classe de Jovens, preparado pelo Prof. Sebastião Rogério a partir da revista Lições Bíblicas Jovens, 4º trimestre de 2026 (CPAD): <em>Regozijai-vos no Senhor</em>. Os textos deste site são resumos próprios; para o conteúdo completo, use a revista.</p>
-    <p><a href="../index.html">Voltar ao site do professor</a></p>
+    <p>Material de apoio da EBD, classe de Jovens, a partir da revista Lições Bíblicas Jovens, 4º trimestre de 2026 (CPAD): <em>Regozijai-vos no Senhor</em>. Os textos deste site são resumos próprios. Para o conteúdo completo, use a revista.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_upper_city_wall_1.JPG" target="_blank" rel="noopener">Trecho da muralha da cidade alta</a>: Marsyas, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi.jpg" target="_blank" rel="noopener">Moeda de ouro cunhada em Filipos, século IV a.C.</a>: A. Mitropoulos, CC BY 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Via_Egnatia%2C_Philippi_%287272787450%29.jpg" target="_blank" rel="noopener">Pedras da Via Egnatia em Filipos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_forum_and_basilicas_from_acropolis_01.jpg" target="_blank" rel="noopener">Fórum e basílicas vistos da acrópole, com a planície ao fundo</a>: Mark Landon, CC BY 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Latin_inscriptions_found_in_the_Forum%2C_Philippi_%287272469500%29.jpg" target="_blank" rel="noopener">Inscrição em latim encontrada no fórum</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-15-20.jpg" target="_blank" rel="noopener">Batistério de Santa Lídia, perto do rio, em Filipos</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Bifolio_from_Paul%27s_Letter_to_the_Romans%2C_the_end_of_Paul%27s_Letter_to_the_Philippians_and_the_beginning_of_Paul%27s_Letter_to_the_Colossians.jpg" target="_blank" rel="noopener">Papiro P46 (por volta de 200 d.C.): final de Filipenses e começo de Colossenses</a>: Chester Beatty Library, Domínio público, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:The_imposing_early_Christian_Basilica_%28Basilica_B%29_next_to_the_Forum%2C_PhilippiPhilippi_%287272631506%29.jpg" target="_blank" rel="noopener">Basílica B, do século VI, ao lado do fórum</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Ancient_theatre_-_Philippi.jpg" target="_blank" rel="noopener">O teatro de Filipos, erguido no tempo de Filipe II</a>: MrPanyGoff, CC BY-SA 3.0, via Wikimedia Commons</li></ul></details>
   </footer>
 </div>
+<script src="assets/cenas.js"></script>
 <script src="assets/ebd.js"></script>
 <script>Expedicao.iniciar();</script>
 </body>

@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Parada 1: Porto de Neápolis</title>
-<meta name="description" content="Expedição Filipos, Lição 1: Carta aos Filipenses, um chamado à alegria. História de Filipos, desafios, vídeos e podcasts.">
+<meta name="description" content="Expedição Filipos, Lição 1: Carta aos Filipenses, um chamado à alegria. História de Filipos, desafios, vídeos, podcasts e livros.">
+<script>try{var t=localStorage.getItem('expedicaoTema');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
@@ -14,139 +15,186 @@
 <body>
 <div class="envoltorio">
   <header class="topo">
-    <a class="marca" href="index.html">
-      <span class="inscricao">Expedição Filipos<small>Voltar ao mapa e ao passaporte</small></span>
-    </a>
-    <div class="viajante" id="viajante"></div>
+    <a class="marca" href="index.html"><span class="inscricao">Expedição Filipos</span><small>Voltar ao mapa e ao passaporte</small></a>
+    <div class="topo-dir"><span id="viajante"></span><span id="tema"></span></div>
   </header>
 
   <div class="parada-cab">
-    <div>
-      <p class="rotulo">Parada 1 de 13 · Lição 1 · domingo, 4 de outubro de 2026</p>
-      <h1>Porto de Neápolis</h1>
-      <p class="tema">Carta aos Filipenses: um chamado à alegria</p>
-      <p class="nota">Texto bíblico: <a href="https://www.bibliaonline.com.br/arc/fp/1" target="_blank" rel="noopener">Filipenses 1.1 a 11</a> · Leitura de fundo: <a href="https://www.bibliaonline.com.br/arc/at/16" target="_blank" rel="noopener">Atos 16</a></p>
-    </div>
-    <div id="mapaHeroi"></div>
+    <p class="rotulo">Parada 1 de 13 · Lição 1 · 4 de outubro de 2026</p>
+    <h1>Porto de Neápolis</h1>
+    <p class="tema">Carta aos Filipenses: um chamado à alegria</p>
+    <div class="cena" data-cena="chegada"></div>
   </div>
 
-  <section aria-labelledby="tChegada" style="padding-top:0">
-    <h2 id="tChegada" class="oculto">Chegada</h2>
-    <div class="narrativa coluna">
-      <p>O barco saiu de Trôade com vento a favor. Num dia vocês chegaram à ilha de Samotrácia e, no outro, ao porto de Neápolis (At 16.11). Poucas noites antes, Paulo tinha visto em sonho um homem da Macedônia que pedia: <span class="citacao">"Passa à Macedônia e ajuda-nos"</span> (At 16.9).</p>
-      <p>Agora você desembarca com Paulo, Silas, Timóteo e Lucas. À frente está uma estrada de pedra, a Via Egnatia. São uns 15 km de subida até uma cidade que se orgulha de ser um pedaço de Roma fora da Itália. Ali vai nascer a primeira igreja da Europa. Anos depois, essa igreja vai receber uma carta escrita por um homem preso e, mesmo assim, cheia de alegria.</p>
+  <section aria-label="Chegada">
+    <div class="narrativa texto">
+      <p>O barco saiu de Trôade com vento a favor. Num dia vocês chegaram à ilha de Samotrácia e, no outro, ao porto de Neápolis. Poucas noites antes, Paulo tinha visto em sonho um homem da Macedônia que pedia: <span class="citacao">"Passa à Macedônia e ajuda-nos!"</span> (At 16.9).</p>
+      <p>Agora você desembarca com Paulo, Silas, Timóteo e Lucas. À frente, uma estrada de pedra sobe uns 15 km até uma cidade que se orgulha de ser um pedaço de Roma. Ali vai nascer a primeira igreja da Europa.</p>
     </div>
   </section>
 
   <section aria-labelledby="tCur">
-    <div class="secao-titulo"><h2 id="tCur">O que um viajante precisa saber</h2></div>
-    <div class="curiosidades">
-      <article class="curiosidade"><h3>Uma cidade com nome de rei</h3><p>Antes se chamava Crenides, por causa das fontes de água. Por volta de 356 a.C., Filipe II, pai de Alexandre, o Grande, tomou a cidade de olho nas minas de ouro da região e deu a ela o próprio nome.</p></article>
-      <article class="curiosidade"><h3>A batalha que mudou tudo</h3><p>Em 42 a.C., nos campos de Filipos, Marco Antônio e Otávio venceram Brutus e Cássio, os assassinos de Júlio César. Depois disso, soldados veteranos foram morar ali e a cidade virou colônia romana.</p></article>
-      <article class="curiosidade"><h3>Um pedaço de Roma</h3><p>Ser colônia significava seguir a lei romana, ter magistrados romanos e usar o latim nos documentos oficiais. Os filipenses tinham orgulho disso. Paulo usa essa ideia quando lembra que a nossa cidadania está nos céus (Fp 3.20).</p></article>
-      <article class="curiosidade"><h3>A estrada das cartas</h3><p>A Via Egnatia cruzava Filipos ligando o mar Adriático a Bizâncio. Por ela passavam soldados, comerciantes e mensageiros. Foi por estradas assim que Epafrodito levou a oferta da igreja até Paulo.</p></article>
-      <article class="curiosidade"><h3>A primeira a crer</h3><p>Filipos não tinha sinagoga. Paulo foi a um lugar de oração à beira do rio e lá encontrou Lídia, uma vendedora de púrpura vinda de Tiatira. Ela creu, foi batizada com a família e abriu a casa para os missionários (At 16.13 a 15).</p></article>
-      <article class="curiosidade"><h3>Filipos hoje</h3><p>As ruínas ficam perto de Kavala, cidade que fica onde era Neápolis, no norte da Grécia. Desde 2016 são Patrimônio Mundial da UNESCO. Dá para ver o fórum, o teatro e basílicas cristãs dos primeiros séculos.</p></article>
-    </div>
-  </section>
-
-  <section aria-labelledby="tRes">
-    <div class="resumo coluna">
-      <h2 id="tRes">A lição em resumo</h2>
-      <p class="ideia">A alegria cristã não depende das circunstâncias. Ela nasce da comunhão com Cristo.</p>
-      <ol>
-        <li><strong>Conhecendo a história</strong>A igreja de Filipos nasceu por volta de 49 d.C., na segunda viagem missionária. Uns doze anos depois, Paulo estava preso, provavelmente em Roma, quando os filipenses mandaram uma oferta por meio de Epafrodito (Fp 2.25; 4.18). A carta é a resposta: agradecimento, notícias, conselhos e muito carinho.</li>
-        <li><strong>A segunda viagem missionária</strong>Paulo queria pregar na Ásia, mas o Espírito Santo fechou esse caminho (At 16.6 e 7). Em Trôade veio a visão do macedônio, e a equipe atravessou o mar. Em Filipos teve conversão, perseguição, açoites e prisão. À meia-noite, presos e feridos, Paulo e Silas oravam e cantavam hinos (At 16.25). A alegria que aparece na carta já estava lá no começo da igreja.</li>
-        <li><strong>O afeto de Paulo pelos filipenses</strong>Paulo diz: <span class="citacao">"Dou graças ao meu Deus todas as vezes que me lembro de vós"</span> (Fp 1.3). Ele agradece a parceria deles no evangelho "desde o primeiro dia até agora" (1.5), tem certeza de que Deus vai terminar a obra que começou neles (1.6) e ora para que o amor deles cresça em conhecimento (1.9 a 11). É a única carta de Paulo que saúda bispos e diáconos logo na abertura, sinal de uma igreja organizada.</li>
-      </ol>
-      <div class="pergunta-chave">
-        <p style="margin:0"><strong>Para pensar esta semana:</strong> a minha alegria está nas circunstâncias ou em Cristo?</p>
+    <div class="secao-titulo"><h2 id="tCur">O que um viajante precisa saber</h2><p>Toque num cartão para virar.</p></div>
+    <div class="cartoes">
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi.jpg?width=960" alt="Moeda de ouro cunhada em Filipos, século IV a.C." loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">356 a.C.</span><span class="frase">Uma cidade com nome de rei</span></span></span>
+        <span class="lado verso"><h3>Filipe II</h3><p>Antes se chamava Crenides, por causa das fontes de água. Filipe II, pai de Alexandre, o Grande, tomou a cidade de olho no ouro da região e deu a ela o próprio nome.</p><a href="https://pt.wikipedia.org/wiki/Filipos" target="_blank" rel="noopener">Saiba mais</a></span>
+      </div>
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Philippi%20forum%20and%20basilicas%20from%20acropolis%2001.jpg?width=960" alt="Fórum e basílicas vistos da acrópole, com a planície ao fundo" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">42 a.C.</span><span class="frase">A batalha que mudou a cidade</span></span></span>
+        <span class="lado verso"><h3>Antônio e Otávio</h3><p>Na planície de Filipos, eles venceram Brutus e Cássio, os assassinos de Júlio César. Depois, soldados veteranos foram morar ali e a cidade virou colônia romana.</p><a href="https://pt.wikipedia.org/wiki/Batalha_de_Filipos" target="_blank" rel="noopener">Saiba mais</a></span>
+      </div>
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Latin%20inscriptions%20found%20in%20the%20Forum%2C%20Philippi%20%287272469500%29.jpg?width=960" alt="Inscrição em latim encontrada no fórum" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Colônia</span><span class="frase">Um pedaço de Roma na Macedônia</span></span></span>
+        <span class="lado verso"><h3>Cidadãos de Roma</h3><p>Lei romana, magistrados romanos e latim nos documentos. Os filipenses tinham orgulho disso. Paulo usa a ideia ao lembrar que a nossa cidadania está nos céus (Fp 3.20).</p></span>
+      </div>
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Via%20Egnatia%2C%20Philippi%20%287272787450%29.jpg?width=960" alt="Pedras da Via Egnatia em Filipos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Via Egnatia</span><span class="frase">A estrada das cartas</span></span></span>
+        <span class="lado verso"><h3>Do Adriático a Bizâncio</h3><p>A estrada romana cruzava Filipos. Por ela passavam soldados, comerciantes e mensageiros como Epafrodito, que levou a oferta da igreja até Paulo.</p><a href="https://pt.wikipedia.org/wiki/Via_Eg%C3%A1cia" target="_blank" rel="noopener">Saiba mais</a></span>
+      </div>
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lydia%20Baptistery%20BW%202017-10-05%2011-15-20.jpg?width=960" alt="Batistério de Santa Lídia, perto do rio, em Filipos" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Lídia</span><span class="frase">A primeira a crer na Europa</span></span></span>
+        <span class="lado verso"><h3>À beira do rio</h3><p>Filipos não tinha sinagoga. Paulo foi a um lugar de oração junto ao rio e encontrou Lídia, vendedora de púrpura de Tiatira. Ela creu e abriu a casa para os missionários (At 16.13 a 15).</p><a href="https://pt.wikipedia.org/wiki/L%C3%ADdia_de_Tiatira" target="_blank" rel="noopener">Saiba mais</a></span>
+      </div>
+      <div class="cartao" role="button" tabindex="0" aria-pressed="false">
+        <span class="lado frente"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Aqueduct%20in%20Kavala.jpg?width=960" alt="Aqueduto de Kavala, cidade que hoje ocupa o lugar de Neápolis" loading="lazy" decoding="async"><span class="virar">Virar</span><span class="faixa"><span class="grande">Hoje</span><span class="frase">Neápolis virou Kavala</span></span></span>
+        <span class="lado verso"><h3>Norte da Grécia</h3><p>O porto onde Paulo desembarcou é hoje a cidade de Kavala. As ruínas de Filipos ficam perto e, desde 2016, são Patrimônio Mundial da UNESCO.</p><a href="https://whc.unesco.org/en/list/1517" target="_blank" rel="noopener">Ver na UNESCO</a></span>
       </div>
     </div>
   </section>
 
+  <section aria-labelledby="tTexto">
+    <div class="secao-titulo"><h2 id="tTexto">Texto bíblico</h2></div>
+    <details class="biblia texto" open>
+      <summary>Filipenses 1.1 a 11</summary>
+      <div class="versos">
+        <p><sup>1</sup>Paulo e Timóteo, servos de Jesus Cristo, a todos os santos em Cristo Jesus que estão em Filipos, com os bispos e diáconos: <sup>2</sup>graça a vós e paz, da parte de Deus, nosso Pai, e da do Senhor Jesus Cristo.</p>
+        <p><sup>3</sup>Dou graças ao meu Deus todas as vezes que me lembro de vós, <sup>4</sup>fazendo, sempre com alegria, oração por vós em todas as minhas súplicas, <sup>5</sup>pela vossa cooperação no evangelho desde o primeiro dia até agora. <sup>6</sup>Tendo por certo isto mesmo: que aquele que em vós começou a boa obra a aperfeiçoará até ao Dia de Jesus Cristo. <sup>7</sup>Como tenho por justo sentir isto de vós todos, porque vos retenho em meu coração, pois todos vós fostes participantes da minha graça, tanto nas minhas prisões como na minha defesa e confirmação do evangelho. <sup>8</sup>Porque Deus me é testemunha das saudades que de todos vós tenho, em entranhável afeição de Jesus Cristo.</p>
+        <p><sup>9</sup>E peço isto: que o vosso amor aumente mais e mais em ciência e em todo o conhecimento, <sup>10</sup>para que aproveis as coisas excelentes, para que sejais sinceros e sem escândalo algum até ao Dia de Cristo, <sup>11</sup>cheios de frutos de justiça, que são por Jesus Cristo, para glória e louvor de Deus.</p>
+        <p class="versao">Almeida Revista e Corrigida (ARC), © Sociedade Bíblica do Brasil.</p>
+      </div>
+    </details>
+  </section>
+
+  <section aria-labelledby="tRes">
+    <div class="secao-titulo"><h2 id="tRes">A lição em resumo</h2></div>
+    <p class="ideia">A alegria cristã não depende das circunstâncias. Ela nasce da comunhão com Cristo.</p>
+    <div class="pontos">
+      <article class="ponto-resumo"><span class="n">1</span><h3>Conhecendo a história</h3>
+        <p>A igreja nasceu por volta de 49 d.C. Uns doze anos depois, Paulo estava preso quando os filipenses mandaram uma oferta por Epafrodito (Fp 4.18). A carta é a resposta: gratidão, notícias e conselhos.</p></article>
+      <article class="ponto-resumo"><span class="n">2</span><h3>A segunda viagem</h3>
+        <p>O Espírito fechou o caminho para a Ásia (At 16.6 e 7), veio a visão em Trôade e a equipe cruzou o mar. Em Filipos, presos e feridos, Paulo e Silas cantavam à meia-noite (At 16.25).</p></article>
+      <article class="ponto-resumo"><span class="n">3</span><h3>O carinho de Paulo</h3>
+        <p>"Dou graças ao meu Deus todas as vezes que me lembro de vós" (Fp 1.3). Ele tem certeza de que Deus vai terminar a obra que começou neles (1.6) e ora para que o amor deles cresça (1.9).</p></article>
+    </div>
+    <p class="pergunta-chave"><strong>Para pensar esta semana:</strong> a minha alegria está nas circunstâncias ou em Cristo?</p>
+  </section>
+
   <section aria-labelledby="tExp" id="desafios">
-    <div class="secao-titulo"><h2 id="tExp">Desafios da parada</h2><p>Uns 10 minutos. O resultado vai para o professor.</p></div>
+    <div class="secao-titulo"><h2 id="tExp">Desafios da parada</h2><p>Uns 10 minutos. Ao terminar, seu passaporte ganha o carimbo e o resultado vai para o professor.</p></div>
     <div class="expedicao" id="expedicao" aria-live="polite"></div>
   </section>
 
   <section aria-labelledby="tRef">
-    <div class="coluna">
-      <h2 id="tRef">Minha reflexão</h2>
-      <p>Pense numa situação difícil que você está vivendo agora. O que mudaria se você olhasse para ela como Paulo olhou para a prisão? Escreva aqui. Fica só no seu aparelho, ninguém mais vê.</p>
-      <label for="reflexao" class="oculto">Minha reflexão</label>
+    <div class="secao-titulo"><h2 id="tRef">Minha reflexão</h2><p>Fica só no seu aparelho. Ninguém mais vê.</p></div>
+    <div class="texto">
+      <label for="reflexao">Pense numa situação difícil que você está vivendo. O que mudaria se você olhasse para ela como Paulo olhou para a prisão?</label>
       <textarea id="reflexao" placeholder="Escreva aqui..."></textarea>
     </div>
   </section>
 
-  <section aria-labelledby="tExtras">
-    <div class="secao-titulo"><h2 id="tExtras">Para ir além</h2><p>Vídeos, podcasts e leituras sobre esta parada.</p></div>
-    <div class="extras">
-      <article class="extra">
-        <span class="tipo">Vídeo · 9 min</span>
-        <h3>Filipenses: visão geral</h3>
-        <div class="video" data-yt="OtJkruVf4b0" data-titulo="Filipenses, BibleProject Português"></div>
-        <p>BibleProject Português. Bom para assistir antes da aula e ter a carta inteira na cabeça.</p>
-      </article>
-      <article class="extra">
-        <span class="tipo">Vídeo</span>
-        <h3>Filipenses comentado #2 (Fp 1.7 a 18)</h3>
-        <div class="video" data-yt="LVmEnPXQOX0" data-titulo="Filipenses comentado 2, JesusCopy"></div>
-        <p>Douglas Gonçalves, no canal JesusCopy, comenta o carinho de Paulo pela igreja e o que a prisão dele fez pelo evangelho.</p>
-      </article>
-      <article class="extra">
-        <span class="tipo">Podcast · 34 min</span>
-        <h3>Alegria no Senhor (BTCast Vida Nova 043)</h3>
-        <p>Bibotalk, com o pastor Leonardo Sahium. Por que a alegria plena só existe quando vivemos para a glória de Deus, mesmo em tempos difíceis.</p>
-        <a class="abrir" href="https://bibotalk.com/podcast/alegria-no-senhor-btcast-vida-nova-043/" target="_blank" rel="noopener">Ouvir no Bibotalk</a>
-      </article>
-      <article class="extra">
-        <span class="tipo">Podcast · 48 min</span>
-        <h3>Filipenses 01 (BTCast 342)</h3>
-        <p>Bibotalk. O capítulo 1 de perto: por que Paulo se chama de servo, o que são "frutos de justiça" e quem pregava Cristo por inveja.</p>
-        <a class="abrir" href="https://bibotalk.com/podcast/filipenses-01-btcast-342/" target="_blank" rel="noopener">Ouvir no Bibotalk</a>
-      </article>
-      <article class="extra">
-        <span class="tipo">Leitura</span>
-        <h3>Atos 16, de uma vez só</h3>
-        <p>Leia o capítulo inteiro como se fosse o diário de bordo de Lucas. Repare quando o texto passa a dizer "nós": é ele entrando na viagem.</p>
-        <a class="abrir" href="https://www.bibliaonline.com.br/arc/at/16" target="_blank" rel="noopener">Ler Atos 16</a>
-      </article>
-      <article class="extra">
-        <span class="tipo">Livro</span>
-        <h3>Para quem quer aprofundar</h3>
-        <p><em>Filipenses: introdução e comentário</em>, de Ralph P. Martin (Série Cultura Bíblica, Vida Nova). E o <em>Comentário Bíblico da Mulher: Novo Testamento, vol. II</em> (CPAD, 2025), citado na revista desta lição.</p>
-      </article>
-    </div>
+  <section aria-labelledby="tDiario">
+    <div class="secao-titulo"><h2 id="tDiario">Diário de bordo da semana</h2><p>A leitura diária da revista. Toque em "Ler aqui" e marque o que já leu.</p></div>
+    <ul class="diario" id="diario">
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de segunda"><span class="dia">Segunda</span><span class="titulo">Filipos, uma importante colônia romana<span class="ref">Atos 16.12</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><sup>12</sup>e dali, para Filipos, que é a primeira cidade desta parte da Macedônia e é uma colônia; e estivemos alguns dias nesta cidade.</p></div></li>
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de terça"><span class="dia">Terça</span><span class="titulo">O benefício de ser cidadão romano<span class="ref">Atos 22.29; 23.27</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><strong>At 22.29</strong> E logo dele se apartaram os que o haviam de examinar; e até o tribuno teve temor, quando soube que era romano, visto que o tinha ligado.</p><p><strong>At 23.27</strong> Este homem foi preso pelos judeus; e, estando já a ponto de ser morto por eles, sobrevim eu com a soldadesca e o livrei, informado de que era romano.</p></div></li>
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de quarta"><span class="dia">Quarta</span><span class="titulo">Atendendo a um chamado de Deus<span class="ref">Atos 16.9 e 10</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><sup>9</sup>E Paulo teve, de noite, uma visão em que se apresentava um varão da Macedônia e lhe rogava, dizendo: Passa à Macedônia e ajuda-nos! <sup>10</sup>E, logo depois desta visão, procuramos partir para a Macedônia, concluindo que o Senhor nos chamava para lhes anunciarmos o evangelho.</p></div></li>
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de quinta"><span class="dia">Quinta</span><span class="titulo">O sofrimento de Paulo em Filipos<span class="ref">1 Tessalonicenses 2.2</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><sup>2</sup>mas, havendo primeiro padecido e sido agravados em Filipos, como sabeis, tornamo-nos ousados em nosso Deus, para vos falar o evangelho de Deus com grande combate.</p></div></li>
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de sexta"><span class="dia">Sexta</span><span class="titulo">A alegria do Senhor é a nossa força<span class="ref">Neemias 8.10</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><sup>10</sup>Disse-lhes mais: Ide, e comei as gorduras, e bebei as doçuras, e enviai porções aos que não têm nada preparado para si; porque esse dia é consagrado ao nosso Senhor; portanto, não vos entristeçais, porque a alegria do Senhor é a vossa força.</p></div></li>
+      <li class="dia-item"><div class="dia-cab"><input type="checkbox" aria-label="Li a leitura de sábado"><span class="dia">Sábado</span><span class="titulo">Uma igreja organizada, com bispos e diáconos<span class="ref">Filipenses 1.1</span></span><button class="ler" type="button" aria-expanded="false">Ler aqui</button></div>
+        <div class="dia-texto" hidden><p><sup>1</sup>Paulo e Timóteo, servos de Jesus Cristo, a todos os santos em Cristo Jesus que estão em Filipos, com os bispos e diáconos:</p></div></li>
+    </ul>
+    <p class="nota centro" style="margin-top:12px">Textos da Almeida Revista e Corrigida (ARC), © Sociedade Bíblica do Brasil.</p>
   </section>
 
-  <section aria-labelledby="tDiario">
-    <div class="coluna">
-      <h2 id="tDiario">Diário de bordo da semana</h2>
-      <p>A leitura diária da revista. Marque o que já leu.</p>
-      <ul class="diario" id="diario">
-        <li><label><input type="checkbox"><span class="dia">Segunda</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/at/16" target="_blank" rel="noopener">At 16.12</a></span><br>Filipos, uma importante colônia romana</span></label></li>
-        <li><label><input type="checkbox"><span class="dia">Terça</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/at/22" target="_blank" rel="noopener">At 22.29</a>; <a href="https://www.bibliaonline.com.br/arc/at/23" target="_blank" rel="noopener">23.27</a></span><br>O benefício de ser cidadão romano</span></label></li>
-        <li><label><input type="checkbox"><span class="dia">Quarta</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/at/16" target="_blank" rel="noopener">At 16.9 e 10</a></span><br>Atendendo a um chamado de Deus</span></label></li>
-        <li><label><input type="checkbox"><span class="dia">Quinta</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/1ts/2" target="_blank" rel="noopener">1Ts 2.2</a></span><br>O sofrimento de Paulo em Filipos</span></label></li>
-        <li><label><input type="checkbox"><span class="dia">Sexta</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/ne/8" target="_blank" rel="noopener">Ne 8.10</a></span><br>A alegria do Senhor é a nossa força</span></label></li>
-        <li><label><input type="checkbox"><span class="dia">Sábado</span><span><span class="ref"><a href="https://www.bibliaonline.com.br/arc/fp/1" target="_blank" rel="noopener">Fp 1.1</a></span><br>Uma igreja organizada, com bispos e diáconos</span></label></li>
-      </ul>
+  <section aria-labelledby="tExtras">
+    <div class="secao-titulo"><h2 id="tExtras">Para ir além</h2><p>Vídeos, podcasts e livros sobre esta parada.</p></div>
+    <div class="grupo">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Vídeos</h3>
+      <div class="extras">
+        <article class="extra">
+          <span class="tipo">BibleProject Português · 9 min</span>
+          <h4>Filipenses: visão geral</h4>
+          <div class="video" data-yt="OtJkruVf4b0" data-titulo="Filipenses, BibleProject Português"></div>
+          <p>Bom para assistir antes da aula e ter a carta inteira na cabeça.</p>
+        </article>
+        <article class="extra">
+          <span class="tipo">JesusCopy · Talmidim</span>
+          <h4>Filipenses comentado #2 (Fp 1.7 a 18)</h4>
+          <div class="video" data-yt="LVmEnPXQOX0" data-titulo="Filipenses comentado 2, JesusCopy"></div>
+          <p>Douglas Gonçalves comenta o carinho de Paulo pela igreja e o que a prisão dele fez pelo evangelho.</p>
+        </article>
+      </div>
+    </div>
+    <div class="grupo">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>Podcasts</h3>
+      <div class="extras">
+        <article class="extra podcast">
+          <span class="onda"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20h3M12 13v14M18 8v24M24 14v12M30 10v20M34 20h1" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>
+          <div><span class="tipo">Bibotalk · BTCast Vida Nova 043 · 34 min</span><h4>Alegria no Senhor</h4>
+          <p>Com o pastor Leonardo Sahium. A alegria plena só existe quando vivemos para a glória de Deus, mesmo em tempos difíceis.</p>
+          <a class="abrir" href="https://bibotalk.com/podcast/alegria-no-senhor-btcast-vida-nova-043/" target="_blank" rel="noopener">Ouvir no Bibotalk</a></div>
+        </article>
+        <article class="extra podcast">
+          <span class="onda"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20h3M12 13v14M18 8v24M24 14v12M30 10v20M34 20h1" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>
+          <div><span class="tipo">Bibotalk · BTCast 342 · 48 min</span><h4>Filipenses 01</h4>
+          <p>O capítulo 1 de perto: por que Paulo se chama de servo, o que são "frutos de justiça" e quem pregava Cristo por inveja.</p>
+          <a class="abrir" href="https://bibotalk.com/podcast/filipenses-01-btcast-342/" target="_blank" rel="noopener">Ouvir no Bibotalk</a></div>
+        </article>
+      </div>
+    </div>
+    <div class="grupo" id="livros">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5zM4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></svg>Livros</h3>
+      <div class="extras">
+        <article class="extra livro">
+          <div class="capa" style="background:#7E3369"><b>Filipenses</b><span>Hernandes Dias Lopes</span></div>
+          <div><span class="tipo">Hagnos · 264 páginas</span><h4>Filipenses: a alegria triunfante no meio das provas</h4>
+            <p>Comentário em linguagem de pregação, fácil de ler. Bom para acompanhar a carta junto com as lições.</p>
+            <ul><li>Como preservar a alegria nas provas</li><li>O que rouba a alegria do cristão</li><li>Ameaças de dentro e de fora da igreja</li></ul>
+            <a class="abrir" href="https://www.hagnos.com.br/filipenses-comentarios-expositivos-hagnos" target="_blank" rel="noopener">Comprar na Hagnos</a></div>
+        </article>
+        <article class="extra livro">
+          <div class="capa" style="background:#1F4E6B"><b>Filipenses</b><span>Ralph P. Martin</span></div>
+          <div><span class="tipo">Vida Nova · Série Cultura Bíblica</span><h4>Filipenses: introdução e comentário</h4>
+            <p>Um clássico curto e acessível. O autor é especialista no hino de Cristo de Filipenses 2.</p>
+            <ul><li>Introdução: autor, data e onde Paulo estava preso</li><li>Comentário versículo por versículo</li><li>Destaque para Fp 2.5 a 11</li></ul>
+            <a class="abrir" href="https://www.vidanova.com.br/livros/filipenses-introducao-e-comentario-serie-cultura-biblica" target="_blank" rel="noopener">Comprar na Vida Nova</a></div>
+        </article>
+        <article class="extra livro">
+          <div class="capa" style="background:#8C6A2C"><b>Comentário Bíblico da Mulher</b><span>CPAD</span></div>
+          <div><span class="tipo">CPAD · Novo Testamento, 2 volumes</span><h4>Comentário Bíblico da Mulher</h4>
+            <p>Citado na revista desta lição. Organizado por Dorothy Kelley Patterson e Rhonda Harrington Kelley. Filipenses está no volume II.</p>
+            <ul><li>Comenta todo o Novo Testamento</li><li>Atenção às mulheres do texto, como Lídia, Evódia e Síntique</li><li>Aplicação prática para a vida cristã</li></ul>
+            <a class="abrir" href="https://www.cpad.com.br/comentario-biblico-da-mulher-novo-testamento-368197/p" target="_blank" rel="noopener">Comprar na CPAD</a></div>
+        </article>
+      </div>
     </div>
   </section>
 
   <footer class="rodape">
     <p><strong>Próxima parada:</strong> Portão da colônia · Uma vida digna do evangelho · 11 de outubro.</p>
-    <p>Fontes da parte histórica:</p>
-    <ul class="fontes">
-      <li><a href="https://whc.unesco.org/en/list/1517" target="_blank" rel="noopener">UNESCO: Archaeological Site of Philippi</a></li>
-      <li>Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 1 (CPAD)</li>
-      <li>Bíblia Sagrada, Almeida Revista e Corrigida: Atos 16 e Filipenses 1</li>
-    </ul>
-    <p><a href="index.html">Voltar ao mapa e ao passaporte</a></p>
+    <p>Fontes: <a href="https://whc.unesco.org/en/list/1517" target="_blank" rel="noopener">UNESCO, Archaeological Site of Philippi</a> · Revista Lições Bíblicas Jovens, 4º trimestre de 2026, Lição 1 (CPAD) · Bíblia Sagrada, ARC.</p>
+    <details><summary>Créditos das imagens</summary><ul class="creditos"><li><a href="https://commons.wikimedia.org/wiki/File:Philippi.jpg" target="_blank" rel="noopener">Moeda de ouro cunhada em Filipos, século IV a.C.</a>: A. Mitropoulos, CC BY 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Philippi_forum_and_basilicas_from_acropolis_01.jpg" target="_blank" rel="noopener">Fórum e basílicas vistos da acrópole, com a planície ao fundo</a>: Mark Landon, CC BY 4.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Latin_inscriptions_found_in_the_Forum%2C_Philippi_%287272469500%29.jpg" target="_blank" rel="noopener">Inscrição em latim encontrada no fórum</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Via_Egnatia%2C_Philippi_%287272787450%29.jpg" target="_blank" rel="noopener">Pedras da Via Egnatia em Filipos</a>: Carole Raddato, CC BY-SA 2.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Lydia_Baptistery_BW_2017-10-05_11-15-20.jpg" target="_blank" rel="noopener">Batistério de Santa Lídia, perto do rio, em Filipos</a>: Berthold Werner, CC BY-SA 3.0, via Wikimedia Commons</li><li><a href="https://commons.wikimedia.org/wiki/File:Aqueduct_in_Kavala.jpg" target="_blank" rel="noopener">Aqueduto de Kavala, cidade que hoje ocupa o lugar de Neápolis</a>: AJ Alfieri-Crispin, CC BY-SA 2.0, via Wikimedia Commons</li></ul></details>
+    <p style="margin-top:14px"><a href="index.html">Voltar ao mapa e ao passaporte</a></p>
   </footer>
 </div>
 
+<script src="assets/cenas.js"></script>
 <script src="assets/ebd.js"></script>
 <script>
 Expedicao.iniciar();
@@ -162,7 +210,16 @@ Expedicao.iniciarExpedicao({
       micro: 'De Trôade, na Ásia, o barco cruzou o mar Egeu com uma parada em Samotrácia e chegou a Neápolis. De lá a equipe subiu a Filipos. Depois da prisão, seguiram pela Via Egnatia passando por Anfípolis e Apolônia até Tessalônica (At 16.8 a 17.1).',
       instrucao: 'Toque nos lugares na ordem em que a equipe passou por eles.',
       itens: ['Trôade: a visão do macedônio', 'Samotrácia', 'Neápolis, o porto', 'Filipos: Lídia à beira do rio', 'Filipos: a prisão e o carcereiro', 'Anfípolis e Apolônia', 'Tessalônica'],
-      feedbackOk: 'Repare que a cidade de Filipos aparece duas vezes: primeiro a conversão de Lídia, depois a prisão. A igreja nasceu entre uma coisa e outra.'
+      dicas: [
+        'Tudo começa em Trôade, na Ásia, onde Paulo teve a visão do macedônio (At 16.8 a 10).',
+        'Samotrácia é uma ilha no meio do mar. O barco parou lá antes de chegar à Europa (At 16.11).',
+        'Neápolis era o porto da Macedônia. Só depois de desembarcar dava para subir até Filipos (At 16.11 e 12).',
+        'Em Filipos, o primeiro acontecimento foi o encontro com Lídia à beira do rio, num sábado (At 16.13 a 15).',
+        'A prisão veio depois, quando Paulo libertou a jovem adivinha e os donos dela se revoltaram (At 16.16 a 34).',
+        'Saindo de Filipos, a equipe passou por Anfípolis e Apolônia antes de chegar ao destino seguinte (At 17.1).',
+        'Tessalônica é o ponto final deste trecho, onde havia uma sinagoga (At 17.1).'
+      ],
+      feedbackOk: 'Repare que Filipos aparece duas vezes: primeiro a conversão de Lídia, depois a prisão. A igreja nasceu entre uma coisa e outra.'
     },
     {
       tipo: 'categorizar',
@@ -172,14 +229,14 @@ Expedicao.iniciarExpedicao({
       instrucao: 'Para cada motivo de alegria, escolha de onde ele vem.',
       categorias: ['Depende das circunstâncias', 'Vem de Cristo'],
       itens: [
-        { texto: 'Ganhar uma promoção no trabalho', categoria: 'Depende das circunstâncias', explicacao: 'É uma bênção, mas pode mudar amanhã. Se a alegria depende disso, ela vai junto.' },
-        { texto: 'Muitas curtidas numa foto', categoria: 'Depende das circunstâncias', explicacao: 'A aprovação das pessoas varia de um dia para o outro.' },
+        { texto: 'Ganhar uma promoção no trabalho', categoria: 'Depende das circunstâncias', explicacao: 'É uma bênção, mas pode mudar amanhã. Se a alegria depende disso, ela vai junto quando a situação muda.' },
+        { texto: 'Muitas curtidas numa foto', categoria: 'Depende das circunstâncias', explicacao: 'A aprovação das pessoas varia de um dia para o outro. Não é uma base firme.' },
         { texto: 'Meu time ser campeão', categoria: 'Depende das circunstâncias', explicacao: 'Alegria boa, mas passageira, e depende de um resultado que ninguém controla.' },
         { texto: 'Comprar o celular que eu queria', categoria: 'Depende das circunstâncias', explicacao: 'Coisas novas envelhecem. A alegria que vem delas também.' },
-        { texto: 'Ter comunhão com Deus em oração', categoria: 'Vem de Cristo', explicacao: 'Isso Paulo tinha na prisão e ninguém podia tirar dele.' },
+        { texto: 'Ter comunhão com Deus em oração', categoria: 'Vem de Cristo', explicacao: 'Isso Paulo tinha até na prisão, e ninguém podia tirar dele.' },
         { texto: 'A presença do Espírito Santo comigo', categoria: 'Vem de Cristo', explicacao: 'Não depende de lugar nem de situação. Vai com a gente para todo lado.' },
         { texto: 'Saber que Deus vai completar a obra que começou em mim', categoria: 'Vem de Cristo', explicacao: 'É a certeza de Filipenses 1.6. Nada de fora consegue cancelar essa promessa.' },
-        { texto: 'Cantar louvores mesmo num dia ruim', categoria: 'Vem de Cristo', explicacao: 'Foi o que Paulo e Silas fizeram à meia-noite, presos e feridos (At 16.25).' }
+        { texto: 'Cantar louvores mesmo num dia ruim', categoria: 'Vem de Cristo', explicacao: 'Foi o que Paulo e Silas fizeram à meia-noite, presos e feridos (At 16.25). A alegria deles não vinha da situação.' }
       ]
     },
     {
@@ -188,12 +245,24 @@ Expedicao.iniciarExpedicao({
       contexto: 'Na entrada de Filipos, um guarda romano quer saber se você conhece mesmo o lugar antes de deixar você passar.',
       instrucao: 'Responda às perguntas do guarda.',
       perguntas: [
-        { enunciado: 'Quem deu à cidade o nome de Filipos?', opcoes: ['O apóstolo Filipe, discípulo', 'Filipe II da Macedônia', 'O imperador Augusto César', 'Filipe, o evangelista'], correta: 1, explicacao: 'Filipe II, pai de Alexandre, o Grande, conquistou a antiga Crenides e deu a ela o próprio nome, por volta de 356 a.C.' },
-        { enunciado: 'O que aconteceu perto de Filipos em 42 a.C.?', opcoes: ['Um terremoto destruiu o porto', 'Uma grande batalha romana', 'A cidade foi abandonada', 'Construíram a primeira sinagoga'], correta: 1, explicacao: 'Foi a batalha em que Marco Antônio e Otávio venceram Brutus e Cássio. Depois dela, Filipos virou colônia romana.' },
-        { enunciado: 'Na prática, o que significava Filipos ser colônia romana?', opcoes: ['Seguia a lei de Roma', 'Era governada pelos gregos', 'Não pagava nenhum imposto', 'Proibia estrangeiros'], correta: 0, explicacao: 'A lei romana valia ali, com magistrados romanos e latim nos documentos oficiais. Os filipenses tinham orgulho disso.' },
-        { enunciado: 'Com o que Lídia trabalhava?', opcoes: ['Vendia azeite', 'Tecia o linho', 'Fazia as tendas', 'Vendia púrpura'], correta: 3, explicacao: 'Lídia era vendedora de púrpura, um tecido tingido caro, e vinha da cidade de Tiatira (At 16.14).' },
-        { enunciado: 'Qual foi o motivo imediato para Paulo escrever a carta?', opcoes: ['Corrigir uma heresia grave', 'Pedir para sair da prisão', 'Agradecer uma oferta', 'Organizar uma nova viagem'], correta: 2, explicacao: 'Os filipenses mandaram uma oferta por meio de Epafrodito, e Paulo escreveu agradecendo (Fp 4.10 a 18).' },
-        { enunciado: 'Onde Paulo estava, provavelmente, quando escreveu Filipenses?', opcoes: ['Preso em Roma', 'Livre em Atenas', 'Indo a Antioquia', 'Em casa em Tarso'], correta: 0, explicacao: 'Ele estava preso, provavelmente em Roma, por volta de 61 e 62 d.C. Mesmo assim a carta é cheia de alegria.' }
+        { enunciado: 'Quem deu à cidade o nome de Filipos?', opcoes: ['O apóstolo Filipe, discípulo', 'Filipe II da Macedônia', 'O imperador Augusto César', 'Filipe, o evangelista'], correta: 1,
+          porque: ['O apóstolo Filipe viveu uns 400 anos depois de a cidade ganhar esse nome.', null, 'Augusto refundou Filipos como colônia, mas o nome já existia havia mais de 300 anos.', 'Filipe, o evangelista, aparece em Atos 8 e não tem ligação com a fundação da cidade.'],
+          explicacao: 'Filipe II, pai de Alexandre, o Grande, conquistou a antiga Crenides e deu a ela o próprio nome, por volta de 356 a.C.' },
+        { enunciado: 'O que aconteceu perto de Filipos em 42 a.C.?', opcoes: ['Um terremoto destruiu o porto', 'Uma grande batalha romana', 'A cidade foi abandonada', 'Construíram a primeira sinagoga'], correta: 1,
+          porque: ['O terremoto famoso de Filipos é o de Atos 16, quase cem anos depois, e foi na prisão.', null, 'Foi o contrário: depois de 42 a.C. a cidade cresceu com a chegada dos veteranos.', 'Filipos nem tinha sinagoga no tempo de Paulo. Por isso ele foi orar à beira do rio.'],
+          explicacao: 'Foi a batalha em que Marco Antônio e Otávio venceram Brutus e Cássio. Depois dela, Filipos virou colônia romana.' },
+        { enunciado: 'Na prática, o que significava Filipos ser colônia romana?', opcoes: ['Seguia a lei de Roma', 'Era governada pelos gregos', 'Não pagava nenhum imposto', 'Proibia estrangeiros'], correta: 0,
+          porque: [null, 'Era o contrário: a colônia tinha magistrados romanos, mesmo numa região de língua grega.', 'Algumas colônias tinham vantagens nos impostos, mas não é isso que define uma colônia.', 'Paulo e Lídia eram de fora e estavam na cidade sem problema por isso.'],
+          explicacao: 'A lei romana valia ali, com magistrados romanos e latim nos documentos oficiais. Os filipenses tinham orgulho disso.' },
+        { enunciado: 'Com o que Lídia trabalhava?', opcoes: ['Vendia azeite', 'Tecia o linho', 'Fazia as tendas', 'Vendia púrpura'], correta: 3,
+          porque: ['Azeite era um comércio comum na época, mas Atos 16.14 diz outra coisa sobre Lídia.', 'O texto não fala de linho. Fala de um tecido tingido e caro.', 'Fazer tendas era o ofício de Paulo, Áquila e Priscila (At 18.3), não de Lídia.', null],
+          explicacao: 'Lídia era vendedora de púrpura, um tecido tingido muito caro, e vinha da cidade de Tiatira (At 16.14).' },
+        { enunciado: 'Qual foi o motivo imediato para Paulo escrever a carta?', opcoes: ['Corrigir uma heresia grave', 'Pedir para sair da prisão', 'Agradecer uma oferta', 'Organizar uma nova viagem'], correta: 2,
+          porque: ['Paulo alerta contra falsos mestres no capítulo 3, mas não foi isso que fez a carta nascer.', 'Paulo não pede para ser solto. Ele diz que, para ele, o viver é Cristo e o morrer é ganho (Fp 1.21).', null, 'Paulo até espera visitar a igreja (Fp 2.24), mas a carta não é sobre planejar viagem.'],
+          explicacao: 'Os filipenses mandaram uma oferta por meio de Epafrodito, e Paulo escreveu agradecendo (Fp 4.10 a 18).' },
+        { enunciado: 'Onde Paulo estava, provavelmente, quando escreveu Filipenses?', opcoes: ['Preso em Roma', 'Livre em Atenas', 'Indo a Antioquia', 'Em casa em Tarso'], correta: 0,
+          porque: [null, 'Paulo fala das suas prisões na própria carta (Fp 1.7 e 13). Ele não estava livre.', 'Na carta Paulo está preso, não viajando.', 'Paulo fala das suas prisões (Fp 1.13). Ele não estava em casa.'],
+          explicacao: 'Ele estava preso, provavelmente em Roma, por volta de 61 e 62 d.C. Mesmo assim a carta é cheia de alegria.' }
       ]
     },
     {
@@ -207,7 +276,7 @@ Expedicao.iniciarExpedicao({
         { a: 'O carcereiro', b: 'Perguntou: "Que é necessário que eu faça para me salvar?"', explicacao: 'Depois do terremoto, ele e sua casa creram (At 16.30 a 34).' },
         { a: 'Silas', b: 'Preso e açoitado junto com Paulo', explicacao: 'Os dois cantavam hinos à meia-noite (At 16.25).' },
         { a: 'Timóteo', b: 'Aparece com Paulo na saudação da carta', explicacao: 'Filipenses 1.1: "Paulo e Timóteo, servos de Jesus Cristo".' },
-        { a: 'Epafrodito', b: 'Levou a oferta da igreja até Paulo', explicacao: 'Fp 2.25 e 4.18.' },
+        { a: 'Epafrodito', b: 'Levou a oferta da igreja até Paulo', explicacao: 'Está em Filipenses 2.25 e 4.18.' },
         { a: 'Filipe II', b: 'Rei que deu nome à cidade', explicacao: 'Pai de Alexandre, o Grande.' }
       ]
     },
@@ -217,12 +286,12 @@ Expedicao.iniciarExpedicao({
       contexto: 'No mercado da cidade, cada um conta a história de um jeito. Descubra o que é verdade.',
       instrucao: 'Diga se cada frase é verdadeira ou falsa.',
       perguntas: [
-        { enunciado: 'Paulo queria pregar na Ásia, mas o Espírito Santo não permitiu.', correta: true, explicacao: 'Verdade. Atos 16.6 e 7 conta que o caminho para a Ásia e a Bitínia foi fechado.' },
-        { enunciado: 'O porto de Neápolis ficava a uns 15 km de Filipos.', correta: true, explicacao: 'Verdade. Da costa até a cidade se subia pela Via Egnatia.' },
-        { enunciado: 'Na prisão, Paulo e Silas ficaram calados e desanimados.', correta: false, explicacao: 'Falso. À meia-noite eles oravam e cantavam hinos, e os outros presos ouviam (At 16.25).' },
-        { enunciado: 'Filipenses é a única carta de Paulo que saúda bispos e diáconos logo no início.', correta: true, explicacao: 'Verdade. Está em Filipenses 1.1 e mostra uma igreja já organizada.' },
-        { enunciado: 'Paulo escreveu Filipenses assim que chegou à cidade, em 49 d.C.', correta: false, explicacao: 'Falso. A igreja nasceu por volta de 49 d.C., mas a carta veio uns doze anos depois, com Paulo preso.' },
-        { enunciado: 'Alegria é um assunto que quase não aparece na carta.', correta: false, explicacao: 'Falso. Alegria e alegrar-se aparecem umas 16 vezes. É o tema que atravessa a carta inteira.' }
+        { enunciado: 'Paulo queria pregar na Ásia, mas o Espírito Santo não permitiu.', correta: true, explicacao: 'Atos 16.6 e 7 conta que o caminho para a Ásia e para a Bitínia foi fechado. Por isso a equipe acabou em Trôade.' },
+        { enunciado: 'O porto de Neápolis ficava a uns 15 km de Filipos.', correta: true, explicacao: 'Da costa até a cidade se subia pela Via Egnatia, uns 15 km.' },
+        { enunciado: 'Na prisão, Paulo e Silas ficaram calados e desanimados.', correta: false, explicacao: 'À meia-noite eles oravam e cantavam hinos, e os outros presos ouviam (At 16.25).' },
+        { enunciado: 'Filipenses é a única carta de Paulo que saúda bispos e diáconos logo no início.', correta: true, explicacao: 'Está em Filipenses 1.1 e mostra uma igreja já organizada.' },
+        { enunciado: 'Paulo escreveu Filipenses assim que chegou à cidade, em 49 d.C.', correta: false, explicacao: 'A igreja nasceu por volta de 49 d.C., mas a carta veio uns doze anos depois, com Paulo preso.' },
+        { enunciado: 'Alegria é um assunto que quase não aparece na carta.', correta: false, explicacao: 'Alegria e alegrar-se aparecem umas 16 vezes. É o tema que atravessa a carta inteira.' }
       ]
     }
   ]
