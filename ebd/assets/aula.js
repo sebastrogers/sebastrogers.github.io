@@ -7,9 +7,11 @@
   const painel = document.querySelector('#notas');
   let atual = 0;
 
+  const celularEmPe = matchMedia('(max-width: 760px) and (orientation: portrait)');
   function escalar() {
+    if (celularEmPe.matches) { tela.style.transform = ''; return; }
     const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-    tela.style.transform = `scale(${s})`;
+    tela.style.transform = `translate(-50%, -50%) scale(${s})`;
   }
   window.addEventListener('resize', escalar);
   escalar();
@@ -20,6 +22,7 @@
     atual = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle('ativo', k === atual));
     const sl = slides[atual];
+    sl.scrollTop = 0;
     passos(sl).forEach(p => p.classList.toggle('visto', !!todosPassos));
     barra.style.width = ((atual + 1) / slides.length * 100) + '%';
     contador.textContent = `${atual + 1} / ${slides.length}`;
@@ -32,11 +35,13 @@
   }
 
   function avancar() {
+    if (celularEmPe.matches) { if (atual < slides.length - 1) mostrar(atual + 1, true); return; }
     const falta = passos(slides[atual]).find(p => !p.classList.contains('visto'));
     if (falta) { falta.classList.add('visto'); return; }
     if (atual < slides.length - 1) mostrar(atual + 1);
   }
   function voltar() {
+    if (celularEmPe.matches) { if (atual > 0) mostrar(atual - 1, true); return; }
     const vistos = passos(slides[atual]).filter(p => p.classList.contains('visto'));
     if (vistos.length) { vistos[vistos.length - 1].classList.remove('visto'); return; }
     if (atual > 0) mostrar(atual - 1, true);
@@ -62,14 +67,16 @@
   });
   document.querySelector('.palco').addEventListener('click', (e) => {
     if (e.target.closest('button,a,summary,details,.venn,.fichas,.mapa-slide,.revisao')) return;
+    if (celularEmPe.matches) return;
     const r = tela.getBoundingClientRect();
     if (e.clientX > r.left + r.width * 0.3) avancar(); else voltar();
   });
   let x0 = null;
-  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  let y0 = null;
+  document.addEventListener('touchstart', e => { if (e.target.closest('.venn,.fichas,.controles,.notas,.mapa-slide')) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
   document.addEventListener('touchend', e => {
-    if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
-    if (Math.abs(dx) > 50) (dx < 0 ? avancar : voltar)();
+    if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; const dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) (dx < 0 ? avancar : voltar)();
   });
   document.querySelector('#bAnt').addEventListener('click', voltar);
   document.querySelector('#bProx').addEventListener('click', avancar);
