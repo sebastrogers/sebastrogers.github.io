@@ -345,3 +345,17 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .controles #tema{display:inline-flex;align-items:center}
 .s-lado .foto figcaption{top:14px;bottom:auto}
 @media screen and (max-height:500px){.controles .botao-tema{width:32px;height:32px;min-width:32px}}
+
+/* aprofundamento: texto justificado, subtítulos e figuras pareadas */
+.pagina-aula .camada p,.pagina-aula .camada li,.pagina-aula .corte p,.pagina-aula .tres-mundos p,.pagina-aula .na-carta p{text-align:justify;-webkit-hyphens:auto;hyphens:auto;text-wrap:pretty}
+.pagina-aula .camada .verso,.pagina-aula .camada .refs{text-align:left;-webkit-hyphens:manual;hyphens:manual}
+.camada h3{display:flex;align-items:center;gap:12px;margin:34px 0 14px;font-size:1.18rem;letter-spacing:.03em;color:var(--tinta)}
+.camada h3::before{content:"";flex:none;width:26px;height:3px;border-radius:2px;background:var(--cor)}
+.camada .camada-cab + figure,.camada .camada-cab + .duas{margin-top:4px}
+.camada .tres-mundos h3{display:block;margin:0 0 4px;font-size:1.05rem}
+.camada .tres-mundos h3::before{content:none}
+.camada .duas{align-items:stretch}
+.camada .duas figure{display:flex;flex-direction:column}
+.camada .duas img{width:100%;height:auto;aspect-ratio:4/3;max-height:none;object-fit:contain;background:var(--pedra-2)}
+.camada .duas figcaption{flex:1}
+@media (max-width:600px){.pagina-aula .camada p,.pagina-aula .camada li,.pagina-aula .corte p,.pagina-aula .tres-mundos p,.pagina-aula .na-carta p{text-align:left}}
