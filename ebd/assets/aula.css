@@ -370,3 +370,4 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .versiculo .vs-ref{color:#D6B06A}}
 .na-carta .versiculo{box-shadow:none;margin:10px 0 12px}
 @media (max-width:600px){.versiculo{padding:12px 14px 14px}.versiculo .vs-texto{font-size:1.04rem}}
+.versiculo .vs-rotulo{color:var(--purpura)}
