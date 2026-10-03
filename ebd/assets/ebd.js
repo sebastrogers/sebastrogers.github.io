@@ -425,5 +425,5 @@
     iniciarCartoes();
   }
 
-  window.Expedicao = { iniciar, iniciarExpedicao, iniciarDiario };
+  window.Expedicao = { iniciar, iniciarExpedicao, iniciarDiario, mapa: animarMapa };
 })();

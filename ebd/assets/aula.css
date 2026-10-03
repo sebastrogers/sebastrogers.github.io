@@ -1,0 +1,220 @@
+/* Aulas em slides e páginas de aprofundamento · Expedição Filipos */
+
+/* ---------- camadas (corte de escavação) ---------- */
+:root{
+  --c1:#B98B3E; --c2:#8E5A3C; --c3:#4D6F7E; --c4:#6E3A5E; --c5:#5D7A44; --c6:#5E1F4F; --c7:#7B7F84;
+}
+:root[data-theme="dark"]{--c1:#D6B06A;--c2:#D0957A;--c3:#93C5D9;--c4:#D7A0C6;--c5:#A9C77E;--c6:#EBC0DD;--c7:#AEB7BA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:#D6B06A;--c2:#D0957A;--c3:#93C5D9;--c4:#D7A0C6;--c5:#A9C77E;--c6:#EBC0DD;--c7:#AEB7BA}}
+
+.estratos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.estratos li{position:relative;display:flex;align-items:center;gap:12px;padding:8px 14px;border-radius:8px;
+  background:color-mix(in srgb,var(--cor) 16%,var(--papel));border-left:6px solid var(--cor);color:var(--tinta);opacity:.55;transition:opacity .3s,transform .3s}
+.estratos li b{font-family:"Cinzel",Georgia,serif;font-weight:700;min-width:1.4em;color:var(--cor)}
+.estratos li span{flex:1}
+.estratos li small{color:var(--tinta-2);font-size:.8em;white-space:nowrap}
+.estratos li.atual{opacity:1;transform:translateX(6px);box-shadow:var(--sombra)}
+.estratos.todas li{opacity:1}
+.estratos a{color:inherit;text-decoration:none}
+
+/* ================= SLIDES ================= */
+body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10}
+.palco{position:fixed;inset:0;display:grid;place-items:center}
+.tela{position:relative;width:1280px;height:720px;transform-origin:center center;flex:none;background:var(--pedra);color:var(--tinta);overflow:hidden;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.slide{position:absolute;inset:0;display:none;padding:64px 80px 70px;font-size:26px;line-height:1.45}
+.slide.ativo{display:flex;flex-direction:column;animation:entra .45s ease}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.ativo{animation:none}}
+.slide h2{font-size:52px;line-height:1.1;margin:0 0 22px}
+.slide h3{font-size:30px;margin:0 0 10px}
+.slide p{margin:0 0 16px}
+.slide .rotulo{font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--cor,var(--bronze));font-weight:700;margin:0 0 12px}
+.slide .ref{font-size:19px;color:var(--tinta-2)}
+.slide ul.itens{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+.slide ul.itens li{position:relative;padding-left:30px}
+.slide ul.itens li::before{content:"";position:absolute;left:4px;top:.55em;width:12px;height:12px;border-radius:3px;transform:rotate(45deg);background:var(--cor,var(--purpura))}
+.slide em.forte{font-style:normal;color:var(--purpura);font-weight:700}
+.destaque-num{font-family:"Cinzel",Georgia,serif;font-size:120px;line-height:1;color:var(--cor,var(--purpura));font-weight:700}
+
+/* revelar aos poucos */
+.slide .passo{opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.slide .passo.visto{opacity:1;transform:none}
+.slide .passo.dica{opacity:.18}
+
+/* capa e fotos de fundo */
+.slide.s-capa,.slide.s-fundo{padding:0;color:#fff;background:#1b1620}
+.s-capa .kb,.s-fundo .kb,.s-capa > img,.s-fundo > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.s-capa::after,.s-fundo::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,9,18,.94) 0%,rgba(14,9,18,.6) 45%,rgba(14,9,18,.12) 80%);pointer-events:none}
+.s-fundo.lado::after{background:linear-gradient(to right,rgba(14,9,18,.94) 0%,rgba(14,9,18,.75) 48%,rgba(14,9,18,.1) 80%)}
+.s-capa .conteudo,.s-fundo .conteudo{position:relative;z-index:2;margin-top:auto;padding:0 80px 70px;max-width:1100px}
+.s-fundo.lado .conteudo{margin:auto 0;max-width:640px}
+.s-capa h1{font-size:76px;line-height:1.05;margin:0 0 18px;color:#fff}
+.s-capa .capa-licao{display:inline-flex;gap:14px;align-items:center;font-size:24px;margin:0 0 18px}
+.s-capa .capa-licao b{background:#F4EDF2;color:#3A1832;border-radius:999px;padding:4px 16px;font-size:20px}
+.s-capa .rotulo,.s-fundo .rotulo{color:#E7C98A}
+.s-fundo h2{color:#fff}
+.s-fundo .ref{color:#d8d0d6}
+.legenda-foto{position:absolute;right:18px;top:16px;z-index:3;font-size:14px;color:#F4EDF2;background:rgba(15,10,18,.6);padding:5px 12px;border-radius:8px;max-width:520px;text-align:right}
+
+/* foto ao lado */
+.s-lado{flex-direction:row !important;gap:48px;align-items:stretch;padding:0 !important}
+.s-lado .foto{flex:0 0 46%;position:relative;margin:0;background:#1b1620}
+.s-lado .foto img{width:100%;height:100%;object-fit:cover}
+.s-lado .foto figcaption{position:absolute;left:14px;right:14px;bottom:14px;font-size:14px;color:#F4EDF2;background:rgba(15,10,18,.6);padding:5px 10px;border-radius:8px}
+.s-lado .texto{flex:1;padding:64px 70px 70px 0;display:flex;flex-direction:column;justify-content:center}
+.s-lado.inverso{flex-direction:row-reverse !important}
+.s-lado.inverso .texto{padding:64px 0 70px 70px}
+
+/* coluna de camadas ao lado */
+.com-coluna{grid-template-columns:1fr 330px;gap:56px;align-items:center}
+.slide.ativo.com-coluna{display:grid}
+.com-coluna .estratos{font-size:17px}
+
+/* pergunta para a turma */
+.s-pergunta{justify-content:center;align-items:center;text-align:center;background:var(--pass) !important;color:var(--pass-txt) !important}
+.s-pergunta .chip{display:inline-flex;align-items:center;gap:10px;font-size:18px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#E7C98A;border:2px solid rgba(231,201,138,.6);padding:6px 18px;border-radius:999px;margin-bottom:34px}
+.s-pergunta blockquote{margin:0;font-family:"Literata",Georgia,serif;font-size:54px;line-height:1.2;max-width:980px}
+.s-pergunta p.sub{margin-top:30px;font-size:22px;color:#e2d4de;max-width:820px}
+
+/* citação bíblica */
+.slide .citacao,.pagina-aula .citacao{font-style:normal}
+.citacao{margin:0;border-left:6px solid var(--cor,var(--purpura));padding:6px 0 6px 28px;font-family:"Literata",Georgia,serif;font-size:31px;line-height:1.45}
+.citacao cite{display:block;margin-top:12px;font-family:"Atkinson Hyperlegible",sans-serif;font-style:normal;font-size:19px;color:var(--tinta-2)}
+.s-fundo .citacao{color:#fff}
+.s-fundo .citacao cite{color:#d8d0d6}
+
+/* cartões */
+.cartoes-aula{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+.cartao-aula{background:var(--papel);border-radius:14px;box-shadow:var(--sombra);overflow:hidden;display:flex;flex-direction:column;font-size:20px;line-height:1.4}
+.cartao-aula img{height:150px;width:100%;object-fit:cover}
+.cartao-aula .corpo{padding:16px 20px 18px}
+.cartao-aula h3{font-size:24px;margin-bottom:4px}
+.cartao-aula .tag{display:inline-block;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cor,var(--purpura));margin-bottom:6px}
+.cartao-aula ul{margin:8px 0 0;padding-left:20px}
+.grade-2{display:grid;grid-template-columns:1fr 1fr;gap:20px 30px}
+.grade-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.caixa{background:var(--papel);border-radius:14px;box-shadow:var(--sombra);padding:18px 22px;font-size:21px;line-height:1.4}
+.caixa b.t{display:block;font-size:17px;letter-spacing:.08em;text-transform:uppercase;color:var(--cor,var(--purpura));margin-bottom:4px}
+
+/* linha do tempo horizontal */
+.linha-h{position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:16px;margin-top:30px}
+.linha-h::before{content:"";position:absolute;left:0;right:0;top:20px;height:4px;border-radius:2px;background:color-mix(in srgb,var(--cor,var(--purpura)) 40%,transparent)}
+.linha-h > div{position:relative;padding-top:52px;font-size:19px;line-height:1.35}
+.linha-h > div::before{content:"";position:absolute;left:0;top:10px;width:24px;height:24px;border-radius:50%;background:var(--cor,var(--purpura));border:4px solid var(--pedra)}
+.linha-h b{display:block;font-family:"Cinzel",Georgia,serif;font-size:22px;color:var(--cor,var(--purpura));margin-bottom:4px}
+.linha-h .ref{font-size:16px}
+
+/* anatomia do texto */
+.anatomia{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:16px;overflow:hidden;box-shadow:var(--sombra)}
+.anatomia > div{padding:22px 24px;background:var(--papel);border-top:10px solid var(--cor)}
+.anatomia > div + div{border-left:1px solid var(--linha)}
+.anatomia .v{font-family:"Cinzel",Georgia,serif;font-size:20px;color:var(--cor);font-weight:700}
+.anatomia h3{font-size:30px;margin:4px 0 10px}
+.anatomia ul{margin:0;padding-left:20px;font-size:19px;line-height:1.45}
+.anatomia .palavra{display:inline-block;margin-top:12px;font-size:17px;background:color-mix(in srgb,var(--cor) 16%,transparent);border-radius:999px;padding:3px 12px}
+
+/* atividade: os dois círculos */
+.venn{position:relative;height:372px;margin:4px 0 12px}
+.venn .zona{position:absolute;top:0;width:430px;height:370px;border-radius:50%;border:4px solid;display:flex;flex-direction:column;align-items:center;padding-top:26px;cursor:pointer;background:transparent;font:inherit;color:inherit}
+.venn .z-mundo{left:150px;border-color:var(--bronze);background:color-mix(in srgb,var(--bronze) 9%,transparent)}
+.venn .z-senhor{right:150px;border-color:var(--purpura);background:color-mix(in srgb,var(--purpura) 9%,transparent)}
+.venn .zona > span.nome{font-family:"Cinzel",Georgia,serif;font-weight:700;font-size:24px}
+.venn .z-mundo > span.nome{color:var(--bronze);margin-right:120px}
+.venn .z-senhor > span.nome{color:var(--purpura);margin-left:120px}
+.venn .z-ambos{position:absolute;left:50%;top:96px;transform:translateX(-50%);width:150px;height:190px;border-radius:50%;border:2px dashed var(--tinta-2);background:transparent;font:inherit;font-size:15px;color:var(--tinta-2);display:flex;align-items:flex-start;justify-content:center;padding-top:10px;cursor:pointer;z-index:2}
+.venn .lista{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;max-width:300px}
+.venn .z-mundo .lista{margin-right:110px}
+.venn .z-senhor .lista{margin-left:110px}
+.venn .z-ambos .lista{position:absolute;top:34px;left:50%;transform:translateX(-50%);flex-direction:column;max-width:none;margin:0;align-items:center;width:190px}
+.venn .lista .ficha{font-size:15px;padding:4px 10px}
+.fichas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:52px}
+.ficha{font:inherit;font-size:17px;padding:6px 14px;border-radius:999px;border:2px solid var(--linha);background:var(--papel);color:var(--tinta);cursor:pointer;box-shadow:var(--sombra)}
+.ficha:hover{border-color:var(--bronze)}
+.ficha.escolhida{border-color:var(--purpura);background:var(--purpura);color:var(--papel)}
+.dica-venn{text-align:center;font-size:17px;color:var(--tinta-2);margin:6px 0 0}
+
+/* revisão */
+.revisao{display:grid;gap:12px}
+.revisao details{background:var(--papel);border-radius:12px;box-shadow:var(--sombra);padding:12px 20px;font-size:22px}
+.revisao summary{cursor:pointer;font-weight:700;list-style:none;display:flex;gap:14px;align-items:baseline}
+.revisao summary::-webkit-details-marker{display:none}
+.revisao summary b{font-family:"Cinzel",Georgia,serif;color:var(--purpura)}
+.revisao details p{margin:8px 0 2px 34px;color:var(--tinta-2)}
+
+/* mapa dentro do slide */
+.slide .mapa-slide .mapa{max-height:470px;width:auto;margin:0 auto}
+.slide .mapa-slide .acoes{margin-top:8px}
+
+/* barra e notas */
+.barra{position:fixed;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08);z-index:10}
+.barra i{display:block;height:100%;width:0;background:#E7C98A;transition:width .3s}
+.controles{position:fixed;right:14px;bottom:14px;z-index:11;display:flex;gap:8px;align-items:center;opacity:.25;transition:opacity .25s}
+.controles:hover,.controles:focus-within,body.mostrar-ctrl .controles{opacity:1}
+.controles button,.controles a,.controles .contador{font:inherit;font-size:14px;font-weight:700;min-height:38px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(20,14,22,.85);color:#F4EDF2;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.controles .botao-tema{background:rgba(20,14,22,.85);color:#F4EDF2;border-color:rgba(255,255,255,.25);min-height:38px}
+.notas{position:fixed;left:14px;right:14px;bottom:62px;z-index:12;max-width:900px;margin:0 auto;max-height:42vh;overflow:auto;background:rgba(20,14,22,.96);color:#F4EDF2;border:1px solid rgba(231,201,138,.4);border-radius:14px;padding:16px 22px;font-size:17px;line-height:1.5;display:none}
+.notas.aberta{display:block}
+.notas h4{margin:0 0 6px;font-family:"Cinzel",Georgia,serif;color:#E7C98A;font-size:15px;letter-spacing:.08em;text-transform:uppercase}
+.notas p{margin:0 0 8px}
+.ajuda-teclas{font-size:13px;color:#cdbfca;margin-top:6px}
+
+/* ================= PÁGINA DE APROFUNDAMENTO ================= */
+.corte{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:center;margin-top:8px}
+.corte .estratos li{opacity:1}
+.corte .estratos li:hover{transform:translateX(4px)}
+@media (max-width:760px){.corte{grid-template-columns:1fr}}
+.camada{position:relative;padding:40px 0 30px;border-top:1px solid var(--linha)}
+.camada-cab{display:flex;gap:18px;align-items:center;margin-bottom:18px}
+.camada-cab .num{flex:none;width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-family:"Cinzel",Georgia,serif;font-weight:700;font-size:1.7rem;color:#fff;background:var(--cor)}
+:root[data-theme="dark"] .camada-cab .num{color:#121A21}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .camada-cab .num{color:#121A21}}
+.camada-cab p{margin:0;color:var(--cor);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem}
+.camada-cab h2{margin:2px 0 0}
+.camada figure.larga{margin:0 0 18px;border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra);background:#1b1620}
+.camada figure.larga img{width:100%;max-height:420px;object-fit:cover}
+.camada figure figcaption{font-size:.85rem;color:var(--tinta-2);padding:8px 12px;background:var(--papel)}
+.camada .duas{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:6px 0 18px}
+@media (max-width:640px){.camada .duas{grid-template-columns:1fr}}
+.camada .duas figure{margin:0;border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra);background:var(--papel)}
+.camada .duas img{width:100%;height:220px;object-fit:cover}
+.na-carta{margin:18px 0 6px;padding:16px 20px;border-radius:var(--raio);background:color-mix(in srgb,var(--cor) 12%,var(--papel));border-left:6px solid var(--cor)}
+.na-carta b.t{display:block;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cor);margin-bottom:4px}
+.na-carta p:last-child{margin:0}
+.verso{font-family:"Literata",Georgia,serif;font-size:1.08rem}
+.verso cite{font-family:"Atkinson Hyperlegible",sans-serif;font-style:normal;font-size:.88rem;color:var(--tinta-2);white-space:nowrap}
+.refs{font-size:.88rem;color:var(--tinta-2)}
+.lista-fatos{margin:0 0 16px;padding-left:22px}
+.lista-fatos li{margin-bottom:6px}
+.tres-mundos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 18px}
+@media (max-width:720px){.tres-mundos{grid-template-columns:1fr}}
+.tres-mundos > div{background:var(--papel);border-radius:var(--raio);box-shadow:var(--sombra);padding:14px 16px;border-top:6px solid var(--cor)}
+.tres-mundos h3{font-size:1.05rem;margin-bottom:4px}
+.tres-mundos p{margin:0;font-size:.95rem}
+.tres-mundos .tag{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cor)}
+.cronologia{width:100%;border-collapse:collapse;font-size:.95rem;background:var(--papel);border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra)}
+.cronologia th,.cronologia td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--linha);vertical-align:top}
+.cronologia th{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-2)}
+.cronologia td:first-child{white-space:nowrap;font-weight:700;color:var(--cor,var(--purpura))}
+.cronologia tr:last-child td{border-bottom:0}
+@media (max-width:600px){.cronologia td:first-child{white-space:normal}}
+.glossario{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.glossario{grid-template-columns:1fr}}
+.glossario div{background:var(--papel);border-radius:var(--raio);padding:12px 16px;box-shadow:var(--sombra)}
+.glossario dt{font-weight:700;color:var(--purpura)}
+.glossario dd{margin:2px 0 0;font-size:.95rem}
+.chamada-aula{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--pass);color:var(--pass-txt);border-radius:var(--raio);padding:18px 22px;margin:18px 0}
+.chamada-aula p{margin:0}
+.chamada-aula b{font-family:"Cinzel",Georgia,serif;font-size:1.15rem;display:block;color:#E7C98A}
+.chamada-aula .botao{background:#F4EDF2;border-color:#F4EDF2;color:#3A1832}
+.chamada-aula .botao:hover{background:#E7C98A;border-color:#E7C98A;color:#1D1B26}
+.slide .verso{font-family:"Literata",Georgia,serif;font-size:25px;line-height:1.4}
+.slide .caixa .ref{font-size:19px}
+.linha-h{margin-top:46px}
+.linha-h > div{font-size:21px}
+.linha-h b{font-size:26px}
+.slide .grade-3 .caixa{font-size:22px}
+.slide.compacto{font-size:23px}
+.slide.compacto h2{font-size:46px;margin-bottom:14px}
+.venn .zona{padding-top:34px}
+.corte .estratos li{font-size:.95rem;padding:7px 12px}.corte .estratos li small{font-size:.75rem}.camada .aviso{text-align:left;max-width:none}
+.venn .zona{padding-top:62px}.venn .nome-ambos{background:var(--pedra);padding:0 8px;border-radius:999px;position:relative;z-index:1}.venn .z-ambos{top:110px}
