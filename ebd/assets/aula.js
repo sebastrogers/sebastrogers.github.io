@@ -136,3 +136,11 @@
   const inicio = parseInt((location.hash || '#1').slice(1), 10);
   mostrar(isNaN(inicio) ? 0 : inicio - 1);
 })();
+/* botões que alternam um estado (ex.: a folha amassada) */
+document.querySelectorAll('[data-alternar]').forEach(b => b.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const alvo = document.querySelector(b.dataset.alternar);
+  if (!alvo) return;
+  const aberta = alvo.classList.toggle('aberta');
+  if (b.dataset.rotulos) { const [a, c] = b.dataset.rotulos.split('|'); b.textContent = aberta ? c : a; }
+}));

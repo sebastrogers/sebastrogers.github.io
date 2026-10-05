@@ -362,8 +362,8 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 
 /* versículos no aprofundamento (proposta B) */
 .versiculo{margin:18px 0;padding:14px 20px 16px;border-left:4px solid #C9A24D;background:var(--papel);border-radius:0 12px 12px 0;box-shadow:var(--sombra)}
-.versiculo .vs-ref{display:flex;align-items:center;gap:8px;margin:0 0 6px !important;font:700 .76rem "Atkinson Hyperlegible",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9A7A2E;text-align:left !important}
-.versiculo .vs-ref svg{width:17px;height:17px;flex:none}
+.versiculo .vs-ref{display:block;line-height:1.5;margin:0 0 6px !important;font:700 .76rem "Atkinson Hyperlegible",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#9A7A2E;text-align:left !important}
+.versiculo .vs-ref svg{width:17px;height:17px;display:inline-block;vertical-align:-3px;margin-right:8px}
 .versiculo .vs-ref cite{font-style:normal}
 .versiculo .vs-texto{margin:0 !important;font-family:"Literata",Georgia,serif;font-size:1.1rem;line-height:1.62;color:var(--tinta);text-align:left !important;-webkit-hyphens:manual !important;hyphens:manual !important}
 :root[data-theme="dark"] .versiculo .vs-ref{color:#D6B06A}
@@ -371,3 +371,32 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .na-carta .versiculo{box-shadow:none;margin:10px 0 12px}
 @media (max-width:600px){.versiculo{padding:12px 14px 14px}.versiculo .vs-texto{font-size:1.04rem}}
 .versiculo .vs-rotulo{color:var(--purpura)}
+
+/* Lição 2: a folha amassada */
+.folha{position:relative;width:440px;max-width:100%;margin:6px auto 0;aspect-ratio:400/280}
+.folha svg{width:100%;height:100%;display:block;transform:scale(.62) rotate(-9deg) skew(4deg,-3deg);filter:drop-shadow(0 10px 18px rgba(0,0,0,.28));transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.folha .papel{fill:#f4efe4;stroke:#d8cfbf;stroke-width:2}
+.folha .vincos path{fill:none;stroke:#7d7262;stroke-width:3.2;stroke-linejoin:round;opacity:.85;transition:opacity .9s,stroke-width .9s}
+.folha .linhas path{fill:none;stroke:#b9c8d6;stroke-width:2;opacity:0;transition:opacity .9s}
+.folha-texto{position:absolute;inset:26% 13% auto;margin:0;text-align:center;font-family:"Cinzel",Georgia,serif;font-size:21px;line-height:1.35;color:#3a2e36;opacity:0;transition:opacity .6s .5s}
+.folha.aberta svg{transform:none}
+.folha.aberta .vincos path{opacity:.32;stroke-width:1.6}
+.folha.aberta .linhas path{opacity:1}
+.folha.aberta .folha-texto{opacity:1}
+.folha.mini{width:320px}
+.folha.mini svg{transition:none}
+
+/* Lição 2: a balança do dilema */
+.balanca{display:grid;grid-template-columns:1fr 90px 1fr;gap:18px;align-items:center;margin-top:14px}
+.balanca .prato{background:var(--papel);border-radius:16px;box-shadow:var(--sombra);padding:18px 22px;border-top:6px solid var(--cor,var(--bronze));text-align:center;font-size:22px}
+.balanca .prato b{display:block;font-family:"Cinzel",Georgia,serif;font-size:30px;color:var(--cor,var(--purpura));margin-bottom:6px}
+.balanca .prato p{margin:0 0 8px}
+.balanca .prato small{display:inline-block;font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--tinta-2)}
+.balanca .fiel{font-size:64px;text-align:center;color:var(--bronze);line-height:1}
+@media screen and (max-width:760px) and (orientation:portrait){
+  .balanca{grid-template-columns:1fr;gap:10px}
+  .balanca .fiel{font-size:40px}
+  .folha{width:300px}
+  .folha-texto{font-size:16px}
+}
+@media print{.folha svg{transform:none}.folha .vincos path{opacity:.32;stroke-width:1.6}.folha .linhas path,.folha .folha-texto{opacity:1}}
