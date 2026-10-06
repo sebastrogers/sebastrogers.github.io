@@ -1,0 +1,10 @@
+# O site é publicado direto pelo GitHub Pages (Jekyll), que ignora
+# arquivos começando com "_". Estas linhas liberam só os arquivos da
+# prévia da Livraria El Shaday (pasta livraria-elshaday/), gerada pelo Next.js.
+include:
+  - "_next"
+  - "__next.*"
+  - "_not-found"
+  - "_buildManifest.js"
+  - "_ssgManifest.js"
+  - "_clientMiddlewareManifest.js"
