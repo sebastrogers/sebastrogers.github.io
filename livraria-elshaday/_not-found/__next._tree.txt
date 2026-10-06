@@ -1,2 +1,2 @@
-:HL["/livraria-elshaday/_next/static/chunks/3_j8ph5zggcg7.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"qvATMkpV-ICAbjxfZ_Vn8"}
+:HL["/livraria-elshaday/_next/static/chunks/0oxutbswqve2f.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"P0ETZXhUBKqFS7vMXP5je"}
