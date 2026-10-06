@@ -3,4 +3,4 @@
 :HL["https://martinsfontespaulista.vteximg.com.br/arquivos/ids/1258248-600-600/909349.jpg","image"]
 :HL["https://martinsfontespaulista.vteximg.com.br/arquivos/ids/1780077-600-600/1197834.jpg","image"]
 :HL["https://martinsfontespaulista.vteximg.com.br/arquivos/ids/1389080-600-600/947165.jpg","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"(loja)","param":null,"prefetchHints":4128,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4224,"slots":null}}}}},"staleTime":300,"buildId":"P0ETZXhUBKqFS7vMXP5je"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"(loja)","param":null,"prefetchHints":4128,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4224,"slots":null}}}}},"staleTime":300,"buildId":"GKrGrzqjL5fs8wBAxDs96"}
