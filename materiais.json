@@ -158,6 +158,14 @@
           }
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 8: Loja de Roupas, ao vivo (versão interativa)",
+          "descricao": "Os mesmos slides, no navegador: mapa das fases (tecla M), código com botão de copiar, laboratório clicável e respostas reveladas aos poucos. Use as setas para navegar e F para tela cheia.",
+          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas-ao-vivo.html",
+          "data": "06/10/2026",
+          "tags": "slides interativo html navegador revisao nivelamento loja roupas mapa fases pytest git github poo"
+        },
+        {
           "tipo": "Projeto",
           "titulo": "Repositório da Loja de Roupas, fase por fase",
           "descricao": "O projeto da aula pronto no GitHub, com uma tag por fase (etapa-01 a etapa-09). Travou numa fase? Baixe o .zip dela na aba Tags.",

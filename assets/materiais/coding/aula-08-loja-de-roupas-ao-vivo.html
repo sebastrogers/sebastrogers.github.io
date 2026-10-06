@@ -1,0 +1,778 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coding · Aula 8 · Loja de Roupas, ao vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--ink:#1b1c1f;--body:#3b3b3e;--mute:#7b7769;--teal:#1f6f6b;--teal2:#2b8a83;--wine:#7a2c46;
+--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--dark:#15171b;--dark2:#1e2127;--card:#fffdf8;--line:#e2dccd;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0c0e;overflow:hidden;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+#deck{position:absolute;width:1600px;height:900px;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;background:var(--bg);display:none;flex-direction:column;overflow:hidden;border-radius:4px}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.dark{background:var(--dark);color:#eeeae0}
+.kicker{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+h1{font-family:"Fraunces",Georgia,serif;font-size:96px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:1.1;font-weight:700;margin-bottom:34px;letter-spacing:-.005em}
+h3{font-family:"Fraunces",Georgia,serif;font-size:34px;margin:6px 0 14px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:rgba(31,111,107,.1);color:var(--teal);padding:1px 7px;border-radius:6px}
+.dark code{background:rgba(255,255,255,.08);color:#9fe3d9}
+b{font-weight:700}
+/* capa */
+.capa{justify-content:center;background:radial-gradient(1200px 600px at 85% 20%,#24302f 0,transparent 60%),var(--dark)}
+.capa h1{color:#fff;max-width:1250px;margin-bottom:28px}
+.capa .sub{font-size:30px;line-height:1.45;color:#cfc9bb;max-width:1100px}
+.capa-foot{position:absolute;bottom:70px;left:90px;font-size:22px;color:#8f8a7c}
+/* listas */
+.cols{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:start}
+ul.notes{list-style:none;display:flex;flex-direction:column;gap:22px}
+ul.notes li{font-size:31px;line-height:1.42;color:var(--body);padding-left:34px;position:relative}
+ul.notes li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:14px;border-radius:3px;background:var(--teal);transform:rotate(45deg)}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:46px;flex:1;min-height:0}
+.split.wide{grid-template-columns:1.6fr 1fr}
+.split:has(.has-tree){grid-template-columns:1.75fr 1fr}
+.split .left,.split .right{min-height:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+.code,.term{min-width:0;max-width:100%}.duo>*,.annot>*{min-width:0}
+.codeslide ul.notes li{font-size:27px}
+.full{flex:1;min-height:0;display:flex;flex-direction:column;gap:24px;justify-content:flex-start}
+/* código */
+.code,.term{background:#17191d;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+.code .body{display:flex;flex:1 1 auto;min-height:0;min-width:0}.code .body pre,.term pre{flex:1 1 auto;min-height:0;min-width:0}
+.tree{flex:none;width:250px;background:#1d2026;border-right:1px solid #2c3038;padding:10px 0;font:16px/1.75 Inter,system-ui,sans-serif;color:#b9bcc4;overflow:hidden}
+.tr-h{font:700 12px Inter,system-ui,sans-serif;letter-spacing:.12em;color:#8a8f99;padding:2px 14px 6px}
+.tr{padding-left:calc(14px + var(--d)*16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tr.dim{color:#6b707a}
+.tr .chev{display:inline-block;width:14px;color:#8a8f99}.tr.cur{background:#37373d;color:#fff;box-shadow:inset 2px 0 0 var(--gold)}
+.ic{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 8px 0 4px;background:#7f8590}.ic-py{background:#4b8bbe}.ic-ini,.ic-txt{background:#9a968b}.ic-yml{background:#c2412d}.ic-md{background:#5fa3d8}.ic-gitignore{background:#e06c4a}
+.annot>div{display:flex;flex-direction:column;gap:16px;min-height:0}
+.bar{display:flex;align-items:center;gap:8px;background:#0f1013;padding:10px 16px}
+.bar i{width:12px;height:12px;border-radius:50%;background:#e0574a}.bar i:nth-child(2){background:#e6b13d}.bar i:nth-child(3){background:#4cb26a}
+.fname{font-family:"JetBrains Mono",ui-monospace,monospace;color:#9a968b;font-size:17px;margin-left:12px;flex:1}
+.copy{background:transparent;border:1px solid #3a3d44;color:#c9c4b8;font-size:15px;padding:4px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2a2d33}.copy.done{border-color:#4cb26a;color:#7fe0a0}
+pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:26px;line-height:1.5;color:#e9e6dd;padding:18px 22px;overflow:hidden;white-space:pre;tab-size:4}
+pre .ln{display:block;margin:0 -22px;padding:0 22px}
+pre .ln.hl{background:rgba(199,154,43,.18);box-shadow:inset 4px 0 0 var(--gold)}
+.k{color:#ff8b7e}.s{color:#a8d98a}.c{color:#7f8590;font-style:italic}.n{color:#f2c46d}.d{color:#c49bff}.fn{color:#7cc7ff}.bi{color:#6fd4c6}.fl{color:#f2c46d}
+.term pre .ps{color:#7cc7ff;font-weight:700}.term .cmd{color:#f4f1ea}.term .ok{color:#7fe0a0;font-weight:700}.term .err{color:#ff8b7e}.term .dim{color:#7f8590}.term .warn{color:#f2c46d}.term .out{color:#d9d5ca}
+/* caixas */
+.ok-box,.sos,.tip{border-radius:14px;padding:22px 26px;font-size:26px;line-height:1.45;color:var(--body)}
+.ok-box{background:#e4f1e8;border-left:6px solid var(--green)}
+.lbl{display:block;font-size:17px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.ok-box .lbl{color:var(--green)}
+.sos{background:#f7e6df;border-left:6px solid var(--red)}.sos .lbl{color:var(--red)}.sos a code{font-size:18px;word-break:break-all}.sos .alt{display:block;margin-top:10px;font-size:20px;color:var(--mute)}
+.tip{background:#efe6cf;border-left:6px solid var(--gold)}.tip .lbl{color:#9a7414}
+/* duo e cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:0 1 auto;min-height:0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.card .tag{font-family:"JetBrains Mono",monospace;font-size:17px;letter-spacing:.12em;font-weight:700}
+.card.bad{border-color:#e9b8ae}.card.bad .tag{color:var(--red)}
+.card.good{border-color:#a9d4b7}.card.good .tag{color:var(--green)}
+.card.neutral .tag{color:var(--teal)}
+.card p{font-size:26px;line-height:1.45;color:var(--body)}
+.foot{font-size:26px;margin-top:26px;color:var(--body)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid3 .card h3{font-size:30px}
+.big-num{font-family:"Fraunces",Georgia,serif;font-size:64px;color:var(--teal);font-weight:700;line-height:1}
+/* afirmação */
+.afirma{justify-content:center}.afirma.wine{background:var(--wine);color:#fff}.afirma.teal{background:var(--teal);color:#fff}.afirma.dk{background:var(--dark);color:#fff}
+.afirma .kicker{color:#f3d58a}.afirma h2{font-size:62px;max-width:1300px}.afirma p{font-size:30px;line-height:1.45;max-width:1200px;opacity:.88}
+/* quiz */
+.reveal{align-self:flex-start;background:var(--teal);color:#fff;border:0;border-radius:10px;font-size:22px;padding:12px 22px;cursor:pointer;font-family:inherit}
+.answer{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 28px;font-size:28px;line-height:1.45;color:var(--body)}
+.answer p+p{margin-top:12px}
+/* fragmentos */
+.f{opacity:0;transform:translateY(6px);transition:all .3s}
+.f.vis{opacity:1;transform:none}
+/* svg */
+svg.flow{width:100%;height:auto;max-height:190px;flex:none}
+.sv-t{font:700 30px "Fraunces",Georgia,serif}.sv-s{font:22px "Inter",system-ui,sans-serif;fill:#555}.sv-a{font:600 20px "JetBrains Mono",monospace;fill:#7a2c46}.sv-f{font:italic 22px "Inter",system-ui;fill:#777}
+/* mapa */
+.mapa{padding:50px 70px 70px}
+.map-wrap{display:grid;grid-template-rows:1fr auto;gap:18px;height:100%}
+.map svg{width:100%;height:100%}
+.map{min-height:0}
+.map-info{display:grid;grid-template-columns:auto 1fr;column-gap:40px;align-items:end}
+.map-info .kicker{grid-column:1/3;margin-bottom:6px}
+.map-info h2{margin:0;font-size:50px;color:#fff}
+.map-info p{font-size:24px;color:#bdb8aa;line-height:1.4;grid-column:1/3;margin-top:10px;max-width:1300px}
+.goal{grid-column:2;grid-row:2;justify-self:end;background:#22262d;border:1px solid #343944;border-radius:12px;padding:14px 20px;font-size:22px;color:#e8e3d6}
+.goal span{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.12em;color:#7fe0a0;text-transform:uppercase;margin-bottom:4px}
+.m-zone{fill:#1c2026;stroke:#2a2f37;stroke-width:2}
+.m-zlab{font:700 17px "JetBrains Mono",monospace;letter-spacing:.14em;fill:#6f7480}
+.m-path{fill:none;stroke:#3b414c;stroke-width:10;stroke-linecap:round;stroke-dasharray:2 22}
+.m-done{fill:none;stroke:var(--teal2);stroke-width:10;stroke-linecap:round}
+.m-node circle,.m-node rect{stroke-width:5}
+.m-node.todo circle,.m-node.todo rect{fill:#15171b;stroke:#4a505c}
+.m-node.done circle,.m-node.done rect{fill:var(--teal);stroke:#5cc2b8}
+.m-node.cur circle,.m-node.cur rect{fill:var(--gold);stroke:#ffe2a0}
+.m-node .ring{fill:none;stroke:var(--gold);stroke-width:3;opacity:.7;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:34;opacity:.8}100%{r:58;opacity:0}}
+.m-code{font:700 22px "JetBrains Mono",monospace;fill:#fff}
+.m-node.todo .m-code{fill:#8a909c}.m-node.cur .m-code{fill:#1b1c1f}
+.m-name{font:600 21px "Inter",system-ui,sans-serif;fill:#d8d3c6}.m-node.todo .m-name{fill:#8a909c}
+.m-aula{font:16px "JetBrains Mono",monospace;fill:#7b8190}
+.m-flag{fill:#c2412d}
+/* barra inferior */
+#ui{position:fixed;right:18px;bottom:14px;display:flex;gap:8px;z-index:20;opacity:.35;transition:opacity .2s}
+#ui:hover{opacity:1}
+#ui button,#ui span{background:#24272d;color:#ddd;border:0;border-radius:8px;padding:7px 12px;font-size:13px;font-family:Inter,system-ui,sans-serif;cursor:pointer}
+#prog{position:fixed;left:0;bottom:0;height:4px;background:var(--gold);z-index:20;transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(11,12,14,.94);display:none;z-index:30;padding:4vh 5vw}
+#overlay.on{display:block}#overlay .map{height:80vh}
+#overlay .close{position:absolute;right:28px;top:20px;color:#ddd;font-size:15px;font-family:Inter,sans-serif}
+.relembre{background:#e8f0ed}
+.rl-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}.rl-top .kicker{margin:0}
+.rl-pill{font:700 16px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:var(--teal);padding:6px 14px;border-radius:30px}
+.rl-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;flex:1;min-height:0}
+.rl-left,.rl-right{display:flex;flex-direction:column;gap:22px;min-height:0;min-width:0}
+.rl-def{font-size:33px;line-height:1.42;color:var(--ink)}
+.rl-box{border-radius:14px;padding:20px 24px;font-size:25px;line-height:1.45;color:var(--body)}
+.rl-box.an{background:#fffdf8;border-left:6px solid var(--teal)}.rl-box.an .lbl{color:var(--teal)}
+.rl-box.cu{background:#f7e6df;border-left:6px solid var(--red)}.rl-box.cu .lbl{color:var(--red)}
+/* laboratório TDD */
+.lab{display:grid;grid-template-columns:330px 1fr;gap:30px;flex:1;min-height:0}
+.lab-steps{display:flex;flex-direction:column;gap:14px}
+.lab-steps button{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font-size:21px;cursor:pointer;font-family:inherit;color:var(--body);line-height:1.35}
+.lab-steps button b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.1em;margin-bottom:4px}
+.lab-steps button.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,107,.15)}
+.lab-steps .r b{color:var(--red)}.lab-steps .g b{color:var(--green)}
+.lab-view{display:flex;flex-direction:column;gap:16px;min-height:0}
+.lab-panel{display:none;flex-direction:column;gap:16px;min-height:0}.lab-panel.on{display:flex}
+.status{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:20px;padding:8px 16px;border-radius:30px;color:#fff}
+.status.red{background:var(--red)}.status.green{background:var(--green)}
+/* anotações sobre a saída */
+.annot{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;flex:1;min-height:0}
+.annot ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:18px}
+.annot ol li{counter-increment:a;font-size:27px;line-height:1.4;color:var(--body);padding-left:52px;position:relative}
+.annot ol li::before{content:counter(a);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--wine);color:#fff;font:700 19px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+table.t{border-collapse:collapse;width:100%;font-size:25px}
+table.t th{background:var(--teal);color:#fff;text-align:left;padding:12px 16px;font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+table.t td{padding:12px 16px;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+table.t tr:nth-child(even) td{background:#f8f5ee}
+</style></head><body>
+<div id="deck"><section class="slide dark capa" data-fase=""><div class="capa-in"><div class="kicker">Coding · Aula 8 · 6 de outubro de 2026</div><h1>Loja de Roupas, ao vivo</h1><p class="sub">Um projeto Python do zero até o GitHub, passando por tudo o que vimos: tipos, funções, testes, classes, herança, polimorfismo e contratos. Eu digito, vocês digitam junto.</p><div class="capa-foot">Faculdade Senac Pernambuco · ADS 2026.2 · Prof. Sebastião Rogério</div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Como a aula funciona</div><h2>Três regras para ninguém ficar para trás</h2><div class="full"><div class="grid3"><div class="card neutral"><div class="tag">REGRA 1</div><h3>Digite, não copie</h3><p>O botão Copiar existe para emergência. O que fica na cabeça é o que passou pelos dedos.</p></div><div class="card neutral"><div class="tag">REGRA 2</div><h3>Fase só acaba no verde</h3><p>Cada fase termina com <code>pytest</code> passando e um commit no GitHub. Sem verde, não avançamos.</p></div><div class="card neutral"><div class="tag">REGRA 3</div><h3>Travou? Checkpoint</h3><p>Toda fase tem um gabarito pronto no GitHub. Em 30 segundos você baixa e volta para o mesmo ponto da turma.</p></div></div><div class="tip f"><span class="lbl">Atalho</span>Aperte <code>M</code> a qualquer momento para ver o mapa e onde estamos.</div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current=""></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Nove fases, três mundos</h2><p>Cada fase revisita uma aula. As fases com losango são os chefes de cada mundo: as que mais pesam no projeto de vocês.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">O que vamos construir</div><h2>A loja, no fim do dia</h2><div class="full"><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">loja-roupas/</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">loja-roupas/
+├── .github/workflows/testes.yml   # o GitHub roda os testes
+├── loja/
+│   ├── calculos.py                # total e frete
+│   ├── produto.py                 # Produto, Camiseta, Calca
+│   ├── carrinho.py                # o Carrinho
+│   └── promocao.py                # o contrato e as promoções
+├── tests/                         # 30 testes
+├── vitrine.py                     # o primeiro script
+├── requirements.txt
+└── README.md</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Uma loja que vende <b>camisetas, calças e moletons</b> em tamanhos PP a GG.</li><li class="f">Um <b>carrinho</b> que soma as peças, cobra frete abaixo de R$ 200 e aceita <b>promoções</b>.</li><li class="f"><b>30 testes</b> conferindo cada regra.</li><li class="f">Tudo no <b>GitHub</b>, com um ✓ verde a cada push.</li></ul></div></div></div></section><section class="slide dark mapa" data-fase="1-1"><div class="map-wrap"><div class="map" data-current="1-1"></div><div class="map-info"><div class="kicker">FASE 1-1 · REVISITA Roteiro 1</div><h2>O repositório</h2><p>Antes de qualquer linha de Python: um lugar onde o código fica guardado, com histórico, e que a equipe inteira enxerga.</p><div class="goal"><span>Ao final da fase</span>projeto no GitHub com README, .gitignore e requirements.txt</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Roteiro 1</span></div><h2>Repositório e commit</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><b>Repositório</b> é a pasta do projeto com memória: o Git guarda cada versão salva. <b>Commit</b> é uma dessas versões, uma foto do projeto com uma mensagem dizendo o que mudou.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O histórico de versões de um documento, só que você decide quando tirar a foto e escreve a legenda.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>O commit fica só no seu computador até o <code>git push</code>.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="bash" data-hl="">git log --oneline
+# 8da2ea2 Fase 2-1: classe Produto
+# 5bb8b16 Fase 1-3: calculos e testes
+# ed82f9b Fase 1-2: vitrine</pre></div></div></div></div></section><section class="slide fullslide " data-fase="1-1"><div class="kicker">Fase 1-1 · Conceito</div><h2>Git e GitHub não são a mesma coisa</h2><div class="full"><svg class="flow" viewBox="0 0 1400 230"><defs><marker id="ar1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs><rect x="20.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#7b7769" stroke-width="4"/><text x="167.5" y="92" text-anchor="middle" class="sv-t" fill="#7b7769">Sua pasta</text><text x="167.5" y="132" text-anchor="middle" class="sv-s">onde você edita</text><line x1="321.0" y1="100" x2="367.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar1)"/><text x="347.0" y="210" text-anchor="middle" class="sv-a">git add</text><rect x="375.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#c79a2b" stroke-width="4"/><text x="522.5" y="92" text-anchor="middle" class="sv-t" fill="#c79a2b">Preparado</text><text x="522.5" y="132" text-anchor="middle" class="sv-s">o que vai na foto</text><line x1="676.0" y1="100" x2="722.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar1)"/><text x="702.0" y="210" text-anchor="middle" class="sv-a">git commit</text><rect x="730.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="877.5" y="92" text-anchor="middle" class="sv-t" fill="#1f6f6b">Commit</text><text x="877.5" y="132" text-anchor="middle" class="sv-s">a foto, no seu PC</text><line x1="1031.0" y1="100" x2="1077.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar1)"/><text x="1057.0" y="210" text-anchor="middle" class="sv-a">git push</text><rect x="1085.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#7a2c46" stroke-width="4"/><text x="1232.5" y="92" text-anchor="middle" class="sv-t" fill="#7a2c46">GitHub</text><text x="1232.5" y="132" text-anchor="middle" class="sv-s">a cópia na nuvem</text></svg><div class="duo f" style="flex:none"><div class="card neutral"><div class="tag">GIT</div><h3>O histórico</h3><p>Programa no seu computador. Cada commit é uma foto do projeto que dá para rever e desfazer.</p></div><div class="card neutral"><div class="tag">GITHUB</div><h3>A nuvem</h3><p>Site que guarda uma cópia do repositório. É por ele que a equipe compartilha e o professor corrige.</p></div></div></div></section><section class="slide txt" data-fase="1-1"><div class="kicker">Fase 1-1 · No navegador</div><h2>Criar o repositório no GitHub</h2><div class="cols"><div><ul class="notes"><li class="f">Em github.com, clique em <b>New</b> (ou no <b>+</b> do canto superior).</li><li class="f">Repository name: <code>loja-roupas</code>. Deixe <b>Public</b>.</li><li class="f">Marque <b>Add a README file</b>. Clique em <b>Create repository</b>.</li><li class="f">Clique no botão verde <b>Code</b> e copie o endereço <b>HTTPS</b>.</li></ul></div><div class="tip" style="width:460px"><span class="lbl">Por que README já na criação?</span>Assim o repositório nasce com um commit e o <code>git clone</code> funciona direto, sem configuração extra.</div></div></section><section class="slide codeslide" data-fase="1-1"><div class="kicker">Fase 1-1 · No terminal do VS Code</div><h2>Trazer o repositório para o computador</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>git clone https://github.com/SEU-USUARIO/loja-roupas.git</span>
+<span class="dim">Cloning into 'loja-roupas'...</span>
+<span class="cmd"><span class="ps">$ </span>cd loja-roupas</span>
+<span class="cmd"><span class="ps">$ </span>code .</span>
+<span class="dim"># o VS Code abre na pasta do projeto</span></pre></div></div><div class="right"><ul class="notes"><li class="f"><code>clone</code> baixa o repositório <b>com todo o histórico</b> e já liga a pasta ao GitHub.</li><li class="f">Troque <code>SEU-USUARIO</code> pelo seu usuário. Melhor ainda: cole o endereço copiado.</li><li class="f">Daqui para frente, use o terminal do VS Code: menu <b>Terminal › New Terminal</b>.</li></ul></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Roteiro 1</span></div><h2>Ambiente virtual</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma pasta, a <code>.venv</code>, com um Python e bibliotecas só deste projeto. Com ela ativada, o <code>pip install</code> instala ali dentro, sem mexer no resto do computador.</p><div class="rl-box an"><span class="lbl">Pense assim</span>Uma mala por viagem: cada projeto leva só o que precisa, nas versões que precisa.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>Sem <code>(.venv)</code> no começo da linha, o pip instala no lugar errado e o <code>pytest</code> "some".</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="bash" data-hl="">python -m venv .venv          # cria
+source .venv/bin/activate     # ativa
+# Windows: .venv\Scripts\activate
+pip install pytest            # instala só aqui
+pip freeze                    # lista o que tem</pre></div></div></div></div></section><section class="slide codeslide" data-fase="1-1"><div class="kicker">Fase 1-1 · No terminal</div><h2>O ambiente virtual e o pytest</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>python -m venv .venv</span>
+<span class="cmd"><span class="ps">$ </span>source .venv/bin/activate</span>
+<span class="dim"># Windows: .venv\Scripts\activate</span>
+<span class="out">(.venv) aparece no começo da linha</span>
+<span class="cmd"><span class="ps">$ </span>pip install pytest</span>
+<span class="dim">Successfully installed pytest-8...</span>
+<span class="cmd"><span class="ps">$ </span>echo pytest &gt; requirements.txt</span></pre></div></div><div class="right"><ul class="notes"><li class="f">O <b>.venv</b> é uma caixa de bibliotecas só deste projeto. Um projeto não quebra o outro.</li><li class="f"><code>requirements.txt</code> lista o que o projeto precisa. Quem clonar roda <code>pip install -r requirements.txt</code>.</li><li class="f">Se o <code>(.venv)</code> sumiu do terminal, ative de novo. É o erro mais comum do dia.</li></ul></div></div></section><section class="slide codeslide" data-fase="1-1"><div class="kicker">Fase 1-1 · No editor</div><h2>O que o Git deve ignorar</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">.gitignore</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr file cur" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div></div><pre data-lang="text" data-hl="">.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Crie o arquivo <code>.gitignore</code> na raiz, com o ponto no início do nome.</li><li class="f"><code>.venv/</code> é pesado e cada um cria o seu. <b>Nunca</b> vai para o GitHub.</li><li class="f"><code>__pycache__</code> e <code>.pytest_cache</code> são gerados sozinhos pelo Python e pelo pytest.</li></ul></div></div></section><section class="slide codeslide" data-fase="1-1"><div class="kicker">Fase 1-1 · No terminal</div><h2>O ciclo que vamos repetir o dia inteiro</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>git status</span>
+<span class="err">Untracked files: .gitignore  requirements.txt</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git status</span>
+<span class="ok">Changes to be committed: .gitignore  requirements.txt</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 1-1: ambiente e gitignore"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><ul class="notes"><li class="f"><code>git status</code> é a pergunta "o que mudou?". Use sem medo, quantas vezes quiser.</li><li class="f">Vermelho no status: mudou e <b>não</b> está na foto. Verde: vai entrar no próximo commit.</li><li class="f">Na primeira vez, o <code>git push</code> abre o navegador para você entrar no GitHub.</li><li class="f">Repare: a <code>.venv</code> <b>não</b> apareceu no status. É o <code>.gitignore</code> trabalhando.</li></ul></div></div></section><section class="slide check" data-fase="1-1"><div class="kicker">FASE 1-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 1-1: ambiente e gitignore"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>No GitHub, a página do repositório mostra README.md, .gitignore e requirements.txt, e <b>não</b> mostra .venv.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-01.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-01.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-01</code></span></div></div></div></section><section class="slide dark mapa" data-fase="1-2"><div class="map-wrap"><div class="map" data-current="1-2"></div><div class="map-info"><div class="kicker">FASE 1-2 · REVISITA Aula 3</div><h2>A vitrine</h2><p>Os dados da loja em tipos e coleções: tupla, lista e dicionário, cada um com o seu papel.</p><div class="goal"><span>Ao final da fase</span>um script que mostra quantas peças há na vitrine e o total do carrinho</div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 3</span></div><h2>Variável e tipo</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><b>Variável</b> é um nome que aponta para um valor. Todo valor tem um <b>tipo</b>, que diz o que dá para fazer com ele.</p><div class="rl-box cu"><span class="lbl">Cuidado</span><code>"3"</code> é texto, não número: <code>"3" * 2</code> dá <code>"33"</code>.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">nome = "Camiseta básica"   # str: texto
+quantidade = 3             # int: inteiro
+preco = 39.90              # float: com casas decimais
+em_estoque = True          # bool: verdadeiro ou falso
+
+print(type(preco))         # &lt;class 'float'&gt;</pre></div></div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 3</span></div><h2>Lista e tupla</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">As duas guardam vários valores em ordem, acessados pela <b>posição</b>, que começa em 0. A <b>lista</b> pode mudar; a <b>tupla</b>, não.</p><div class="rl-box an"><span class="lbl">Pense assim</span>A lista é o carrinho: entra e sai peça. A tupla é a tabela de tamanhos: fixa.</div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>TAMANHOS.append("GG")</code> dá erro: tupla não muda.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">carrinho = ["camiseta", "calça"]   # lista: colchetes
+carrinho.append("moletom")         # cresce
+
+TAMANHOS = ("P", "M", "G")         # tupla: parênteses
+
+print(carrinho[0])                 # camiseta
+print(TAMANHOS[-1])                # G, o último</pre></div></div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 3</span></div><h2>Dicionário</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Guarda pares <b>chave e valor</b>. Em vez de achar pela posição, você acha pelo nome da chave.</p><div class="rl-box an"><span class="lbl">Pense assim</span>A etiqueta da peça: em "preço" está 159,90; em "tamanho" está P.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>Chave que não existe dá <code>KeyError</code>: <code>produto["cor"]</code>.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">produto = {"nome": "Moletom", "preco": 159.90}
+
+print(produto["preco"])     # 159.9
+produto["tamanho"] = "P"    # chave nova
+print(len(produto))         # 3</pre></div></div></div></div></section><section class="slide codeslide" data-fase="1-2"><div class="kicker">Fase 1-2 · No editor</div><h2>vitrine.py: os dados da loja</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">vitrine.py (parte 1 de 2)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file cur" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="4,7-11,14"># Etapa 2: os dados da loja em tipos e coleções (Aula 3)
+
+# tupla: a lista de tamanhos não muda
+TAMANHOS = ("PP", "P", "M", "G", "GG")
+
+# lista de dicionários: um por produto
+vitrine = [
+    {"nome": "Camiseta básica", "preco": 39.90, "tamanho": "M"},
+    {"nome": "Calça jeans", "preco": 129.90, "tamanho": "G"},
+    {"nome": "Moletom", "preco": 159.90, "tamanho": "P"},
+]
+
+# lista de pares (nome, quantidade)
+carrinho = [("Camiseta básica", 3), ("Calça jeans", 1)]</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><b>Tupla</b> <code>TAMANHOS</code>: uma sequência que não muda.</li><li class="f"><b>Lista</b> de <b>dicionários</b>: cada produto tem nome, preço e tamanho com nome.</li><li class="f">O carrinho é uma lista de pares <code>(nome, quantidade)</code>.</li></ul></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aulas 3 e 4</span></div><h2>Laço for</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Repete o mesmo bloco <b>para cada item</b> de uma coleção. Tudo o que está indentado embaixo do <code>for</code> roda uma vez por item.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>A indentação, 4 espaços, é o que diz o que está dentro do laço.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">for peca in ["camiseta", "calça"]:
+    print("separando", peca)
+# separando camiseta
+# separando calça
+
+for nome, qtd in [("camiseta", 3), ("calça", 1)]:
+    print(nome, qtd)    # desempacota o par</pre></div></div></div></div></section><section class="slide codeslide" data-fase="1-2"><div class="kicker">Fase 1-2 · No editor</div><h2>vitrine.py: a conta do carrinho</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">vitrine.py (parte 2 de 2)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file cur" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="2-4,7-8"># dicionário: nome -&gt; preço
+precos = {}
+for produto in vitrine:
+    precos[produto["nome"]] = produto["preco"]
+
+total = 0
+for nome, quantidade in carrinho:
+    total = total + precos[nome] * quantidade
+
+print("Peças na vitrine:", len(vitrine))
+print("Total do carrinho: R$", round(total, 2))</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O dicionário <code>precos</code> acha o preço pelo nome, sem procurar na lista toda.</li><li class="f">O segundo laço desempacota cada par: <code>nome, quantidade</code>.</li><li class="f"><code>round(total, 2)</code> só arredonda para mostrar. A conta continua em ponto flutuante.</li></ul></div></div></section><section class="slide quiz" data-fase="1-2"><div class="kicker">Fase 1-2 · Qual é a saída?</div><h2>Antes de rodar: o que aparece?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">no terminal: python</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">print(vitrine[1]["preco"])
+print(TAMANHOS[-1])
+print(len(carrinho))
+print(precos["Moletom"] * 2)</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><code>129.9</code>: posição 1 da lista é a calça, e o zero à direita some.</p><p><code>GG</code>: índice -1 é o último.</p><p><code>2</code>: o carrinho tem dois pares, não quatro peças.</p><p><code>319.8</code>: dois moletons.</p></div></div></div></section><section class="slide codeslide" data-fase="1-2"><div class="kicker">Fase 1-2 · No terminal</div><h2>Rodar o script</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>python vitrine.py</span>
+<span class="out">Peças na vitrine: 3</span>
+<span class="out">Total do carrinho: R$ 249.6</span></pre></div></div><div class="right"><ul class="notes"><li class="f">Funciona. Mas e se o preço mudar? E se alguém escrever <code>+</code> no lugar de <code>*</code>?</li><li class="f">Para saber se continua certo, só rodando e <b>olhando com os olhos</b>. Toda vez.</li><li class="f">É esse o problema que a próxima fase resolve: fazer o computador conferir por nós.</li></ul></div></div></section><section class="slide check" data-fase="1-2"><div class="kicker">FASE 1-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 1-2: vitrine"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O script imprime 3 peças e o total 249.6, e o vitrine.py aparece no GitHub.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-02.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-02.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-02</code></span></div></div></div></section><section class="slide dark mapa" data-fase="1-3"><div class="map-wrap"><div class="map" data-current="1-3"></div><div class="map-info"><div class="kicker">FASE 1-3 · REVISITA Aula 4</div><h2>Testes de verdade</h2><p>O chefe do primeiro mundo. Vamos com calma: o que é um teste, o que o pytest faz, como ler quando dá errado e como escrever o teste antes do código.</p><div class="goal"><span>Ao final da fase</span>4 testes passando e você sabendo ler um teste vermelho</div></div></div></section><section class="slide afirma teal" data-fase="1-3"><div class="af-in"><div class="kicker">Fase 1-3 · Para começar</div><h2>Numa loja de roupa, ninguém vende a peça sem passar no provador.</h2><p>Teste é o provador do código. Um programa pequeno que usa o seu programa e confere se a resposta está certa, sozinho, em milissegundos, quantas vezes você quiser.</p></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 4</span></div><h2>Função</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um bloco com nome, que recebe valores (<b>parâmetros</b>) e devolve um resultado com <code>return</code>. Escreve uma vez, usa quantas vezes quiser.</p><div class="rl-box an"><span class="lbl">Pense assim</span>Uma máquina: entra matéria-prima, sai produto. Quem usa não precisa saber como ela funciona por dentro.</div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>print</code> só mostra na tela. <code>return</code> devolve para quem chamou. Só o que é devolvido pode ser testado.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">def preco_com_desconto(preco, pct):     # parâmetros
+    return preco * (100 - pct) / 100    # devolve
+
+valor = preco_com_desconto(100, 10)     # chamada
+print(valor)                            # 90.0</pre></div></div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 4</span></div><h2>Módulo e pacote</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><b>Módulo</b> é um arquivo <code>.py</code>. <b>Pacote</b> é uma pasta de módulos com um <code>__init__.py</code>. O <code>import</code> traz para o seu arquivo o que está em outro.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>O <code>import</code> usa o caminho com pontos (<code>loja.calculos</code>), sem o <code>.py</code>.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl=""># loja/calculos.py: módulo calculos, no pacote loja
+
+from loja.calculos import total_carrinho
+total_carrinho([(10, 2)])            # 20
+
+import loja.calculos
+loja.calculos.total_carrinho([])     # 0</pre></div></div></div></div></section><section class="slide codeslide" data-fase="1-3"><div class="kicker">Fase 1-3 · No editor</div><h2>Primeiro passo: a conta vira função</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/calculos.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="7-12">"""Etapa 3: funções puras, fáceis de testar (Aula 4)."""
+
+FRETE_FIXO = 15.0
+FRETE_GRATIS_A_PARTIR_DE = 200.0
+
+
+def total_carrinho(itens):
+    """Recebe uma lista de (preço, quantidade) e devolve o total."""
+    total = 0
+    for preco, quantidade in itens:
+        total = total + preco * quantidade
+    return total</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Crie a pasta <code>loja/</code> com um <code>__init__.py</code> <b>vazio</b>: ela vira um pacote que dá para importar.</li><li class="f">A função recebe a lista e <b>devolve</b> o total, sem <code>print</code>. O que é devolvido pode ser conferido.</li><li class="f">Função que só recebe e devolve, sem tela e sem arquivo, é a mais fácil de testar.</li></ul></div></div></section><section class="slide codeslide" data-fase="1-3"><div class="kicker">Fase 1-3 · Por baixo do pytest</div><h2>Um teste, sem pytest nenhum</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">no terminal: python</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="5">from loja.calculos import total_carrinho
+
+assert total_carrinho([]) == 0          # verdadeiro: nada acontece
+assert total_carrinho([(10, 2)]) == 20  # verdadeiro: nada acontece
+assert total_carrinho([(10, 2)]) == 99  # falso: AssertionError</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>assert condição</code> não faz nada se a condição é verdadeira, e <b>explode</b> se é falsa.</li><li class="f">Todo teste é isso: rodar o código e afirmar o que deveria sair.</li><li class="f">O pytest só organiza: acha os asserts, roda todos e mostra o placar.</li></ul></div></div></section><section class="slide fullslide " data-fase="1-3"><div class="kicker">Fase 1-3 · Conceito</div><h2>Todo teste tem três partes</h2><div class="full"><svg class="flow" viewBox="0 0 1400 230"><defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs><rect x="20.0" y="30" width="413.3333333333333" height="140" rx="16" fill="#fff" stroke="#c79a2b" stroke-width="4"/><text x="226.66666666666666" y="92" text-anchor="middle" class="sv-t" fill="#c79a2b">1. Preparar</text><text x="226.66666666666666" y="132" text-anchor="middle" class="sv-s">os dados de entrada</text><line x1="439.3333333333333" y1="100" x2="485.3333333333333" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar2)"/><rect x="493.3333333333333" y="30" width="413.3333333333333" height="140" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="700.0" y="92" text-anchor="middle" class="sv-t" fill="#1f6f6b">2. Agir</text><text x="700.0" y="132" text-anchor="middle" class="sv-s">chamar a função</text><line x1="912.6666666666666" y1="100" x2="958.6666666666666" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar2)"/><rect x="966.6666666666666" y="30" width="413.3333333333333" height="140" rx="16" fill="#fff" stroke="#2f8a55" stroke-width="4"/><text x="1173.3333333333333" y="92" text-anchor="middle" class="sv-t" fill="#2f8a55">3. Conferir</text><text x="1173.3333333333333" y="132" text-anchor="middle" class="sv-s">assert no resultado</text><text x="700.0" y="226" text-anchor="middle" class="sv-f">Em inglês: Arrange, Act, Assert. Se faltar o 3, não é teste.</text></svg><div class="f"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_calculos.py (um teste)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="2-7">def test_soma_preco_vezes_quantidade():
+    # 1. preparar
+    itens = [(39.90, 3), (129.90, 1)]
+    # 2. agir
+    total = total_carrinho(itens)
+    # 3. conferir
+    assert total == pytest.approx(249.60)</pre></div></div></div></div></section><section class="slide codeslide" data-fase="1-3"><div class="kicker">Fase 1-3 · No editor</div><h2>O arquivo de testes</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_calculos.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="3,6,10">import pytest
+
+from loja.calculos import total_carrinho
+
+
+def test_carrinho_vazio_custa_zero():
+    assert total_carrinho([]) == 0
+
+
+def test_soma_preco_vezes_quantidade():
+    # 1. preparar
+    itens = [(39.90, 3), (129.90, 1)]
+    # 2. agir
+    total = total_carrinho(itens)
+    # 3. conferir
+    assert total == pytest.approx(249.60)</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Pasta <code>tests/</code> com <code>__init__.py</code> vazio, e um <code>pytest.ini</code> na raiz para o pytest achar o pacote <code>loja</code>.</li><li class="f">O arquivo começa com <code>test_</code>. Cada função de teste também. É assim que o pytest acha.</li><li class="f">O nome do teste diz a regra: <code>test_carrinho_vazio_custa_zero</code>. Quando falhar, o nome já explica.</li></ul></div></div></section><section class="slide fullslide " data-fase="1-3"><div class="kicker">Fase 1-3 · Conceito</div><h2>O que acontece quando você digita pytest</h2><div class="full"><svg class="flow" viewBox="0 0 1400 230"><defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs><rect x="20.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#7b7769" stroke-width="4"/><text x="167.5" y="92" text-anchor="middle" class="sv-t" fill="#7b7769">Procura</text><text x="167.5" y="132" text-anchor="middle" class="sv-s">pasta tests/</text><line x1="321.0" y1="100" x2="367.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar3)"/><rect x="375.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#c79a2b" stroke-width="4"/><text x="522.5" y="92" text-anchor="middle" class="sv-t" fill="#c79a2b">Acha</text><text x="522.5" y="132" text-anchor="middle" class="sv-s">arquivos test_*.py</text><line x1="676.0" y1="100" x2="722.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar3)"/><rect x="730.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="877.5" y="92" text-anchor="middle" class="sv-t" fill="#1f6f6b">Roda</text><text x="877.5" y="132" text-anchor="middle" class="sv-s">cada função test_*</text><line x1="1031.0" y1="100" x2="1077.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar3)"/><rect x="1085.0" y="30" width="295.0" height="140" rx="16" fill="#fff" stroke="#7a2c46" stroke-width="4"/><text x="1232.5" y="92" text-anchor="middle" class="sv-t" fill="#7a2c46">Placar</text><text x="1232.5" y="132" text-anchor="middle" class="sv-s">. passou  F falhou</text></svg><div class="f"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">pytest.ini</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file cur" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="bash" data-hl="">[pytest]
+pythonpath = .
+testpaths = tests</pre></div></div></div><div class="tip f"><span class="lbl">pytest.ini</span><code>pythonpath = .</code> deixa os testes importarem <code>loja</code>; <code>testpaths = tests</code> diz onde procurar.</div></div></section><section class="slide fullslide " data-fase="1-3"><div class="kicker">Fase 1-3 · No terminal</div><h2>Rodar: verde</h2><div class="full"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest -v</span>
+<span class="dim">collected 2 items</span>
+<span class="out"></span>
+<span class="ok">tests/test_calculos.py::test_carrinho_vazio_custa_zero PASSED      [ 50%]</span>
+<span class="ok">tests/test_calculos.py::test_soma_preco_vezes_quantidade PASSED    [100%]</span>
+<span class="ok">================== 2 passed in 0.01s ==================</span>
+<span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">..</span>
+<span class="ok">2 passed in 0.01s</span></pre></div><ul class="notes"><li class="f"><code>-v</code> mostra o nome de cada teste. Sem ele, cada teste vira um ponto: <code>..</code></li><li class="f">Repare no <code>pytest.approx(249.60)</code> do segundo teste. O próximo slide mostra por que ele está ali.</li></ul></div></section><section class="slide fullslide" data-fase="1-3"><div class="kicker">Fase 1-3 · Lendo um teste vermelho</div><h2>Por que o pytest.approx?</h2><div class="annot"><div><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_ingenuo.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="2">def test_tres_camisetas():
+    assert total_carrinho([(39.90, 3)]) == 119.70</pre></div></div><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="err">F</span>
+<span class="err">___________ test_tres_camisetas ___________</span>
+<span class="out">&gt;       assert total_carrinho([(39.90, 3)]) == 119.70</span>
+<span class="err">E       assert 119.69999999999999 == 119.7</span>
+<span class="dim">tests/test_ingenuo.py:5: AssertionError</span>
+<span class="err">1 failed in 0.02s</span></pre></div></div><ol><li class="f">O <b>F</b> e o nome do teste dizem <b>qual</b> regra quebrou.</li><li class="f">A linha com <code>&gt;</code> mostra <b>onde</b>: arquivo e linha.</li><li class="f">As linhas com <code>E</code> mostram <b>o que saiu</b> contra <b>o que se esperava</b>.</li><li class="f">Aqui o código está certo: é a Aula 3, ponto flutuante não é exato. Por isso <code>pytest.approx</code>.</li></ol></div></section><section class="slide fullslide" data-fase="1-3"><div class="kicker">Fase 1-3 · Quebre de propósito</div><h2>Um teste só vale se já viu o erro</h2><div class="annot"><div><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/calculos.py · com um erro de digitação</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="1">        total = total + preco + quantidade   # era *</pre></div></div><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="err">.F</span>
+<span class="err">E       assert 173.8 == 249.6 ± 2.5e-04</span>
+<span class="out">E         Obtained: 173.8</span>
+<span class="out">E         Expected: 249.6 ± 2.5e-04</span>
+<span class="err">1 failed, 1 passed in 0.02s</span></pre></div></div><ol><li class="f">Troque o <code>*</code> por <code>+</code> e rode. O teste pega na hora.</li><li class="f">O vitrine.py também imprimiria 173.8, sem reclamar. Só alguém atento perceberia.</li><li class="f">Desfaça o erro e rode de novo: verde. Um teste que nunca falhou não provou nada.</li></ol></div></section><section class="slide quiz" data-fase="1-3"><div class="kicker">Fase 1-3 · Esse teste serve?</div><h2>Ele passa. Mas testa alguma coisa?</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_duvidoso.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_duvidoso.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="">def test_total():
+    total_carrinho([(39.90, 3)])</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>Não testa nada.</b> Não tem <code>assert</code>: chama a função e não confere o resultado.</p><p>Ele passaria mesmo se a função devolvesse 0, ou -1000. Só falharia se a função levantasse um erro.</p><p>Regra: todo teste termina conferindo alguma coisa.</p></div></div></div></section><section class="slide afirma wine" data-fase="1-3"><div class="af-in"><div class="kicker">Fase 1-3 · Teste primeiro</div><h2>Regra nova da loja: frete grátis a partir de R$ 200. Abaixo disso, R$ 15.</h2><p>Desta vez vamos escrever o teste antes do código. Vermelho primeiro, depois o código, depois verde. O teste vira a especificação da regra.</p></div></section><section class="slide codeslide" data-fase="1-3"><div class="kicker">Fase 1-3 · Vermelho primeiro</div><h2>Os testes da regra, antes da função existir</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_calculos.py (fim do arquivo)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="6">def test_frete_abaixo_de_200_custa_15():
+    assert frete(199.99) == 15.0
+
+
+def test_frete_a_partir_de_200_e_gratis():
+    assert frete(200.00) == 0.0
+    assert frete(350.00) == 0.0</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Atualize o import: <code>from loja.calculos import frete, total_carrinho</code>.</li><li class="f">Um teste para cada lado da regra, e um para <b>a fronteira</b>: exatamente 200.</li><li class="f">A fronteira é onde mais se erra: <code>&gt;</code> ou <code>&gt;=</code>? O teste decide, não a memória.</li></ul></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 3</span></div><h2>Condição: if e else</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Escolhe um caminho conforme uma comparação dê <b>verdadeiro</b> ou <b>falso</b>.</p><div class="rl-box cu"><span class="lbl">Cuidado</span><code>&gt;</code> e <code>&gt;=</code> só dão resultados diferentes exatamente na fronteira, em 200. É lá que o teste precisa olhar.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">valor = 200
+
+if valor &gt;= 200:
+    frete = 0
+else:
+    frete = 15
+
+print(frete)   # 0</pre></div></div></div></div></section><section class="slide fullslide " data-fase="1-3"><div class="kicker">Fase 1-3 · Laboratório</div><h2>Vermelho, vermelho, verde</h2><div class="full"><div class="lab"><div class="lab-steps"><button class="on r"><b>1 · VERMELHO</b>Teste escrito, função ainda não existe</button><button class="r"><b>2 · AINDA VERMELHO</b>Primeira versão, com <code>&gt;</code></button><button class="g"><b>3 · VERDE</b>Corrigida, com <code>&gt;=</code></button></div><div class="lab-view"><div class="lab-panel on"><span class="status red">1 erro</span><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="err">ERROR tests/test_calculos.py</span>
+<span class="err">E   ImportError: cannot import name 'frete' from 'loja.calculos'</span>
+<span class="err">Interrupted: 1 error during collection</span></pre></div><div class="tip"><span class="lbl">Lendo</span>Não é falha de regra: o teste nem conseguiu importar. É o esperado, a função ainda não existe.</div></div><div class="lab-panel"><span class="status red">1 failed, 3 passed</span><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/calculos.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="2">def frete(valor_da_compra):
+    if valor_da_compra &gt; FRETE_GRATIS_A_PARTIR_DE:
+        return 0.0
+    return FRETE_FIXO</pre></div></div><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="err">&gt;       assert frete(200.00) == 0.0</span>
+<span class="err">E       assert 15.0 == 0.0</span>
+<span class="err">1 failed, 3 passed in 0.01s</span></pre></div></div><div class="lab-panel"><span class="status green">4 passed</span><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/calculos.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="7">FRETE_FIXO = 15.0
+FRETE_GRATIS_A_PARTIR_DE = 200.0
+
+
+def frete(valor_da_compra):
+    """Frete grátis a partir de R$ 200; abaixo disso, R$ 15."""
+    if valor_da_compra &gt;= FRETE_GRATIS_A_PARTIR_DE:
+        return 0.0
+    return FRETE_FIXO</pre></div></div><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">....</span>
+<span class="ok">4 passed in 0.01s</span></pre></div></div></div></div></div></section><section class="slide fullslide " data-fase="1-3"><div class="kicker">Fase 1-3 · Resumo</div><h2>Como escrever um bom teste</h2><div class="full"><table class="t"><tr><th>Regra</th><th>Na loja</th></tr><tr><td>O nome do teste diz a regra</td><td><code>test_frete_a_partir_de_200_e_gratis</code></td></tr><tr><td>Preparar, agir, conferir</td><td>itens, <code>total_carrinho(itens)</code>, <code>assert</code></td></tr><tr><td>Um comportamento por teste</td><td>frete abaixo de 200 e a partir de 200 em testes separados</td></tr><tr><td>Teste a fronteira</td><td>exatamente R$ 200,00</td></tr><tr><td>Dinheiro com casas decimais</td><td><code>pytest.approx</code></td></tr><tr><td>Veja o teste falhar uma vez</td><td>troque <code>*</code> por <code>+</code> e rode</td></tr></table></div></section><section class="slide check" data-fase="1-3"><div class="kicker">FASE 1-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">4 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 1-3: calculos e primeiros testes"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>4 passed</b> e a pasta loja/ e a tests/ aparecem no GitHub.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-03.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-03.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-03</code></span></div></div></div></section><section class="slide dark mapa" data-fase="2-1"><div class="map-wrap"><div class="map" data-current="2-1"></div><div class="map-info"><div class="kicker">FASE 2-1 · REVISITA Aula 6</div><h2>O produto vira classe</h2><p>No dicionário, qualquer coisa entra. Na classe, o produto se recusa a nascer errado.</p><div class="goal"><span>Ao final da fase</span>8 testes passando, incluindo os que esperam erro</div></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>Classe e objeto</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><b>Classe</b> é o molde; <b>objeto</b> é cada peça feita com ele. A classe junta os dados (<b>atributos</b>) e o que dá para fazer com eles (<b>métodos</b>).</p><div class="rl-box an"><span class="lbl">Pense assim</span>A ficha técnica da camiseta é a classe. Cada camiseta no estoque é um objeto.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>Cada objeto tem os próprios atributos: mudar <code>camiseta.preco</code> não muda <code>moletom.preco</code>.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Produto:                        # o molde
+    ...
+
+camiseta = Produto("Básica", 39.90, "M")   # um objeto
+moletom = Produto("Moletom", 159.90, "P")  # outro
+
+print(camiseta.nome)          # atributo
+print(camiseta.descricao())   # método</pre></div></div></div></div></section><section class="slide duoslide" data-fase="2-1"><div class="kicker">Fase 2-1 · O problema</div><h2>Dicionário aceita tudo; classe confere</h2><div class="duo"><div class="card bad"><div class="tag">DICIONÁRIO</div><h3>Entra qualquer coisa</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">vitrine.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">{"nome": "", "preco": -10, "tamanho": "XG"}</pre></div></div><p>Nome vazio, preço negativo, tamanho que não existe. Nada reclama.</p></div><div class="card good"><div class="tag">CLASSE</div><h3>Valida na porta de entrada</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/produto.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">Produto("", -10, "XG")
+# ValueError: nome do produto não pode ser vazio</pre></div></div><p>O <code>__init__</code> confere antes de guardar. Produto inválido nem chega a existir.</p></div></div><p class="foot f">É a invariante da Aula 6: uma regra que vale <b>sempre</b>, garantida no ponto de entrada.</p></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>__init__ e self</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><code>__init__</code> roda sozinho quando o objeto nasce e prepara os atributos. <code>self</code> é o próprio objeto que está sendo criado ou usado.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Sem o <code>self.</code>, a variável some quando o <code>__init__</code> termina.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Produto:
+    def __init__(self, nome, preco):
+        self.nome = nome       # guarda no objeto
+        self.preco = preco
+
+p = Produto("Boné", 35)
+# o Python chama __init__(p, "Boné", 35)</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>Exceção: raise</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><code>raise</code> interrompe o programa e avisa que algo está errado, com um <b>tipo de erro</b> e uma <b>mensagem</b>.</p><div class="rl-box cu"><span class="lbl">Cuidado</span><code>ValueError</code>: valor inválido. <code>TypeError</code>: tipo errado. O tipo certo ajuda quem lê o erro.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">if preco &lt;= 0:
+    raise ValueError("preço deve ser maior que zero")
+
+# no terminal:
+# ValueError: preço deve ser maior que zero</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>Invariante</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma regra que precisa valer <b>sempre</b>, do nascimento ao fim do objeto. É conferida na porta de entrada, para nenhum objeto inválido existir.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Validar só na tela não basta: a classe precisa se proteger sozinha.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Produto:   preço &gt; 0 e tamanho em TAMANHOS
+Carrinho:  quantidade &gt; 0
+           finalizado não recebe peças
+Promoção:  total nunca negativo</pre></div></div></div></div></section><section class="slide codeslide" data-fase="2-1"><div class="kicker">Fase 2-1 · No editor</div><h2>loja/produto.py</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/produto.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="8-13">"""Etapa 4: o produto vira classe (Aula 6)."""
+
+TAMANHOS = ("PP", "P", "M", "G", "GG")
+
+
+class Produto:
+    def __init__(self, nome, preco, tamanho):
+        if not nome or not nome.strip():
+            raise ValueError("nome do produto não pode ser vazio")
+        if preco &lt;= 0:
+            raise ValueError("preço deve ser maior que zero")
+        if tamanho not in TAMANHOS:
+            raise ValueError(f"tamanho inválido: {tamanho}")
+        self.nome = nome.strip()
+        self.preco = preco
+        self.tamanho = tamanho
+
+    def descricao(self):
+        return f"{self.nome} {self.tamanho}: R$ {self.preco:.2f}"</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Três regras, conferidas <b>antes</b> de guardar qualquer atributo.</li><li class="f"><code>raise ValueError</code> interrompe a criação com uma mensagem que explica o problema.</li><li class="f"><code>descricao()</code> é comportamento junto do dado: o produto sabe se apresentar.</li></ul></div></div></section><section class="slide codeslide" data-fase="2-1"><div class="kicker">Fase 2-1 · Testando o erro</div><h2>pytest.raises: passa quando o erro acontece</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_produto.py (os dois primeiros)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="11-13">import pytest
+
+from loja.produto import Produto
+
+
+def test_produto_valido():
+    camiseta = Produto("Camiseta básica", 39.90, "M")
+    assert camiseta.descricao() == "Camiseta básica M: R$ 39.90"
+
+
+def test_preco_zero_nao_e_aceito():
+    with pytest.raises(ValueError):
+        Produto("Camiseta básica", 0, "M")</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>with pytest.raises(ValueError):</code> lê-se "o que vem a seguir <b>tem</b> que dar ValueError".</li><li class="f">Se o erro <b>não</b> acontecer, o teste falha. É assim que se prova que a regra existe.</li><li class="f">Teste o caminho feliz <b>e</b> cada regra que recusa.</li></ul></div></div></section><section class="slide quiz" data-fase="2-1"><div class="kicker">Fase 2-1 · Quais nascem?</div><h2>Quais linhas levantam ValueError?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">no terminal: python</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">a = Produto("Moletom", 159.90, "g")
+b = Produto("  Boné  ", 35, "M")
+c = Produto("Meia", 0, "P")
+d = Produto("Jaqueta", 299.90, "GG")</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a</b>: ValueError. <code>"g"</code> minúsculo não está na tupla <code>TAMANHOS</code>.</p><p><b>b</b>: nasce. O <code>strip()</code> guarda o nome como <code>"Boné"</code>.</p><p><b>c</b>: ValueError. Preço tem que ser maior que zero.</p><p><b>d</b>: nasce.</p></div></div></div></section><section class="slide check" data-fase="2-1"><div class="kicker">FASE 2-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">8 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 2-1: classe Produto"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>8 passed</b>: 4 de cálculo e 4 de produto.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-04.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-04.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-04</code></span></div></div></div></section><section class="slide dark mapa" data-fase="2-2"><div class="map-wrap"><div class="map" data-current="2-2"></div><div class="map-info"><div class="kicker">FASE 2-2 · REVISITA Aulas 6 e 7</div><h2>O carrinho</h2><p>O carrinho não é um produto: ele TEM produtos. Composição, encapsulamento e propriedades.</p><div class="goal"><span>Ao final da fase</span>15 testes passando, com o carrinho protegendo a própria lista</div></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>Composição</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma classe que <b>tem</b> outra dentro de si e usa o que ela sabe fazer. É a relação <b>"tem um"</b>.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O carrinho tem peças. Ele não é uma peça.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>Se a frase "X é um Y" soa estranha, é composição, não herança.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Carrinho:
+    def __init__(self):
+        self._itens = []    # o carrinho TEM uma lista
+
+    def adicionar(self, produto, quantidade=1):
+        self._itens.append((produto, quantidade))</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>Encapsulamento</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Esconder o detalhe interno e oferecer <b>portas controladas</b>. Em Python, o <code>_</code> no começo do nome avisa: não mexa direto, use os métodos.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>O <code>_</code> é um combinado, não um cadeado. O cadeado é a validação dentro do método.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">c._itens.append(("x", -5))   # possível, mas fura a regra
+
+c.adicionar(camiseta, 2)     # a porta certa: valida antes</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>isinstance</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Pergunta se um objeto é de uma classe, ou de uma filha dela. Devolve <code>True</code> ou <code>False</code>.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O segurança da loja conferindo o crachá antes de deixar entrar.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">isinstance(camiseta, Produto)       # True
+isinstance(("Boné", 35), Produto)   # False: é uma tupla
+isinstance(3, int)                  # True</pre></div></div></div></div></section><section class="slide codeslide" data-fase="2-2"><div class="kicker">Fase 2-2 · No editor</div><h2>loja/carrinho.py: a porta de entrada</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/carrinho.py (a partir da classe)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="3,6-13">class Carrinho:
+    def __init__(self):
+        self._itens = []   # pares (produto, quantidade)
+        self._finalizado = False
+
+    def adicionar(self, produto, quantidade=1):
+        if self._finalizado:
+            raise CarrinhoFinalizadoError("carrinho finalizado não recebe peças")
+        if not isinstance(produto, Produto):
+            raise TypeError("só é possível adicionar um Produto")
+        if quantidade &lt;= 0:
+            raise ValueError("quantidade deve ser positiva")
+        self._itens.append((produto, quantidade))</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>self._itens</code> guarda pares <code>(produto, quantidade)</code>. O underscore avisa: não mexa direto.</li><li class="f"><code>adicionar</code> é a <b>única</b> porta. Ela confere três regras antes do <code>append</code>.</li><li class="f"><code>CarrinhoFinalizadoError</code> é uma exceção nossa, com nome que explica o problema.</li></ul></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 6</span></div><h2>@property</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Transforma um método em algo que se lê <b>como atributo</b>, sem parênteses. O valor é calculado na hora em que é lido.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Por ser calculado na hora, o valor nunca fica desatualizado.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Carrinho:
+    @property
+    def quantidade_de_pecas(self):
+        return sum(q for _, q in self._itens)
+
+c.quantidade_de_pecas      # sem ()</pre></div></div></div></div></section><section class="slide codeslide" data-fase="2-2"><div class="kicker">Fase 2-2 · No editor</div><h2>carrinho.py: o que ele sabe responder</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/carrinho.py (continuação)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="1-3,9-11">    @property
+    def itens(self):
+        return list(self._itens)   # uma cópia
+
+    @property
+    def quantidade_de_pecas(self):
+        return sum(quantidade for _, quantidade in self._itens)
+
+    @property
+    def subtotal(self):
+        return total_carrinho([(p.preco, q) for p, q in self._itens])
+
+    @property
+    def total(self):
+        return self.subtotal + frete(self.subtotal)
+
+    def finalizar(self):
+        if not self._itens:
+            raise ValueError("não é possível finalizar um carrinho vazio")
+        self._finalizado = True</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>@property</code> deixa escrever <code>c.subtotal</code>, sem parênteses, como se fosse atributo.</li><li class="f"><code>itens</code> devolve uma <b>cópia</b>: quem está de fora lê, mas não altera.</li><li class="f"><code>subtotal</code> reaproveita a função da Fase 1-3. O que já tem teste, a gente reusa.</li></ul></div></div></section><section class="slide codeslide" data-fase="2-2"><div class="kicker">Fase 2-2 · Testando</div><h2>Uma função que prepara, vários testes que conferem</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_carrinho.py (trecho)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="1-5">def carrinho_exemplo():
+    c = Carrinho()
+    c.adicionar(Produto("Camiseta básica", 39.90, "M"), 3)
+    c.adicionar(Produto("Calça jeans", 129.90, "G"))
+    return c
+
+
+def test_subtotal_e_quantidade():
+    c = carrinho_exemplo()
+    assert c.quantidade_de_pecas == 4
+    assert c.subtotal == pytest.approx(249.60)
+
+
+def test_acima_de_200_frete_gratis():
+    assert carrinho_exemplo().total == pytest.approx(249.60)</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>carrinho_exemplo()</code> faz a parte <b>preparar</b> uma vez só. Cada teste chama e confere.</li><li class="f">Os dois testes de total cobrem os dois lados do frete: grátis e pago.</li><li class="f">No arquivo completo há mais 4 testes, um para cada regra de <code>adicionar</code> e para a cópia.</li></ul></div></div></section><section class="slide check" data-fase="2-2"><div class="kicker">FASE 2-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">15 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 2-2: Carrinho"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>15 passed</b>. Teste no terminal: <code>c.itens.append("x")</code> não muda o carrinho.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-05.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-05.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-05</code></span></div></div></div></section><section class="slide dark mapa" data-fase="2-3"><div class="map-wrap"><div class="map" data-current="2-3"></div><div class="map-info"><div class="kicker">FASE 2-3 · REVISITA Aula 7</div><h2>Camiseta é um Produto</h2><p>Herança só onde a frase "é um" soa natural, com super() preservando as regras.</p><div class="goal"><span>Ao final da fase</span>19 testes passando, com a validação da mãe valendo para as filhas</div></div></div></section><section class="slide duoslide" data-fase="2-3"><div class="kicker">Fase 2-3 · O teste do "é um"</div><h2>Herdar ou compor?</h2><div class="duo"><div class="card good"><div class="tag">É UM</div><h3>Camiseta é um Produto</h3><p>Tem nome, preço, tamanho e as mesmas regras. Acrescenta só a manga. <b>Herança.</b></p></div><div class="card bad"><div class="tag">TEM UM</div><h3>Carrinho não é um Produto</h3><p>Carrinho tem produtos, mas não tem tamanho nem preço próprio. <b>Composição</b>, como na Fase 2-2.</p></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>Herança</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma classe <b>filha</b> recebe tudo da <b>mãe</b> e acrescenta ou muda só o que é dela. É a relação <b>"é um"</b>.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Herde só quando a frase "a filha é uma mãe" for verdadeira.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Camiseta(Produto):     # Camiseta é um Produto
+    ...
+
+c = Camiseta("Básica", 39.90, "M", "curta")
+c.preco          # veio de Produto
+c.descricao()    # veio de Produto</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>super()</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Chama a versão da classe <b>mãe</b> de dentro da filha. No <code>__init__</code>, garante que a parte herdada nasça com as regras da mãe.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Sem o <code>super().__init__</code>, a camiseta nasce sem nome, sem preço e sem validação.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">def __init__(self, nome, preco, tamanho, manga):
+    super().__init__(nome, preco, tamanho)   # a mãe valida
+    self.manga = manga                       # a filha acrescenta</pre></div></div></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>Sobrescrita</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">A filha <b>redefine</b> um método da mãe, com o mesmo nome. Quem chama não muda nada; muda o que acontece.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">class Calca(Produto):
+    def descricao(self):                       # mesmo nome
+        base = super().descricao()            # reaproveita a mãe
+        return f"{base} · {self.modelagem}"</pre></div></div></div></div></section><section class="slide codeslide" data-fase="2-3"><div class="kicker">Fase 2-3 · No editor</div><h2>Camiseta e Calça (fim de loja/produto.py)</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/produto.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="5,10-11">class Camiseta(Produto):
+    MANGAS = ("curta", "longa")
+
+    def __init__(self, nome, preco, tamanho, manga):
+        super().__init__(nome, preco, tamanho)   # regras do Produto
+        if manga not in self.MANGAS:
+            raise ValueError(f"manga inválida: {manga}")
+        self.manga = manga
+
+    def descricao(self):
+        return f"{super().descricao()} · manga {self.manga}"
+
+
+class Calca(Produto):
+    def __init__(self, nome, preco, tamanho, modelagem):
+        super().__init__(nome, preco, tamanho)
+        self.modelagem = modelagem
+
+    def descricao(self):
+        return f"{super().descricao()} · {self.modelagem}"</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>super().__init__</code> entrega para o Produto o trabalho comum: atributos <b>e validações</b>.</li><li class="f">A filha acrescenta só o que é dela, com a própria regra (a manga).</li><li class="f"><code>descricao</code> é <b>sobrescrita</b>, mas reaproveita a da mãe com <code>super()</code>.</li></ul></div></div></section><section class="slide codeslide" data-fase="2-3"><div class="kicker">Fase 2-3 · Testando</div><h2>O teste que prova o super()</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_heranca.py (trecho)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_carrinho.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_heranca.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="1-3">def test_camiseta_herda_a_validacao_do_produto():
+    with pytest.raises(ValueError):
+        Camiseta("Camiseta básica", -10, "M", "curta")
+
+
+def test_manga_invalida():
+    with pytest.raises(ValueError):
+        Camiseta("Camiseta básica", 39.90, "M", "regata")</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Se alguém apagar a linha do <code>super()</code>, a Camiseta aceitaria preço -10. Este teste pega.</li><li class="f"><code>isinstance</code> confirma: onde se espera um Produto, uma Camiseta serve. O carrinho aceita.</li></ul></div></div></section><section class="slide check" data-fase="2-3"><div class="kicker">FASE 2-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">19 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 2-3: Camiseta e Calca"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>19 passed</b>.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-06.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-06.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-06</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-1"><div class="map-wrap"><div class="map" data-current="3-1"></div><div class="map-info"><div class="kicker">FASE 3-1 · REVISITA Aula 7</div><h2>Promoções</h2><p>Um verbo, várias formas: o carrinho aplica a promoção sem saber qual é.</p><div class="goal"><span>Ao final da fase</span>24 testes passando, com um teste rodando para todas as promoções</div></div></div></section><section class="slide duoslide" data-fase="3-1"><div class="kicker">Fase 3-1 · O problema</div><h2>Uma cadeia de ifs ou objetos trocáveis?</h2><div class="duo"><div class="card bad"><div class="tag">SEM POLIMORFISMO</div><h3>O carrinho decide tudo</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/carrinho.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">if tipo == "percentual":
+    ...
+elif tipo == "cupom":
+    ...
+elif tipo == "black_friday":  # mais um</pre></div></div><p>Cada promoção nova obriga a mexer no carrinho.</p></div><div class="card good"><div class="tag">COM POLIMORFISMO</div><h3>Cada promoção sabe se aplicar</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/carrinho.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">self.promocao.aplicar(self.subtotal)</pre></div></div><p>Promoção nova é classe nova. O carrinho não muda uma linha.</p></div></div></section><section class="slide relembre" data-fase="3-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>Polimorfismo</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Objetos diferentes respondem ao <b>mesmo método</b>, cada um do seu jeito. Quem chama não precisa saber qual é qual.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O caixa só pede "aplique o desconto". Cada promoção sabe fazer a sua conta.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">for promo in [SemPromocao(), Percentual(10), Cupom(50)]:
+    print(promo.aplicar(200))
+# 200
+# 180.0
+# 150</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>loja/promocao.py: três promoções, um verbo</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/promocao.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>promocao.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="2,12,22">class SemPromocao:
+    def aplicar(self, subtotal):
+        return subtotal
+
+
+class Percentual:
+    def __init__(self, pct):
+        if not 0 &lt;= pct &lt;= 100:
+            raise ValueError("percentual deve estar entre 0 e 100")
+        self.pct = pct
+
+    def aplicar(self, subtotal):
+        return subtotal * (100 - self.pct) / 100
+
+
+class Cupom:
+    def __init__(self, valor):
+        if valor &lt; 0:
+            raise ValueError("valor do cupom não pode ser negativo")
+        self.valor = valor
+
+    def aplicar(self, subtotal):
+        return max(subtotal - self.valor, 0)   # nunca negativo</pre></div></div></div><div class="right"><ul class="notes"><li class="f">As três têm <code>aplicar(subtotal)</code>: recebe o subtotal, devolve o valor com desconto.</li><li class="f">Nenhuma herda da outra. O que as une é o <b>nome do método</b>: duck typing.</li><li class="f">Cada uma protege a própria regra: percentual entre 0 e 100, cupom nunca negativo.</li></ul></div></div></section><section class="slide relembre" data-fase="3-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 4</span></div><h2>Parâmetro com valor padrão</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um parâmetro pode ter um valor que vale <b>quando ninguém informa</b>. Assim, as chamadas antigas continuam funcionando.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>O valor padrão vem sempre por último na lista de parâmetros.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">def adicionar(self, produto, quantidade=1):
+    ...
+
+c.adicionar(camiseta)       # quantidade = 1
+c.adicionar(camiseta, 3)    # quantidade = 3
+
+promocao or SemPromocao()   # se promocao for None, usa SemPromocao()</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>O carrinho TEM uma promoção</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/carrinho.py (só o que muda)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>promocao.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="7,11">from .promocao import SemPromocao
+
+class Carrinho:
+    def __init__(self, promocao=None):
+        self._itens = []
+        self._finalizado = False
+        self.promocao = promocao or SemPromocao()
+
+    @property
+    def total(self):
+        com_desconto = self.promocao.aplicar(self.subtotal)
+        return com_desconto + frete(com_desconto)</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Sem promoção, entra a <code>SemPromocao</code>: o código do total não precisa de <code>if</code>.</li><li class="f">O frete é calculado <b>depois</b> do desconto. Regra de negócio, decidida pela loja.</li><li class="f">Os 15 testes da Fase 2-2 continuam passando: <code>Carrinho()</code> sem argumento ainda funciona.</li></ul></div></div></section><section class="slide relembre" data-fase="3-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>parametrize</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Roda o <b>mesmo teste</b> várias vezes, uma para cada linha de dados. Menos código repetido, mais casos testados.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Os nomes dentro das aspas precisam ser os mesmos dos parâmetros do teste.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">@pytest.mark.parametrize("valor, esperado", [
+    (199.99, 15.0),
+    (200.00, 0.0),
+])
+def test_frete(valor, esperado):
+    assert frete(valor) == esperado</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · Testando</div><h2>Um teste, três rodadas: parametrize</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_promocao.py (trecho)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_heranca.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_promocao.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="8-12">def carrinho_com(promocao):
+    c = Carrinho(promocao)
+    c.adicionar(Produto("Camiseta básica", 39.90, "M"), 3)
+    c.adicionar(Produto("Calça jeans", 129.90, "G"))
+    return c   # subtotal 249.60
+
+
+@pytest.mark.parametrize("promocao, esperado", [
+    (SemPromocao(), 249.60),    # frete grátis
+    (Percentual(10), 224.64),   # ainda acima de 200
+    (Cupom(100), 164.60),       # 149.60 + 15 de frete
+])
+def test_total_com_cada_promocao(promocao, esperado):
+    assert carrinho_com(promocao).total == pytest.approx(esperado)</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>parametrize</code> roda o mesmo teste uma vez para cada linha da lista.</li><li class="f">No <code>pytest -v</code> aparecem três testes: <code>[promocao0-249.6]</code>, <code>[promocao1-224.64]</code>, <code>[promocao2-164.6]</code>.</li><li class="f">Promoção nova? Uma linha a mais na lista.</li></ul></div></div></section><section class="slide quiz" data-fase="3-1"><div class="kicker">Fase 3-1 · Faça a conta</div><h2>Por que o Cupom(100) dá 164.60?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">o carrinho do teste</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">3 camisetas x 39.90 = 119.70
+1 calça     x 129.90 = 129.90
+subtotal             = 249.60
+Cupom(100)          -&gt; ?</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p>249.60 - 100 = <b>149.60</b>.</p><p>Como ficou abaixo de 200, o frete volta: <b>+ 15</b>.</p><p>Total: <b>164.60</b>. O teste conferiu uma regra que ninguém lembraria de checar no olho.</p></div></div></div></section><section class="slide check" data-fase="3-1"><div class="kicker">FASE 3-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">24 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-1: promocoes"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest -v</code> mostra os três <code>test_total_com_cada_promocao[...]</code> e <b>24 passed</b>.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-07.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-07.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-07</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-2"><div class="map-wrap"><div class="map" data-current="3-2"></div><div class="map-info"><div class="kicker">FASE 3-2 · REVISITA Aula 8 (hoje)</div><h2>O contrato</h2><p>O combinado "toda promoção tem aplicar" vira código, com classe abstrata.</p><div class="goal"><span>Ao final da fase</span>30 testes passando, com promoção fora do contrato barrada</div></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · O problema</div><h2>A Black Friday com o nome errado</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">experimento.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file cur" style="--d:0"><span class="ic ic-py"></span>experimento.py</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="11">from loja.carrinho import Carrinho
+from loja.produto import Produto
+
+class BlackFriday:
+    def aplicar_desconto(self, subtotal):   # nome errado
+        return subtotal * 0.5
+
+c = Carrinho(BlackFriday())
+c.adicionar(Produto("Moletom", 159.90, "P"))
+print("carrinho montado")       # aparece
+print(c.total)</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O carrinho nasce, recebe a peça e só quebra no <b>total</b>, na hora de pagar:</li><li class="f"><code>AttributeError: 'BlackFriday' object has no attribute 'aplicar'</code></li><li class="f">O erro aparece longe de onde nasceu. Com o cliente no caixa.</li></ul></div></div></section><section class="slide relembre" data-fase="3-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 8</span></div><h2>Classe abstrata</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma classe que só define o <b>contrato</b> e não vira objeto. Toda filha é obrigada a implementar os métodos marcados como abstratos.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O modelo de contrato da loja: ninguém assina o modelo em branco, mas todo contrato real precisa ter as cláusulas dele.</div><div class="rl-box cu"><span class="lbl">Cuidado</span>O contrato confere o <b>nome</b> do método, não se a conta está certa. Isso é papel do teste.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">from abc import ABC, abstractmethod
+
+class Promocao(ABC):
+    @abstractmethod
+    def aplicar(self, subtotal): ...
+
+Promocao()   # TypeError: não vira objeto</pre></div></div></div></div></section><section class="slide relembre" data-fase="3-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aulas 6, 7 e 8</span></div><h2>Decorador</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">A linha com <code>@</code> em cima de uma função muda o comportamento dela, sem mexer no corpo. Na loja, já usamos três.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">@property                  # lê como atributo
+@abstractmethod            # obriga a filha a implementar
+@pytest.mark.parametrize   # roda o teste várias vezes</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No editor</div><h2>O contrato escrito: Promocao(ABC)</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">loja/promocao.py (começo)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>loja</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>produto.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>promocao.py</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="2,5,8-9,13">"""Etapas 7 e 8: promoções com contrato (Aula 8)."""
+from abc import ABC, abstractmethod
+
+
+class Promocao(ABC):
+    """Contrato: aplicar devolve o valor com desconto."""
+
+    @abstractmethod
+    def aplicar(self, subtotal):
+        ...
+
+
+class SemPromocao(Promocao):
+    def aplicar(self, subtotal):
+        return subtotal
+
+
+class Percentual(Promocao):
+    def __init__(self, pct):
+        if not 0 &lt;= pct &lt;= 100:
+            raise ValueError("percentual deve estar entre 0 e 100")</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>Promocao(ABC)</code> é uma <b>classe abstrata</b>: existe para definir o contrato, não para virar objeto.</li><li class="f"><code>@abstractmethod</code> marca o obrigatório. Subclasse sem <code>aplicar</code> <b>não nasce</b>.</li><li class="f">Percentual e Cupom ganham o mesmo <code>(Promocao)</code>. O resto não muda.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No terminal</div><h2>Agora o erro aparece ao criar</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>python experimento.py</span>
+<span class="err">TypeError: Can't instantiate abstract class BlackFriday</span>
+<span class="err">  without an implementation for abstract method 'aplicar'</span>
+<span class="dim"># Python 3.11 ou anterior: "... with abstract method aplicar"</span></pre></div></div><div class="right"><ul class="notes"><li class="f">Faça a BlackFriday herdar de <code>Promocao</code> e rode de novo.</li><li class="f">O erro saiu do caixa e foi para a linha que <b>cria</b> a promoção.</li><li class="f">O "carrinho montado" nem aparece. Quanto mais cedo, mais barato.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · Testando o contrato</div><h2>Testes que provam o contrato</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_contrato.py (trecho)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_carrinho.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_contrato.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_heranca.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_promocao.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="1-2,6-7">def test_promocao_sem_aplicar_nao_nasce():
+    class BlackFriday(Promocao):
+        def aplicar_desconto(self, subtotal):   # nome errado
+            return subtotal * 0.5
+
+    with pytest.raises(TypeError):
+        BlackFriday()
+
+
+def test_carrinho_recusa_quem_nao_segue_o_contrato():
+    class Parecida:
+        def aplicar(self, subtotal):
+            return subtotal
+
+    with pytest.raises(TypeError):
+        Carrinho(Parecida())</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Os testes esperam <code>TypeError</code>: o contrato barrando quem não o segue.</li><li class="f">O carrinho também confere na entrada com <code>isinstance(promocao, Promocao)</code>, como o preço na Fase 2-1.</li><li class="f">O contrato confere o <b>nome</b> do método. Se ele calcula certo, quem confere é o teste.</li></ul></div></div></section><section class="slide check" data-fase="3-2"><div class="kicker">FASE 3-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">30 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-2: contrato Promocao"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>30 passed</b>.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-08.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-08.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-08</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-3"><div class="map-wrap"><div class="map" data-current="3-3"></div><div class="map-info"><div class="kicker">FASE 3-3 · CONTEÚDO NOVO</div><h2>O GitHub roda os testes</h2><p>O último chefe: integração contínua. A partir daqui, ninguém da equipe consegue esquecer de rodar os testes.</p><div class="goal"><span>Ao final da fase</span>✓ verde no GitHub a cada push, sem ninguém rodar nada</div></div></div></section><section class="slide fullslide " data-fase="3-3"><div class="kicker">Fase 3-3 · Conceito</div><h2>Integração contínua: o pytest roda sozinho a cada push</h2><div class="full"><svg class="flow" viewBox="0 0 1400 230"><defs><marker id="ar4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs><rect x="20.0" y="30" width="224.0" height="140" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="132.0" y="92" text-anchor="middle" class="sv-t" fill="#1f6f6b">git push</text><text x="132.0" y="132" text-anchor="middle" class="sv-s">você envia</text><line x1="250.0" y1="100" x2="296.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar4)"/><rect x="304.0" y="30" width="224.0" height="140" rx="16" fill="#fff" stroke="#7a2c46" stroke-width="4"/><text x="416.0" y="92" text-anchor="middle" class="sv-t" fill="#7a2c46">GitHub</text><text x="416.0" y="132" text-anchor="middle" class="sv-s">recebe o commit</text><line x1="534.0" y1="100" x2="580.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar4)"/><rect x="588.0" y="30" width="224.0" height="140" rx="16" fill="#fff" stroke="#c79a2b" stroke-width="4"/><text x="700.0" y="92" text-anchor="middle" class="sv-t" fill="#c79a2b">Máquina</text><text x="700.0" y="132" text-anchor="middle" class="sv-s">Ubuntu com Python</text><line x1="818.0" y1="100" x2="864.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar4)"/><rect x="872.0" y="30" width="224.0" height="140" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="984.0" y="92" text-anchor="middle" class="sv-t" fill="#1f6f6b">pytest</text><text x="984.0" y="132" text-anchor="middle" class="sv-s">roda os 30 testes</text><line x1="1102.0" y1="100" x2="1148.0" y2="100" stroke="#3a3a3a" stroke-width="4" marker-end="url(#ar4)"/><rect x="1156.0" y="30" width="224.0" height="140" rx="16" fill="#fff" stroke="#2f8a55" stroke-width="4"/><text x="1268.0" y="92" text-anchor="middle" class="sv-t" fill="#2f8a55">✓ ou ✗</text><text x="1268.0" y="132" text-anchor="middle" class="sv-s">no commit</text></svg><div class="duo f" style="flex:none"><div class="card good"><div class="tag">✓ VERDE</div><h3>Todos passaram</h3><p>Aparece ao lado do commit. A equipe sabe que o código no GitHub funciona.</p></div><div class="card bad"><div class="tag">✗ VERMELHO</div><h3>Algum falhou</h3><p>O GitHub avisa por e-mail e mostra qual teste quebrou, antes de alguém usar o código.</p></div></div></div></section><section class="slide relembre" data-fase="3-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Conteúdo novo</span></div><h2>YAML</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Formato de texto para <b>configuração</b>, organizado por indentação: chave, dois pontos, valor. Itens de lista começam com hífen.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Indentação com espaços, nunca com tab. Um espaço a mais muda o sentido.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="yaml" data-hl="">nome: testes        # chave: valor
+on: [push]          # lista numa linha
+steps:              # lista em várias linhas
+  - run: pytest -v
+  - run: echo pronto</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · No editor</div><h2>.github/workflows/testes.yml</h2><div class="split"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">.github/workflows/testes.yml</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>.github</div><div class="tr dir" style="--d:1"><span class="chev">⌄</span>workflows</div><div class="tr file cur" style="--d:2"><span class="ic ic-yml"></span>testes.yml</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">›</span>tests</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="yaml" data-hl="3,9-14">name: testes
+
+on: [push, pull_request]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: pytest -v</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Crie as pastas <code>.github/workflows/</code>, com ponto no início. O nome do arquivo é livre.</li><li class="f"><code>on: [push, pull_request]</code>: quando rodar.</li><li class="f"><code>steps</code>: baixar o código, instalar o Python, instalar o <code>requirements.txt</code> e rodar o <code>pytest</code>.</li><li class="f">Por isso o <code>requirements.txt</code> da Fase 1-1 importa: a máquina do GitHub começa vazia.</li></ul></div></div></section><section class="slide txt" data-fase="3-3"><div class="kicker">Fase 3-3 · No GitHub</div><h2>Ver o ✓ aparecer</h2><div class="cols"><div><ul class="notes"><li class="f"><code>git add .</code>, <code>git commit -m "Fase 3-3: GitHub Actions"</code> e <code>git push</code>.</li><li class="f">No GitHub, abra a aba <b>Actions</b>: o workflow <b>testes</b> aparece rodando, em amarelo.</li><li class="f">Em menos de um minuto: ✓ verde. Clique nele e veja a saída do <code>pytest</code>, igual à do seu terminal.</li><li class="f">Na página inicial do repositório, o ✓ aparece ao lado do último commit.</li></ul></div><div class="tip" style="width:470px"><span class="lbl">O selo no README</span>Troque SEU-USUARIO e cole no README.md:<br><code style="font-size:15px">![testes](https://github.com/SEU-USUARIO/loja-roupas/actions/workflows/testes.yml/badge.svg)</code></div></div></section><section class="slide afirma dk" data-fase="3-3"><div class="af-in"><div class="kicker">Fase 3-3 · Quebre de propósito</div><h2>Mude o frete grátis para R$ 300 e dê push.</h2><p>O GitHub fica vermelho e aponta o teste test_frete_a_partir_de_200_e_gratis. Desfaça, dê push de novo e veja voltar o verde. É assim que uma equipe trabalha sem medo de mexer no código.</p></div></section><section class="slide check" data-fase="3-3"><div class="kicker">FASE 3-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">30 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-3: GitHub Actions"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A aba <b>Actions</b> mostra o workflow <b>testes</b> com ✓ verde, e o selo aparece no README.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-09.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-09.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-09</code></span></div></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current="FIM"></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Mapa completo</h2><p>Do repositório vazio a um projeto testado, com integração contínua. Tudo o que vimos desde a Aula 1, num projeto só.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Fechamento</div><h2>O que cada fase revisitou</h2><div class="full"><table class="t"><tr><th>Fase</th><th>Conceito</th><th>Aula</th><th>Teste que prova</th></tr><tr><td>1-1</td><td>Git, GitHub, venv, .gitignore</td><td>Roteiro 1</td><td>o repositório no ar</td></tr><tr><td>1-2</td><td>tupla, lista, dicionário</td><td>Aula 3</td><td>o script imprime 249.6</td></tr><tr><td>1-3</td><td>função, módulo, assert, pytest, teste primeiro</td><td>Aula 4</td><td><code>test_frete_a_partir_de_200_e_gratis</code></td></tr><tr><td>2-1</td><td>classe e invariante</td><td>Aula 6</td><td><code>test_preco_zero_nao_e_aceito</code></td></tr><tr><td>2-2</td><td>composição, encapsulamento, @property</td><td>Aulas 6 e 7</td><td><code>test_itens_devolve_copia</code></td></tr><tr><td>2-3</td><td>herança, super(), sobrescrita</td><td>Aula 7</td><td><code>test_camiseta_herda_a_validacao_do_produto</code></td></tr><tr><td>3-1</td><td>polimorfismo, parametrize</td><td>Aula 7</td><td><code>test_total_com_cada_promocao</code></td></tr><tr><td>3-2</td><td>classe abstrata, contrato</td><td>Aula 8</td><td><code>test_promocao_sem_aplicar_nao_nasce</code></td></tr><tr><td>3-3</td><td>integração contínua</td><td>novo</td><td>✓ no GitHub</td></tr></table></div></section><section class="slide txt" data-fase=""><div class="kicker">Agora no projeto da equipe</div><h2>Checklist para levar tudo isso ao projeto de vocês</h2><div class="cols"><div><ul class="notes"><li class="f">Repositório da equipe com <code>.gitignore</code>, <code>requirements.txt</code> e README com <b>como rodar os testes</b>.</li><li class="f">Regras de negócio em <b>funções</b> ou <b>classes</b> que validam na entrada, cada uma com um teste que espera o erro.</li><li class="f">Pelo menos um teste escrito <b>antes</b> do código, para uma regra nova.</li><li class="f">Um verbo com duas implementações e um <b>contrato</b> com classe abstrata.</li><li class="f">O workflow do <b>GitHub Actions</b> copiado da loja, com ✓ verde.</li><li class="f">Commits pequenos, com mensagem que diz o que mudou.</li></ul></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para deixar aberto</div><h2>Cola de comandos</h2><div class="full"><div class="duo"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">git</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="bash" data-hl=""># pergunta o que mudou
+git status
+# prepara tudo para o commit
+git add .
+# tira a foto
+git commit -m "mensagem"
+# envia para o GitHub
+git push
+# traz o que a equipe enviou
+git pull</pre></div></div><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">python e pytest</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="bash" data-hl=""># criar e ativar o ambiente
+python -m venv .venv
+source .venv/bin/activate
+# Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+# rodar os testes
+pytest
+pytest -v
+pytest tests/test_carrinho.py</pre></div></div></div></div></section></div>
+<div id="overlay"><span class="close">M ou Esc para fechar</span><div class="map"></div></div>
+<div id="prog"></div>
+<div id="ui"><button id="bMap">Mapa (M)</button><button id="bPrev">‹</button><span id="pg"></span><button id="bNext">›</button><button id="bFs">Tela cheia (F)</button></div>
+<script>
+const FASES=[
+ {id:'1-1',nome:'Repositório',aula:'Roteiro 1',x:190,y:445,w:1},{id:'1-2',nome:'Vitrine',aula:'Aula 3',x:310,y:340,w:1},
+ {id:'1-3',nome:'Testes',aula:'Aula 4',x:450,y:410,w:1,boss:1},{id:'2-1',nome:'Produto',aula:'Aula 6',x:590,y:300,w:2},
+ {id:'2-2',nome:'Carrinho',aula:'Aulas 6 e 7',x:690,y:180,w:2},{id:'2-3',nome:'Herança',aula:'Aula 7',x:830,y:250,w:2,boss:1},
+ {id:'3-1',nome:'Promoções',aula:'Aula 7',x:950,y:360,w:3},{id:'3-2',nome:'Contrato',aula:'Aula 8',x:1080,y:270,w:3},
+ {id:'3-3',nome:'GitHub Actions',aula:'novo',x:1140,y:160,w:3,boss:1}];
+const START={x:70,y:470};
+function catmull(pts){let d=`M${pts[0].x},${pts[0].y}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6,c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2.x},${p2.y}`}return d}
+function mapSVG(cur){
+ const idx=cur==='FIM'?FASES.length:FASES.findIndex(f=>f.id===cur);
+ const zones=[[30,60,500,'MUNDO 1 · FUNDAMENTOS'],[520,60,330,'MUNDO 2 · OBJETOS'],[870,40,310,'MUNDO 3 · QUALIDADE']];
+ let g='';zones.forEach(z=>{g+=`<rect class="m-zone" x="${z[0]}" y="${z[1]}" width="${z[2]}" height="${520-z[1]}" rx="28"/><text class="m-zlab" x="${z[0]+24}" y="${z[1]+38}">${z[3]}</text>`});
+ const pts=[START,...FASES];g+=`<path class="m-path" d="${catmull(pts)}"/>`;
+ if(idx>0){const dpts=pts.slice(0,Math.min(idx,FASES.length)+1);g+=`<path class="m-done" d="${catmull(dpts)}"/>`}
+ g+=`<circle cx="${START.x}" cy="${START.y}" r="14" fill="#5cc2b8"/><text class="m-aula" x="${START.x-30}" y="${START.y+44}">início</text>`;
+ FASES.forEach((f,i)=>{const st=idx<0?'todo':i<idx?'done':i===idx?'cur':'todo';
+  let shape=f.boss?`<rect x="${f.x-30}" y="${f.y-30}" width="60" height="60" rx="10" transform="rotate(45 ${f.x} ${f.y})"/>`:`<circle cx="${f.x}" cy="${f.y}" r="30"/>`;
+  let ring=st==='cur'?`<circle class="ring" cx="${f.x}" cy="${f.y}" r="34"/>`:'';
+  let lab=st==='done'?'✓':f.id;
+  const ly=f.y+(f.y>400?-0:0);
+  g+=`<g class="m-node ${st}">${ring}${shape}<text class="m-code" x="${f.x}" y="${f.y+8}" text-anchor="middle">${lab}</text>
+   <text class="m-name" x="${f.x}" y="${f.y+66}" text-anchor="middle">${f.nome}</text><text class="m-aula" x="${f.x}" y="${f.y+90}" text-anchor="middle">${f.aula}</text></g>`});
+ const L=FASES[FASES.length-1];g+=`<line x1="${L.x+44}" y1="${L.y-10}" x2="${L.x+44}" y2="${L.y-80}" stroke="#ddd" stroke-width="4"/><path class="m-flag" d="M${L.x+46},${L.y-80} l46,14 l-46,14 z"/>`;
+ return `<svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid meet">${g}</svg>`}
+// ---------- realce de sintaxe
+const KW=new Set('False None True and as assert break class continue def elif else except finally for from global if import in is lambda not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print len sum max min list dict tuple set range isinstance super round str int float self'.split(' '));
+function hiPy(line){
+ let out='',i=0;const m=(re)=>{re.lastIndex=i;const r=re.exec(line);return r&&r.index===i?r[0]:null};
+ const reStr=/[fF]?("{3}[^]*?"{3}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/y,reCom=/#.*/y,reNum=/\d+(\.\d+)?/y,reId=/[A-Za-z_]\w*/y,reDec=/@\w+/y;
+ let prev='';
+ while(i<line.length){let t;
+  if((t=m(reCom))){out+=`<span class="c">${t}</span>`;i+=t.length;continue}
+  if((t=m(reStr))){out+=`<span class="s">${t}</span>`;i+=t.length;continue}
+  if((t=m(reDec))){out+=`<span class="d">${t}</span>`;i+=t.length;continue}
+  if((t=m(reNum))&&!/\w/.test(line[i-1]||'')){out+=`<span class="n">${t}</span>`;i+=t.length;continue}
+  if((t=m(reId))){let cls=KW.has(t)?'k':BI.has(t)?'bi':(prev==='def'||prev==='class')?'fn':'';out+=cls?`<span class="${cls}">${t}</span>`:t;prev=t;i+=t.length;continue}
+  if(line[i]!==' ')prev='';out+=line[i];i++}
+ return out}
+function tok(line,rules){let out='',i=0;while(i<line.length){let hit=false;for(const [re,cls] of rules){re.lastIndex=i;const r=re.exec(line);if(r&&r.index===i&&r[0].length){out+=cls?`<span class="${cls}">${r[0]}</span>`:r[0];i+=r[0].length;hit=true;break}}if(!hit){out+=line[i];i++}}return out}
+function hiSh(line){const m=/^(\s*)([^\s#]+)/.exec(line);if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const head=m?`${m[1]}<span class="fn">${m[2]}</span>`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/\s#.*/y,'c'],[/"[^"]*"/y,'s'],[/'[^']*'/y,'s'],[/(?<=\s)--?[\w-]+/y,'fl']])}
+function hiYml(line){if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const m=/^(\s*(?:-\s+)?)([\w-]+)(:)/.exec(line);const head=m?`${m[1]}<span class="k">${m[2]}</span>${m[3]}`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/"[^"]*"/y,'s'],[/\s#.*/y,'c']])}
+function hiMd(line){return line.replace(/^(#+.*)$/,'<span class="k">$1</span>').replace(/(`[^`]*`)/g,'<span class="s">$1</span>')}
+function parseHL(s){const set=new Set();(s||'').split(',').filter(Boolean).forEach(p=>{const [a,b]=p.split('-').map(Number);for(let k=a;k<=(b||a);k++)set.add(k)});return set}
+document.querySelectorAll('.code pre').forEach(pre=>{
+ const lang=pre.dataset.lang,hl=parseHL(pre.dataset.hl),raw=pre.textContent;pre.dataset.raw=raw;
+ const f=lang==='python'?hiPy:lang==='bash'?hiSh:lang==='yaml'?hiYml:lang==='md'?hiMd:(x=>x);
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ pre.innerHTML=raw.split('\n').map((l,i)=>`<span class="ln${hl.has(i+1)?' hl':''}">${f(esc(l))||' '}</span>`).join('')});
+// python: o realce trabalha sobre texto escapado; strings com aspas continuam válidas
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const box=b.closest('.code,.term');let txt;
+ if(box.classList.contains('term')){txt=[...box.querySelectorAll('.cmd')].map(x=>x.textContent.replace(/^\$ /,'')).join('\n')}else{txt=box.querySelector('pre').dataset.raw}
+ navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copiado';b.classList.add('done');setTimeout(()=>{b.textContent='Copiar';b.classList.remove('done')},1400)})}));
+// ---------- encaixe do código na altura disponível
+function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);pres.forEach(p=>p.style.fontSize='');
+ const over=p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2;
+ let guard=0;while(guard<40){const slideOver=slide.scrollHeight>slide.clientHeight+2;const bad=pres.filter(p=>over(p)||slideOver);if(!bad.length)break;
+  let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>14){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
+  while(slide.scrollHeight>slide.clientHeight+2&&z>0.66){z-=0.04;box.style.zoom=z}}}
+// ---------- navegação
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+const deck=document.getElementById('deck');
+function scale(){const s=Math.min(innerWidth/1600,innerHeight/900);deck.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',()=>{scale();fitCode(slides[cur])});scale();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>fitCode(slides[cur]));
+document.querySelectorAll('.map').forEach(m=>{m.innerHTML=mapSVG(m.dataset.current||'')});
+function frags(s){return [...s.querySelectorAll('.f')]}
+function show(i,fromHash){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+ document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;document.getElementById('prog').style.width=`${(cur+1)/slides.length*100}%`;
+ if(!fromHash)history.replaceState(null,'','#'+(cur+1));requestAnimationFrame(()=>fitCode(slides[cur]))}
+function next(){const fs=frags(slides[cur]).filter(f=>!f.classList.contains('vis'));if(fs.length){fs[0].classList.add('vis');return}show(cur+1)}
+function prev(){const fs=frags(slides[cur]).filter(f=>f.classList.contains('vis'));if(fs.length){fs[fs.length-1].classList.remove('vis');return}show(cur-1)}
+function faseAtual(){for(let k=cur;k>=0;k--){if(slides[k].dataset.fase)return slides[k].dataset.fase}return ''}
+function toggleMap(){const o=document.getElementById('overlay');if(o.classList.contains('on')){o.classList.remove('on');return}
+ o.querySelector('.map').innerHTML=mapSVG(faseAtual());o.classList.add('on')}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='m'||e.key==='M')toggleMap();
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.getElementById('overlay').classList.remove('on')});
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.getElementById('bMap').onclick=toggleMap;document.getElementById('bFs').onclick=fs;
+document.getElementById('bPrev').onclick=prev;document.getElementById('bNext').onclick=next;
+document.getElementById('overlay').onclick=toggleMap;
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('.f').forEach(f=>f.classList.add('vis'))});
+document.querySelectorAll('.lab').forEach(lab=>{const bs=[...lab.querySelectorAll('.lab-steps button')],ps=[...lab.querySelectorAll('.lab-panel')];
+ bs.forEach((b,k)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));ps.forEach(x=>x.classList.remove('on'));b.classList.add('on');ps[k].classList.add('on');fitCode(lab.closest('.slide'))})});
+const h=parseInt(location.hash.slice(1));show(isNaN(h)?0:h-1,true);
+</script></body></html>
