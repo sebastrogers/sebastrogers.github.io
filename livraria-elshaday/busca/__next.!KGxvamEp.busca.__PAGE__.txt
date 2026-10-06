@@ -1,17 +1,17 @@
 1:"$Sreact.fragment"
-2:I[47257,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"ClientPageRoot"]
-3:I[78439,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js","/livraria-elshaday/_next/static/chunks/29d15fucpo1mr.js","/livraria-elshaday/_next/static/chunks/14x8snj1mc0e1.js"],"default"]
-6:I[97367,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"OutletBoundary"]
+2:I[47257,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"ClientPageRoot"]
+3:I[78439,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js","/livraria-elshaday/_next/static/chunks/0gsbab-h-71eg.js","/livraria-elshaday/_next/static/chunks/12blnaobky165.js"],"default"]
+6:I[97367,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"OutletBoundary"]
 7:"$Sreact.suspense"
-b:I[97367,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"ViewportBoundary"]
-c:I[97367,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"MetadataBoundary"]
-d:I[27201,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"IconMark"]
-f:I[39756,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"default"]
-10:I[37457,["/livraria-elshaday/_next/static/chunks/29b41cxd56nhp.js"],"default"]
+b:I[97367,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"ViewportBoundary"]
+c:I[97367,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"MetadataBoundary"]
+d:I[27201,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"IconMark"]
+f:I[39756,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"default"]
+10:I[37457,["/livraria-elshaday/_next/static/chunks/0jbrddou344t3.js"],"default"]
 a:X
 12:X
 12:C
-0:{"buildId":"LU9HB345d7Ekw4xxT9fV7","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/livraria-elshaday/_next/static/chunks/14x8snj1mc0e1.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":"$@9","staleTime":"$a","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$Lb",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#13294B"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"El Shaday · Livraria cristã em Garanhuns"}],["$","meta","1",{"name":"description","content":"Bíblias, livros e presentes cristãos. Entrega em Garanhuns por R$ 5,00 e envio para todo o Brasil."}],["$","meta","2",{"name":"robots","content":"noindex, nofollow"}],["$","link","3",{"rel":"icon","href":"/livraria-elshaday/favicon.ico?favicon.2vob68tjqpejf.ico","sizes":"256x256","type":"image/x-icon"}],["$","$Ld","4",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@e","staleTime":"$a","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lf",null,{"parallelRouterKey":"children","template":["$","$L10",null,{}]}]]}],"isPartial":"$@11","staleTime":"$a","varyParams":"$12"}],"isUpgradeableISRFallback":false,"a":"$@13","rootVaryParams":null,"needsRuntimeRequest":"$@14"}
+0:{"buildId":"Lr8lUL7bo8r9z5hqtNP5x","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/livraria-elshaday/_next/static/chunks/12blnaobky165.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":"$@9","staleTime":"$a","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$Lb",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#13294B"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"El Shaday · Livraria cristã em Garanhuns"}],["$","meta","1",{"name":"description","content":"Bíblias, livros e presentes cristãos. Entrega em Garanhuns por R$ 5,00 e envio para todo o Brasil."}],["$","meta","2",{"name":"robots","content":"noindex, nofollow"}],["$","link","3",{"rel":"icon","href":"/livraria-elshaday/favicon.ico?favicon.2vob68tjqpejf.ico","sizes":"256x256","type":"image/x-icon"}],["$","$Ld","4",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@e","staleTime":"$a","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lf",null,{"parallelRouterKey":"children","template":["$","$L10",null,{}]}]]}],"isPartial":"$@11","staleTime":"$a","varyParams":"$12"}],"isUpgradeableISRFallback":false,"a":"$@13","rootVaryParams":null,"needsRuntimeRequest":"$@14"}
 4:{}
 5:"$0:data:0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null

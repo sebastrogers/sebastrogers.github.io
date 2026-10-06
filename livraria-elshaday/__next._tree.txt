@@ -1,3 +1,4 @@
-:HL["/livraria-elshaday/_next/static/chunks/1eqkaq0ynvkyt.css","style"]
+:HL["/livraria-elshaday/_next/static/chunks/0axckb3mtgt_0.css","style"]
 :HC["/",""]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"(loja)","param":null,"prefetchHints":4128,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4224,"slots":null}}}}},"staleTime":300,"buildId":"LU9HB345d7Ekw4xxT9fV7"}
+:HL["https://martinsfontespaulista.vteximg.com.br/arquivos/ids/1780077-600-600/1197834.jpg","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"(loja)","param":null,"prefetchHints":4128,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4224,"slots":null}}}}},"staleTime":300,"buildId":"Lr8lUL7bo8r9z5hqtNP5x"}
