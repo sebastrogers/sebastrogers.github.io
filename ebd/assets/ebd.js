@@ -394,6 +394,59 @@
         bt.textContent = abrir ? 'Fechar' : 'Ler aqui';
       });
     });
+    iniciarPartilha(lista);
+    /* link direto para um dia (#dia-3): abre a leitura */
+    const alvo = location.hash && lista.querySelector(location.hash.replace(/[^#\w-]/g, ''));
+    if (alvo && alvo.classList.contains('dia-item')) {
+      const t = alvo.querySelector('.dia-texto');
+      if (t.hidden) alvo.querySelector('.ler').click();
+      setTimeout(() => alvo.scrollIntoView({ block: 'start' }), 60);
+    }
+  }
+
+  /* ---------- compartilhar a leitura (WhatsApp, Telegram, copiar, menu do aparelho) ---------- */
+  function iniciarPartilha(lista) {
+    const base = location.origin + location.pathname;
+    const n = lista.dataset.licao, tema = lista.dataset.tema;
+    const textoDia = (item) => {
+      const versos = [...item.querySelectorAll('.dia-texto > p')].map(p => {
+        const c = p.cloneNode(true);
+        c.querySelectorAll('sup').forEach(s => { s.textContent = s.textContent + ' '; });
+        return c.textContent.replace(/\s+/g, ' ').trim();
+      }).join('\n');
+      const link = base + '#' + item.id;
+      return { link, texto: `📖 Leitura diária · ${item.dataset.dia}\n*${item.dataset.titulo}*\n${item.dataset.ref}\n\n${versos}\n(ARC)\n\nEBD Jovens · Lição ${n}: ${tema}\nLeia e marque no Diário de bordo:\n${link}` };
+    };
+    const textoSemana = () => {
+      const link = base + '#diario';
+      const dias = [...lista.querySelectorAll('.dia-item')].map(i => `• ${i.dataset.dia}: ${i.dataset.titulo} (${i.dataset.ref})`).join('\n');
+      return { link, texto: `📖 Leituras diárias da semana\nEBD Jovens · Lição ${n}: ${tema}\n\n${dias}\n\nLeia os textos e marque o que já leu:\n${link}` };
+    };
+    const copiar = async (txt) => {
+      try { await navigator.clipboard.writeText(txt); return true; } catch (e) {
+        const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.append(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { ok = false; } ta.remove(); return ok;
+      }
+    };
+    const secao = lista.closest('section') || document;
+    secao.querySelectorAll('.partilha').forEach((bar) => {
+      const pegar = () => bar.dataset.tipo === 'semana' ? textoSemana() : textoDia(bar.closest('.dia-item'));
+      const { link, texto } = pegar();
+      bar.querySelector('.p-whats').href = 'https://wa.me/?text=' + encodeURIComponent(texto);
+      bar.querySelector('.p-telegram').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(texto.replace('\n' + link, '').replace(/\n[^\n]*:\s*$/, ''));
+      const bCopiar = bar.querySelector('.p-copiar'), rot = bCopiar.querySelector('span');
+      bCopiar.addEventListener('click', async () => {
+        const ok = await copiar(pegar().texto);
+        rot.textContent = ok ? 'Copiado!' : 'Não deu para copiar';
+        bCopiar.classList.toggle('feito', ok);
+        setTimeout(() => { rot.textContent = 'Copiar'; bCopiar.classList.remove('feito'); }, 2200);
+      });
+      const bMais = bar.querySelector('.p-mais');
+      if (navigator.share) {
+        bMais.hidden = false;
+        bMais.addEventListener('click', () => { const d = pegar(); navigator.share({ title: 'Leitura diária · EBD Jovens', text: d.texto.replace('\n' + d.link, ''), url: d.link }).catch(() => {}); });
+      }
+    });
   }
 
   /* ---------- cartões que viram ---------- */

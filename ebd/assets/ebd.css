@@ -481,3 +481,21 @@ body.menu-aberto{overflow:hidden}
 .nota-ia{border-top:5px solid var(--egeu)}
 .credito-prod{font-size:.82rem;color:var(--tinta-2)}
 .bio-foto{width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:center 20%;box-shadow:0 0 0 3px var(--papel),0 0 0 5px #E7C98A,var(--sombra)}
+
+/* compartilhar a leitura diária */
+.partilha{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--linha,rgba(0,0,0,.15));font-family:"Atkinson Hyperlegible",system-ui,sans-serif;line-height:1.2}
+.partilha-rotulo{width:100%;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-2)}
+.p-bt{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--linha);background:transparent;color:var(--tinta);font:700 .9rem "Atkinson Hyperlegible",system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.p-bt svg{width:18px;height:18px;flex:none}
+.p-bt:hover{border-color:var(--purpura)}
+.p-bt:focus-visible{outline:3px solid var(--bronze);outline-offset:2px}
+.p-whats{border-color:#25D366;color:#13863f}
+.p-telegram{border-color:#2AABEE;color:#1a7fb3}
+.p-copiar.feito{background:var(--oliva);border-color:var(--oliva);color:#fff}
+.p-bt[hidden]{display:none}
+:root[data-theme="dark"] .p-whats{color:#5fe08f}:root[data-theme="dark"] .p-telegram{color:#7fd0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .p-whats{color:#5fe08f}:root:not([data-theme="light"]) .p-telegram{color:#7fd0f7}}
+.partilha-semana{margin:-4px 0 14px}
+.partilha-semana .partilha{margin-top:0;padding-top:0;border-top:0;justify-content:center}
+.partilha-semana .partilha-rotulo{text-align:center}
+@media (max-width:480px){.dia-texto .partilha{margin-left:-34px}.p-bt{padding:8px 12px}}
