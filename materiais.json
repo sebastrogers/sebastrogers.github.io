@@ -147,9 +147,9 @@
         },
         {
           "tipo": "Aula",
-          "titulo": "Aula 8: Loja de Roupas, ao vivo",
+          "titulo": "Aula 8: Loja de Roupas",
           "descricao": "Revisão prática de tudo o que vimos, construindo um projeto do zero em 9 fases: Git e GitHub, coleções, funções, testes de verdade com pytest, classes, composição, herança, polimorfismo, classe abstrata e GitHub Actions. Cada conceito com um cartão Relembre.",
-          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas-ao-vivo.pdf",
+          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas.pdf",
           "data": "06/10/2026",
           "tags": "slides revisao nivelamento loja roupas git github venv lista tupla dicionario funcao modulo pytest assert teste tdd classe init self invariante composicao encapsulamento property heranca super polimorfismo parametrize classe abstrata abc github actions ci",
           "extra": {
@@ -159,9 +159,9 @@
         },
         {
           "tipo": "Aula",
-          "titulo": "Aula 8: Loja de Roupas, ao vivo (versão interativa)",
+          "titulo": "Aula 8: Loja de Roupas (versão interativa)",
           "descricao": "Os mesmos slides, no navegador: mapa das fases (tecla M), código com botão de copiar, laboratório clicável e respostas reveladas aos poucos. Use as setas para navegar e F para tela cheia.",
-          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas-ao-vivo.html",
+          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas.html",
           "data": "06/10/2026",
           "tags": "slides interativo html navegador revisao nivelamento loja roupas mapa fases pytest git github poo"
         },
