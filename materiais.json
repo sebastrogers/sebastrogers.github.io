@@ -291,13 +291,9 @@
           "tipo": "Aula",
           "titulo": "Aula 8: A loja na nuvem",
           "descricao": "Revisão prática da disciplina e conteúdo novo, em 9 fases: a vitrine da Loja de Roupas no S3, as regras numa Lambda e uma API de verdade com o API Gateway (rotas, CORS e estágios), com o custo de cada parte.",
-          "arquivo": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.pdf",
+          "arquivo": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.html",
           "data": "08/10/2026",
-          "tags": "slides revisao s3 site estatico lambda json api gateway http api rota cors estagio cloudwatch custo loja roupas",
-          "extra": {
-            "rotulo": "Versão interativa",
-            "url": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.html"
-          }
+          "tags": "slides revisao s3 site estatico lambda json api gateway http api rota cors estagio cloudwatch custo loja roupas"
         },
         {
           "tipo": "Projeto",
@@ -465,13 +461,9 @@
           "tipo": "Aula",
           "titulo": "Aula 8: Do documento ao caso de uso",
           "descricao": "Aquecimento sobre bons requisitos, a revisão cruzada do DDR v1 com tempo marcado e o conteúdo novo: casos de uso, com ator, fluxo principal, alternativos, exceções, include, extend e diagrama.",
-          "arquivo": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.pdf",
+          "arquivo": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.html",
           "data": "08/10/2026",
-          "tags": "slides revisao cruzada ddr checklist defeito caso de uso ator fluxo principal alternativo excecao include extend diagrama uml loja",
-          "extra": {
-            "rotulo": "Versão interativa",
-            "url": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.html"
-          }
+          "tags": "slides revisao cruzada ddr checklist defeito caso de uso ator fluxo principal alternativo excecao include extend diagrama uml loja"
         }
       ]
     }
