@@ -1,5 +1,5 @@
 {
-  "atualizado": "6 de outubro de 2026",
+  "atualizado": "8 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -286,6 +286,26 @@
           "arquivo": "assets/materiais/cloud/roteiro-06-lambda-ligada-ao-site.pdf",
           "data": "01/10/2026",
           "tags": "laboratorio pratica aws lambda python function url cors fetch javascript s3 cloudwatch logs cloudshell cli console relatorio de custo"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: A loja na nuvem",
+          "descricao": "Revisão prática da disciplina e conteúdo novo, em 9 fases: a vitrine da Loja de Roupas no S3, as regras numa Lambda e uma API de verdade com o API Gateway (rotas, CORS e estágios), com o custo de cada parte.",
+          "arquivo": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.pdf",
+          "data": "08/10/2026",
+          "tags": "slides revisao s3 site estatico lambda json api gateway http api rota cors estagio cloudwatch custo loja roupas",
+          "extra": {
+            "rotulo": "Versão interativa",
+            "url": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.html"
+          }
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "A loja na nuvem: arquivos de cada fase",
+          "descricao": "Os arquivos prontos de cada fase da aula: a vitrine, a política do bucket, a Lambda, os eventos de teste e o site que chama a API.",
+          "arquivo": "assets/materiais/cloud/loja-na-nuvem-arquivos.zip",
+          "data": "08/10/2026",
+          "tags": "codigo lambda python index html politica bucket evento teste api gateway zip"
         }
       ]
     },
@@ -440,6 +460,18 @@
           "arquivo": "assets/materiais/requisitos/ficha-revisao-cruzada-ddr.docx",
           "data": "01/10/2026",
           "tags": "ficha revisao checklist defeito editavel word docx"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: Do documento ao caso de uso",
+          "descricao": "Aquecimento sobre bons requisitos, a revisão cruzada do DDR v1 com tempo marcado e o conteúdo novo: casos de uso, com ator, fluxo principal, alternativos, exceções, include, extend e diagrama.",
+          "arquivo": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.pdf",
+          "data": "08/10/2026",
+          "tags": "slides revisao cruzada ddr checklist defeito caso de uso ator fluxo principal alternativo excecao include extend diagrama uml loja",
+          "extra": {
+            "rotulo": "Versão interativa",
+            "url": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.html"
+          }
         }
       ]
     }

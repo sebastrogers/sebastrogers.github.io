@@ -1,0 +1,375 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Requisitos · Aula 8 · Do documento ao caso de uso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--ink:#1b1c1f;--body:#3b3b3e;--mute:#7b7769;--teal:#1f6f6b;--teal2:#2b8a83;--wine:#7a2c46;
+--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--dark:#15171b;--dark2:#1e2127;--card:#fffdf8;--line:#e2dccd;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0c0e;overflow:hidden;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+#deck{position:absolute;width:1600px;height:900px;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;background:var(--bg);display:none;flex-direction:column;overflow:hidden;border-radius:4px}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.dark{background:var(--dark);color:#eeeae0}
+.kicker{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+h1{font-family:"Fraunces",Georgia,serif;font-size:96px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:1.1;font-weight:700;margin-bottom:34px;letter-spacing:-.005em}
+h3{font-family:"Fraunces",Georgia,serif;font-size:34px;margin:6px 0 14px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:rgba(31,111,107,.1);color:var(--teal);padding:1px 7px;border-radius:6px}
+.dark code{background:rgba(255,255,255,.08);color:#9fe3d9}
+b{font-weight:700}
+/* capa */
+.capa{justify-content:center;background:radial-gradient(1200px 600px at 85% 20%,#24302f 0,transparent 60%),var(--dark)}
+.capa h1{color:#fff;max-width:1250px;margin-bottom:28px}
+.capa .sub{font-size:30px;line-height:1.45;color:#cfc9bb;max-width:1100px}
+.capa-foot{position:absolute;bottom:70px;left:90px;font-size:22px;color:#8f8a7c}
+/* listas */
+.cols{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:start}
+ul.notes{list-style:none;display:flex;flex-direction:column;gap:22px}
+ul.notes li{font-size:31px;line-height:1.42;color:var(--body);padding-left:34px;position:relative}
+ul.notes li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:14px;border-radius:3px;background:var(--teal);transform:rotate(45deg)}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:46px;flex:1;min-height:0}
+.split.wide{grid-template-columns:1.6fr 1fr}
+.split:has(.has-tree){grid-template-columns:1.75fr 1fr}
+.split .left,.split .right{min-height:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+.code,.term{min-width:0;max-width:100%}.duo>*,.annot>*{min-width:0}
+.codeslide ul.notes li{font-size:27px}
+.full{flex:1;min-height:0;display:flex;flex-direction:column;gap:24px;justify-content:flex-start}
+/* código */
+.code,.term{background:#17191d;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+.code .body{display:flex;flex:1 1 auto;min-height:0;min-width:0}.code .body pre,.term pre{flex:1 1 auto;min-height:0;min-width:0}
+.tree{flex:none;width:250px;background:#1d2026;border-right:1px solid #2c3038;padding:10px 0;font:16px/1.75 Inter,system-ui,sans-serif;color:#b9bcc4;overflow:hidden}
+.tr-h{font:700 12px Inter,system-ui,sans-serif;letter-spacing:.12em;color:#8a8f99;padding:2px 14px 6px}
+.tr{padding-left:calc(14px + var(--d)*16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tr.dim{color:#6b707a}
+.tr .chev{display:inline-block;width:14px;color:#8a8f99}.tr.cur{background:#37373d;color:#fff;box-shadow:inset 2px 0 0 var(--gold)}
+.ic{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 8px 0 4px;background:#7f8590}.ic-py{background:#4b8bbe}.ic-ini,.ic-txt{background:#9a968b}.ic-yml{background:#c2412d}.ic-md{background:#5fa3d8}.ic-gitignore{background:#e06c4a}
+.annot>div{display:flex;flex-direction:column;gap:16px;min-height:0}
+.bar{display:flex;align-items:center;gap:8px;background:#0f1013;padding:10px 16px}
+.bar i{width:12px;height:12px;border-radius:50%;background:#e0574a}.bar i:nth-child(2){background:#e6b13d}.bar i:nth-child(3){background:#4cb26a}
+.fname{font-family:"JetBrains Mono",ui-monospace,monospace;color:#9a968b;font-size:17px;margin-left:12px;flex:1}
+.copy{background:transparent;border:1px solid #3a3d44;color:#c9c4b8;font-size:15px;padding:4px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2a2d33}.copy.done{border-color:#4cb26a;color:#7fe0a0}
+pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:26px;line-height:1.5;color:#e9e6dd;padding:18px 22px;overflow:hidden;white-space:pre;tab-size:4}
+pre .ln{display:block;margin:0 -22px;padding:0 22px}
+pre .ln.hl{background:rgba(199,154,43,.18);box-shadow:inset 4px 0 0 var(--gold)}
+.k{color:#ff8b7e}.s{color:#a8d98a}.c{color:#7f8590;font-style:italic}.n{color:#f2c46d}.d{color:#c49bff}.fn{color:#7cc7ff}.bi{color:#6fd4c6}.fl{color:#f2c46d}
+.term pre .ps{color:#7cc7ff;font-weight:700}.term .cmd{color:#f4f1ea}.term .ok{color:#7fe0a0;font-weight:700}.term .err{color:#ff8b7e}.term .dim{color:#7f8590}.term .warn{color:#f2c46d}.term .out{color:#d9d5ca}
+/* caixas */
+.ok-box,.sos,.tip{border-radius:14px;padding:22px 26px;font-size:26px;line-height:1.45;color:var(--body)}
+.ok-box{background:#e4f1e8;border-left:6px solid var(--green)}
+.lbl{display:block;font-size:17px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.ok-box .lbl{color:var(--green)}
+.sos{background:#f7e6df;border-left:6px solid var(--red)}.sos .lbl{color:var(--red)}.sos a code{font-size:18px;word-break:break-all}.sos .alt{display:block;margin-top:10px;font-size:20px;color:var(--mute)}
+.tip{background:#efe6cf;border-left:6px solid var(--gold)}.tip .lbl{color:#9a7414}
+/* duo e cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:0 1 auto;min-height:0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.card .tag{font-family:"JetBrains Mono",monospace;font-size:17px;letter-spacing:.12em;font-weight:700}
+.card.bad{border-color:#e9b8ae}.card.bad .tag{color:var(--red)}
+.card.good{border-color:#a9d4b7}.card.good .tag{color:var(--green)}
+.card.neutral .tag{color:var(--teal)}
+.card p{font-size:26px;line-height:1.45;color:var(--body)}
+.foot{font-size:26px;margin-top:26px;color:var(--body)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid3 .card h3{font-size:30px}
+.big-num{font-family:"Fraunces",Georgia,serif;font-size:64px;color:var(--teal);font-weight:700;line-height:1}
+/* afirmação */
+.afirma{justify-content:center}.afirma.wine{background:var(--wine);color:#fff}.afirma.teal{background:var(--teal);color:#fff}.afirma.dk{background:var(--dark);color:#fff}
+.afirma .kicker{color:#f3d58a}.afirma h2{font-size:62px;max-width:1300px}.afirma p{font-size:30px;line-height:1.45;max-width:1200px;opacity:.88}
+/* quiz */
+.reveal{align-self:flex-start;background:var(--teal);color:#fff;border:0;border-radius:10px;font-size:22px;padding:12px 22px;cursor:pointer;font-family:inherit}
+.answer{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 28px;font-size:28px;line-height:1.45;color:var(--body)}
+.answer p+p{margin-top:12px}
+/* fragmentos */
+.f{opacity:0;transform:translateY(6px);transition:all .3s}
+.f.vis{opacity:1;transform:none}
+/* svg */
+svg.flow{width:100%;height:auto;max-height:190px;flex:none}
+.sv-t{font:700 30px "Fraunces",Georgia,serif}.sv-s{font:22px "Inter",system-ui,sans-serif;fill:#555}.sv-a{font:600 20px "JetBrains Mono",monospace;fill:#7a2c46}.sv-f{font:italic 22px "Inter",system-ui;fill:#777}
+/* mapa */
+.mapa{padding:50px 70px 70px}
+.map-wrap{display:grid;grid-template-rows:1fr auto;gap:18px;height:100%}
+.map svg{width:100%;height:100%}
+.map{min-height:0}
+.map-info{display:grid;grid-template-columns:auto 1fr;column-gap:40px;align-items:end}
+.map-info .kicker{grid-column:1/3;margin-bottom:6px}
+.map-info h2{margin:0;font-size:50px;color:#fff}
+.map-info p{font-size:24px;color:#bdb8aa;line-height:1.4;grid-column:1/3;margin-top:10px;max-width:1300px}
+.goal{grid-column:2;grid-row:2;justify-self:end;background:#22262d;border:1px solid #343944;border-radius:12px;padding:14px 20px;font-size:22px;color:#e8e3d6}
+.goal span{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.12em;color:#7fe0a0;text-transform:uppercase;margin-bottom:4px}
+.m-zone{fill:#1c2026;stroke:#2a2f37;stroke-width:2}
+.m-zlab{font:700 17px "JetBrains Mono",monospace;letter-spacing:.14em;fill:#6f7480}
+.m-path{fill:none;stroke:#3b414c;stroke-width:10;stroke-linecap:round;stroke-dasharray:2 22}
+.m-done{fill:none;stroke:var(--teal2);stroke-width:10;stroke-linecap:round}
+.m-node circle,.m-node rect{stroke-width:5}
+.m-node.todo circle,.m-node.todo rect{fill:#15171b;stroke:#4a505c}
+.m-node.done circle,.m-node.done rect{fill:var(--teal);stroke:#5cc2b8}
+.m-node.cur circle,.m-node.cur rect{fill:var(--gold);stroke:#ffe2a0}
+.m-node .ring{fill:none;stroke:var(--gold);stroke-width:3;opacity:.7;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:34;opacity:.8}100%{r:58;opacity:0}}
+.m-code{font:700 22px "JetBrains Mono",monospace;fill:#fff}
+.m-node.todo .m-code{fill:#8a909c}.m-node.cur .m-code{fill:#1b1c1f}
+.m-name{font:600 21px "Inter",system-ui,sans-serif;fill:#d8d3c6}.m-node.todo .m-name{fill:#8a909c}
+.m-aula{font:16px "JetBrains Mono",monospace;fill:#7b8190}
+.m-flag{fill:#c2412d}
+/* barra inferior */
+#ui{position:fixed;right:18px;bottom:14px;display:flex;gap:8px;z-index:20;opacity:.35;transition:opacity .2s}
+#ui:hover{opacity:1}
+#ui button,#ui span{background:#24272d;color:#ddd;border:0;border-radius:8px;padding:7px 12px;font-size:13px;font-family:Inter,system-ui,sans-serif;cursor:pointer}
+#prog{position:fixed;left:0;bottom:0;height:4px;background:var(--gold);z-index:20;transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(11,12,14,.94);display:none;z-index:30;padding:4vh 5vw}
+#overlay.on{display:block}#overlay .map{height:80vh}
+#overlay .close{position:absolute;right:28px;top:20px;color:#ddd;font-size:15px;font-family:Inter,sans-serif}
+.relembre{background:#e8f0ed}
+.rl-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}.rl-top .kicker{margin:0}
+.rl-pill{font:700 16px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:var(--teal);padding:6px 14px;border-radius:30px}
+.rl-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;flex:1;min-height:0}
+.rl-left,.rl-right{display:flex;flex-direction:column;gap:22px;min-height:0;min-width:0}
+.rl-def{font-size:33px;line-height:1.42;color:var(--ink)}
+.rl-box{border-radius:14px;padding:20px 24px;font-size:25px;line-height:1.45;color:var(--body)}
+.rl-box.an{background:#fffdf8;border-left:6px solid var(--teal)}.rl-box.an .lbl{color:var(--teal)}
+.rl-box.cu{background:#f7e6df;border-left:6px solid var(--red)}.rl-box.cu .lbl{color:var(--red)}
+.timer{display:flex;flex-direction:column;align-items:center;gap:22px;background:#15171b;border-radius:22px;padding:34px 40px;color:#fff;flex:none}
+.t-dig{font:700 150px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em;line-height:1}
+.timer.fim .t-dig{color:#ff8b7e}
+.t-bar{width:100%;height:12px;background:#2a2e36;border-radius:8px;overflow:hidden}.t-bar i{display:block;height:100%;background:var(--gold);width:0}
+.t-btns{display:flex;gap:14px}.t-btns button{font:600 22px Inter,system-ui,sans-serif;padding:12px 26px;border-radius:12px;border:0;cursor:pointer;background:#2a2e36;color:#fff}.t-btns .t-go{background:var(--teal)}
+.t-row{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;flex:1;min-height:0;align-items:start}
+/* laboratório TDD */
+.lab{display:grid;grid-template-columns:330px 1fr;gap:30px;flex:1;min-height:0}
+.lab-steps{display:flex;flex-direction:column;gap:14px}
+.lab-steps button{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font-size:21px;cursor:pointer;font-family:inherit;color:var(--body);line-height:1.35}
+.lab-steps button b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.1em;margin-bottom:4px}
+.lab-steps button.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,107,.15)}
+.lab-steps .r b{color:var(--red)}.lab-steps .g b{color:var(--green)}
+.lab-view{display:flex;flex-direction:column;gap:16px;min-height:0}
+.lab-panel{display:none;flex-direction:column;gap:16px;min-height:0}.lab-panel.on{display:flex}
+.status{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:20px;padding:8px 16px;border-radius:30px;color:#fff}
+.status.red{background:var(--red)}.status.green{background:var(--green)}
+/* anotações sobre a saída */
+.annot{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;flex:1;min-height:0}
+.annot ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:18px}
+.annot ol li{counter-increment:a;font-size:27px;line-height:1.4;color:var(--body);padding-left:52px;position:relative}
+.annot ol li::before{content:counter(a);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--wine);color:#fff;font:700 19px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+table.t{border-collapse:collapse;width:100%;font-size:25px}
+table.t th{background:var(--teal);color:#fff;text-align:left;padding:12px 16px;font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+table.t td{padding:12px 16px;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+table.t tr:nth-child(even) td{background:#f8f5ee}
+</style></head><body>
+<div id="deck"><section class="slide dark capa" data-fase=""><div class="capa-in"><div class="kicker">Engenharia de Requisitos · Aula 8 · 8 de outubro de 2026</div><h1>Do documento ao caso de uso</h1><p class="sub">Primeiro, cada equipe lê o DDR de outra como um desconhecido leria e devolve os defeitos por escrito. Depois, com a Loja de Roupas, a turma aprende a descrever a conversa entre o usuário e o sistema: o caso de uso.</p><div class="capa-foot">Faculdade Senac Pernambuco · ADS 2026.2 · Prof. Sebastião Rogério</div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Como a aula funciona</div><h2>Três regras para hoje</h2><div class="full"><div class="grid3"><div class="card neutral"><div class="tag">REGRA 1</div><h3>DDR v1 em mãos</h3><p>Cada equipe chega com o DDR v1 em PDF. Ele é enviado no AVA e passado para a equipe revisora no começo.</p></div><div class="card neutral"><div class="tag">REGRA 2</div><h3>Critique o texto, não o autor</h3><p>Diga "o RNF-02 não tem número", e não "vocês esqueceram o número".</p></div><div class="card neutral"><div class="tag">REGRA 3</div><h3>Cada fase termina com algo pronto</h3><p>Uma ficha, uma resposta ou um caso de uso. Quem travar usa o modelo do site.</p></div></div><div class="tip f"><span class="lbl">Atalho</span>Aperte <code>M</code> para ver o mapa e onde estamos.</div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current=""></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Nove fases, três mundos</h2><p>Um aquecimento rápido, a revisão cruzada com tempo marcado e o conteúdo novo: casos de uso. Os losangos são os chefes de cada mundo.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">O que sai daqui hoje</div><h2>Três entregas</h2><div class="full"><table class="t"><tr><th>Quem</th><th>Entrega</th><th>Onde e quando</th></tr><tr><td>Equipe autora</td><td>DDR v1 em PDF</td><td>AVA e cópia para a equipe revisora, no começo da aula</td></tr><tr><td>Equipe revisora</td><td>Ficha de Revisão Cruzada preenchida</td><td>AVA e cópia para a equipe autora, no fim do Mundo 2</td></tr><tr><td>Cada equipe</td><td>Um caso de uso do próprio projeto e o diagrama</td><td>AVA, no fim da aula</td></tr></table><div class="tip f"><span class="lbl">Material</span>No site da disciplina, em Materiais › Requisitos: Roteiro da revisão cruzada, Ficha de revisão (PDF e Word), Exemplo de DDR v1 e Modelo de DDR.</div></div></section><section class="slide dark mapa" data-fase="1-1"><div class="map-wrap"><div class="map" data-current="1-1"></div><div class="map-info"><div class="kicker">FASE 1-1 · REVISITA Aulas 1 e 2</div><h2>O que é um bom requisito</h2><p>Dez minutos para afinar o olhar antes de revisar o documento dos colegas.</p><div class="goal"><span>Ao final da fase</span>cada um sabendo dizer por que um requisito é ruim</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 2</span></div><h2>Três tipos de requisito</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><b>Funcional</b>: o que o sistema faz. <b>Não funcional</b>: com que qualidade ele faz. <b>Regra de negócio</b>: uma política do cliente, que vale com ou sem sistema.</p><div class="rl-box an"><span class="lbl">Pense assim</span>Na loja: o provador existe (funcional), é limpo e iluminado (não funcional), e só se leva até 3 peças por vez (regra).</div><div class="rl-box cu"><span class="lbl">Cuidado</span>"O sistema deve usar Python" não é necessidade do cliente: é uma escolha técnica, e precisa de origem para estar no DDR.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">RF-03   O sistema deve calcular o frete do carrinho.
+RNF-01  A vitrine deve carregar em até 2 s com 100 usuários.
+RN-01   Compras a partir de R$ 200 têm frete grátis.</pre></div></div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 2 · ISO/IEC/IEEE 29148</span></div><h2>As características de um bom requisito</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O checklist da revisão de hoje. Cada característica vira uma pergunta que o revisor faz ao texto.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Não ambíguo   duas pessoas leem do mesmo jeito?
+Verificável   dá para testar com sim ou não?
+Singular      pede uma coisa só?
+Completo      falta ator, exceção ou critério?
+Necessário    tem origem? alguém pediu?
+Consistente   contradiz outro requisito?
+Rastreável    tem ID, origem e história?
+Conforme      segue o modelo e a escrita?</pre></div></div></div></div></section><section class="slide quiz" data-fase="1-1"><div class="kicker">Fase 1-1 · Conserte</div><h2>O que há de errado em cada um?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">requisitos da Loja de Roupas</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">RNF-02  O site deve ser rápido.
+
+RF-07   O sistema deve calcular o frete e enviar o e-mail
+        de confirmação do pedido.
+
+RN-01   Frete grátis acima de R$ 200.
+H04     Dado uma compra de exatamente R$ 200,
+        quando finalizo, então o frete é grátis.</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>RNF-02</b>: não é <b>verificável</b>. "Rápido" não tem número. Sugestão: até 2 s com 100 usuários.</p><p><b>RF-07</b>: não é <b>singular</b>. São dois pedidos: frete e e-mail.</p><p><b>RN-01 e H04</b>: não são <b>consistentes</b>. "Acima de 200" exclui o 200; o critério inclui. Exatamente na fronteira, como o teste de Coding.</p></div></div></div></section><section class="slide check" data-fase="1-1"><div class="kicker">FASE 1-1 · CONCLUÍDA</div><h2>Checkpoint: olhar afinado</h2><div class="split"><div class="left"><ul class="notes"><li class="">Três defeitos encontrados, cada um com o nome da característica.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Você sabe dizer, para cada um dos três, <b>qual característica</b> ele quebra.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Volte ao cartão das características e leia a pergunta de cada uma em voz alta, comparando com o requisito.</div></div></div></section><section class="slide dark mapa" data-fase="1-2"><div class="map-wrap"><div class="map" data-current="1-2"></div><div class="map-info"><div class="kicker">FASE 1-2 · REVISITA Aula 7</div><h2>Defeito com endereço</h2><p>Achar o defeito é metade. A outra metade é escrever de um jeito que a equipe autora consiga corrigir.</p><div class="goal"><span>Ao final da fase</span>um defeito escrito no formato da ficha</div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>Defeito e gravidade</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um defeito bem registrado diz <b>onde</b> está, <b>qual regra</b> quebra, <b>por quê</b> e <b>como</b> poderia ficar. A gravidade diz a urgência.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Uma ficha com dez erros de digitação vale menos que uma com dois defeitos críticos bem explicados.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">CRÍTICO  leva a construir a coisa errada ou contradiz outra parte
+MAIOR    impede testar ou entender sem perguntar ao autor
+MENOR    forma, digitação, padrão</pre></div></div></div></div></section><section class="slide duoslide" data-fase="1-2"><div class="kicker">Fase 1-2 · Na ficha</div><h2>Mal escrito e bem escrito</h2><div class="duo"><div class="card bad"><div class="tag">MAL ESCRITO</div><h3>"Os requisitos estão confusos."</h3><p>Não diz onde, nem qual regra, nem como corrigir. A equipe autora não tem o que fazer com isso.</p></div><div class="card good"><div class="tag">BEM ESCRITO</div><h3>D-01 · seção 3 · RNF-02</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">ficha</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Trecho:        "O site deve ser rápido."
+Característica: verificável
+Por quê:        "rápido" não tem número
+Sugestão:       até 2 s com 100 usuários
+Gravidade:      MAIOR</pre></div></div></div></div></section><section class="slide check" data-fase="1-2"><div class="kicker">FASE 1-2 · CONCLUÍDA</div><h2>Checkpoint: formato da ficha</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">os cinco campos</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">onde · trecho · característica · por quê e sugestão · gravidade</pre></div></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Você consegue escrever o RF-07 da fase anterior nesse formato.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Abra o <b>Roteiro da revisão cruzada</b>, no site: ele tem a ficha de um exemplo inteira preenchida.</div></div></div></section><section class="slide dark mapa" data-fase="1-3"><div class="map-wrap"><div class="map" data-current="1-3"></div><div class="map-info"><div class="kicker">FASE 1-3 · REVISITA Aula 5 e Coding</div><h2>Do critério ao teste</h2><p>O chefe do aquecimento: por que "verificável" é a característica que mais importa.</p><div class="goal"><span>Ao final da fase</span>a ligação entre o critério de aceite e o teste automatizado</div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 5</span></div><h2>Critério de aceite</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Diz como saber que uma história está pronta, no formato <b>Dado</b> (o contexto), <b>Quando</b> (a ação), <b>Então</b> (o resultado que dá para conferir).</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">H04  Como cliente, quero frete grátis em compras grandes,
+     para economizar.
+
+Critério: Dado um carrinho de R$ 200,00,
+          quando finalizo a compra,
+          então o frete é R$ 0,00.</pre></div></div></div></div></section><section class="slide duoslide" data-fase="1-3"><div class="kicker">Fase 1-3 · Requisitos encontra Coding</div><h2>O mesmo critério, escrito duas vezes</h2><div class="duo"><div class="card neutral"><div class="tag">REQUISITOS · DDR</div><h3>Critério de aceite</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">H04</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Dado um carrinho de R$ 200,00,
+quando finalizo a compra,
+então o frete é R$ 0,00.</pre></div></div></div><div class="card good"><div class="tag">CODING · tests/test_calculos.py</div><h3>Teste automatizado</h3><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">teste</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="python" data-hl="">def test_frete_a_partir_de_200_e_gratis():
+    assert frete(200.00) == 0.0</pre></div></div></div></div><p class="foot f">Critério verificável vira teste quase palavra por palavra. Se não dá para escrever o teste, provavelmente o requisito tem um defeito.</p></section><section class="slide check" data-fase="1-3"><div class="kicker">FASE 1-3 · CONCLUÍDA</div><h2>Checkpoint: aquecimento concluído</h2><div class="split"><div class="left"><ul class="notes"><li class="">As características do checklist.</li><li class="">O formato do defeito.</li><li class="">Critério verificável vira teste.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O DDR da equipe está aberto e enviado no AVA. Agora é a vez do documento de verdade.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Se o DDR ainda não foi enviado, envie agora em PDF com o nome <code>DDR_v1_EquipeN.pdf</code>.</div></div></div></section><section class="slide dark mapa" data-fase="2-1"><div class="map-wrap"><div class="map" data-current="2-1"></div><div class="map-info"><div class="kicker">FASE 2-1 · REVISITA Aula 7</div><h2>Trocar e ler</h2><p>O DDR desce para a equipe revisora. A partir daqui, a equipe autora não explica nada: o documento precisa se explicar sozinho.</p><div class="goal"><span>Ao final da fase</span>cada equipe com o DDR de outra e a ficha aberta</div></div></div></section><section class="slide txt" data-fase="2-1"><div class="kicker">Fase 2-1 · O rodízio</div><h2>Quem revisa quem</h2><div class="cols"><div><ul class="notes"><li class="f">A Equipe 1 revisa a 2, a 2 revisa a 3, e assim por diante. A última revisa a 1.</li><li class="f">Passe a cópia do DDR para a equipe seguinte e receba a da equipe anterior.</li><li class="f">Abra a <b>Ficha de Revisão Cruzada</b> e preencha o cabeçalho: equipe revisora, autora e sistema.</li><li class="f">Ninguém revisa o próprio documento: quem escreveu lê o que quis dizer, não o que está escrito.</li></ul></div><div class="tip" style="width:470px"><span class="lbl">Equipe sem DDR?</span>Revisa o <b>Exemplo de DDR v1 da Barbearia</b>, do site, e entrega o próprio DDR até o fim do dia.</div></div></section><section class="slide fullslide" data-fase="2-1"><div class="kicker">Fase 2-1 · Ler sozinho</div><h2>Leitura em silêncio</h2><div class="t-row"><div class="timer" data-min="10"><div class="t-dig">10:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Cada integrante lê o documento <b>inteiro</b>, do começo ao fim.</li><li class="">Só marque onde travou: uma palavra vaga, uma regra estranha, um número que falta.</li><li class="">Sem conversar com a equipe autora. Se precisou perguntar, já é um defeito.</li></ul></div></div></section><section class="slide check" data-fase="2-1"><div class="kicker">FASE 2-1 · CONCLUÍDA</div><h2>Checkpoint: leitura feita</h2><div class="split"><div class="left"><ul class="notes"><li class="">DDR de outra equipe lido por todos.</li><li class="">Ficha com o cabeçalho preenchido.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Todos da equipe leram o documento inteiro e marcaram os pontos de dúvida.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Ficha em branco: No site da disciplina, em Materiais › Requisitos, "Ficha de Revisão Cruzada".</div></div></div></section><section class="slide dark mapa" data-fase="2-2"><div class="map-wrap"><div class="map" data-current="2-2"></div><div class="map-info"><div class="kicker">FASE 2-2 · REVISITA Aula 7</div><h2>Checklist dividido</h2><p>Cada pessoa vira especialista em duas características e caça só elas, no documento inteiro.</p><div class="goal"><span>Ao final da fase</span>os achados de cada integrante anotados num rascunho</div></div></div></section><section class="slide txt" data-fase="2-2"><div class="kicker">Fase 2-2 · Como dividir</div><h2>Duas características por pessoa</h2><div class="cols"><div><ul class="notes"><li class="f">Divida as 8 características entre os integrantes, duas para cada um.</li><li class="f">Exemplo: Ana fica com <b>Verificável</b> e <b>Singular</b>; Bruno, com <b>Consistente</b> e <b>Rastreável</b>.</li><li class="f">Quem ficou com <b>Consistente</b> compara as histórias com as regras de negócio.</li><li class="f">Quem ficou com <b>Rastreável</b> abre a matriz e procura linhas com "?" ou requisitos fora dela.</li><li class="f">Anote cada achado em três itens: onde, trecho e característica.</li></ul></div></div></section><section class="slide fullslide" data-fase="2-2"><div class="kicker">Fase 2-2 · Caçar defeitos</div><h2>Checklist em ação</h2><div class="t-row"><div class="timer" data-min="20"><div class="t-dig">20:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Percorra o documento inteiro procurando <b>só</b> as suas duas características.</li><li class="">Anote no rascunho: onde (seção e ID), trecho e característica.</li><li class="">Meta da equipe: pelo menos 8 defeitos, de pelo menos 4 características diferentes.</li></ul></div></div></section><section class="slide check" data-fase="2-2"><div class="kicker">FASE 2-2 · CONCLUÍDA</div><h2>Checkpoint: rascunho cheio</h2><div class="split"><div class="left"><ul class="notes"><li class="">Cada integrante com seus achados anotados.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A equipe tem, somando os rascunhos, pelo menos 8 achados.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Faltou achado? Releia as seções 3 (requisitos) e 6 (matriz): é onde mais aparecem defeitos.</div></div></div></section><section class="slide dark mapa" data-fase="2-3"><div class="map-wrap"><div class="map" data-current="2-3"></div><div class="map-info"><div class="kicker">FASE 2-3 · REVISITA Aula 7</div><h2>Ficha e devolução</h2><p>O chefe do segundo mundo: transformar achados soltos em defeitos com endereço e devolvê-los sem briga.</p><div class="goal"><span>Ao final da fase</span>a ficha entregue e explicada para a equipe autora</div></div></div></section><section class="slide fullslide" data-fase="2-3"><div class="kicker">Fase 2-3 · Consolidar</div><h2>Ficha da equipe</h2><div class="t-row"><div class="timer" data-min="10"><div class="t-dig">10:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Juntem os rascunhos; achados repetidos viram uma linha só.</li><li class="">Para cada defeito: por que é defeito, uma sugestão e a gravidade.</li><li class="">Preencham o resumo, com um elogio concreto ao documento.</li></ul></div></div></section><section class="slide fullslide" data-fase="2-3"><div class="kicker">Fase 2-3 · Devolver</div><h2>Conversa com a equipe autora</h2><div class="t-row"><div class="timer" data-min="10"><div class="t-dig">10:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Leiam um defeito por frase, começando pelos críticos.</li><li class="">A equipe autora só pergunta para entender. Não é hora de defender o texto.</li><li class="">Entreguem a ficha no AVA e uma cópia para a equipe autora.</li></ul></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Aula 7</span></div><h2>A resposta do autor</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Depois da aula, a equipe autora responde a cada defeito e faz o DDR v2.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Rejeitar não é ignorar: se o revisor entendeu errado, outro leitor também vai. Vale reescrever o trecho mesmo assim.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Aceito           o defeito procede: corrigir
+Aceito em parte  procede, mas a sugestão não serve: corrigir do seu jeito
+Rejeitado        o revisor entendeu errado: explicar numa frase</pre></div></div></div></div></section><section class="slide check" data-fase="2-3"><div class="kicker">FASE 2-3 · CONCLUÍDA</div><h2>Checkpoint: revisão entregue</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">arquivo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Ficha_EquipeN_revisa_EquipeM</pre></div></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A ficha está no AVA e a equipe autora recebeu a cópia. As respostas e o DDR v2 ficam para casa.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Ficha incompleta? Entregue o que tem e complete até o fim do dia, no mesmo envio do AVA.</div></div></div></section><section class="slide dark mapa" data-fase="3-1"><div class="map-wrap"><div class="map" data-current="3-1"></div><div class="map-info"><div class="kicker">FASE 3-1 · REVISITA conteúdo novo</div><h2>Ator e fluxo principal</h2><p>A história diz o que o cliente quer. O caso de uso mostra, passo a passo, a conversa entre ele e o sistema.</p><div class="goal"><span>Ao final da fase</span>o caso de uso "Finalizar compra" da loja, com o fluxo principal</div></div></div></section><section class="slide afirma wine" data-fase="3-1"><div class="af-in"><div class="kicker">Fase 3-1 · Para começar</div><h2>"Como cliente, quero finalizar a compra, para receber as roupas em casa." Está claro o que o sistema faz?</h2><p>O que o cliente informa primeiro? Quando o frete é calculado? E se o pagamento for recusado? A história não responde. É para isso que serve o caso de uso.</p></div></section><section class="slide relembre" data-fase="3-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Conteúdo novo · Jacobson, 1992</span></div><h2>Caso de uso</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Descrição, passo a passo, de como um <b>ator</b> usa o sistema para alcançar um objetivo, incluindo o que pode dar errado no caminho.</p><div class="rl-box an"><span class="lbl">Pense assim</span>O roteiro de um atendimento no caixa: o que o cliente diz, o que o caixa responde, e o que fazer quando o cartão é recusado.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Nome           UC03 Finalizar compra
+Ator principal Cliente
+Objetivo       comprar as peças do carrinho
+Fluxo          os passos, alternando ator e sistema
+Exceções       o que pode dar errado</pre></div></div></div></div></section><section class="slide relembre" data-fase="3-1"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Conteúdo novo</span></div><h2>Ator</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Quem está <b>fora</b> do sistema e interage com ele. É um <b>papel</b>, não uma pessoa. Pode ser gente ou outro sistema.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>O banco de dados não é ator: ele está dentro do sistema.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Ator principal    Cliente         inicia o caso de uso
+Ator secundário   Pagamento       outro sistema que ajuda
+Outro ator        Dona da loja    papel diferente, casos diferentes
+
+A mesma pessoa pode ser cliente e dona: são dois papéis.</pre></div></div></div></div></section><section class="slide duoslide" data-fase="3-1"><div class="kicker">Fase 3-1 · Lado a lado</div><h2>História e caso de uso</h2><div class="duo"><div class="card neutral"><div class="tag">HISTÓRIA · AULA 5</div><h3>Curta, para conversar e priorizar</h3><p>Como, Quero, Para. Cabe num cartão. Diz <b>o quê</b> e <b>para quê</b>. Os critérios de aceite dizem quando está pronta.</p></div><div class="card good"><div class="tag">CASO DE USO · HOJE</div><h3>Detalhado, para construir e testar</h3><p>Passo a passo da interação, com pré-condição, fluxo principal, alternativos e exceções. Diz <b>como</b> a conversa acontece.</p></div></div><p class="foot f">Não são concorrentes: a história Must mais importante costuma virar o primeiro caso de uso detalhado.</p></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · Ao vivo</div><h2>UC03 Finalizar compra: o cabeçalho</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">UC03</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Nome:            UC03 Finalizar compra
+Ator principal:  Cliente
+Ator secundário: Sistema de pagamento
+Objetivo:        comprar as peças do carrinho e receber em casa
+Pré-condições:   cliente identificado; carrinho com ao menos 1 peça
+Pós-condição:    pedido registrado, estoque baixado,
+                 cliente com o número do pedido
+Origem:          H04 e H07; entrevista com a dona, 02/10</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><b>Pré-condição</b>: o que precisa ser verdade <b>antes</b> de começar.</li><li class="f"><b>Pós-condição</b>: o que fica verdade <b>depois</b> do sucesso.</li><li class="f"><b>Origem</b>: a rastreabilidade da Aula 7 continua valendo aqui.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · Ao vivo</div><h2>UC03: o fluxo principal</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">fluxo principal</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">1. Cliente abre o carrinho e escolhe "Finalizar compra".
+2. Sistema mostra as peças, o subtotal, o frete e o total.
+3. Cliente informa o endereço de entrega.
+4. Sistema recalcula o frete pelo endereço (RN-01).
+5. Cliente escolhe a forma de pagamento.
+6. Sistema envia a cobrança ao sistema de pagamento.
+7. Sistema de pagamento confirma a cobrança.
+8. Sistema registra o pedido, baixa o estoque e
+   mostra o número do pedido.</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Cada passo é <b>uma ação</b>, de um lado só: ator <b>ou</b> sistema.</li><li class="f">É o "caminho feliz": tudo dá certo.</li><li class="f">Sem tela, sem botão, sem tecnologia: "escolhe", e não "clica no botão azul".</li></ul></div></div></section><section class="slide quiz" data-fase="3-1"><div class="kicker">Fase 3-1 · Qual passo está errado?</div><h2>Revise este fluxo</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">fluxo de um colega</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">1. Cliente clica no botão verde "Comprar".
+2. Sistema faz SELECT na tabela de produtos.
+3. Cliente informa o endereço.
+4. Sistema calcula o frete e o cliente paga.</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>1</b>: descreve a tela (botão verde). Escreva a intenção: "Cliente escolhe comprar".</p><p><b>2</b>: descreve tecnologia interna (SELECT). Escreva o que o ator percebe: "Sistema mostra as peças".</p><p><b>4</b>: dois atores no mesmo passo. Separe em "Sistema calcula o frete" e "Cliente paga".</p></div></div></div></section><section class="slide check" data-fase="3-1"><div class="kicker">FASE 3-1 · CONCLUÍDA</div><h2>Checkpoint: caminho feliz</h2><div class="split"><div class="left"><ul class="notes"><li class="">Ator principal e secundário identificados.</li><li class="">Pré e pós-condições escritas.</li><li class="">Fluxo principal numerado, um ator por passo.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O UC03 tem cabeçalho e fluxo principal sem tela e sem tecnologia.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Use o exemplo destes slides como molde e troque só o objetivo.</div></div></div></section><section class="slide dark mapa" data-fase="3-2"><div class="map-wrap"><div class="map" data-current="3-2"></div><div class="map-info"><div class="kicker">FASE 3-2 · REVISITA conteúdo novo</div><h2>Exceções e diagrama</h2><p>O chefe do último mundo: o que acontece quando o caminho não é feliz, e o mapa de todos os casos de uso.</p><div class="goal"><span>Ao final da fase</span>o UC03 completo e o diagrama de casos de uso da loja</div></div></div></section><section class="slide relembre" data-fase="3-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Conteúdo novo</span></div><h2>Fluxo alternativo e de exceção</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O <b>alternativo</b> é outro caminho que também chega ao objetivo. O de <b>exceção</b> é quando algo dá errado e o objetivo não é alcançado, ou é adiado.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>Toda exceção diz em qual passo começa e como termina: volta a um passo ou encerra o caso de uso.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Alternativo  A1 (passo 5) Cliente aplica um cupom:
+             sistema valida, recalcula o total e volta ao passo 5.
+
+Exceção      E1 (passo 7) Pagamento recusado:
+             sistema mostra o motivo e volta ao passo 5;
+             o pedido não é registrado.</pre></div></div></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · Ao vivo</div><h2>UC03: alternativos e exceções</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">fluxos</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">A1 (passo 3) Cliente usa um endereço já salvo:
+   sistema preenche o endereço e segue para o passo 4.
+A2 (passo 5) Cliente aplica um cupom:
+   sistema valida, recalcula o total e volta ao passo 5.
+
+E1 (passo 7) Pagamento recusado:
+   sistema mostra o motivo e volta ao passo 5.
+E2 (passo 8) Peça sem estoque:
+   sistema avisa, retira a peça e volta ao passo 2.
+E3 (passo 4) Endereço fora da área de entrega:
+   sistema avisa e encerra o caso de uso.</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Os números dizem <b>onde</b> cada desvio começa.</li><li class="f">Cada exceção é um caso de teste pronto: "Dado pagamento recusado, quando..., então...".</li><li class="f">E3 mostra uma exceção que <b>encerra</b>, em vez de voltar.</li></ul></div></div></section><section class="slide relembre" data-fase="3-2"><div class="rl-top"><span class="rl-pill">RELEMBRE</span><span class="kicker">Conteúdo novo · UML</span></div><h2>include e extend</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Ligações entre casos de uso. <b>include</b>: um caso <b>sempre</b> usa outro. <b>extend</b>: um caso <b>às vezes</b> acrescenta comportamento a outro.</p><div class="rl-box cu"><span class="lbl">Cuidado</span>A seta do extend aponta para o caso que é estendido. Na dúvida, prefira um fluxo alternativo a um extend.</div></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Finalizar compra --«include»--&gt; Calcular frete
+   (toda compra calcula frete)
+
+Aplicar cupom --«extend»--&gt; Finalizar compra
+   (só quando o cliente tem cupom)</pre></div></div></div></div></section><section class="slide fullslide " data-fase="3-2"><div class="kicker">Fase 3-2 · Diagrama de casos de uso</div><h2>O mapa da loja, num desenho só</h2><div class="full"><svg class="ucd" viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg"><defs><marker id="uca" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12" fill="none" stroke="#3a3a3a" stroke-width="2"/></marker></defs>
+<rect x="250" y="20" width="880" height="560" rx="18" fill="#fffdf8" stroke="#1b1c1f" stroke-width="3"/>
+<text x="275" y="58" class="sv-t" fill="#1b1c1f">Loja de Roupas (site)</text>
+<g stroke="#1b1c1f" stroke-width="4" fill="none"><circle cx="110" cy="150" r="24"/><line x1="110" y1="174" x2="110" y2="240"/><line x1="70" y1="198" x2="150" y2="198"/><line x1="110" y1="240" x2="80" y2="290"/><line x1="110" y1="240" x2="140" y2="290"/>
+<circle cx="110" cy="420" r="24"/><line x1="110" y1="444" x2="110" y2="500"/><line x1="70" y1="466" x2="150" y2="466"/><line x1="110" y1="500" x2="80" y2="550"/><line x1="110" y1="500" x2="140" y2="550"/>
+<circle cx="1290" cy="300" r="24"/><line x1="1290" y1="324" x2="1290" y2="390"/><line x1="1250" y1="348" x2="1330" y2="348"/><line x1="1290" y1="390" x2="1260" y2="440"/><line x1="1290" y1="390" x2="1320" y2="440"/></g>
+<text x="110" y="322" text-anchor="middle" class="sv-s">Cliente</text><text x="110" y="584" text-anchor="middle" class="sv-s">Dona da loja</text>
+<text x="1290" y="472" text-anchor="middle" class="sv-s">Sistema de</text><text x="1290" y="498" text-anchor="middle" class="sv-s">pagamento</text>
+<g fill="#fff" stroke-width="3"><ellipse cx="460" cy="130" rx="150" ry="42" stroke="#1f6f6b"/><ellipse cx="460" cy="240" rx="150" ry="42" stroke="#1f6f6b"/><ellipse cx="660" cy="350" rx="160" ry="46" stroke="#7a2c46"/>
+<ellipse cx="960" cy="230" rx="140" ry="42" stroke="#c79a2b"/><ellipse cx="960" cy="470" rx="140" ry="42" stroke="#c79a2b"/><ellipse cx="460" cy="490" rx="150" ry="42" stroke="#1f6f6b"/></g>
+<text x="460" y="138" text-anchor="middle" class="sv-s">Ver vitrine</text><text x="460" y="248" text-anchor="middle" class="sv-s">Adicionar ao carrinho</text>
+<text x="660" y="358" text-anchor="middle" class="sv-s" font-weight="700">Finalizar compra</text><text x="960" y="238" text-anchor="middle" class="sv-s">Calcular frete</text>
+<text x="960" y="478" text-anchor="middle" class="sv-s">Aplicar cupom</text><text x="460" y="498" text-anchor="middle" class="sv-s">Cadastrar produto</text>
+<g stroke="#3a3a3a" stroke-width="2.5"><line x1="150" y1="200" x2="312" y2="140"/><line x1="150" y1="210" x2="312" y2="240"/><line x1="150" y1="220" x2="502" y2="340"/><line x1="150" y1="470" x2="312" y2="490"/><line x1="820" y1="350" x2="1250" y2="345"/></g>
+<g stroke="#3a3a3a" stroke-width="2.5" stroke-dasharray="10 8" fill="none"><line x1="790" y1="322" x2="868" y2="262" marker-end="url(#uca)"/><line x1="865" y1="440" x2="760" y2="392" marker-end="url(#uca)"/></g>
+<text x="842" y="282" class="sv-a">«include»</text><text x="822" y="438" class="sv-a">«extend»</text></svg><ul class="notes"><li class="">Bonecos são <b>atores</b>; elipses são <b>casos de uso</b>; o retângulo é a <b>fronteira</b> do sistema.</li><li class="">A linha simples liga ator e caso de uso. A seta tracejada é include ou extend.</li></ul></div></section><section class="slide quiz" data-fase="3-2"><div class="kicker">Fase 3-2 · Include ou extend?</div><h2>Como ligar estes casos de uso?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">situações</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">a) Finalizar compra e Emitir nota fiscal
+   (toda compra finalizada emite nota)
+
+b) Finalizar compra e Embrulhar para presente
+   (só quando o cliente pede)</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) include</b>: acontece <b>sempre</b>. Finalizar compra «include» Emitir nota fiscal.</p><p><b>b) extend</b>: acontece <b>às vezes</b>. Embrulhar para presente «extend» Finalizar compra.</p></div></div></div></section><section class="slide check" data-fase="3-2"><div class="kicker">FASE 3-2 · CONCLUÍDA</div><h2>Checkpoint: UC03 completo</h2><div class="split"><div class="left"><ul class="notes"><li class="">Pelo menos 2 fluxos alternativos.</li><li class="">Pelo menos 2 exceções, cada uma dizendo onde começa e como termina.</li><li class="">O diagrama com atores, fronteira e casos de uso.</li></ul></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O UC03 tem cabeçalho, fluxo principal, alternativos, exceções e diagrama.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Copie as estruturas dos slides de alternativos e exceções e adapte os passos.</div></div></div></section><section class="slide dark mapa" data-fase="3-3"><div class="map-wrap"><div class="map" data-current="3-3"></div><div class="map-info"><div class="kicker">FASE 3-3 · REVISITA conteúdo novo</div><h2>No projeto da equipe</h2><p>O mesmo caminho, agora no domínio de vocês.</p><div class="goal"><span>Ao final da fase</span>um caso de uso do projeto e o diagrama, entregues no AVA</div></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · Mãos à obra</div><h2>Modelo do caso de uso</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">modelo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">Nome:            UCxx [verbo + objeto]
+Ator principal:  [papel]
+Ator secundário: [outro sistema ou papel, se houver]
+Objetivo:        [o que o ator quer alcançar]
+Pré-condições:   [o que precisa ser verdade antes]
+Pós-condição:    [o que fica verdade depois do sucesso]
+Origem:          [história e requisitos do DDR]
+
+Fluxo principal: 1. ... 2. ...  (um ator por passo)
+Alternativos:    A1 (passo n) ...
+Exceções:        E1 (passo n) ...  volta ao passo ... ou encerra</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Partam da <b>história Must</b> mais importante do DDR.</li><li class="f">Nome com verbo + objeto: "Agendar horário", "Emprestar livro".</li><li class="f">Pelo menos <b>2 alternativos</b> e <b>2 exceções</b>.</li><li class="f">O diagrama pode ser no papel (foto) ou no draw.io.</li></ul></div></div></section><section class="slide fullslide" data-fase="3-3"><div class="kicker">Fase 3-3 · Escrever</div><h2>Caso de uso da equipe</h2><div class="t-row"><div class="timer" data-min="25"><div class="t-dig">25:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Cabeçalho completo, com a origem no DDR.</li><li class="">Fluxo principal com um ator por passo, sem tela e sem tecnologia.</li><li class="">Dois alternativos, duas exceções e o diagrama.</li><li class="">Entrega no AVA: <code>UC_EquipeN.pdf</code>.</li></ul></div></div></section><section class="slide check" data-fase="3-3"><div class="kicker">FASE 3-3 · CONCLUÍDA</div><h2>Checkpoint final</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">entregas de hoje</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">DDR v1                          AVA (início)
+Ficha de Revisão Cruzada        AVA (fim do Mundo 2)
+Caso de uso + diagrama          AVA (fim da aula)
+
+Para casa: responder aos defeitos e fazer o DDR v2</pre></div></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>As três entregas estão no AVA.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>O caso de uso pode ser terminado em casa e enviado até o fim do dia, no mesmo envio.</div></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current="FIM"></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Mapa completo</h2><p>Do olhar afinado à revisão de verdade, e da história ao caso de uso.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Fechamento</div><h2>O que cada fase trabalhou</h2><div class="full"><table class="t"><tr><th>Fase</th><th>Conceito</th><th>Aula</th></tr><tr><td>1-1</td><td>tipos de requisito e as características da ISO 29148</td><td>Aulas 1 e 2</td></tr><tr><td>1-2</td><td>defeito com endereço e gravidade</td><td>Aula 7</td></tr><tr><td>1-3</td><td>critério de aceite verificável vira teste</td><td>Aula 5 e Coding</td></tr><tr><td>2-1 a 2-3</td><td>revisão cruzada do DDR v1, com checklist e ficha</td><td>Aula 7</td></tr><tr><td>3-1</td><td>caso de uso, ator, pré e pós-condição, fluxo principal</td><td>novo</td></tr><tr><td>3-2</td><td>alternativos, exceções, include, extend e diagrama</td><td>novo</td></tr><tr><td>3-3</td><td>caso de uso do projeto da equipe</td><td>novo</td></tr></table></div></section><section class="slide txt" data-fase=""><div class="kicker">REFERÊNCIAS</div><h2>Para estudar depois</h2><ul class="notes"><li class="">JACOBSON, I. et al. <b>Object-Oriented Software Engineering: A Use Case Driven Approach</b>. Addison-Wesley, 1992.</li><li class="">COCKBURN, A. <b>Writing Effective Use Cases</b>. Addison-Wesley, 2001.</li><li class="">OMG. <b>Unified Modeling Language (UML)</b>, versão 2.5.1, 2017: diagramas de casos de uso.</li><li class="">ISO/IEC/IEEE 29148:2018. <b>Requirements engineering</b>: características de um bom requisito.</li><li class="">WIEGERS, K. <b>Peer Reviews in Software</b>. Addison-Wesley, 2002.</li></ul></section></div>
+<div id="overlay"><span class="close">M ou Esc para fechar</span><div class="map"></div></div>
+<div id="prog"></div>
+<div id="ui"><button id="bMap">Mapa (M)</button><button id="bPrev">‹</button><span id="pg"></span><button id="bNext">›</button><button id="bFs">Tela cheia (F)</button></div>
+<script>window.MAPA = {"zonas": ["MUNDO 1 · AQUECIMENTO", "MUNDO 2 · REVISÃO CRUZADA", "MUNDO 3 · CASOS DE USO"], "fases": [["Bom requisito", "Aulas 1 e 2"], ["Defeito com endereço", "Aula 7"], ["Critério e teste", "Aula 5 e Coding"], ["Trocar e ler", "Aula 7"], ["Checklist", "Aula 7"], ["Ficha e devolução", "Aula 7"], ["Ator e fluxo", "novo"], ["Exceções e diagrama", "novo"], ["No projeto", "novo"]]};</script>
+<script>
+const FASES=[
+ {id:'1-1',nome:'Repositório',aula:'Roteiro 1',x:190,y:445,w:1},{id:'1-2',nome:'Vitrine',aula:'Aula 3',x:310,y:340,w:1},
+ {id:'1-3',nome:'Testes',aula:'Aula 4',x:450,y:410,w:1,boss:1},{id:'2-1',nome:'Produto',aula:'Aula 6',x:590,y:300,w:2},
+ {id:'2-2',nome:'Carrinho',aula:'Aulas 6 e 7',x:690,y:180,w:2},{id:'2-3',nome:'Herança',aula:'Aula 7',x:830,y:250,w:2,boss:1},
+ {id:'3-1',nome:'Promoções',aula:'Aula 7',x:950,y:360,w:3},{id:'3-2',nome:'Contrato',aula:'Aula 8',x:1080,y:270,w:3},
+ {id:'3-3',nome:'GitHub Actions',aula:'novo',x:1140,y:160,w:3,boss:1}];
+if(window.MAPA){window.MAPA.fases.forEach((f,i)=>{FASES[i].nome=f[0];FASES[i].aula=f[1]})}
+const ZONAS=(window.MAPA&&window.MAPA.zonas)||['MUNDO 1 · FUNDAMENTOS','MUNDO 2 · OBJETOS','MUNDO 3 · QUALIDADE'];
+const START={x:70,y:470};
+function catmull(pts){let d=`M${pts[0].x},${pts[0].y}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6,c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2.x},${p2.y}`}return d}
+function mapSVG(cur){
+ const idx=cur==='FIM'?FASES.length:FASES.findIndex(f=>f.id===cur);
+ const zones=[[30,60,500,ZONAS[0]],[520,60,330,ZONAS[1]],[870,40,310,ZONAS[2]]];
+ let g='';zones.forEach(z=>{g+=`<rect class="m-zone" x="${z[0]}" y="${z[1]}" width="${z[2]}" height="${520-z[1]}" rx="28"/><text class="m-zlab" x="${z[0]+24}" y="${z[1]+38}">${z[3]}</text>`});
+ const pts=[START,...FASES];g+=`<path class="m-path" d="${catmull(pts)}"/>`;
+ if(idx>0){const dpts=pts.slice(0,Math.min(idx,FASES.length)+1);g+=`<path class="m-done" d="${catmull(dpts)}"/>`}
+ g+=`<circle cx="${START.x}" cy="${START.y}" r="14" fill="#5cc2b8"/><text class="m-aula" x="${START.x-30}" y="${START.y+44}">início</text>`;
+ FASES.forEach((f,i)=>{const st=idx<0?'todo':i<idx?'done':i===idx?'cur':'todo';
+  let shape=f.boss?`<rect x="${f.x-30}" y="${f.y-30}" width="60" height="60" rx="10" transform="rotate(45 ${f.x} ${f.y})"/>`:`<circle cx="${f.x}" cy="${f.y}" r="30"/>`;
+  let ring=st==='cur'?`<circle class="ring" cx="${f.x}" cy="${f.y}" r="34"/>`:'';
+  let lab=st==='done'?'✓':f.id;
+  const ly=f.y+(f.y>400?-0:0);
+  g+=`<g class="m-node ${st}">${ring}${shape}<text class="m-code" x="${f.x}" y="${f.y+8}" text-anchor="middle">${lab}</text>
+   <text class="m-name" x="${f.x}" y="${f.y+66}" text-anchor="middle">${f.nome}</text><text class="m-aula" x="${f.x}" y="${f.y+90}" text-anchor="middle">${f.aula}</text></g>`});
+ const L=FASES[FASES.length-1];g+=`<line x1="${L.x+44}" y1="${L.y-10}" x2="${L.x+44}" y2="${L.y-80}" stroke="#ddd" stroke-width="4"/><path class="m-flag" d="M${L.x+46},${L.y-80} l46,14 l-46,14 z"/>`;
+ return `<svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid meet">${g}</svg>`}
+// ---------- realce de sintaxe
+const KW=new Set('False None True and as assert break class continue def elif else except finally for from global if import in is lambda not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print len sum max min list dict tuple set range isinstance super round str int float self'.split(' '));
+function hiPy(line){
+ let out='',i=0;const m=(re)=>{re.lastIndex=i;const r=re.exec(line);return r&&r.index===i?r[0]:null};
+ const reStr=/[fF]?("{3}[^]*?"{3}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/y,reCom=/#.*/y,reNum=/\d+(\.\d+)?/y,reId=/[A-Za-z_]\w*/y,reDec=/@\w+/y;
+ let prev='';
+ while(i<line.length){let t;
+  if((t=m(reCom))){out+=`<span class="c">${t}</span>`;i+=t.length;continue}
+  if((t=m(reStr))){out+=`<span class="s">${t}</span>`;i+=t.length;continue}
+  if((t=m(reDec))){out+=`<span class="d">${t}</span>`;i+=t.length;continue}
+  if((t=m(reNum))&&!/\w/.test(line[i-1]||'')){out+=`<span class="n">${t}</span>`;i+=t.length;continue}
+  if((t=m(reId))){let cls=KW.has(t)?'k':BI.has(t)?'bi':(prev==='def'||prev==='class')?'fn':'';out+=cls?`<span class="${cls}">${t}</span>`:t;prev=t;i+=t.length;continue}
+  if(line[i]!==' ')prev='';out+=line[i];i++}
+ return out}
+function tok(line,rules){let out='',i=0;while(i<line.length){let hit=false;for(const [re,cls] of rules){re.lastIndex=i;const r=re.exec(line);if(r&&r.index===i&&r[0].length){out+=cls?`<span class="${cls}">${r[0]}</span>`:r[0];i+=r[0].length;hit=true;break}}if(!hit){out+=line[i];i++}}return out}
+function hiSh(line){const m=/^(\s*)([^\s#]+)/.exec(line);if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const head=m?`${m[1]}<span class="fn">${m[2]}</span>`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/\s#.*/y,'c'],[/"[^"]*"/y,'s'],[/'[^']*'/y,'s'],[/(?<=\s)--?[\w-]+/y,'fl']])}
+function hiYml(line){if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const m=/^(\s*(?:-\s+)?)([\w-]+)(:)/.exec(line);const head=m?`${m[1]}<span class="k">${m[2]}</span>${m[3]}`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/"[^"]*"/y,'s'],[/\s#.*/y,'c']])}
+function hiMd(line){return line.replace(/^(#+.*)$/,'<span class="k">$1</span>').replace(/(`[^`]*`)/g,'<span class="s">$1</span>')}
+function parseHL(s){const set=new Set();(s||'').split(',').filter(Boolean).forEach(p=>{const [a,b]=p.split('-').map(Number);for(let k=a;k<=(b||a);k++)set.add(k)});return set}
+document.querySelectorAll('.code pre').forEach(pre=>{
+ const lang=pre.dataset.lang,hl=parseHL(pre.dataset.hl),raw=pre.textContent;pre.dataset.raw=raw;
+ const f=lang==='python'?hiPy:lang==='bash'?hiSh:lang==='yaml'?hiYml:lang==='md'?hiMd:(x=>x);
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ pre.innerHTML=raw.split('\n').map((l,i)=>`<span class="ln${hl.has(i+1)?' hl':''}">${f(esc(l))||' '}</span>`).join('')});
+// python: o realce trabalha sobre texto escapado; strings com aspas continuam válidas
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const box=b.closest('.code,.term');let txt;
+ if(box.classList.contains('term')){txt=[...box.querySelectorAll('.cmd')].map(x=>x.textContent.replace(/^\$ /,'')).join('\n')}else{txt=box.querySelector('pre').dataset.raw}
+ navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copiado';b.classList.add('done');setTimeout(()=>{b.textContent='Copiar';b.classList.remove('done')},1400)})}));
+// ---------- encaixe do código na altura disponível
+function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);pres.forEach(p=>p.style.fontSize='');
+ const over=p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2;
+ let guard=0;while(guard<40){const slideOver=slide.scrollHeight>slide.clientHeight+2;const bad=pres.filter(p=>over(p)||slideOver);if(!bad.length)break;
+  let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>14){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
+  while(slide.scrollHeight>slide.clientHeight+2&&z>0.66){z-=0.04;box.style.zoom=z}}}
+// ---------- navegação
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+const deck=document.getElementById('deck');
+function scale(){const s=Math.min(innerWidth/1600,innerHeight/900);deck.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',()=>{scale();fitCode(slides[cur])});scale();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>fitCode(slides[cur]));
+document.querySelectorAll('.map').forEach(m=>{m.innerHTML=mapSVG(m.dataset.current||'')});
+function frags(s){return [...s.querySelectorAll('.f')]}
+function show(i,fromHash){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+ document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;document.getElementById('prog').style.width=`${(cur+1)/slides.length*100}%`;
+ if(!fromHash)history.replaceState(null,'','#'+(cur+1));requestAnimationFrame(()=>fitCode(slides[cur]))}
+function next(){const fs=frags(slides[cur]).filter(f=>!f.classList.contains('vis'));if(fs.length){fs[0].classList.add('vis');return}show(cur+1)}
+function prev(){const fs=frags(slides[cur]).filter(f=>f.classList.contains('vis'));if(fs.length){fs[fs.length-1].classList.remove('vis');return}show(cur-1)}
+function faseAtual(){for(let k=cur;k>=0;k--){if(slides[k].dataset.fase)return slides[k].dataset.fase}return ''}
+function toggleMap(){const o=document.getElementById('overlay');if(o.classList.contains('on')){o.classList.remove('on');return}
+ o.querySelector('.map').innerHTML=mapSVG(faseAtual());o.classList.add('on')}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='m'||e.key==='M')toggleMap();
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.getElementById('overlay').classList.remove('on')});
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.getElementById('bMap').onclick=toggleMap;document.getElementById('bFs').onclick=fs;
+document.getElementById('bPrev').onclick=prev;document.getElementById('bNext').onclick=next;
+document.getElementById('overlay').onclick=toggleMap;
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('.f').forEach(f=>f.classList.add('vis'))});
+document.querySelectorAll('.lab').forEach(lab=>{const bs=[...lab.querySelectorAll('.lab-steps button')],ps=[...lab.querySelectorAll('.lab-panel')];
+ bs.forEach((b,k)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));ps.forEach(x=>x.classList.remove('on'));b.classList.add('on');ps[k].classList.add('on');fitCode(lab.closest('.slide'))})});
+document.querySelectorAll('.timer').forEach(t=>{let total=+t.dataset.min*60,rest=total,id=null;const d=t.querySelector('.t-dig'),bar=t.querySelector('.t-bar i');
+ const draw=()=>{const m=Math.floor(rest/60),s=rest%60;d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');bar.style.width=(100*(total-rest)/total)+'%';t.classList.toggle('fim',rest===0)};
+ t.querySelector('.t-go').onclick=()=>{if(id){clearInterval(id);id=null;return}id=setInterval(()=>{if(rest>0){rest--;draw()}else{clearInterval(id);id=null}},1000)};
+ t.querySelector('.t-reset').onclick=()=>{clearInterval(id);id=null;rest=total;draw()};draw()});
+const h=parseInt(location.hash.slice(1));show(isNaN(h)?0:h-1,true);
+</script></body></html>
