@@ -1,5 +1,5 @@
 {
-  "atualizado": "8 de outubro de 2026",
+  "atualizado": "12 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -7,14 +7,14 @@
       "periodo": "2026.2",
       "dia": "Terças-feiras",
       "instituicao": "Faculdade SENAC Pernambuco, ADS",
-      "resumo": "Como as linguagens de programação funcionam por dentro e como se constrói software com orientação a objetos. Ao longo de 16 encontros, cada equipe leva um produto do núcleo em objetos até uma aplicação full-stack publicada.",
+      "resumo": "Como as linguagens de programação funcionam por dentro e como se constrói software com orientação a objetos. Ao longo de 17 encontros, cada equipe leva um produto do núcleo em objetos até uma aplicação full-stack publicada.",
       "materiais": [
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "As 16 aulas, com tema, prática e entregável de cada uma.",
+          "descricao": "As 17 aulas, com tema, prática e entregável de cada uma, já no calendário avaliativo: projeto final em 17/11 e AV2 em 24/11.",
           "arquivo": "assets/materiais/coding/cronograma-coding-2026-2.pdf",
-          "data": "25/08/2026",
+          "data": "12/10/2026",
           "tags": "calendario planejamento avaliacao"
         },
         {
@@ -166,11 +166,23 @@
           "tags": "slides interativo html navegador revisao nivelamento loja roupas mapa fases pytest git github poo"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 9: A loja abre as portas, HTTP, REST e a primeira API",
+          "descricao": "Conteúdo novo, do zero: cliente e servidor, a mensagem HTTP, métodos, códigos de status, JSON e REST. Depois a Loja de Roupas vira uma API com FastAPI, recebe dados validados com Pydantic e é testada com TestClient. Com fluxogramas, passo a passo e referências.",
+          "arquivo": "assets/materiais/coding/aula-09-loja-abre-as-portas.html",
+          "data": "13/10/2026",
+          "tags": "slides interativo http rest api cliente servidor url metodo get post delete idempotencia status 200 404 422 json fastapi uvicorn docs openapi pydantic testclient pytest loja roupas",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
           "tipo": "Projeto",
           "titulo": "Repositório da Loja de Roupas, fase por fase",
-          "descricao": "O projeto da aula pronto no GitHub, com uma tag por fase (etapa-01 a etapa-09). Travou numa fase? Baixe o .zip dela na aba Tags.",
+          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8) e etapa-10 a etapa-12 (Aula 9, a API). Travou numa fase? Baixe o .zip dela na aba Tags.",
           "arquivo": "https://github.com/sebastrogers/loja-roupas-gabarito",
-          "data": "06/10/2026",
+          "data": "13/10/2026",
           "tags": "github repositorio codigo fonte gabarito tags etapa checkpoint pytest github actions loja"
         }
       ]
@@ -186,9 +198,9 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "Os 16 encontros, com tema, laboratório e datas das provas.",
+          "descricao": "Os 17 encontros, com tema, laboratório e entregáveis, já no calendário avaliativo: entrega final em 19/11 e AV2 em 26/11.",
           "arquivo": "assets/materiais/cloud/cronograma-cloud-2026-2.pdf",
-          "data": "27/08/2026",
+          "data": "12/10/2026",
           "tags": "calendario planejamento avaliacao"
         },
         {
@@ -316,9 +328,9 @@
         {
           "tipo": "Cronograma",
           "titulo": "Cronograma do semestre 2026.2",
-          "descricao": "Os 16 encontros, com tema, laboratório e datas das provas.",
+          "descricao": "Os 17 encontros, com tema, laboratório e entregáveis, já no calendário avaliativo: entrega final em 19/11 e AV2 em 26/11.",
           "arquivo": "assets/materiais/requisitos/cronograma-requisitos-2026-2.pdf",
-          "data": "27/08/2026",
+          "data": "12/10/2026",
           "tags": "calendario planejamento avaliacao ddr"
         },
         {
