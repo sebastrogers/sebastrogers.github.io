@@ -1,5 +1,5 @@
 {
-  "atualizado": "12 de outubro de 2026",
+  "atualizado": "13 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -176,6 +176,14 @@
             "rotulo": "Repositório no GitHub",
             "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
           }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: A loja abre as portas (PDF)",
+          "descricao": "Os mesmos slides da Aula 9 em PDF, para ler, imprimir ou baixar.",
+          "arquivo": "assets/materiais/coding/aula-09-loja-abre-as-portas.pdf",
+          "data": "13/10/2026",
+          "tags": "slides pdf http rest api fastapi pydantic testclient loja roupas"
         },
         {
           "tipo": "Projeto",
