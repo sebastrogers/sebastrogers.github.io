@@ -1,5 +1,5 @@
 {
-  "atualizado": "13 de outubro de 2026",
+  "atualizado": "15 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -508,6 +508,14 @@
           "arquivo": "assets/materiais/requisitos/aula-09-req-caso-de-uso-ao-modelo.html",
           "data": "15/10/2026",
           "tags": "slides interativo uml diagrama de classes modelo de dominio atributo associacao multiplicidade generalizacao diagrama de atividades acao decisao guarda bifurcacao raia caso de uso drawio ddr"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Ateliê de Modelagem: Clínica PetVida",
+          "descricao": "Atividade em equipe: do caso de uso de uma clínica de banho e tosa ao modelo de domínio e ao diagrama de atividades, em seis estações, com a Dona Rita como cliente.",
+          "arquivo": "assets/materiais/requisitos/jogo-atelie-modelagem-petvida.html",
+          "data": "15/10/2026",
+          "tags": "jogo equipe interativo uml modelo de dominio classe atributo associacao multiplicidade generalizacao diagrama de atividades raias decisao guarda bifurcacao petvida"
         }
       ]
     }

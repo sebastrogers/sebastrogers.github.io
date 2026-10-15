@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ateliê de Modelagem · Clínica PetVida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3eee3;--paper:#fffdf8;--ink:#1b1c1f;--muted:#6b675d;--teal:#1f6f6b;--teal2:#e3efed;--wine:#7a2c46;--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--line:#d9d2c2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Inter,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#16171a;color:#eeeae0;display:flex;align-items:center;gap:18px;padding:10px 22px;flex-wrap:wrap}
+header .t{font:700 19px Fraunces,Georgia,serif}
+header .sp{flex:1}
+header .pill{font:600 13px JetBrains Mono,monospace;background:#2a2b30;border-radius:20px;padding:5px 12px}
+header button{background:#2a2b30;color:#eeeae0;border:0;border-radius:20px;padding:6px 12px;font:600 13px Inter;cursor:pointer}
+.trilha{display:flex;gap:6px;padding:10px 22px;background:#202126;overflow-x:auto}
+.trilha span{font:600 12px JetBrains Mono,monospace;color:#8d897d;padding:4px 10px;border-radius:14px;border:1px solid #3a3b40;white-space:nowrap}
+.trilha span.ok{color:#9fd8b5;border-color:#2f8a55}
+.trilha span.at{color:#16171a;background:var(--gold);border-color:var(--gold)}
+main{max-width:1180px;margin:0 auto;padding:26px 22px 80px}
+h1{font:700 34px/1.15 Fraunces,Georgia,serif;margin:4px 0 10px}
+h2{font:700 26px/1.2 Fraunces,Georgia,serif;margin:0 0 8px}
+.kick{font:700 13px JetBrains Mono,monospace;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0}
+.fala{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.fala .av{flex:0 0 52px;height:52px;border-radius:50%;background:var(--wine);color:#fff;display:grid;place-items:center;font:700 20px Fraunces,serif}
+.fala b.n{display:block;font:700 14px Inter;color:var(--wine)}
+.uc{font:500 16px/1.6 JetBrains Mono,monospace;background:#16171a;color:#eeeae0;border-radius:12px;padding:18px 20px;white-space:pre-wrap}
+.uc .hl{background:#c79a2b33;border-radius:4px;padding:0 2px}
+.btn{display:inline-block;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 20px;font:700 16px Inter;cursor:pointer;margin:6px 8px 6px 0}
+.btn.sec{background:#e7e1d3;color:var(--ink)}
+.btn.dica{background:#fff3d6;color:#7a5a12;border:1px solid #e8cf8a}
+.btn:disabled{opacity:.45;cursor:default}
+.rodape{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.mouse{display:inline-flex;align-items:center;gap:8px;background:var(--teal2);color:var(--teal);border-radius:20px;padding:6px 14px;font:600 14px Inter}
+input,select{font:16px Inter;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+select{padding:7px 8px;font-size:15px}
+.membros{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;max-width:720px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:#fff;border:2px solid var(--line);border-radius:22px;padding:8px 14px;font:600 15px Inter;cursor:pointer;user-select:none}
+.chip.sel{border-color:var(--gold);background:#fff6df}
+.chip.ok{border-color:var(--green);background:#eef8f1}
+.chip.no{border-color:var(--red);background:#fbefeb}
+.chip small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.baldes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.balde{background:var(--paper);border:2px dashed var(--line);border-radius:14px;padding:12px;min-height:120px;cursor:pointer}
+.balde.alvo{border-color:var(--gold);background:#fffaf0}
+.balde h3{margin:0 0 6px;font:700 15px Inter;color:var(--teal)}
+.balde p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.fb{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:15px}
+.fb.ok{background:#eef8f1;border:1px solid #a9d4b7}
+.fb.no{background:#fbefeb;border:1px solid #e9b8ae}
+.fb.info{background:var(--teal2);border:1px solid #b9d6d2}
+.lista-exp{margin:8px 0 0;padding-left:18px;font-size:14px}
+.lista-exp li{margin:3px 0}
+.diag{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:12px 0}
+.diag svg{width:100%;height:auto;display:block}
+svg text{font-family:Inter,system-ui,sans-serif}
+.assoc{display:grid;grid-template-columns:110px 92px 1fr 92px 120px;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:600}
+.assoc.ok{border-color:#a9d4b7;background:#f3faf5}.assoc.no{border-color:#e9b8ae;background:#fdf4f1}
+.assoc .r{text-align:right}
+.mcq{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.mcq .en{font-weight:600;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin:6px 0;font:15px Inter;cursor:pointer}
+.opt.sel{border-color:var(--gold);background:#fff6df}
+.opt.ok{border-color:var(--green);background:#eef8f1}
+.opt.no{border-color:var(--red);background:#fbefeb}
+.cards5{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.c5{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.c5 .tx{font-weight:600;margin-bottom:8px}
+.c5 .bt{display:flex;gap:6px;flex-wrap:wrap}
+.c5 .bt button{flex:1;border:2px solid var(--line);background:#fff;border-radius:8px;padding:6px;font:600 13px Inter;cursor:pointer}
+.c5 .bt button.sel{border-color:var(--teal);background:var(--teal2);color:var(--teal)}
+.c5.ok{border-color:#a9d4b7;background:#f3faf5}.c5.no{border-color:#e9b8ae;background:#fdf4f1}
+.ordem{display:flex;flex-wrap:wrap;gap:8px}
+.ordem .chip .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;margin-right:6px}
+.hot{cursor:pointer}
+.hot rect.hb{fill:transparent;stroke:transparent;stroke-width:3;rx:6}
+.hot:hover rect.hb{stroke:#c79a2b88}
+.hot.marc rect.hb{fill:#c79a2b22;stroke:var(--gold)}
+.hot.ok rect.hb{fill:#2f8a5522;stroke:var(--green)}
+.hot.no rect.hb{fill:#c2412d22;stroke:var(--red)}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.placar div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.placar b{display:block;font:700 26px Fraunces,serif;color:var(--teal)}
+.grande{font:700 64px Fraunces,serif;color:var(--teal);line-height:1}
+.status{font-weight:600;color:var(--teal)}
+.dicabox{background:#fff8e6;border:1px solid #e8cf8a;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:15px}
+@media (max-width:760px){.assoc{grid-template-columns:1fr 1fr;}.membros{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+  <span class="t">Ateliê de Modelagem</span>
+  <span class="pill" id="hEquipe">Clínica PetVida</span>
+  <span class="sp"></span>
+  <span class="pill" id="hPontos">0 pontos</span>
+  <span class="pill" id="hTempo">00:00</span>
+  <button id="bSom">som: ligado</button>
+  <button id="bRe">recomeçar</button>
+</header>
+<nav class="trilha" id="trilha"></nav>
+<main id="app"></main>
+
+<script>
+'use strict';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const CHAVE = 'atelie-petvida-v1';
+const ESTACOES = ['Equipe', '1 · Briefing', '2 · Marca-texto', '3 · Prancheta', '4 · Pergunta ao cliente', '5 · Fluxo nas raias', '6 · Caça ao defeito', 'Resultado'];
+
+/* ------------------------------------------------------------ estado */
+let S = carregar() || novo();
+function novo(){ return {est:0, equipe:'', membros:[], pts:{}, max:{}, dicas:{}, inicio:null, fim:null, enviado:false, som:true, r:{}}; }
+function carregar(){ try{ return JSON.parse(localStorage.getItem(CHAVE)); }catch(e){ return null; } }
+function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){} }
+const $ = (s, el=document) => el.querySelector(s);
+function h(tag, attrs={}, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (k==='class') e.className=v; else if (k==='html') e.innerHTML=v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()){ if (k==null) continue; e.append(k.nodeType ? k : document.createTextNode(k)); }
+  return e;
+}
+function md(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>'); }
+function embaralhar(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function total(){ let p=0; for(const k in S.pts) p+=S.pts[k]; for(const k in S.dicas) p-=S.dicas[k]; return Math.max(0,p); }
+function totalMax(){ let m=0; for(const k in S.max) m+=S.max[k]; return m; }
+
+/* ------------------------------------------------------------ som */
+let AC=null;
+function bip(ok){
+  if(!S.som) return;
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const notas = ok ? [523,659,784] : [330,262];
+    notas.forEach((f,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type= ok?'triangle':'square'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,AC.currentTime+i*0.09); g.gain.exponentialRampToValueAtTime(0.06,AC.currentTime+i*0.09+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+i*0.09+0.16); o.connect(g).connect(AC.destination); o.start(AC.currentTime+i*0.09); o.stop(AC.currentTime+i*0.09+0.2); });
+  }catch(e){}
+}
+
+/* ------------------------------------------------------------ cabeçalho */
+function cab(){
+  $('#hEquipe').textContent = S.equipe ? 'Equipe ' + S.equipe : 'Clínica PetVida';
+  $('#hPontos').textContent = total() + ' pontos';
+  $('#bSom').textContent = 'som: ' + (S.som ? 'ligado' : 'desligado');
+  const tr = $('#trilha'); tr.innerHTML='';
+  ESTACOES.forEach((n,i)=> tr.append(h('span',{class: i<S.est ? 'ok' : i===S.est ? 'at' : ''}, n)));
+}
+setInterval(()=>{ if(!S.inicio) return; const s=Math.floor(((S.fim||Date.now())-S.inicio)/1000);
+  $('#hTempo').textContent = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }, 1000);
+$('#bSom').onclick = ()=>{ S.som=!S.som; salvar(); cab(); };
+$('#bRe').onclick = ()=>{ if(window.confirm ? true : true){ const som=S.som; S=novo(); S.som=som; salvar(); ir(0); } };
+
+function comMouse(){
+  if(!S.membros.length) return null;
+  const n = S.membros[(S.est-1+S.membros.length)%S.membros.length].nome.split(' ')[0];
+  return h('span',{class:'mouse'}, 'Com o mouse agora: ' + n);
+}
+function fala(texto, quem='Dona Rita', sigla='R'){
+  return h('div',{class:'fala'}, h('div',{class:'av'}, sigla), h('div',{}, h('b',{class:'n'}, quem), h('div',{html: md(texto)})));
+}
+function dicaBtn(id, texto, area){
+  const b = h('button',{class:'btn dica'}, S.dicas[id] ? 'Dica usada (−1)' : 'Pedir dica (custa 1 ponto)');
+  if (S.dicas[id]) { b.disabled = true; area.append(h('div',{class:'dicabox', html: md(texto)})); }
+  b.onclick = ()=>{ S.dicas[id]=1; salvar(); b.disabled=true; b.textContent='Dica usada (−1)'; area.append(h('div',{class:'dicabox', html: md(texto)})); cab(); };
+  return b;
+}
+function ir(n){ S.est=n; salvar(); cab(); const app=$('#app'); app.innerHTML=''; TELAS[n](app); window.scrollTo(0,0); }
+
+/* ------------------------------------------------------------ conteúdo */
+const UC = `UC05 · Agendar banho e tosa
+Ator principal: Tutor · Ator secundário: Sistema de pagamento
+
+1. O tutor escolhe o pet que vai receber o serviço.
+2. O sistema mostra os serviços e o preço de cada um.
+3. O tutor escolhe o serviço, a data e o horário.
+4. O sistema verifica se há tosador livre no horário.
+5. O tutor paga o sinal pelo aplicativo.
+6. O sistema de pagamento autoriza o sinal.
+7. O sistema confirma o agendamento.
+8. Na véspera, o sistema envia um lembrete pelo WhatsApp.
+
+E1 · Sem tosador livre: o sistema mostra os três horários livres mais próximos.
+E2 · Sinal recusado: o tutor escolhe outra forma de pagamento ou desiste.`;
+
+const PALAVRAS = [
+  {p:'tutor', c:'Classe', e:'Tem dados próprios (nome, telefone) e se liga aos pets.'},
+  {p:'pet', c:'Classe', e:'Conceito central: tem espécie, porte, data de nascimento.'},
+  {p:'animal', c:'Sinônimo', e:'É o mesmo que pet. Dois nomes, uma classe só.'},
+  {p:'serviço', c:'Classe', e:'Banho, tosa: cada um tem tipo e preço.'},
+  {p:'agendamento', c:'Classe', e:'Liga pet, serviço, tosador e horário. Tem situação própria.'},
+  {p:'tosador', c:'Classe', e:'Tem nome e especialidade, e atende agendamentos.'},
+  {p:'pagamento', c:'Classe', e:'Tem valor e data de aprovação; pode ser recusado (E2).'},
+  {p:'sinal', c:'Sinônimo', e:'Na fala da Dona Rita, "sinal" é o pagamento do agendamento.'},
+  {p:'preço', c:'Atributo', e:'Valor simples do Serviço.'},
+  {p:'data e horário', c:'Atributo', e:'Valor simples do Agendamento.'},
+  {p:'porte', c:'Atributo', e:'Valor simples do Pet (pequeno, médio, grande).'},
+  {p:'especialidade', c:'Atributo', e:'Valor simples do Tosador.'},
+  {p:'aplicativo', c:'Fora do modelo', e:'É a tecnologia, não um conceito do negócio.'},
+  {p:'WhatsApp', c:'Fora do modelo', e:'É o canal de envio, não algo que a clínica precisa conhecer.'},
+  {p:'sistema', c:'Fora do modelo', e:'O sistema é quem modela, não uma classe do domínio.'},
+  {p:'lembrete', c:'Fora do modelo', e:'É uma ação do sistema (verbo "envia"): vai para o diagrama de atividades.'},
+];
+const BALDES = [
+  ['Classe','um conceito do negócio, com dados próprios'],
+  ['Atributo','um dado simples de alguma classe'],
+  ['Sinônimo','outro nome para uma classe que já existe'],
+  ['Fora do modelo','tecnologia, canal ou ação, não conceito'],
+];
+
+const CLASSES = ['Tutor','Pet','Agendamento','Serviço','Tosador','Pagamento'];
+const ATRIBUTOS = [
+  {a:'telefone', c:'Tutor'}, {a:'espécie', c:'Pet'}, {a:'porte', c:'Pet'}, {a:'data de nascimento', c:'Pet'},
+  {a:'data e hora', c:'Agendamento'}, {a:'situação', c:'Agendamento'}, {a:'tipo', c:'Serviço'}, {a:'preço', c:'Serviço'},
+  {a:'especialidade', c:'Tosador'}, {a:'valor', c:'Pagamento'}, {a:'aprovado em', c:'Pagamento'},
+];
+const VERBOS = ['possui','recebe','é de um','é atendido por','é pago com'];
+const MULTS = ['1','0..1','0..*','1..*'];
+const ASSOCS = [
+  {id:'tp', a:'Tutor', b:'Pet', verbo:'possui', ma:['1'], mb:['1..*','0..*'],
+   e:'Um tutor possui um ou mais pets; cada pet é de **um** tutor. Lado do Pet: 1..* (ou 0..*, se o tutor pode se cadastrar sem pet).'},
+  {id:'pa', a:'Pet', b:'Agendamento', verbo:'recebe', ma:['1'], mb:['0..*'],
+   e:'Um pet recebe zero ou mais agendamentos ao longo da vida; cada agendamento é de **um** pet.'},
+  {id:'as', a:'Agendamento', b:'Serviço', verbo:'é de um', ma:['0..*'], mb:['1'],
+   e:'Cada agendamento é de **um** serviço (passo 3); um serviço aparece em zero ou mais agendamentos.'},
+  {id:'at', a:'Agendamento', b:'Tosador', verbo:'é atendido por', ma:['0..*'], mb:['1'],
+   e:'Cada agendamento é atendido por **um** tosador (passo 4); um tosador atende zero ou mais.'},
+  {id:'ap', a:'Agendamento', b:'Pagamento', verbo:'é pago com', ma:['1'], mb:['0..1','1'],
+   e:'Um agendamento tem no máximo um sinal (0..1, ou 1 se nunca existe agendamento sem sinal). Cada pagamento é de **um** agendamento.'},
+];
+const GENER = [
+  {id:'g1', fala:'Cão e gato, para nós, só mudam o preço pelo porte. O atendimento é igualzinho.',
+   en:'Como modelar cão e gato?', ops:['Atributo espécie em Pet, sem subclasses','Subclasses Cão e Gato herdando de Pet','Uma classe Espécie ligada a cada Serviço','Classes Cão e Gato soltas, sem a classe Pet'], c:0,
+   e:'Não há dado nem regra própria de cão ou de gato: é só um valor. Subclasse aqui seria peso sem ganho. Cor da roupa não vira subclasse; espécie, neste caso, também não.'},
+  {id:'g2', fala:'No Pix eu guardo o código da transação. No cartão, a bandeira e o número de parcelas.',
+   en:'Como modelar Pix e cartão?', ops:['Subclasses Pix e Cartão herdando de Pagamento','Atributo forma em Pagamento, sem subclasses','Pix e Cartão como atributos de Agendamento','Uma associação ligando Pix e Cartão a Agendamento'], c:0,
+   e:'Cada forma tem **dados próprios** (código, bandeira, parcelas) e todas **são um** pagamento. Aqui a generalização paga o custo.'},
+];
+
+const PERGUNTAS = [
+  {ctx:'No desenho, cada pet está ligado a exatamente **um** tutor (o "1" perto de Tutor).',
+   en:'Que pergunta confirma essa multiplicidade com a Dona Rita?',
+   ops:['Um mesmo pet pode ser de dois tutores, como um casal?','Os tutores preferem agendar pelo celular ou pelo site?','Quantos pets a clínica atende em um sábado comum?','O cadastro do tutor precisa pedir o CPF da pessoa?'], c:0,
+   e:'Só a primeira muda o desenho: se a resposta for "sim", o lado do Tutor vira 1..*. As outras tratam de tela, volume ou cadastro, não da ligação.'},
+  {ctx:'A equipe ficou entre **0..1** e **1** no lado do Pagamento.',
+   en:'O que perguntar para decidir?',
+   ops:['Existe agendamento confirmado sem pagar o sinal?','O sinal pode ser pago com cartão de débito?','Qual é o valor do sinal para cães de porte grande?','O comprovante do sinal vai por e-mail ou WhatsApp?'], c:0,
+   e:'Se pode existir agendamento sem sinal, o lado do Pagamento é 0..1; se nunca, é 1. As outras respostas não mexem em nenhuma linha do diagrama.'},
+  {ctx:'O desenho diz que cada agendamento é de **um** serviço.',
+   en:'Qual pergunta pode mudar esse "1"?',
+   ops:['Dá para marcar banho e hidratação no mesmo horário?','O preço do banho muda conforme o porte do pet?','A clínica abre aos domingos para banho e tosa?','O tosador pode usar a máquina de tosa nos gatos bravos?'], c:0,
+   e:'Se der para juntar dois serviços num horário, o lado do Serviço vira 1..*. Preço por porte é atributo; domingo e máquina são regras de operação, não de ligação.'},
+];
+
+const ACOES = [
+  {t:'Escolhe o pet', r:'Tutor'},
+  {t:'Mostra serviços e preços', r:'Sistema'},
+  {t:'Escolhe serviço, data e horário', r:'Tutor'},
+  {t:'Verifica tosador livre', r:'Sistema'},
+  {t:'Paga o sinal', r:'Tutor'},
+  {t:'Autoriza o sinal', r:'Pagamento'},
+  {t:'Confirma o agendamento', r:'Sistema'},
+  {t:'Envia lembrete na véspera', r:'Sistema'},
+];
+const RAIAS = ['Tutor','Sistema','Pagamento'];
+const MCQ5 = [
+  {id:'guarda', en:'Depois de "Verifica tosador livre" vem um losango. Quais guardas colocar nas duas saídas?',
+   ops:['[tosador livre] e [nenhum tosador livre]','[tosador livre] e [o tutor insiste]','[antes das 12h] e [depois das 10h]','[tosador livre] e [sinal do pagamento recusado]'], c:0,
+   e:'As guardas precisam cobrir todos os casos **sem se sobrepor**. "Antes das 12h" e "depois das 10h" se sobrepõem; "o tutor insiste" deixa casos de fora; "sinal recusado" é outra decisão, a do E2.'},
+  {id:'paralelo', en:'Depois que o sinal é autorizado, o sistema bloqueia o horário do tosador e envia o comprovante ao tutor, sem depender um do outro. Como desenhar?',
+   ops:['Bifurcação: as duas ações em paralelo, com união','Decisão com duas guardas, uma para cada ação','Duas raias novas no desenho, uma para cada uma das ações','Uma ação só, juntando os dois verbos numa caixa'], c:0,
+   e:'Ações independentes que acontecem juntas pedem **barra de bifurcação** e **barra de união**. Decisão escolhe um caminho só; raia diz quem faz, não quando.'},
+];
+
+/* diagrama "de outra equipe", com 3 defeitos */
+const HOTS = [
+  {id:'h1', d:true,  e:'`id_tutor: INT` é chave de banco. Modelo de domínio mostra a ligação com uma linha, não com coluna e tipo.'},
+  {id:'h2', d:false, e:'Espécie como atributo de Pet está certo: cão e gato não têm dados próprios.'},
+  {id:'h3', d:true,  e:'`calcularPreco()` é operação. No modelo de domínio, a terceira parte fica vazia: método é assunto do projeto.'},
+  {id:'h4', d:true,  e:'Multiplicidade invertida: do jeito que está, cada tutor tem um só pet e cada pet tem vários tutores. O certo é Tutor 1 e Pet 1..*.'},
+  {id:'h5', d:false, e:'Agendamento 0..* e Tosador 1: cada agendamento tem um tosador. Certo.'},
+  {id:'h6', d:false, e:'Pix e Cartão herdando de Pagamento: cada um tem dados próprios. Certo.'},
+  {id:'h7', d:false, e:'Agendamento 0..* e Serviço 1: certo para a regra atual da clínica.'},
+  {id:'h8', d:false, e:'`data e hora` e `situação` são dados simples do Agendamento. Certo.'},
+];
+
+/* ------------------------------------------------------------ desenho UML (SVG) */
+const POS = { Tutor:[30,30], Pet:[30,330], Agendamento:[400,330], 'Serviço':[770,330], Tosador:[400,30], Pagamento:[400,600] };
+const W=210, HH=40, HB=120;
+function caixa(nome, attrs=[], ops=null, extra=''){
+  const [x,y]=POS[nome]||extra; const alt = ops!==null ? HH+HB+34 : HH+HB;
+  let s=`<g><rect x="${x}" y="${y}" width="${W}" height="${alt}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<line x1="${x}" y1="${y+HH}" x2="${x+W}" y2="${y+HH}" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<text x="${x+W/2}" y="${y+27}" text-anchor="middle" font-weight="700" font-size="19">${nome}</text>`;
+  attrs.forEach((a,i)=> s+=`<text x="${x+12}" y="${y+HH+26+i*24}" font-size="16" font-family="JetBrains Mono,monospace">${a}</text>`);
+  if(ops!==null){ s+=`<line x1="${x}" y1="${y+HH+HB}" x2="${x+W}" y2="${y+HH+HB}" stroke="#1b1c1f" stroke-width="2"/>`;
+    if(ops) s+=`<text x="${x+12}" y="${y+HH+HB+23}" font-size="16" font-family="JetBrains Mono,monospace">${ops}</text>`; }
+  return s+'</g>';
+}
+function ponta(nome, lado){
+  const [x,y]=POS[nome]; const cx=x+W/2, cy=y+(HH+HB)/2;
+  return {top:[cx,y], bottom:[cx,y+HH+HB], left:[x,cy], right:[x+W,cy]}[lado];
+}
+const GEO = { tp:['Tutor','bottom','Pet','top'], pa:['Pet','right','Agendamento','left'], as:['Agendamento','right','Serviço','left'],
+              at:['Agendamento','top','Tosador','bottom'], ap:['Agendamento','bottom','Pagamento','top'] };
+function linha(id, ma, verbo, mb, cor='#1b1c1f'){
+  const [A,la,B,lb]=GEO[id]; const p1=ponta(A,la), p2=ponta(B,lb);
+  const vert = p1[0]===p2[0];
+  const mx=(p1[0]+p2[0])/2, my=(p1[1]+p2[1])/2;
+  const off = (p,q,d)=> vert ? [p[0]+14, p[1]+(q[1]>p[1]?d:-d)] : [p[0]+(q[0]>p[0]?d:-d), p[1]-10];
+  const t1=off(p1,p2,26), t2=off(p2,p1,26);
+  const anc = vert ? 'start' : 'middle';
+  return `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="${cor}" stroke-width="2"/>`+
+    (ma?`<text x="${t1[0]}" y="${t1[1]}" text-anchor="${anc}" font-size="17" font-weight="700" fill="#7a2c46">${ma}</text>`:'')+
+    (mb?`<text x="${t2[0]}" y="${t2[1]}" text-anchor="${anc}" font-size="17" font-weight="700" fill="#7a2c46">${mb}</text>`:'')+
+    (verbo?`<text x="${vert?mx+14:mx}" y="${vert?my+5:my-12}" text-anchor="${vert?'start':'middle'}" font-size="15" font-style="italic" fill="#1f6f6b">${verbo}</text>`:'');
+}
+function heranca(pai, filhos){
+  const [x,y]=POS[pai]; let s=''; const by=y+HH+HB, tipY=by+40;
+  s+=`<polygon points="${x+W/2},${by} ${x+W/2-12},${by+20} ${x+W/2+12},${by+20}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`;
+  s+=`<line x1="${x+W/2}" y1="${by+20}" x2="${x+W/2}" y2="${tipY}" stroke="#1b1c1f" stroke-width="2"/>`;
+  filhos.forEach(([n,fx,fy,at])=>{ s+=`<polyline points="${x+W/2},${tipY} ${fx+80},${tipY} ${fx+80},${fy}" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<rect x="${fx}" y="${fy}" width="160" height="80" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="${fx}" y1="${fy+34}" x2="${fx+160}" y2="${fy+34}" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<text x="${fx+80}" y="${fy+24}" text-anchor="middle" font-weight="700" font-size="17">${n}</text>`+
+    `<text x="${fx+10}" y="${fy+60}" font-size="14" font-family="JetBrains Mono,monospace">${at}</text>`; });
+  return s;
+}
+
+/* ------------------------------------------------------------ telas */
+const TELAS = [];
+
+/* 0 · equipe */
+TELAS[0] = (app)=>{
+  app.append(h('div',{class:'kick'},'Engenharia de Requisitos · Aula 9 · Atividade em equipe'),
+    h('h1',{},'Ateliê de Modelagem: Clínica PetVida'),
+    h('p',{}, 'A Dona Rita abriu a PetVida, uma clínica de banho e tosa, e quer um aplicativo de agendamento. Ela já escreveu o caso de uso. A equipe de vocês vai transformar esse texto em dois desenhos: o **modelo de domínio** e o **diagrama de atividades**. São seis estações, uns 30 minutos.'.replace(/\*\*(.+?)\*\*/g,'$1')),
+    h('div',{class:'card'},
+      h('b',{},'Como funciona'),
+      h('ul',{class:'lista-exp'},
+        h('li',{},'Um computador por equipe. A cada estação, o mouse passa para outra pessoa; o resto discute e decide junto.'),
+        h('li',{},'Cada estação tem um botão Conferir. Depois de conferir, a resposta trava e aparece o porquê.'),
+        h('li',{},'Dica custa 1 ponto. No fim, o resultado vai para a planilha do professor, uma linha por integrante.'))));
+  const nomeEq = h('input',{placeholder:'Nome da equipe (ex.: Os Tosadores)', value:S.equipe||'', style:'width:100%;max-width:720px;margin:6px 0 12px'});
+  const grade = h('div',{class:'membros'});
+  const linhas=[];
+  for(let i=0;i<5;i++){ const m=S.membros[i]||{};
+    const n=h('input',{placeholder:`Integrante ${i+1}: nome`, value:m.nome||''}); const mt=h('input',{placeholder:'Matrícula ou turma', value:m.mat||''});
+    linhas.push([n,mt]); grade.append(n,mt); }
+  const aviso=h('div',{class:'status'});
+  app.append(h('div',{class:'card'}, h('b',{},'Quem está na equipe'), h('p',{style:'margin:4px 0 8px;color:#6b675d;font-size:14px'},'É só identificação, não precisa de senha. Jogando sozinho? Preencha só a primeira linha.'), nomeEq, grade,
+    h('div',{class:'rodape'}, h('button',{class:'btn', onclick:()=>{
+      const ms = linhas.map(([n,m])=>({nome:n.value.trim(), mat:m.value.trim()})).filter(x=>x.nome);
+      if(!ms.length){ aviso.textContent='Preencha pelo menos um nome.'; return; }
+      S.membros=ms; S.equipe = nomeEq.value.trim() || ms[0].nome.split(' ')[0]; if(!S.inicio) S.inicio=Date.now(); ir(1);
+    }}, 'Começar'), aviso)));
+};
+
+/* 1 · briefing */
+TELAS[1] = (app)=>{
+  app.append(h('div',{class:'kick'},'Estação 1 · Briefing'), h('h2',{},'O texto que vira desenho'),
+    fala('Oi, gente! Escrevi o caso de uso do jeito que aprendi. Leiam com calma: tudo o que o modelo precisa está aqui, e o que não está, vocês me perguntam.'),
+    h('div',{class:'uc'}, UC),
+    fala('Mais umas coisas que eu sei de cor: cada tutor pode ter vários pets. O pet tem espécie, porte e data de nascimento. O tosador tem a especialidade dele. E o serviço tem tipo e preço.'),
+    h('div',{class:'fb info', html:'Lembrem do método da aula: <b>substantivos</b> viram candidatos a classe ou atributo; <b>verbos</b> viram associações ou ações do diagrama de atividades.'}),
+    h('div',{class:'rodape'}, comMouse(), h('button',{class:'btn', onclick:()=>ir(2)},'Ir para o marca-texto')));
+};
+
+/* 2 · marca-texto */
+TELAS[2] = (app)=>{
+  const id='e2'; S.max[id]=PALAVRAS.length;
+  const resp = S.r[id] || (S.r[id]={c:{}, feito:false});
+  let sel=null;
+  app.append(h('div',{class:'kick'},'Estação 2 · Marca-texto'), h('h2',{},'Classe, atributo ou fora do modelo?'),
+    fala('Grifei as palavras que mais aparecem. Toquem numa palavra e depois na caixa certa. Atenção: eu às vezes uso dois nomes para a mesma coisa.'));
+  const chips=h('div',{class:'chips'}); const baldes=h('div',{class:'baldes'}); const area=h('div');
+  const ordem = resp.ordem || (resp.ordem = embaralhar(PALAVRAS.map(x=>x.p)));
+  function desenhar(){
+    chips.innerHTML=''; baldes.innerHTML='';
+    ordem.filter(p=>!resp.c[p]).forEach(p=>{ const c=h('span',{class:'chip'+(sel===p?' sel':'')}, p); if(!resp.feito) c.onclick=()=>{ sel = sel===p?null:p; desenhar(); }; chips.append(c); });
+    if(!chips.children.length) chips.append(h('span',{style:'color:#6b675d'},'Todas as palavras foram classificadas.'));
+    BALDES.forEach(([n,d])=>{
+      const b=h('div',{class:'balde'+(sel?' alvo':'')}, h('h3',{},n), h('p',{},d));
+      const dentro=h('div',{class:'chips'});
+      ordem.filter(p=>resp.c[p]===n).forEach(p=>{
+        const it=PALAVRAS.find(x=>x.p===p); const ok = resp.feito ? (it.c===n?' ok':' no') : '';
+        const c=h('span',{class:'chip'+ok}, p, resp.feito && it.c!==n ? h('small',{},'é '+it.c.toLowerCase()) : null);
+        if(!resp.feito) c.onclick=(ev)=>{ ev.stopPropagation(); delete resp.c[p]; salvar(); desenhar(); };
+        dentro.append(c); });
+      b.append(dentro);
+      if(!resp.feito) b.onclick=()=>{ if(sel){ resp.c[sel]=n; sel=null; salvar(); desenhar(); } };
+      baldes.append(b);
+    });
+  }
+  desenhar();
+  app.append(chips, baldes, area);
+  const rod=h('div',{class:'rodape'}); app.append(rod);
+  function conferir(){
+    resp.feito=true; let ok=0; PALAVRAS.forEach(x=>{ if(resp.c[x.p]===x.c) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=12);
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=12?'ok':'no')}, h('b',{}, `${ok} de ${PALAVRAS.length} certas.`),
+      h('ul',{class:'lista-exp'}, PALAVRAS.map(x=>h('li',{html:`<b>${x.p}</b> · ${x.c}: ${md(x.e)}`})))));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(3)},'Ir para a prancheta'));
+  }
+  if(resp.feito){ conferir(); }
+  else rod.append(comMouse(), dicaBtn(id,'Perguntem: a clínica precisa **guardar dados** sobre isso? Se tem dados próprios, é classe. Se é um valor de outra coisa, é atributo. Se é tecnologia, canal ou ação, fica fora.', area),
+    h('button',{class:'btn', onclick:()=>{ if(Object.keys(resp.c).length<PALAVRAS.length && !window.__forcar){ area.innerHTML=''; area.append(h('div',{class:'fb no'},'Ainda há palavras sem caixa. Classifiquem todas antes de conferir.')); return; } conferir(); }},'Conferir'));
+};
+
+/* 3 · prancheta */
+TELAS[3] = (app)=>{
+  const id='e3'; S.max[id]=ATRIBUTOS.length + ASSOCS.length*3 + GENER.length;
+  const resp = S.r[id] || (S.r[id]={at:{}, as:{}, g:{}, feito:false});
+  let sel=null;
+  app.append(h('div',{class:'kick'},'Estação 3 · Prancheta'), h('h2',{},'O modelo de domínio da PetVida'),
+    fala('As seis classes já estão na prancheta. Agora coloquem cada atributo na classe dele, liguem as classes com o verbo certo e digam quantos de cada lado.'));
+  const diag=h('div',{class:'diag'});
+  const passoA=h('div',{class:'card'}); const passoB=h('div',{class:'card'}); const passoC=h('div',{class:'card'}); const area=h('div');
+  function svg(){
+    let s='<svg viewBox="0 0 1010 910" xmlns="http://www.w3.org/2000/svg">';
+    ASSOCS.forEach(a=>{ const r=resp.as[a.id]||{}; s+=linha(a.id, r.ma||'', r.v||'', r.mb||''); });
+    CLASSES.forEach(c=>{ s+=caixa(c, ATRIBUTOS.filter(x=>resp.at[x.a]===c).map(x=>x.a)); });
+    if(resp.g.g2===0) s+=heranca('Pagamento',[['Pix',330,820,'código'],['Cartão',530,820,'bandeira']]);
+    if(resp.g.g1===1) s+=heranca('Pet',[['Cão',10,560,''],['Gato',190,560,'']]);
+    s+='</svg>'; diag.innerHTML=s;
+  }
+  function desenharA(){
+    passoA.innerHTML='';
+    passoA.append(h('b',{},'A · Atributos: toquem no atributo e depois na classe'));
+    const ch=h('div',{class:'chips'});
+    ATRIBUTOS.forEach(x=>{ const onde=resp.at[x.a]; const st = resp.feito ? (onde===x.c?' ok':' no') : (sel===x.a?' sel':'');
+      const c=h('span',{class:'chip'+st}, x.a, h('small',{}, onde ? '→ '+onde : 'sem classe'));
+      if(!resp.feito) c.onclick=()=>{ sel= sel===x.a?null:x.a; desenharA(); }; ch.append(c); });
+    const cl=h('div',{class:'chips'});
+    CLASSES.forEach(c=>{ const b=h('span',{class:'chip', style:'border-color:#1f6f6b;color:#1f6f6b'}, c); if(!resp.feito) b.onclick=()=>{ if(sel){ resp.at[sel]=c; sel=null; salvar(); desenharA(); svg(); } }; cl.append(b); });
+    passoA.append(ch, h('div',{style:'font-size:14px;color:#6b675d'},'Classes:'), cl);
+  }
+  function desenharB(){
+    passoB.innerHTML=''; passoB.append(h('b',{},'B · Associações: escolham o verbo e a multiplicidade de cada ponta'));
+    ASSOCS.forEach(a=>{
+      const r=resp.as[a.id]||(resp.as[a.id]={});
+      const mk=(campo, ops)=>{ const s=h('select',{}, h('option',{value:''},'?'), ops.map(o=>h('option',{value:o},o))); s.value=r[campo]||''; if(resp.feito) s.disabled=true;
+        s.onchange=()=>{ r[campo]=s.value; salvar(); svg(); }; return s; };
+      let cls='assoc';
+      if(resp.feito){ const ok = r.v===a.verbo && a.ma.includes(r.ma) && a.mb.includes(r.mb); cls+= ok?' ok':' no'; }
+      passoB.append(h('div',{class:cls}, h('span',{},a.a), mk('ma',MULTS), mk('v',VERBOS), mk('mb',MULTS), h('span',{class:'r'},a.b)));
+      if(resp.feito) passoB.append(h('div',{style:'font-size:14px;margin:0 0 8px 6px', html:`Esperado: ${a.a} <b>${a.ma.join(' ou ')}</b> · ${a.verbo} · <b>${a.mb.join(' ou ')}</b> ${a.b}. ${md(a.e)}`}));
+    });
+  }
+  function desenharC(){
+    passoC.innerHTML=''; passoC.append(h('b',{},'C · É um tipo de? Decidam com a Dona Rita'));
+    GENER.forEach(g=>{
+      passoC.append(fala(g.fala));
+      const box=h('div',{class:'mcq'}, h('div',{class:'en'}, g.en));
+      const ordem = resp['o'+g.id] || (resp['o'+g.id]=embaralhar([0,1,2,3]));
+      ordem.forEach(i=>{ let c='opt'; if(resp.g[g.id]===i) c+=' sel'; if(resp.feito){ if(i===g.c) c+=' ok'; else if(resp.g[g.id]===i) c+=' no'; }
+        const b=h('button',{class:c}, g.ops[i]); if(!resp.feito) b.onclick=()=>{ resp.g[g.id]=i; salvar(); desenharC(); svg(); }; box.append(b); });
+      if(resp.feito) box.append(h('div',{class:'fb '+(resp.g[g.id]===g.c?'ok':'no'), html: md(g.e)}));
+      passoC.append(box);
+    });
+  }
+  desenharA(); desenharB(); desenharC(); svg();
+  app.append(diag, passoA, passoB, passoC, area);
+  const rod=h('div',{class:'rodape'}); app.append(rod);
+  function conferir(){
+    resp.feito=true; let ok=0;
+    ATRIBUTOS.forEach(x=>{ if(resp.at[x.a]===x.c) ok++; });
+    ASSOCS.forEach(a=>{ const r=resp.as[a.id]||{}; if(r.v===a.verbo) ok++; if(a.ma.includes(r.ma)) ok++; if(a.mb.includes(r.mb)) ok++; });
+    GENER.forEach(g=>{ if(resp.g[g.id]===g.c) ok++; });
+    S.pts[id]=ok; salvar(); cab(); bip(ok>=S.max[id]*0.7);
+    desenharA(); desenharB(); desenharC(); svg();
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=S.max[id]*0.7?'ok':'no')}, h('b',{},`${ok} de ${S.max[id]} pontos na prancheta.`),
+      h('div',{html:' Atributos no lugar certo valem 1 ponto cada; cada associação vale 3 (verbo e as duas pontas); cada decisão de herança vale 1.'})));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(4)},'Ir para as perguntas ao cliente'));
+  }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Leiam cada linha **nos dois sentidos**: "um tutor possui quantos pets?" e "um pet é de quantos tutores?". O número fica perto da classe que está sendo contada.', area),
+    h('button',{class:'btn', onclick:conferir},'Conferir a prancheta'));
+};
+
+/* MCQ genérico */
+function blocoMCQ(lista, resp, chave, feito, redesenhar){
+  return lista.map((q,k)=>{
+    const box=h('div',{class:'mcq'});
+    if(q.ctx) box.append(h('div',{html: md(q.ctx), style:'margin-bottom:6px'}));
+    box.append(h('div',{class:'en'}, q.en));
+    const ordem = resp['o'+chave+k] || (resp['o'+chave+k]=embaralhar([0,1,2,3]));
+    ordem.forEach(i=>{ let c='opt'; if(resp[chave][k]===i) c+=' sel'; if(feito){ if(i===q.c) c+=' ok'; else if(resp[chave][k]===i) c+=' no'; }
+      const b=h('button',{class:c}, q.ops[i]); if(!feito) b.onclick=()=>{ resp[chave][k]=i; salvar(); redesenhar(); }; box.append(b); });
+    if(feito) box.append(h('div',{class:'fb '+(resp[chave][k]===q.c?'ok':'no'), html: md(q.e)}));
+    return box;
+  });
+}
+
+/* 4 · pergunta ao cliente */
+TELAS[4] = (app)=>{
+  const id='e4'; S.max[id]=PERGUNTAS.length;
+  const resp = S.r[id] || (S.r[id]={q:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 4 · Pergunta ao cliente'), h('h2',{},'O modelo provoca perguntas'),
+    fala('Vocês têm direito a três perguntas antes de eu voltar para a tosa. Escolham bem: pergunta boa é a que muda o desenho.'));
+  const lista=h('div'); const area=h('div'); const rod=h('div',{class:'rodape'});
+  function desenhar(){ lista.innerHTML=''; blocoMCQ(PERGUNTAS, resp, 'q', resp.feito, desenhar).forEach(b=>lista.append(b)); }
+  desenhar(); app.append(lista, area, rod);
+  function conferir(){ resp.feito=true; let ok=0; PERGUNTAS.forEach((q,k)=>{ if(resp.q[k]===q.c) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=2);
+    area.innerHTML=''; area.append(h('div',{class:'fb info'}, h('b',{},`${ok} de ${PERGUNTAS.length}. `), 'Cada resposta da Dona Rita vira requisito ou regra de negócio no DDR.'));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para o fluxo nas raias')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Para cada opção, pensem: **se a resposta for "sim", alguma multiplicidade muda?** Se nada muda no desenho, a pergunta não ajuda o modelo.', area),
+    h('button',{class:'btn', onclick:conferir},'Conferir'));
+};
+
+/* 5 · fluxo nas raias */
+function desenhoAtividades(){
+  const X0=150, DX=150, ly={Tutor:70, Sistema:200, Pagamento:330};
+  let s='<svg viewBox="0 0 1420 400" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs>';
+  RAIAS.forEach((r,i)=>{ s+=`<rect x="0" y="${i*130+5}" width="1420" height="130" fill="${i%2?'#faf7f0':'#fff'}" stroke="#1f6f6b" stroke-width="1.5"/>`+
+    `<text x="22" y="${i*130+75}" font-weight="700" font-size="17" fill="#1f6f6b">${r}</text>`; });
+  s+=`<circle cx="120" cy="${ly.Tutor}" r="12" fill="#1b1c1f"/>`;
+  let prev=[132, ly.Tutor];
+  ACOES.forEach((a,i)=>{
+    const x=X0+i*DX+(i>=4?60:0), y=ly[a.r];
+    s+=`<line x1="${prev[0]}" y1="${prev[1]}" x2="${x}" y2="${y}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`;
+    const tx=a.t.length>17 ? a.t.replace(/^(.{0,17}\S*)\s/,'$1|').split('|') : [a.t];
+    s+=`<rect x="${x}" y="${y-26}" width="130" height="52" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="2"/>`;
+    tx.forEach((t,k)=> s+=`<text x="${x+65}" y="${y+(tx.length>1?-4+k*18:6)}" text-anchor="middle" font-size="13.5">${t}</text>`);
+    prev=[x+130,y];
+    if(i===3){ const dx=x+165; s+=`<line x1="${x+130}" y1="${y}" x2="${dx-20}" y2="${y}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`+
+      `<path d="M${dx},${y-18} L${dx+20},${y} L${dx},${y+18} L${dx-20},${y} Z" fill="#fff" stroke="#c79a2b" stroke-width="2.5"/>`+
+      `<text x="${dx+4}" y="${y-26}" font-size="12.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[tosador livre]</text>`+
+      `<text x="${dx-60}" y="${y+46}" font-size="12.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[nenhum livre] → E1</text>`+
+      `<line x1="${dx}" y1="${y+18}" x2="${dx}" y2="${y+28}" stroke="#3a3a3a" stroke-width="2"/>`;
+      prev=[dx+20,y]; }
+  });
+  s+=`<line x1="${prev[0]}" y1="${prev[1]}" x2="${prev[0]+28}" y2="${prev[1]}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`+
+     `<circle cx="${prev[0]+44}" cy="${prev[1]}" r="13" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><circle cx="${prev[0]+44}" cy="${prev[1]}" r="7" fill="#1b1c1f"/>`;
+  return s+'</svg>';
+}
+TELAS[5] = (app)=>{
+  const id='e5'; S.max[id]=ACOES.length*2 + MCQ5.length;
+  const resp = S.r[id] || (S.r[id]={raia:{}, ordem:[], q:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 5 · Fluxo nas raias'), h('h2',{},'O UC05 como diagrama de atividades'),
+    fala('Agora o passo a passo. Cada verbo do caso de uso vira uma ação. Digam quem faz cada uma e em que ordem acontecem.'));
+  const passoA=h('div',{class:'card'}), passoB=h('div',{class:'card'}), passoC=h('div'), diag=h('div'), area=h('div'), rod=h('div',{class:'rodape'});
+  const embar = resp.emb || (resp.emb = embaralhar(ACOES.map((_,i)=>i)));
+  function A(){ passoA.innerHTML=''; passoA.append(h('b',{},'A · Em que raia fica cada ação?'));
+    const g=h('div',{class:'cards5'});
+    embar.forEach(i=>{ const a=ACOES[i]; let cls='c5'; if(resp.feito) cls+= resp.raia[i]===a.r?' ok':' no';
+      const bt=h('div',{class:'bt'}, RAIAS.map(r=>{ const b=h('button',{class: resp.raia[i]===r?'sel':''}, r); if(!resp.feito) b.onclick=()=>{ resp.raia[i]=r; salvar(); A(); }; return b; }));
+      g.append(h('div',{class:cls}, h('div',{class:'tx'}, a.t), bt, resp.feito && resp.raia[i]!==a.r ? h('div',{style:'font-size:13px;margin-top:6px'}, 'Raia certa: '+a.r) : null)); });
+    passoA.append(g); }
+  function B(){ passoB.innerHTML=''; passoB.append(h('b',{},'B · Toquem nas ações na ordem do fluxo principal (toque de novo para desfazer)'));
+    const o=h('div',{class:'ordem'});
+    embar.forEach(i=>{ const pos=resp.ordem.indexOf(i); let cls='chip'; if(resp.feito) cls+= pos===i?' ok':' no'; else if(pos>=0) cls+=' sel';
+      const c=h('span',{class:cls}, pos>=0?h('span',{class:'num'}, String(pos+1)):null, ACOES[i].t, resp.feito&&pos!==i?h('small',{},'posição certa: '+(i+1)):null);
+      if(!resp.feito) c.onclick=()=>{ if(pos>=0) resp.ordem.splice(pos,1); else resp.ordem.push(i); salvar(); B(); };
+      o.append(c); });
+    passoB.append(o); }
+  function C(){ passoC.innerHTML=''; blocoMCQ(MCQ5, resp, 'q', resp.feito, C).forEach(b=>passoC.append(b)); }
+  A(); B(); C();
+  app.append(passoA, passoB, h('div',{class:'card'}, h('b',{},'C · Decisão e paralelo'), passoC), diag, area, rod);
+  function conferir(){ resp.feito=true; let ok=0;
+    ACOES.forEach((a,i)=>{ if(resp.raia[i]===a.r) ok++; if(resp.ordem[i]===i) ok++; });
+    MCQ5.forEach((q,k)=>{ if(resp.q[k]===q.c) ok++; });
+    S.pts[id]=ok; salvar(); cab(); bip(ok>=S.max[id]*0.7); A(); B(); C();
+    diag.innerHTML=''; diag.append(h('div',{class:'kick', style:'margin-top:14px'},'O desenho completo'), h('div',{class:'diag', html: desenhoAtividades()}));
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=S.max[id]*0.7?'ok':'no')}, h('b',{},`${ok} de ${S.max[id]} pontos. `), 'Raia e posição valem 1 ponto por ação; decisão e paralelo, 1 cada. O E1 sai do losango; o E2 sairia de outra decisão, depois de "Autoriza o sinal".'));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(6)},'Ir para a caça ao defeito')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Quem faz? Pessoa mexendo no app é **Tutor**; o que o software mostra, verifica ou envia é **Sistema**; quem aprova o dinheiro é **Pagamento**. A ordem segue os números do caso de uso.', area),
+    h('button',{class:'btn', onclick:conferir},'Conferir o fluxo'));
+};
+
+/* 6 · caça ao defeito */
+function diagDefeitos(resp){
+  const st=(hid)=>{ let c='hot'; const d=HOTS.find(x=>x.id===hid).d; if(resp.feito){ if(d) c+=' ok'; else if(resp.m[hid]) c+=' no'; } else if(resp.m[hid]) c+=' marc'; return c; };
+  const T=(x,y,t,b)=>`<text x="${x}" y="${y}" font-size="16" font-family="JetBrains Mono,monospace"${b?' font-weight="700"':''}>${t}</text>`;
+  const box=(x,y,n,w=220,hgt=150)=>`<rect x="${x}" y="${y}" width="${w}" height="${hgt}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="${x}" y1="${y+40}" x2="${x+w}" y2="${y+40}" stroke="#1b1c1f" stroke-width="2"/><text x="${x+w/2}" y="${y+27}" text-anchor="middle" font-weight="700" font-size="19">${n}</text>`;
+  const hot=(hid,x,y,w,hgt,inner)=>`<g class="${st(hid)}" data-h="${hid}"><rect class="hb" x="${x}" y="${y}" width="${w}" height="${hgt}" rx="6"/>${inner}</g>`;
+  let s='<svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">';
+  s+=box(30,20,'Tutor')+T(42,86,'nome')+T(42,110,'telefone');
+  s+=box(30,330,'Pet',220,170);
+  s+=hot('h1',36,374,208,28,T(42,394,'id_tutor: INT'))+hot('h2',36,402,208,28,T(42,422,'espécie'))+T(42,446,'porte');
+  s+=`<line x1="140" y1="170" x2="140" y2="330" stroke="#1b1c1f" stroke-width="2"/>`;
+  s+=hot('h4',100,176,110,148,`<text x="152" y="200" font-size="17" font-weight="700" fill="#7a2c46">1..*</text><text x="152" y="318" font-size="17" font-weight="700" fill="#7a2c46">1</text><text x="152" y="258" font-size="15" font-style="italic" fill="#1f6f6b">possui</text>`);
+  s+=box(390,330,'Agendamento',230,150)+hot('h8',396,374,218,52,T(402,394,'data e hora')+T(402,418,'situação'));
+  s+=`<line x1="250" y1="410" x2="390" y2="410" stroke="#1b1c1f" stroke-width="2"/><text x="262" y="400" font-size="16" font-weight="700" fill="#7a2c46">1</text><text x="352" y="400" font-size="16" font-weight="700" fill="#7a2c46">0..*</text>`;
+  s+=box(390,20,'Tosador',230,120)+T(402,86,'especialidade');
+  s+=`<line x1="505" y1="140" x2="505" y2="330" stroke="#1b1c1f" stroke-width="2"/>`;
+  s+=hot('h5',470,146,110,180,`<text x="517" y="170" font-size="17" font-weight="700" fill="#7a2c46">1</text><text x="517" y="318" font-size="17" font-weight="700" fill="#7a2c46">0..*</text>`);
+  s+=box(760,300,'Serviço',220,200)+T(772,366,'tipo')+T(772,390,'preço')+`<line x1="760" y1="440" x2="980" y2="440" stroke="#1b1c1f" stroke-width="2"/>`;
+  s+=hot('h3',766,446,208,34,T(772,468,'calcularPreco()'));
+  s+=`<line x1="620" y1="400" x2="760" y2="400" stroke="#1b1c1f" stroke-width="2"/>`;
+  s+=hot('h7',626,370,128,36,`<text x="632" y="392" font-size="16" font-weight="700" fill="#7a2c46">0..*</text><text x="738" y="392" font-size="16" font-weight="700" fill="#7a2c46" text-anchor="end">1</text>`);
+  s+=hot('h6',300,490,470,126,
+    `<polygon points="505,480 493,500 517,500" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="505" y1="500" x2="505" y2="520" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="385,560 385,520 625,520 625,560" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<rect x="315" y="560" width="140" height="50" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="385" y="591" text-anchor="middle" font-weight="700" font-size="17">Pix</text>`+
+    `<rect x="555" y="560" width="140" height="50" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="625" y="591" text-anchor="middle" font-weight="700" font-size="17">Cartão</text>`);
+  s+=`<text x="640" y="470" font-size="15" fill="#6b675d">Pagamento (detalhe abaixo)</text>`;
+  return s+'</svg>';
+}
+TELAS[6] = (app)=>{
+  const id='e6'; S.max[id]=3;
+  const resp = S.r[id] || (S.r[id]={m:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 6 · Caça ao defeito'), h('h2',{},'Revisem o modelo da outra equipe'),
+    fala('Pedi para outra equipe fazer o mesmo modelo, e o desenho voltou com três defeitos. Toquem nos pontos que estão errados. Cuidado: marcar o que está certo tira ponto.', 'Dona Rita'));
+  const diag=h('div',{class:'diag'}), area=h('div'), rod=h('div',{class:'rodape'});
+  function desenhar(){ diag.innerHTML=diagDefeitos(resp);
+    if(!resp.feito) diag.querySelectorAll('[data-h]').forEach(g=> g.addEventListener('click',()=>{ const k=g.getAttribute('data-h'); resp.m[k]=!resp.m[k]; salvar(); desenhar(); })); }
+  desenhar(); app.append(diag, area, rod);
+  function conferir(){ resp.feito=true; let ok=0, falso=0; HOTS.forEach(x=>{ if(resp.m[x.id]&&x.d) ok++; if(resp.m[x.id]&&!x.d) falso++; });
+    S.pts[id]=Math.max(0, ok-falso); salvar(); cab(); desenhar(); bip(ok===3&&!falso);
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok===3&&!falso?'ok':'no')}, h('b',{},`Acharam ${ok} de 3 defeitos${falso?`, com ${falso} marcação errada`:''}. `),
+      h('ul',{class:'lista-exp'}, HOTS.map(x=>h('li',{html:(x.d?'<b>Defeito:</b> ':'<b>Certo:</b> ')+md(x.e)})))));
+    rod.innerHTML=''; rod.append(h('button',{class:'btn', onclick:()=>{ S.fim=S.fim||Date.now(); ir(7); }},'Ver o resultado da equipe')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Modelo de domínio **não tem** chave de banco nem métodos. E multiplicidade se lê nos dois sentidos: confiram se o número está do lado certo.', area),
+    h('button',{class:'btn', onclick:conferir},'Entregar a revisão'));
+};
+
+/* 7 · resultado */
+TELAS[7] = (app)=>{
+  const pts=total(), mx=totalMax(), pct= mx? Math.round(pts/mx*100):0;
+  const nomes={e2:'Marca-texto', e3:'Prancheta', e4:'Perguntas', e5:'Fluxo', e6:'Defeitos'};
+  app.append(h('div',{class:'kick'},'Resultado'), h('h1',{},'Equipe ' + S.equipe),
+    h('div',{class:'card', style:'text-align:center'}, h('div',{class:'grande'}, `${pts} / ${mx}`), h('div',{style:'font:700 22px Fraunces,serif;margin-top:6px'}, pct + '% de aproveitamento'),
+      h('div',{style:'color:#6b675d;margin-top:6px'}, S.membros.map(m=>m.nome).join(' · '))),
+    h('div',{class:'placar'}, Object.keys(nomes).map(k=>h('div',{}, h('b',{}, `${S.pts[k]||0}/${S.max[k]||0}`), nomes[k]))),
+    Object.keys(S.dicas).length ? h('p',{style:'text-align:center;color:#7a5a12'}, `Dicas usadas: ${Object.keys(S.dicas).length} (−${Object.keys(S.dicas).length} pontos)`) : null);
+  const st=h('div',{class:'status', style:'text-align:center;margin:10px 0'});
+  app.append(st, fala('Obrigada, equipe! Agora façam o mesmo com o caso de uso do projeto de vocês, no draw.io. Esses dois desenhos entram no DDR v2.'));
+  if(!S.enviado){ S.enviado=true; salvar();
+    enviarResultado(S.membros.map(m=>({ timestamp:new Date().toISOString(), nome:m.nome, matricula:m.mat,
+      disciplina:'Engenharia de Requisitos', aula:9, atividade:'Ateliê de Modelagem: PetVida · equipe ' + S.equipe,
+      acertos:pts, total:mx, pontuacao:pct })), st);
+  } else st.textContent='Resultado já enviado. Mostre esta tela ao professor se precisar.';
+};
+function enviarResultado(lista, st){
+  if(!WEBAPP_URL){ st.textContent='Resultado registrado só nesta tela.'; return; }
+  Promise.all(lista.map(d=> fetch(WEBAPP_URL,{method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(d)})))
+    .then(()=>{ st.textContent='Resultado enviado para o professor, uma linha por integrante.'; })
+    .catch(()=>{ st.textContent='Não consegui enviar agora. Mostre esta tela ao professor.'; });
+}
+
+cab(); ir(S.est||0);
+</script>
+</body>
+</html>
