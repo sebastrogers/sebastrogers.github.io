@@ -322,6 +322,22 @@
           "arquivo": "assets/materiais/cloud/loja-na-nuvem-arquivos.zip",
           "data": "08/10/2026",
           "tags": "codigo lambda python index html politica bucket evento teste api gateway zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: Quem pode usar a loja, gerenciar a API",
+          "descricao": "Autenticação e autorização, chave de API, JWT, limite de uso com o balde de fichas, versões com estágios e métricas no CloudWatch, aplicados à loja-api, com telas do console e a conta de custo com e sem limite.",
+          "arquivo": "assets/materiais/cloud/aula-09-cloud-quem-pode-usar.html",
+          "data": "15/10/2026",
+          "tags": "slides interativo api gateway http api rest api chave api key autenticacao autorizacao jwt 401 403 429 throttling token bucket estagio versao cloudwatch metricas owasp custo"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Quem pode usar a loja: arquivos da aula",
+          "descricao": "A loja-api com chave e a rota nova, os eventos de teste, o script de carga para ver o 429 e o index.html mandando a chave.",
+          "arquivo": "assets/materiais/cloud/loja-api-aula09-arquivos.zip",
+          "data": "15/10/2026",
+          "tags": "codigo lambda python chave x-api-key evento teste carga curl 429 index html zip"
         }
       ]
     },
@@ -484,6 +500,14 @@
           "arquivo": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.html",
           "data": "08/10/2026",
           "tags": "slides revisao cruzada ddr checklist defeito caso de uso ator fluxo principal alternativo excecao include extend diagrama uml loja"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: Do caso de uso ao modelo, classes de domínio e atividades",
+          "descricao": "Por que modelar, a UML, como achar classes e ações no caso de uso, o modelo de domínio da loja com associações e multiplicidades, e o UC03 Finalizar compra desenhado como diagrama de atividades com raias.",
+          "arquivo": "assets/materiais/requisitos/aula-09-req-caso-de-uso-ao-modelo.html",
+          "data": "15/10/2026",
+          "tags": "slides interativo uml diagrama de classes modelo de dominio atributo associacao multiplicidade generalizacao diagrama de atividades acao decisao guarda bifurcacao raia caso de uso drawio ddr"
         }
       ]
     }
