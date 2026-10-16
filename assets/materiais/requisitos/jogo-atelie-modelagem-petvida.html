@@ -56,7 +56,7 @@ select{padding:7px 8px;font-size:15px}
 .lista-exp{margin:8px 0 0;padding-left:18px;font-size:14px}
 .lista-exp li{margin:3px 0}
 .diag{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:12px 0}
-.diag svg{width:100%;height:auto;display:block}
+.diag svg{width:100%;height:auto;display:block;max-width:1000px;margin:0 auto}
 svg text{font-family:Inter,system-ui,sans-serif}
 .assoc{display:grid;grid-template-columns:110px 92px 1fr 92px 120px;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:600}
 .assoc.ok{border-color:#a9d4b7;background:#f3faf5}.assoc.no{border-color:#e9b8ae;background:#fdf4f1}
@@ -88,6 +88,15 @@ svg text{font-family:Inter,system-ui,sans-serif}
 .grande{font:700 64px Fraunces,serif;color:var(--teal);line-height:1}
 .status{font-weight:600;color:var(--teal)}
 .dicabox{background:#fff8e6;border:1px solid #e8cf8a;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:15px}
+.prancheta{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+.prancheta .colD{position:sticky;top:104px}
+.prancheta .diag{margin-top:14px}
+.prancheta .assoc{grid-template-columns:96px 74px minmax(0,1fr) 74px 98px;font-size:14px;padding:6px 8px;gap:6px}
+.prancheta .assoc select{font-size:14px;padding:6px 4px;width:100%}
+.prancheta .chip{padding:6px 11px;font-size:14px}
+[data-c]:hover rect{fill:#fff6df}
+@media (max-width:1000px){.prancheta{grid-template-columns:1fr}.prancheta .colD{position:static}}
+main{max-width:1260px}
 @media (max-width:760px){.assoc{grid-template-columns:1fr 1fr;}.membros{grid-template-columns:1fr}h1{font-size:28px}}
 </style>
 </head>
@@ -147,6 +156,7 @@ function cab(){
   $('#hEquipe').textContent = S.equipe ? 'Equipe ' + S.equipe : 'Clínica PetVida';
   $('#hPontos').textContent = total() + ' pontos';
   $('#bSom').textContent = 'som: ' + (S.som ? 'ligado' : 'desligado');
+  if (!S.inicio) $('#hTempo').textContent = '00:00';
   const tr = $('#trilha'); tr.innerHTML='';
   ESTACOES.forEach((n,i)=> tr.append(h('span',{class: i<S.est ? 'ok' : i===S.est ? 'at' : ''}, n)));
 }
@@ -202,7 +212,7 @@ const PALAVRAS = [
   {p:'especialidade', c:'Atributo', e:'Valor simples do Tosador.'},
   {p:'aplicativo', c:'Fora do modelo', e:'É a tecnologia, não um conceito do negócio.'},
   {p:'WhatsApp', c:'Fora do modelo', e:'É o canal de envio, não algo que a clínica precisa conhecer.'},
-  {p:'sistema', c:'Fora do modelo', e:'O sistema é quem modela, não uma classe do domínio.'},
+  {p:'sistema', c:'Fora do modelo', e:'É o próprio software que estamos construindo, não um conceito do negócio.'},
   {p:'lembrete', c:'Fora do modelo', e:'É uma ação do sistema (verbo "envia"): vai para o diagrama de atividades.'},
 ];
 const BALDES = [
@@ -245,7 +255,7 @@ const PERGUNTAS = [
   {ctx:'No desenho, cada pet está ligado a exatamente **um** tutor (o "1" perto de Tutor).',
    en:'Que pergunta confirma essa multiplicidade com a Dona Rita?',
    ops:['Um mesmo pet pode ser de dois tutores, como um casal?','Os tutores preferem agendar pelo celular ou pelo site?','Quantos pets a clínica atende em um sábado comum?','O cadastro do tutor precisa pedir o CPF da pessoa?'], c:0,
-   e:'Só a primeira muda o desenho: se a resposta for "sim", o lado do Tutor vira 1..*. As outras tratam de tela, volume ou cadastro, não da ligação.'},
+   e:'Só a pergunta do casal muda o desenho: se a resposta for "sim", o lado do Tutor vira 1..*. As outras tratam de tela, volume ou cadastro, não da ligação.'},
   {ctx:'A equipe ficou entre **0..1** e **1** no lado do Pagamento.',
    en:'O que perguntar para decidir?',
    ops:['Existe agendamento confirmado sem pagar o sinal?','O sinal pode ser pago com cartão de débito?','Qual é o valor do sinal para cães de porte grande?','O comprovante do sinal vai por e-mail ou WhatsApp?'], c:0,
@@ -270,7 +280,7 @@ const RAIAS = ['Tutor','Sistema','Pagamento'];
 const MCQ5 = [
   {id:'guarda', en:'Depois de "Verifica tosador livre" vem um losango. Quais guardas colocar nas duas saídas?',
    ops:['[tosador livre] e [nenhum tosador livre]','[tosador livre] e [o tutor insiste]','[antes das 12h] e [depois das 10h]','[tosador livre] e [sinal do pagamento recusado]'], c:0,
-   e:'As guardas precisam cobrir todos os casos **sem se sobrepor**. "Antes das 12h" e "depois das 10h" se sobrepõem; "o tutor insiste" deixa casos de fora; "sinal recusado" é outra decisão, a do E2.'},
+   e:'As guardas precisam cobrir todos os casos **sem se sobrepor**. "Antes das 12h" e "depois das 10h" se sobrepõem; "o tutor insiste" deixa casos de fora; "sinal do pagamento recusado" é outra decisão, a do E2.'},
   {id:'paralelo', en:'Depois que o sinal é autorizado, o sistema bloqueia o horário do tosador e envia o comprovante ao tutor, sem depender um do outro. Como desenhar?',
    ops:['Bifurcação: as duas ações em paralelo, com união','Decisão com duas guardas, uma para cada ação','Duas raias novas no desenho, uma para cada uma das ações','Uma ação só, juntando os dois verbos numa caixa'], c:0,
    e:'Ações independentes que acontecem juntas pedem **barra de bifurcação** e **barra de união**. Decisão escolhe um caminho só; raia diz quem faz, não quando.'},
@@ -291,12 +301,12 @@ const HOTS = [
 /* ------------------------------------------------------------ desenho UML (SVG) */
 const POS = { Tutor:[30,30], Pet:[30,330], Agendamento:[400,330], 'Serviço':[770,330], Tosador:[400,30], Pagamento:[400,600] };
 const W=210, HH=40, HB=120;
-function caixa(nome, attrs=[], ops=null, extra=''){
-  const [x,y]=POS[nome]||extra; const alt = ops!==null ? HH+HB+34 : HH+HB;
-  let s=`<g><rect x="${x}" y="${y}" width="${W}" height="${alt}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`+
+function caixa(nome, attrs=[], ops=null, clic=false){
+  const [x,y]=POS[nome]; const alt = ops!==null ? HH+HB+34 : HH+HB;
+  let s=`<g${clic?` data-c="${nome}" style="cursor:pointer"`:''}><rect x="${x}" y="${y}" width="${W}" height="${alt}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`+
     `<line x1="${x}" y1="${y+HH}" x2="${x+W}" y2="${y+HH}" stroke="#1b1c1f" stroke-width="2"/>`+
-    `<text x="${x+W/2}" y="${y+27}" text-anchor="middle" font-weight="700" font-size="19">${nome}</text>`;
-  attrs.forEach((a,i)=> s+=`<text x="${x+12}" y="${y+HH+26+i*24}" font-size="16" font-family="JetBrains Mono,monospace">${a}</text>`);
+    `<text x="${x+W/2}" y="${y+27}" text-anchor="middle" font-weight="700" font-size="21">${nome}</text>`;
+  attrs.forEach((a,i)=> s+=`<text x="${x+12}" y="${y+HH+26+i*24}" font-size="17" font-family="JetBrains Mono,monospace">${a}</text>`);
   if(ops!==null){ s+=`<line x1="${x}" y1="${y+HH+HB}" x2="${x+W}" y2="${y+HH+HB}" stroke="#1b1c1f" stroke-width="2"/>`;
     if(ops) s+=`<text x="${x+12}" y="${y+HH+HB+23}" font-size="16" font-family="JetBrains Mono,monospace">${ops}</text>`; }
   return s+'</g>';
@@ -318,6 +328,13 @@ function linha(id, ma, verbo, mb, cor='#1b1c1f'){
     (ma?`<text x="${t1[0]}" y="${t1[1]}" text-anchor="${anc}" font-size="17" font-weight="700" fill="#7a2c46">${ma}</text>`:'')+
     (mb?`<text x="${t2[0]}" y="${t2[1]}" text-anchor="${anc}" font-size="17" font-weight="700" fill="#7a2c46">${mb}</text>`:'')+
     (verbo?`<text x="${vert?mx+14:mx}" y="${vert?my+5:my-12}" text-anchor="${vert?'start':'middle'}" font-size="15" font-style="italic" fill="#1f6f6b">${verbo}</text>`:'');
+}
+function herancaLado(){
+  const [gx,gy]=POS.Pagamento, cy=gy+(HH+HB)/2, L=`stroke="#1b1c1f" stroke-width="2" fill="none"`;
+  return `<polygon points="${gx+W},${cy} ${gx+W+20},${cy-12} ${gx+W+20},${cy+12}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="${gx+W+20},${cy} ${gx+W+60},${cy}" ${L}/><polyline points="${gx+W+60},${gy+20} ${gx+W+60},${gy+140}" ${L}/>`+
+    `<polyline points="${gx+W+60},${gy+20} ${gx+W+100},${gy+20}" ${L}/><polyline points="${gx+W+60},${gy+140} ${gx+W+100},${gy+140}" ${L}/>`+
+    [['Pix','código',gy-10],['Cartão','bandeira',gy+110]].map(([n,a,y])=>`<rect x="${gx+W+100}" y="${y}" width="170" height="70" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="${gx+W+100}" y1="${y+32}" x2="${gx+W+270}" y2="${y+32}" stroke="#1b1c1f" stroke-width="2"/><text x="${gx+W+185}" y="${y+23}" text-anchor="middle" font-weight="700" font-size="17">${n}</text><text x="${gx+W+110}" y="${y+56}" font-size="14" font-family="JetBrains Mono,monospace">${a}</text>`).join('');
 }
 function heranca(pai, filhos){
   const [x,y]=POS[pai]; let s=''; const by=y+HH+HB, tipY=by+40;
@@ -401,7 +418,7 @@ TELAS[2] = (app)=>{
   function conferir(){
     resp.feito=true; let ok=0; PALAVRAS.forEach(x=>{ if(resp.c[x.p]===x.c) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=12);
     area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=12?'ok':'no')}, h('b',{}, `${ok} de ${PALAVRAS.length} certas.`),
-      h('ul',{class:'lista-exp'}, PALAVRAS.map(x=>h('li',{html:`<b>${x.p}</b> · ${x.c}: ${md(x.e)}`})))));
+      h('ul',{class:'lista-exp'}, PALAVRAS.map(x=>h('li',{html:`${resp.c[x.p]===x.c?'✔':'✘'} <b>${x.p}</b> → ${x.c}. ${md(x.e)}`})))));
     rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(3)},'Ir para a prancheta'));
   }
   if(resp.feito){ conferir(); }
@@ -419,16 +436,17 @@ TELAS[3] = (app)=>{
   const diag=h('div',{class:'diag'});
   const passoA=h('div',{class:'card'}); const passoB=h('div',{class:'card'}); const passoC=h('div',{class:'card'}); const area=h('div');
   function svg(){
-    let s='<svg viewBox="0 0 1010 910" xmlns="http://www.w3.org/2000/svg">';
+    let s='<svg viewBox="0 0 1010 800" xmlns="http://www.w3.org/2000/svg">';
     ASSOCS.forEach(a=>{ const r=resp.as[a.id]||{}; s+=linha(a.id, r.ma||'', r.v||'', r.mb||''); });
-    CLASSES.forEach(c=>{ s+=caixa(c, ATRIBUTOS.filter(x=>resp.at[x.a]===c).map(x=>x.a)); });
-    if(resp.g.g2===0) s+=heranca('Pagamento',[['Pix',330,820,'código'],['Cartão',530,820,'bandeira']]);
+    CLASSES.forEach(c=>{ s+=caixa(c, ATRIBUTOS.filter(x=>resp.at[x.a]===c).map(x=>x.a), null, !resp.feito); });
+    if(resp.g.g2===0) s+=herancaLado();
     if(resp.g.g1===1) s+=heranca('Pet',[['Cão',10,560,''],['Gato',190,560,'']]);
     s+='</svg>'; diag.innerHTML=s;
+    diag.querySelectorAll('[data-c]').forEach(g=>g.addEventListener('click',()=>{ if(sel && !resp.feito){ resp.at[sel]=g.getAttribute('data-c'); sel=null; salvar(); desenharA(); svg(); } }));
   }
   function desenharA(){
     passoA.innerHTML='';
-    passoA.append(h('b',{},'A · Atributos: toquem no atributo e depois na classe'));
+    passoA.append(h('b',{},'A · Atributos: toquem no atributo e depois na classe (aqui ou no desenho)'));
     const ch=h('div',{class:'chips'});
     ATRIBUTOS.forEach(x=>{ const onde=resp.at[x.a]; const st = resp.feito ? (onde===x.c?' ok':' no') : (sel===x.a?' sel':'');
       const c=h('span',{class:'chip'+st}, x.a, h('small',{}, onde ? '→ '+onde : 'sem classe'));
@@ -462,7 +480,7 @@ TELAS[3] = (app)=>{
     });
   }
   desenharA(); desenharB(); desenharC(); svg();
-  app.append(diag, passoA, passoB, passoC, area);
+  app.append(h('div',{class:'prancheta'}, h('div',{class:'colD'}, diag), h('div',{}, passoA, passoB, passoC, area)));
   const rod=h('div',{class:'rodape'}); app.append(rod);
   function conferir(){
     resp.feito=true; let ok=0;
@@ -513,28 +531,56 @@ TELAS[4] = (app)=>{
 
 /* 5 · fluxo nas raias */
 function desenhoAtividades(){
-  const X0=150, DX=150, ly={Tutor:70, Sistema:200, Pagamento:330};
-  let s='<svg viewBox="0 0 1420 400" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs>';
-  RAIAS.forEach((r,i)=>{ s+=`<rect x="0" y="${i*130+5}" width="1420" height="130" fill="${i%2?'#faf7f0':'#fff'}" stroke="#1f6f6b" stroke-width="1.5"/>`+
-    `<text x="22" y="${i*130+75}" font-weight="700" font-size="17" fill="#1f6f6b">${r}</text>`; });
-  s+=`<circle cx="120" cy="${ly.Tutor}" r="12" fill="#1b1c1f"/>`;
-  let prev=[132, ly.Tutor];
-  ACOES.forEach((a,i)=>{
-    const x=X0+i*DX+(i>=4?60:0), y=ly[a.r];
-    s+=`<line x1="${prev[0]}" y1="${prev[1]}" x2="${x}" y2="${y}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`;
-    const tx=a.t.length>17 ? a.t.replace(/^(.{0,17}\S*)\s/,'$1|').split('|') : [a.t];
-    s+=`<rect x="${x}" y="${y-26}" width="130" height="52" rx="16" fill="#fff" stroke="#1f6f6b" stroke-width="2"/>`;
-    tx.forEach((t,k)=> s+=`<text x="${x+65}" y="${y+(tx.length>1?-4+k*18:6)}" text-anchor="middle" font-size="13.5">${t}</text>`);
-    prev=[x+130,y];
-    if(i===3){ const dx=x+165; s+=`<line x1="${x+130}" y1="${y}" x2="${dx-20}" y2="${y}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`+
-      `<path d="M${dx},${y-18} L${dx+20},${y} L${dx},${y+18} L${dx-20},${y} Z" fill="#fff" stroke="#c79a2b" stroke-width="2.5"/>`+
-      `<text x="${dx+4}" y="${y-26}" font-size="12.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[tosador livre]</text>`+
-      `<text x="${dx-60}" y="${y+46}" font-size="12.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[nenhum livre] → E1</text>`+
-      `<line x1="${dx}" y1="${y+18}" x2="${dx}" y2="${y+28}" stroke="#3a3a3a" stroke-width="2"/>`;
-      prev=[dx+20,y]; }
+  const LX={Tutor:[0,300],Sistema:[300,760],Pagamento:[760,1040]}, CX={Tutor:150,Sistema:530,Pagamento:900};
+  const Y=r=>78+r*74, BW=240, BH=48;
+  const N=[];
+  const add=(id,tipo,raia,r,txt,dx=0)=>N.push({id,tipo,raia,r,txt,x:CX[raia]+dx,y:Y(r)});
+  add('ini','ini','Tutor',0);
+  add('a1','acao','Tutor',1,'Escolhe o pet');
+  add('a2','acao','Sistema',2,'Mostra serviços e preços');
+  add('a3','acao','Tutor',3,'Escolhe serviço, data e horário');
+  add('a4','acao','Sistema',4,'Verifica tosador livre');
+  add('d1','dec','Sistema',5);
+  add('a5','acao','Tutor',6,'Paga o sinal');
+  add('e1','acao','Sistema',6,'Mostra 3 horários livres (E1)');
+  add('a6','acao','Pagamento',7,'Autoriza o sinal');
+  add('d2','dec','Pagamento',8);
+  add('a7','acao','Sistema',9,'Confirma o agendamento');
+  add('f1','barra','Sistema',10);
+  add('p1','acao','Sistema',11,'Bloqueia o horário',-115);
+  add('p2','acao','Sistema',11,'Envia o comprovante',115);
+  add('f2','barra','Sistema',12);
+  add('a8','acao','Sistema',13,'Envia lembrete na véspera');
+  add('fim','fim','Sistema',14);
+  const n=id=>N.find(x=>x.id===id);
+  const H=Y(14)+50;
+  let s=`<svg viewBox="0 0 1040 ${H}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3a3a3a"/></marker></defs>`;
+  RAIAS.forEach((r,i)=>{ const [a,b]=LX[r]; s+=`<rect x="${a}" y="0" width="${b-a}" height="${H}" fill="${i%2?'#faf7f0':'#fff'}" stroke="#1f6f6b" stroke-width="1.5"/>`+
+    `<rect x="${a}" y="0" width="${b-a}" height="40" fill="#e3efed" stroke="#1f6f6b" stroke-width="1.5"/><text x="${(a+b)/2}" y="27" text-anchor="middle" font-weight="700" font-size="18" fill="#1f6f6b">${r}</text>`; });
+  const topo=o=> o.tipo==='acao'?o.y-BH/2 : o.tipo==='dec'?o.y-20 : o.tipo==='barra'?o.y-4 : o.y-14;
+  const base=o=> o.tipo==='acao'?o.y+BH/2 : o.tipo==='dec'?o.y+20 : o.tipo==='barra'?o.y+4 : o.y+14;
+  const seta=(a,b,rot='',rx=0)=>{ const A=n(a),B=n(b); const y1=base(A), y2=topo(B), my=(y1+y2)/2;
+    s+=`<path d="M${A.x},${y1} V${my} H${B.x} V${y2-1}" fill="none" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`;
+    if(rot) s+=`<text x="${(A.x+B.x)/2+rx}" y="${my-6}" text-anchor="middle" font-size="13.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">${rot}</text>`; };
+  seta('ini','a1'); seta('a1','a2'); seta('a2','a3'); seta('a3','a4'); seta('a4','d1');
+  { const D=n('d1'), A=n('a5'); s+=`<path d="M${D.x-22},${D.y} H${A.x} V${topo(A)-1}" fill="none" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/><text x="${D.x-34}" y="${D.y-8}" text-anchor="end" font-size="13.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[tosador livre]</text>`; }
+  seta('d1','e1'); { const D=n('d1'); s+=`<text x="${D.x+10}" y="${D.y+40}" font-size="13.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[nenhum livre]</text>`; }
+  { const E=n('e1'), A=n('a3'); const xr=E.x+BW/2; s+=`<path d="M${xr},${E.y} H${xr+40} V${A.y} H${A.x+BW/2+1}" fill="none" stroke="#3a3a3a" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>`+
+    `<text x="${xr+60}" y="${(E.y+A.y)/2}" font-size="13" fill="#6b675d" transform="rotate(-90 ${xr+60} ${(E.y+A.y)/2})" text-anchor="middle">volta ao passo 3</text>`; }
+  seta('a5','a6'); seta('a6','d2'); { const D=n('d2'), A=n('a7'); s+=`<path d="M${D.x-22},${D.y} H${A.x} V${topo(A)-1}" fill="none" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/><text x="${D.x-34}" y="${D.y-8}" text-anchor="end" font-size="13.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[aprovado]</text>`; }
+  { const D=n('d2'); s+=`<path d="M${D.x+20},${D.y} H${D.x+60} V${D.y+44}" fill="none" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`+
+    `<text x="${D.x+66}" y="${D.y-6}" font-size="13.5" fill="#7a2c46" font-family="JetBrains Mono,monospace">[recusado]</text>`+
+    `<text x="${D.x+60}" y="${D.y+62}" text-anchor="middle" font-size="13" fill="#6b675d">E2: outra forma</text><text x="${D.x+60}" y="${D.y+78}" text-anchor="middle" font-size="13" fill="#6b675d">ou desiste</text>`; }
+  seta('a7','f1'); seta('f1','p1'); seta('f1','p2'); seta('p1','f2'); seta('p2','f2'); seta('f2','a8'); seta('a8','fim');
+  N.forEach(o=>{
+    if(o.tipo==='ini') s+=`<circle cx="${o.x}" cy="${o.y}" r="13" fill="#1b1c1f"/>`;
+    if(o.tipo==='fim') s+=`<circle cx="${o.x}" cy="${o.y}" r="15" fill="#fff" stroke="#1b1c1f" stroke-width="2.5"/><circle cx="${o.x}" cy="${o.y}" r="8" fill="#1b1c1f"/>`;
+    if(o.tipo==='dec') s+=`<path d="M${o.x},${o.y-20} L${o.x+22},${o.y} L${o.x},${o.y+20} L${o.x-22},${o.y} Z" fill="#fff" stroke="#c79a2b" stroke-width="3"/>`;
+    if(o.tipo==='barra') s+=`<rect x="${o.x-200}" y="${o.y-4}" width="400" height="8" rx="2" fill="#1b1c1f"/>`;
+    if(o.tipo==='acao'){ const w = o.id[0]==='p' ? 200 : BW; const ex = o.id==='e1' ? ' stroke-dasharray="6 4"' : '';
+      s+=`<rect x="${o.x-w/2}" y="${o.y-BH/2}" width="${w}" height="${BH}" rx="18" fill="#fff" stroke="#1f6f6b" stroke-width="2"${ex}/>`+
+         `<text x="${o.x}" y="${o.y+5}" text-anchor="middle" font-size="15">${o.txt}</text>`; }
   });
-  s+=`<line x1="${prev[0]}" y1="${prev[1]}" x2="${prev[0]+28}" y2="${prev[1]}" stroke="#3a3a3a" stroke-width="2" marker-end="url(#ar)"/>`+
-     `<circle cx="${prev[0]+44}" cy="${prev[1]}" r="13" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><circle cx="${prev[0]+44}" cy="${prev[1]}" r="7" fill="#1b1c1f"/>`;
   return s+'</svg>';
 }
 TELAS[5] = (app)=>{
@@ -565,7 +611,7 @@ TELAS[5] = (app)=>{
     MCQ5.forEach((q,k)=>{ if(resp.q[k]===q.c) ok++; });
     S.pts[id]=ok; salvar(); cab(); bip(ok>=S.max[id]*0.7); A(); B(); C();
     diag.innerHTML=''; diag.append(h('div',{class:'kick', style:'margin-top:14px'},'O desenho completo'), h('div',{class:'diag', html: desenhoAtividades()}));
-    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=S.max[id]*0.7?'ok':'no')}, h('b',{},`${ok} de ${S.max[id]} pontos. `), 'Raia e posição valem 1 ponto por ação; decisão e paralelo, 1 cada. O E1 sai do losango; o E2 sairia de outra decisão, depois de "Autoriza o sinal".'));
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok>=S.max[id]*0.7?'ok':'no')}, h('b',{},`${ok} de ${S.max[id]} pontos. `), 'Raia e posição valem 1 ponto por ação; decisão e paralelo, 1 cada. No desenho, o E1 sai do primeiro losango, o E2 sai do segundo, e a bifurcação mostra as duas ações em paralelo.'));
     rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(6)},'Ir para a caça ao defeito')); }
   if(resp.feito) conferir();
   else rod.append(comMouse(), dicaBtn(id,'Quem faz? Pessoa mexendo no app é **Tutor**; o que o software mostra, verifica ou envia é **Sistema**; quem aprova o dinheiro é **Pagamento**. A ordem segue os números do caso de uso.', area),
@@ -575,30 +621,27 @@ TELAS[5] = (app)=>{
 /* 6 · caça ao defeito */
 function diagDefeitos(resp){
   const st=(hid)=>{ let c='hot'; const d=HOTS.find(x=>x.id===hid).d; if(resp.feito){ if(d) c+=' ok'; else if(resp.m[hid]) c+=' no'; } else if(resp.m[hid]) c+=' marc'; return c; };
-  const T=(x,y,t,b)=>`<text x="${x}" y="${y}" font-size="16" font-family="JetBrains Mono,monospace"${b?' font-weight="700"':''}>${t}</text>`;
-  const box=(x,y,n,w=220,hgt=150)=>`<rect x="${x}" y="${y}" width="${w}" height="${hgt}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="${x}" y1="${y+40}" x2="${x+w}" y2="${y+40}" stroke="#1b1c1f" stroke-width="2"/><text x="${x+w/2}" y="${y+27}" text-anchor="middle" font-weight="700" font-size="19">${n}</text>`;
-  const hot=(hid,x,y,w,hgt,inner)=>`<g class="${st(hid)}" data-h="${hid}"><rect class="hb" x="${x}" y="${y}" width="${w}" height="${hgt}" rx="6"/>${inner}</g>`;
-  let s='<svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">';
-  s+=box(30,20,'Tutor')+T(42,86,'nome')+T(42,110,'telefone');
-  s+=box(30,330,'Pet',220,170);
-  s+=hot('h1',36,374,208,28,T(42,394,'id_tutor: INT'))+hot('h2',36,402,208,28,T(42,422,'espécie'))+T(42,446,'porte');
-  s+=`<line x1="140" y1="170" x2="140" y2="330" stroke="#1b1c1f" stroke-width="2"/>`;
-  s+=hot('h4',100,176,110,148,`<text x="152" y="200" font-size="17" font-weight="700" fill="#7a2c46">1..*</text><text x="152" y="318" font-size="17" font-weight="700" fill="#7a2c46">1</text><text x="152" y="258" font-size="15" font-style="italic" fill="#1f6f6b">possui</text>`);
-  s+=box(390,330,'Agendamento',230,150)+hot('h8',396,374,218,52,T(402,394,'data e hora')+T(402,418,'situação'));
-  s+=`<line x1="250" y1="410" x2="390" y2="410" stroke="#1b1c1f" stroke-width="2"/><text x="262" y="400" font-size="16" font-weight="700" fill="#7a2c46">1</text><text x="352" y="400" font-size="16" font-weight="700" fill="#7a2c46">0..*</text>`;
-  s+=box(390,20,'Tosador',230,120)+T(402,86,'especialidade');
-  s+=`<line x1="505" y1="140" x2="505" y2="330" stroke="#1b1c1f" stroke-width="2"/>`;
-  s+=hot('h5',470,146,110,180,`<text x="517" y="170" font-size="17" font-weight="700" fill="#7a2c46">1</text><text x="517" y="318" font-size="17" font-weight="700" fill="#7a2c46">0..*</text>`);
-  s+=box(760,300,'Serviço',220,200)+T(772,366,'tipo')+T(772,390,'preço')+`<line x1="760" y1="440" x2="980" y2="440" stroke="#1b1c1f" stroke-width="2"/>`;
-  s+=hot('h3',766,446,208,34,T(772,468,'calcularPreco()'));
-  s+=`<line x1="620" y1="400" x2="760" y2="400" stroke="#1b1c1f" stroke-width="2"/>`;
-  s+=hot('h7',626,370,128,36,`<text x="632" y="392" font-size="16" font-weight="700" fill="#7a2c46">0..*</text><text x="738" y="392" font-size="16" font-weight="700" fill="#7a2c46" text-anchor="end">1</text>`);
-  s+=hot('h6',300,490,470,126,
-    `<polygon points="505,480 493,500 517,500" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><line x1="505" y1="500" x2="505" y2="520" stroke="#1b1c1f" stroke-width="2"/>`+
-    `<polyline points="385,560 385,520 625,520 625,560" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
-    `<rect x="315" y="560" width="140" height="50" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="385" y="591" text-anchor="middle" font-weight="700" font-size="17">Pix</text>`+
-    `<rect x="555" y="560" width="140" height="50" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="625" y="591" text-anchor="middle" font-weight="700" font-size="17">Cartão</text>`);
-  s+=`<text x="640" y="470" font-size="15" fill="#6b675d">Pagamento (detalhe abaixo)</text>`;
+  const hot=(hid,x,y,w,hgt,inner='')=>`<g class="${st(hid)}" data-h="${hid}"><rect class="hb" x="${x}" y="${y}" width="${w}" height="${hgt}" rx="6"/>${inner}</g>`;
+  const T=(x,y,t)=>`<text x="${x}" y="${y}" font-size="16" font-family="JetBrains Mono,monospace">${t}</text>`;
+  let s='<svg viewBox="0 0 1010 800" xmlns="http://www.w3.org/2000/svg">';
+  s+=linha('tp','1..*','possui','1')+linha('pa','1','','0..*')+linha('as','0..*','','1')+linha('at','0..*','','1')+linha('ap','1','','0..1');
+  s+=caixa('Tutor',['nome','telefone'])+caixa('Tosador',['especialidade'])+caixa('Agendamento',[])+caixa('Serviço',['tipo','preço'],'')+caixa('Pagamento',['valor','aprovado em'])+caixa('Pet',[]);
+  const [px,py]=POS.Pet, [ax,ay]=POS.Agendamento, [sx,sy]=POS['Serviço'];
+  s+=hot('h1',px+5,py+HH+8,W-10,26,T(px+12,py+HH+26,'id_tutor: INT'));
+  s+=hot('h2',px+5,py+HH+33,W-10,26,T(px+12,py+HH+50,'espécie'));
+  s+=T(px+12,py+HH+74,'porte');
+  s+=hot('h8',ax+5,ay+HH+8,W-10,50,T(ax+12,ay+HH+26,'data e hora')+T(ax+12,ay+HH+50,'situação'));
+  s+=hot('h3',sx+5,sy+HH+HB+4,W-10,28,T(sx+12,sy+HH+HB+23,'calcularPreco()'));
+  s+=hot('h4',100,192,120,136); s+=hot('h5',470,192,120,136); s+=hot('h7',612,376,156,44);
+  const [gx,gy]=POS.Pagamento, cy=gy+(HH+HB)/2;
+  s+=hot('h6',gx+W-2,gy-14,390,190,
+    `<polygon points="${gx+W},${cy} ${gx+W+20},${cy-12} ${gx+W+20},${cy+12}" fill="#fff" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="${gx+W+20},${cy} ${gx+W+60},${cy}" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="${gx+W+60},${gy+20} ${gx+W+60},${gy+140}" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="${gx+W+60},${gy+20} ${gx+W+100},${gy+20}" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<polyline points="${gx+W+60},${gy+140} ${gx+W+100},${gy+140}" fill="none" stroke="#1b1c1f" stroke-width="2"/>`+
+    `<rect x="${gx+W+100}" y="${gy-10}" width="170" height="60" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="${gx+W+185}" y="${gy+27}" text-anchor="middle" font-weight="700" font-size="18">Pix</text>`+
+    `<rect x="${gx+W+100}" y="${gy+110}" width="170" height="60" fill="#fff" stroke="#1b1c1f" stroke-width="2"/><text x="${gx+W+185}" y="${gy+147}" text-anchor="middle" font-weight="700" font-size="18">Cartão</text>`);
   return s+'</svg>';
 }
 TELAS[6] = (app)=>{
@@ -613,7 +656,7 @@ TELAS[6] = (app)=>{
   function conferir(){ resp.feito=true; let ok=0, falso=0; HOTS.forEach(x=>{ if(resp.m[x.id]&&x.d) ok++; if(resp.m[x.id]&&!x.d) falso++; });
     S.pts[id]=Math.max(0, ok-falso); salvar(); cab(); desenhar(); bip(ok===3&&!falso);
     area.innerHTML=''; area.append(h('div',{class:'fb '+(ok===3&&!falso?'ok':'no')}, h('b',{},`Acharam ${ok} de 3 defeitos${falso?`, com ${falso} marcação errada`:''}. `),
-      h('ul',{class:'lista-exp'}, HOTS.map(x=>h('li',{html:(x.d?'<b>Defeito:</b> ':'<b>Certo:</b> ')+md(x.e)})))));
+      h('ul',{class:'lista-exp'}, HOTS.map(x=>h('li',{html:(x.d?'<b>Defeito:</b> ':'<b>Certo:</b> ')+md(x.e)+(resp.m[x.id]?' <i>(vocês marcaram)</i>':'')})))));
     rod.innerHTML=''; rod.append(h('button',{class:'btn', onclick:()=>{ S.fim=S.fim||Date.now(); ir(7); }},'Ver o resultado da equipe')); }
   if(resp.feito) conferir();
   else rod.append(comMouse(), dicaBtn(id,'Modelo de domínio **não tem** chave de banco nem métodos. E multiplicidade se lê nos dois sentidos: confiram se o número está do lado certo.', area),
@@ -628,7 +671,7 @@ TELAS[7] = (app)=>{
     h('div',{class:'card', style:'text-align:center'}, h('div',{class:'grande'}, `${pts} / ${mx}`), h('div',{style:'font:700 22px Fraunces,serif;margin-top:6px'}, pct + '% de aproveitamento'),
       h('div',{style:'color:#6b675d;margin-top:6px'}, S.membros.map(m=>m.nome).join(' · '))),
     h('div',{class:'placar'}, Object.keys(nomes).map(k=>h('div',{}, h('b',{}, `${S.pts[k]||0}/${S.max[k]||0}`), nomes[k]))),
-    Object.keys(S.dicas).length ? h('p',{style:'text-align:center;color:#7a5a12'}, `Dicas usadas: ${Object.keys(S.dicas).length} (−${Object.keys(S.dicas).length} pontos)`) : null);
+    Object.keys(S.dicas).length ? h('p',{style:'text-align:center;color:#7a5a12'}, `Dicas usadas: ${Object.keys(S.dicas).length} (−${Object.keys(S.dicas).length} pontos)`) : '');
   const st=h('div',{class:'status', style:'text-align:center;margin:10px 0'});
   app.append(st, fala('Obrigada, equipe! Agora façam o mesmo com o caso de uso do projeto de vocês, no draw.io. Esses dois desenhos entram no DDR v2.'));
   if(!S.enviado){ S.enviado=true; salvar();
