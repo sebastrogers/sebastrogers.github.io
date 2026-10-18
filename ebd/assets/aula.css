@@ -437,3 +437,24 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .pagina-aula .citacao-longa cite{display:block;font:700 .8rem "Atkinson Hyperlegible",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-2);font-style:normal}
 .hino-pagina{margin:18px 0 22px;padding:18px 16px 10px;background:var(--papel);border-radius:18px;box-shadow:var(--sombra)}
 .hino-pagina .hino-v .trecho{stroke-dashoffset:0;transition:none}
+
+/* Lição 4: a tabela da luz */
+.tabela-luz{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;max-width:1000px;margin:6px auto 0}
+.tabela-luz > div{padding:12px 18px;border-radius:12px;font:700 23px "Atkinson Hyperlegible",sans-serif}
+.tabela-luz .tl-cab{font-size:16px;letter-spacing:.1em;text-transform:uppercase;padding:6px 4px;background:none !important}
+.tabela-luz .tl-cab.tl-apaga{color:#6b6470}.tabela-luz .tl-cab.tl-acende{color:var(--bronze)}
+.tabela-luz .tl-apaga{background:#d9d4d9;color:#4a4450}
+.tabela-luz .tl-acende{background:linear-gradient(90deg,#f6e3b4,#fdf3d8);color:#5a3d06;box-shadow:0 0 22px rgba(231,201,138,.55)}
+:root[data-theme="dark"] .tabela-luz .tl-apaga{background:#2b2f36;color:#a7a3ad}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabela-luz .tl-apaga{background:#2b2f36;color:#a7a3ad}}
+@media screen and (max-width:760px) and (orientation:portrait){.tabela-luz{gap:6px 8px}.tabela-luz > div{font-size:15px;padding:8px 10px}.tabela-luz .tl-cab{font-size:11px}}
+
+/* Lição 4: o céu de Filipos */
+.slide.ceu-slide{background:radial-gradient(120% 90% at 50% 100%,#2b1d3a 0%,#0e0b16 70%) !important;color:#fff}
+.ceu{width:100%;max-width:1100px;height:auto;display:block;margin:0 auto}
+.ceu .pontinho{fill:#fff;opacity:.35}
+.ceu .cidade{fill:#06050a}
+.ceu .estrela text{font:700 22px "Atkinson Hyperlegible",sans-serif;fill:#f3e6c4}
+.ceu .estrela.passo{transform:none;transition:opacity .8s}
+.pagina-aula .ceu-pagina{background:radial-gradient(120% 90% at 50% 100%,#2b1d3a 0%,#0e0b16 70%);border-radius:18px;padding:18px 12px 0;margin:18px 0 22px;overflow:hidden}
+@media screen and (max-width:760px){.ceu .estrela text{font-size:34px}}
