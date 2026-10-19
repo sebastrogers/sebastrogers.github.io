@@ -1,5 +1,5 @@
 {
-  "atualizado": "15 de outubro de 2026",
+  "atualizado": "19 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -186,11 +186,31 @@
           "tags": "slides pdf http rest api fastapi pydantic testclient loja roupas"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 10: A loja não esquece, persistência e camadas",
+          "descricao": "Primeiro os conceitos, depois a prática: persistência, banco relacional e SQLite, SQL pelo Python, camadas (rota, serviço, repositório), ORM com SQLModel e exceções que viram 404, 409 e 422. Na prática, a Loja de Roupas ganha um CRUD gravado no banco e testado com banco em memória.",
+          "arquivo": "assets/materiais/coding/aula-10-loja-nao-esquece.html",
+          "data": "20/10/2026",
+          "tags": "slides persistencia banco de dados sqlite sql commit sql injection camadas repositorio servico orm sqlmodel sessao depends 404 409 422 crud fastapi pytest loja roupas",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: A loja não esquece (PDF)",
+          "descricao": "Os mesmos slides da Aula 10 em PDF, para ler, imprimir ou baixar.",
+          "arquivo": "assets/materiais/coding/aula-10-loja-nao-esquece.pdf",
+          "data": "20/10/2026",
+          "tags": "slides pdf persistencia sqlite camadas sqlmodel crud"
+        },
+        {
           "tipo": "Projeto",
           "titulo": "Repositório da Loja de Roupas, fase por fase",
-          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8) e etapa-10 a etapa-12 (Aula 9, a API). Travou numa fase? Baixe o .zip dela na aba Tags.",
+          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API) e etapa-13 a etapa-15 (Aula 10, banco e camadas). Travou numa fase? Baixe o .zip dela na aba Tags.",
           "arquivo": "https://github.com/sebastrogers/loja-roupas-gabarito",
-          "data": "13/10/2026",
+          "data": "20/10/2026",
           "tags": "github repositorio codigo fonte gabarito tags etapa checkpoint pytest github actions loja"
         }
       ]
