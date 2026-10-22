@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Placar · Plantão PetVida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#111215;--card:#1b1c21;--card2:#23252b;--ink:#f1ece0;--muted:#9b968a;--teal:#3fb0a8;--gold:#e0b440;--silver:#c9cdd3;--bronze:#d08a52;--red:#e2614b;--green:#4cc27f;--line:#30323a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.4 Inter,system-ui,sans-serif;min-height:100%}
+header{display:flex;align-items:center;gap:18px;padding:18px 32px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.kick{font:700 14px JetBrains Mono,monospace;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+h1{margin:2px 0 0;font:900 38px/1 Fraunces,Georgia,serif}
+.sp{flex:1}
+.relogio{font:700 44px JetBrains Mono,monospace;color:var(--ink);letter-spacing:.04em}
+.vivo{display:flex;align-items:center;gap:8px;font:700 13px JetBrains Mono,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.vivo i{width:12px;height:12px;border-radius:50%;background:var(--muted)}
+.vivo.on i{background:var(--red);box-shadow:0 0 0 0 #e2614b88;animation:pulso 1.6s infinite}
+.vivo.on{color:var(--ink)}
+@keyframes pulso{70%{box-shadow:0 0 0 12px #e2614b00}100%{box-shadow:0 0 0 0 #e2614b00}}
+.ctl{display:flex;gap:8px}
+.ctl button{background:var(--card2);color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font:600 13px Inter;cursor:pointer}
+.ctl button:hover{color:var(--ink)}
+main{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(280px,1fr);gap:24px;padding:24px 32px 40px}
+.ranking{position:relative}
+.vazio{color:var(--muted);font-size:22px;padding:40px 0;text-align:center;border:2px dashed var(--line);border-radius:18px}
+.time{display:grid;grid-template-columns:76px minmax(0,1fr) minmax(220px,300px) 110px;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 20px;margin-bottom:12px;transition:transform .7s cubic-bezier(.2,.8,.2,1),background .4s}
+.time .pos{font:900 46px/1 Fraunces,serif;color:var(--muted);text-align:center}
+.time.p1 .pos{color:var(--gold)}.time.p2 .pos{color:var(--silver)}.time.p3 .pos{color:var(--bronze)}
+.time.fechou{background:linear-gradient(90deg,#2b2614,var(--card) 60%);border-color:#6b5a22}
+.time.p1.fechou{box-shadow:0 0 0 2px var(--gold),0 10px 40px #e0b44033}
+.nome{font:700 28px/1.1 Fraunces,serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.membros{font-size:14px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.est{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{font:700 12px JetBrains Mono,monospace;letter-spacing:.06em;text-transform:uppercase;border-radius:20px;padding:4px 10px;background:var(--card2);color:var(--muted)}
+.chip.ok{background:#173326;color:var(--green)}.chip.alerta{background:#3a1d18;color:var(--red)}.chip.ouro{background:#3a2f10;color:var(--gold)}
+.barras{display:grid;gap:8px}
+.barra{display:grid;grid-template-columns:28px 1fr 46px;gap:8px;align-items:center;font:700 13px JetBrains Mono,monospace;color:var(--muted)}
+.trilho{height:12px;border-radius:6px;background:var(--card2);overflow:hidden}
+.trilho b{display:block;height:100%;border-radius:6px;background:var(--teal);transition:width .8s}
+.barra.ok .trilho b{background:var(--green)}
+.pts{text-align:right;font:900 44px/1 Fraunces,serif;color:var(--teal)}
+.pts small{display:block;font:600 12px Inter;color:var(--muted);margin-top:4px}
+.lances{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;max-height:calc(100vh - 160px);overflow:hidden}
+.lances h2{margin:0 0 10px;font:700 14px JetBrains Mono,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lance{display:grid;grid-template-columns:54px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:15px;animation:entra .5s}
+.lance time{font:600 12px JetBrains Mono,monospace;color:var(--muted);padding-top:2px}
+.lance.forte{color:var(--gold);font-weight:700}.lance.ruim{color:#f0a294}.lance.chave{color:#9fe0bb}
+@keyframes entra{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.banner{position:fixed;inset:0;display:none;place-items:center;background:#0b0c0ecc;z-index:50}
+.banner.on{display:grid;animation:entra .4s}
+.banner div{text-align:center;padding:40px 60px;border-radius:24px;background:var(--card);border:2px solid var(--gold);box-shadow:0 20px 80px #e0b44044;max-width:90vw}
+.banner .k{font:700 16px JetBrains Mono,monospace;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.banner .n{font:900 72px/1.05 Fraunces,serif;margin:12px 0}
+.banner .s{font-size:24px;color:var(--muted)}
+canvas#confete{position:fixed;inset:0;pointer-events:none;z-index:60}
+.podio{display:none;grid-template-columns:repeat(3,1fr);gap:18px;align-items:end;max-width:1100px;margin:30px auto 0;padding:0 32px}
+.podio.on{display:grid}
+.degrau{text-align:center}
+.degrau .n{font:900 34px/1.1 Fraunces,serif;margin-bottom:6px}
+.degrau .m{font-size:14px;color:var(--muted);margin-bottom:10px;min-height:20px}
+.degrau .b{border-radius:16px 16px 0 0;display:grid;place-items:center;font:900 80px Fraunces,serif;color:#111215}
+.d1 .b{height:300px;background:var(--gold)}.d2 .b{height:220px;background:var(--silver)}.d3 .b{height:160px;background:var(--bronze)}
+.d1{order:2}.d2{order:1}.d3{order:3}
+.degrau .t{font:700 15px JetBrains Mono,monospace;color:var(--ink);margin-top:-2px}
+.cfg{position:fixed;inset:0;display:none;place-items:center;background:#000a;z-index:70}
+.cfg.on{display:grid}
+.cfg div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;width:min(640px,92vw)}
+.cfg input{width:100%;font:15px JetBrains Mono,monospace;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f1013;color:var(--ink);margin:12px 0}
+.cfg button{background:var(--teal);color:#081211;border:0;border-radius:10px;padding:10px 18px;font:700 15px Inter;cursor:pointer;margin-right:8px}
+.cfg p{color:var(--muted);font-size:14px;margin:6px 0}
+@media (max-width:1100px){main{grid-template-columns:1fr}.lances{max-height:none}.time{grid-template-columns:56px minmax(0,1fr) 90px}.time .barras{grid-column:2/4}.pts{grid-row:1;grid-column:3}.time .pos{font-size:36px}}
+@media (max-width:640px){header,main{padding-left:16px;padding-right:16px}h1{font-size:28px}.relogio{font-size:30px}.nome{font-size:22px}.pts{font-size:34px}.banner .n{font-size:44px}.degrau .b{font-size:50px}.d1 .b{height:200px}.d2 .b{height:150px}.d3 .b{height:110px}.degrau .n{font-size:20px}}
+@media (max-width:640px){.nome,.membros{white-space:normal}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="kick">Engenharia de Requisitos · Aula 10</div><h1>Plantão PetVida · placar ao vivo</h1></div>
+  <span class="sp"></span>
+  <div class="vivo" id="vivo"><i></i><span>conectando</span></div>
+  <div class="relogio" id="relogio">00:00</div>
+  <div class="ctl">
+    <button id="bPodio">pódio</button>
+    <button id="bRodada">nova rodada</button>
+    <button id="bDemo">demonstração</button>
+    <button id="bCfg">configurar</button>
+  </div>
+</header>
+<section class="podio" id="podio"></section>
+<main id="principal">
+  <section class="ranking" id="ranking"><div class="vazio">Esperando a primeira equipe começar...</div></section>
+  <aside class="lances"><h2>Lances</h2><div id="lances"></div></aside>
+</main>
+<div class="banner" id="banner"><div><div class="k" id="bK"></div><div class="n" id="bN"></div><div class="s" id="bS"></div></div></div>
+<canvas id="confete"></canvas>
+<div class="cfg" id="cfg"><div>
+  <b>Endereço do placar</b>
+  <p>Cole a URL do app da Web do Apps Script da planilha do placar (termina em <code>/exec</code>).</p>
+  <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+  <button id="cfgOk">Salvar e conectar</button><button id="cfgDemo" style="background:var(--card2);color:var(--ink)">Só ver a demonstração</button>
+</div></div>
+<script>
+'use strict';
+const PADRAO_URL = 'https://script.google.com/macros/s/AKfycbxe6eBbYrX-2C_rExHc0P2VS97BwEMwTHz1x_Qd6THV1jRnmwjL5aYinyFKlFMWZQlr/exec';   /* pode deixar fixo aqui a URL /exec do placar */
+const $ = s => document.querySelector(s);
+const ls = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+const qs = new URLSearchParams(location.search);
+let URL_P = qs.get('url') || ls.get('placar-url') || PADRAO_URL;
+let desde = Number(ls.get('placar-desde') || 0);
+let demo = qs.has('demo'), dados = {equipes:[], eventos:[]}, vistos = new Set(), finais = new Set(), primeira = true, inicioCorrida = null;
+function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function hhmm(t){ const d=new Date(t); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function dur(s){ s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+/* ---------------- conexão (JSONP: funciona até abrindo o arquivo direto do computador) */
+let pedido = 0;
+function buscar(){
+  if(demo){ passoDemo(); return; }
+  if(!URL_P){ $('#cfg').classList.add('on'); return; }
+  const cb = '__placar' + (++pedido); const s = document.createElement('script'); let feito=false;
+  window[cb] = (r)=>{ feito=true; delete window[cb]; s.remove(); estado(true); receber(r); };
+  s.onerror = ()=>{ estado(false); s.remove(); };
+  setTimeout(()=>{ if(!feito){ estado(false); delete window[cb]; s.remove(); } }, 9000);
+  s.src = URL_P + (URL_P.includes('?')?'&':'?') + 'callback=' + cb + '&desde=' + desde + '&t=' + Date.now();
+  document.body.append(s);
+}
+function estado(ok){ const v=$('#vivo'); v.classList.toggle('on', ok); v.querySelector('span').textContent = demo ? 'demonstração' : ok ? 'ao vivo' : 'sem conexão'; }
+
+/* ---------------- desenho */
+function receber(r){
+  dados = r;
+  if(r.equipes.length) inicioCorrida = Math.min(...r.equipes.map(e=>e.inicio));
+  desenharRanking(); desenharLances(); desenharPodio();
+  r.equipes.forEach((e,i)=>{ if(e.final && !finais.has(e.chave||e.equipe)){ finais.add(e.chave||e.equipe); if(!primeira) comemorar(e, i+1); } });
+  primeira = false;
+}
+function desenharRanking(){
+  const box = $('#ranking'), L = dados.equipes;
+  if(!L.length){ box.innerHTML='<div class="vazio">Esperando a primeira equipe começar...</div>'; return; }
+  const antes = {}; box.querySelectorAll('.time').forEach(el=>{ antes[el.dataset.k] = el.getBoundingClientRect().top; });
+  box.innerHTML = '';
+  L.forEach((e,i)=>{
+    const k = e.chave || e.equipe, pos = i+1;
+    const chips = [];
+    if(e.final) chips.push(`<span class="chip ouro">fechou em ${dur(e.segundos || (e.final-e.inicio)/1000)}</span>`);
+    else if(e.portao) chips.push('<span class="chip ok">na sala de decisão</span>');
+    if(!e.final && !e.portao){ if(e.A.ok) chips.push('<span class="chip ok">chave A</span>'); if(e.B.ok) chips.push('<span class="chip ok">chave B</span>'); }
+    if(e.tentativas && !e.final) chips.push(`<span class="chip alerta">${e.tentativas} ${e.tentativas>1?'tentativas':'tentativa'} na decisão</span>`);
+    if(e.final && e.tentativas>1) chips.push(`<span class="chip">${e.tentativas} tentativas</span>`);
+    const barra = (m, n)=>`<div class="barra${m.ok?' ok':''}"><span>${n}</span><div class="trilho"><b style="width:${m.de?Math.round(m.feito/m.de*100):0}%"></b></div><span>${m.feito}/${m.de}</span></div>`;
+    const el = document.createElement('div');
+    el.className = 'time' + (pos<=3 && e.final ? ' p'+pos : pos<=3 ? ' p'+pos : '') + (e.final ? ' fechou' : '');
+    el.dataset.k = k;
+    el.innerHTML = `<div class="pos">${pos}º</div>
+      <div style="min-width:0"><div class="nome">${esc(e.equipe)}</div><div class="membros">${esc((e.nomes||[]).join(' · '))}</div><div class="est">${chips.join('')}</div></div>
+      <div class="barras">${barra(e.A,'A')}${barra(e.B,'B')}</div>
+      <div class="pts">${e.pontos}<small>pontos</small></div>`;
+    box.append(el);
+  });
+  box.querySelectorAll('.time').forEach(el=>{ const a = antes[el.dataset.k]; if(a===undefined) return;
+    const d = a - el.getBoundingClientRect().top; if(!d) return;
+    el.style.transition='none'; el.style.transform=`translateY(${d}px)`; el.getBoundingClientRect();
+    el.style.transition=''; el.style.transform=''; });
+}
+function textoLance(ev){
+  const n = `<b>${esc(ev.equipe)}</b>`;
+  switch(ev.etapa){
+    case 'inicio': return [`${n} entrou na corrida pela Metade ${ev.metade}.`, ''];
+    case 'progresso': return [`${n}: Metade ${ev.metade} acertou ${ev.feito} de ${ev.de}.`, ''];
+    case 'metade': return [`${n} pegou a chave da Metade ${ev.metade}!`, 'chave'];
+    case 'portao': return [`${n} abriu o portão da sala de decisão.`, 'chave'];
+    case 'tentativa': return [`${n} errou a decisão (${ev.erros} ${ev.erros>1?'erradas':'errada'}) e travou 30 s.`, 'ruim'];
+    case 'final': return [`${n} FECHOU A DECISÃO!`, 'forte'];
+  } return null;
+}
+function desenharLances(){
+  const box = $('#lances'); box.innerHTML='';
+  (dados.eventos||[]).slice().reverse().slice(0,16).forEach(ev=>{ const t=textoLance(ev); if(!t) return;
+    box.insertAdjacentHTML('beforeend', `<div class="lance ${t[1]}"><time>${hhmm(ev.t)}</time><div>${t[0]}</div></div>`); });
+  if(!box.children.length) box.innerHTML='<div class="lance"><time></time><div style="color:var(--muted)">Os lances aparecem aqui.</div></div>';
+}
+function desenharPodio(){
+  const f = dados.equipes.filter(e=>e.final).slice(0,3); const box=$('#podio');
+  box.innerHTML = [0,1,2].map(i=>{ const e=f[i]; return `<div class="degrau d${i+1}"><div class="n">${e?esc(e.equipe):'...'}</div><div class="m">${e?esc((e.nomes||[]).join(' · ')):''}</div>
+    <div class="b">${i+1}º</div><div class="t">${e?`${e.pontos} pts · ${dur(e.segundos||(e.final-e.inicio)/1000)}`:''}</div></div>`; }).join('');
+}
+
+/* ---------------- comemoração */
+function comemorar(e, pos){
+  $('#bK').textContent = pos===1 ? 'Temos uma vencedora' : `${pos}º lugar`;
+  $('#bN').textContent = e.equipe;
+  $('#bS').textContent = `fechou a decisão em ${dur(e.segundos||(e.final-e.inicio)/1000)} · ${e.pontos} pontos`;
+  $('#banner').classList.add('on'); som(pos===1); if(pos===1) confete();
+  setTimeout(()=>$('#banner').classList.remove('on'), pos===1 ? 9000 : 5000);
+}
+$('#banner').onclick = ()=>$('#banner').classList.remove('on');
+let AC=null;
+function som(grande){ try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+  (grande?[523,659,784,1047]:[659,784]).forEach((f,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type='triangle'; o.frequency.value=f;
+    const t=AC.currentTime+i*0.12; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.35);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t+0.4); }); }catch(e){} }
+function confete(){
+  const c=$('#confete'), x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight;
+  const cores=['#e0b440','#3fb0a8','#e2614b','#f1ece0','#4cc27f'];
+  const P=Array.from({length:180},()=>({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.5, v:2+Math.random()*4, r:Math.random()*6, w:6+Math.random()*6, c:cores[Math.floor(Math.random()*5)], g:Math.random()*6}));
+  let n=0; (function quadro(){ x.clearRect(0,0,c.width,c.height); P.forEach(p=>{ p.y+=p.v; p.x+=Math.sin((p.y+p.g*40)/40)*1.5; p.g+=0.1;
+    x.save(); x.translate(p.x,p.y); x.rotate(p.g); x.fillStyle=p.c; x.fillRect(-p.w/2,-3,p.w,6); x.restore(); });
+    if(++n<320) requestAnimationFrame(quadro); else x.clearRect(0,0,c.width,c.height); })();
+}
+
+/* ---------------- relógio da corrida */
+setInterval(()=>{ $('#relogio').textContent = inicioCorrida ? dur((Date.now()-inicioCorrida)/1000) : '00:00'; }, 500);
+
+/* ---------------- controles */
+$('#bPodio').onclick = ()=>{ const on=$('#podio').classList.toggle('on'); $('#principal').style.display = on ? 'none' : ''; $('#bPodio').textContent = on ? 'ranking' : 'pódio'; };
+let rodadaArm=0;
+$('#bRodada').onclick = ()=>{ const b=$('#bRodada');
+  if(Date.now()-rodadaArm>4000){ rodadaArm=Date.now(); b.textContent='clique de novo para zerar'; setTimeout(()=>b.textContent='nova rodada',4000); return; }
+  desde = Date.now(); ls.set('placar-desde', String(desde)); b.textContent='nova rodada'; finais.clear(); primeira=true; inicioCorrida=null;
+  dados={equipes:[],eventos:[]}; if(demo) iniciarDemo(); receber(dados); buscar(); };
+$('#bCfg').onclick = ()=>{ $('#cfgUrl').value = URL_P; $('#cfg').classList.add('on'); };
+$('#cfgOk').onclick = ()=>{ URL_P = $('#cfgUrl').value.trim(); ls.set('placar-url', URL_P); demo=false; $('#cfg').classList.remove('on'); primeira=true; buscar(); };
+$('#cfgDemo').onclick = ()=>{ $('#cfg').classList.remove('on'); demo=true; iniciarDemo(); };
+$('#bDemo').onclick = ()=>{ demo=!demo; $('#bDemo').textContent = demo ? 'sair da demonstração' : 'demonstração'; primeira=true; finais.clear(); if(demo) iniciarDemo(); else buscar(); };
+
+/* ---------------- demonstração: corrida simulada, acelerada */
+let D=null;
+function iniciarDemo(){
+  const nomes=[['Os Tosadores','Ana · Beto · Caio · Duda'],['Banho e Byte','Eva · Fábio · Gil · Hana'],['Patas no Prazo','Iago · Júlia · Kauã'],['Requisito Felino','Lara · Moisés · Nina · Otto'],['Latido 404','Paula · Quim · Rui']];
+  const t0=Date.now(); D={t0, eq:nomes.map(([n,m],i)=>({equipe:n, chave:n, nomes:m.split(' · '), inicio:t0-i*4000, A:{feito:0,de:7,pts:0,ok:false}, B:{feito:0,de:5,pts:0,ok:false},
+    portao:false, tentativas:0, final:null, pontos:0, segundos:null, vel:0.5+Math.random()*0.5})), ev:[]};
+  dados={equipes:[],eventos:[]}; estado(true); passoDemo();
+}
+function passoDemo(){
+  if(!D) iniciarDemo();
+  const agora=Date.now();
+  D.eq.forEach(e=>{
+    if(e.final || Math.random()>e.vel*0.6) return;
+    const ev=(etapa,x={})=>D.ev.push(Object.assign({t:agora, equipe:e.equipe, etapa}, x));
+    if(!D.ev.some(v=>v.equipe===e.equipe)) { ev('inicio',{metade:'A'}); return; }
+    const pend=['A','B'].filter(k=>!e[k].ok); const m = pend.length ? pend[Math.floor(Math.random()*pend.length)] : null;
+    if(m){ const M=e[m]; M.feito++; M.pts+= Math.random()<0.75?2:1; ev('progresso',{metade:m, feito:M.feito, de:M.de});
+      if(M.feito>=M.de){ M.ok=true; ev('metade',{metade:m}); } }
+    else if(!e.portao){ e.portao=true; ev('portao'); }
+    else if(Math.random()<0.45){ e.tentativas++; ev('tentativa',{erros:1+Math.floor(Math.random()*3)}); }
+    else { e.final=agora; e.tentativas++; e.segundos=(agora-e.inicio)/1000*12; e.pontos=e.A.pts+e.B.pts+Math.max(0,13-2*(e.tentativas-1)); ev('final'); }
+    if(!e.final) e.pontos=e.A.pts+e.B.pts;
+  });
+  const L=D.eq.filter(e=>D.ev.some(v=>v.equipe===e.equipe)).map(e=>Object.assign({},e,{progresso:e.A.feito/7*40+e.B.feito/5*40+(e.portao?10:0)+(e.final?10:0)}));
+  L.sort((a,b)=> a.final&&b.final ? a.final-b.final : a.final ? -1 : b.final ? 1 : b.progresso-a.progresso || b.pontos-a.pontos);
+  receber({agora, equipes:L, eventos:D.ev.slice(-30)});
+}
+
+if(demo){ $('#bDemo').textContent='sair da demonstração'; iniciarDemo(); }
+buscar(); setInterval(buscar, 4000);
+</script>
+</body>
+</html>

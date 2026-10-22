@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantão PetVida · a versão de sábado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3eee3;--paper:#fffdf8;--ink:#1b1c1f;--muted:#6b675d;--teal:#1f6f6b;--teal2:#e3efed;--wine:#7a2c46;--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--line:#d9d2c2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Inter,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#16171a;color:#eeeae0;display:flex;align-items:center;gap:18px;padding:10px 22px;flex-wrap:wrap}
+header .t{font:700 19px Fraunces,Georgia,serif}
+header .sp{flex:1}
+header .pill{font:600 13px JetBrains Mono,monospace;background:#2a2b30;border-radius:20px;padding:5px 12px}
+header button{background:#2a2b30;color:#eeeae0;border:0;border-radius:20px;padding:6px 12px;font:600 13px Inter;cursor:pointer}
+.trilha{display:flex;gap:6px;padding:10px 22px;background:#202126;overflow-x:auto}
+.trilha span{font:600 12px JetBrains Mono,monospace;color:#8d897d;padding:4px 10px;border-radius:14px;border:1px solid #3a3b40;white-space:nowrap}
+.trilha span.ok{color:#9fd8b5;border-color:#2f8a55}
+.trilha span.at{color:#16171a;background:var(--gold);border-color:var(--gold)}
+main{max-width:1180px;margin:0 auto;padding:26px 22px 80px}
+h1{font:700 34px/1.15 Fraunces,Georgia,serif;margin:4px 0 10px}
+h2{font:700 26px/1.2 Fraunces,Georgia,serif;margin:0 0 8px}
+.kick{font:700 13px JetBrains Mono,monospace;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0}
+.fala{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.fala .av{flex:0 0 52px;height:52px;border-radius:50%;background:var(--wine);color:#fff;display:grid;place-items:center;font:700 20px Fraunces,serif}
+.fala b.n{display:block;font:700 14px Inter;color:var(--wine)}
+.uc{font:500 16px/1.6 JetBrains Mono,monospace;background:#16171a;color:#eeeae0;border-radius:12px;padding:18px 20px;white-space:pre-wrap}
+.uc .hl{background:#c79a2b33;border-radius:4px;padding:0 2px}
+.btn{display:inline-block;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 20px;font:700 16px Inter;cursor:pointer;margin:6px 8px 6px 0}
+.btn.sec{background:#e7e1d3;color:var(--ink)}
+.btn.dica{background:#fff3d6;color:#7a5a12;border:1px solid #e8cf8a}
+.btn:disabled{opacity:.45;cursor:default}
+.rodape{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.mouse{display:inline-flex;align-items:center;gap:8px;background:var(--teal2);color:var(--teal);border-radius:20px;padding:6px 14px;font:600 14px Inter}
+input,select{font:16px Inter;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+select{padding:7px 8px;font-size:15px}
+.membros{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;max-width:720px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:#fff;border:2px solid var(--line);border-radius:22px;padding:8px 14px;font:600 15px Inter;cursor:pointer;user-select:none}
+.chip.sel{border-color:var(--gold);background:#fff6df}
+.chip.ok{border-color:var(--green);background:#eef8f1}
+.chip.no{border-color:var(--red);background:#fbefeb}
+.chip small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.baldes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.balde{background:var(--paper);border:2px dashed var(--line);border-radius:14px;padding:12px;min-height:120px;cursor:pointer}
+.balde.alvo{border-color:var(--gold);background:#fffaf0}
+.balde h3{margin:0 0 6px;font:700 15px Inter;color:var(--teal)}
+.balde p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.fb{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:15px}
+.fb.ok{background:#eef8f1;border:1px solid #a9d4b7}
+.fb.no{background:#fbefeb;border:1px solid #e9b8ae}
+.fb.info{background:var(--teal2);border:1px solid #b9d6d2}
+.lista-exp{margin:8px 0 0;padding-left:18px;font-size:14px}
+.lista-exp li{margin:3px 0}
+.diag{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:12px 0}
+.diag svg{width:100%;height:auto;display:block;max-width:1000px;margin:0 auto}
+svg text{font-family:Inter,system-ui,sans-serif}
+.assoc{display:grid;grid-template-columns:110px 92px 1fr 92px 120px;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:600}
+.assoc.ok{border-color:#a9d4b7;background:#f3faf5}.assoc.no{border-color:#e9b8ae;background:#fdf4f1}
+.assoc .r{text-align:right}
+.mcq{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.mcq .en{font-weight:600;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin:6px 0;font:15px Inter;cursor:pointer}
+.opt.sel{border-color:var(--gold);background:#fff6df}
+.opt.ok{border-color:var(--green);background:#eef8f1}
+.opt.no{border-color:var(--red);background:#fbefeb}
+.cards5{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.c5{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.c5 .tx{font-weight:600;margin-bottom:8px}
+.c5 .bt{display:flex;gap:6px;flex-wrap:wrap}
+.c5 .bt button{flex:1;border:2px solid var(--line);background:#fff;border-radius:8px;padding:6px;font:600 13px Inter;cursor:pointer}
+.c5 .bt button.sel{border-color:var(--teal);background:var(--teal2);color:var(--teal)}
+.c5.ok{border-color:#a9d4b7;background:#f3faf5}.c5.no{border-color:#e9b8ae;background:#fdf4f1}
+.ordem{display:flex;flex-wrap:wrap;gap:8px}
+.ordem .chip .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;margin-right:6px}
+.hot{cursor:pointer}
+.hot rect.hb{fill:transparent;stroke:transparent;stroke-width:3;rx:6}
+.hot:hover rect.hb{stroke:#c79a2b88}
+.hot.marc rect.hb{fill:#c79a2b22;stroke:var(--gold)}
+.hot.ok rect.hb{fill:#2f8a5522;stroke:var(--green)}
+.hot.no rect.hb{fill:#c2412d22;stroke:var(--red)}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.placar div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.placar b{display:block;font:700 26px Fraunces,serif;color:var(--teal)}
+.grande{font:700 64px Fraunces,serif;color:var(--teal);line-height:1}
+.status{font-weight:600;color:var(--teal)}
+.dicabox{background:#fff8e6;border:1px solid #e8cf8a;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:15px}
+[data-c]:hover rect{fill:#fff6df}
+@media (max-width:760px){.assoc{grid-template-columns:1fr 1fr;}.membros{grid-template-columns:1fr}h1{font-size:28px}}
+.intro{font-size:18px;max-width:900px}
+.sub{margin:4px 0 8px;color:var(--muted);font-size:14px}
+.larga{width:100%;max-width:560px;margin:4px 0 6px}
+.metades{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;max-width:760px}
+.metade{text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;font:15px Inter;color:var(--ink)}
+.metade b{display:block;font:700 20px Fraunces,Georgia,serif;color:var(--teal)}
+.metade.sel{border-color:var(--gold);background:#fff6df}
+.prog{display:flex;gap:6px;margin:6px 0 14px}
+.prog span{flex:1;height:8px;border-radius:4px;background:#e2dbcb}
+.prog span.ok{background:var(--green)}.prog span.at{background:var(--gold)}
+.dupla{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:18px;align-items:start}
+.dossie{background:#fffdf8;border:1px solid var(--line);border-radius:14px;padding:4px 16px 12px;position:sticky;top:104px;max-height:calc(100vh - 124px);overflow:auto}
+.dossie summary{font:700 13px JetBrains Mono,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--wine);padding:12px 0 8px;cursor:pointer}
+.pessoa{display:flex;gap:12px;align-items:flex-start;border-top:1px solid var(--line);padding:10px 0}
+.pessoa .av{flex:0 0 38px;height:38px;border-radius:50%;background:var(--wine);color:#fff;display:grid;place-items:center;font:700 16px Fraunces,serif}
+.pessoa b.n{font:700 15px Inter;color:var(--wine)}
+.papel{font-size:13px;color:var(--muted)}
+.pessoa p{margin:6px 0;font-size:15px;line-height:1.5}
+.rel{border-top:1px solid var(--line);padding:10px 0}
+.rel b{display:block;font:700 15px Inter;color:var(--teal)}
+.rel pre{font:500 14px/1.55 JetBrains Mono,monospace;background:#16171a;color:#eeeae0;border-radius:10px;padding:10px 12px;margin:6px 0 0;white-space:pre;overflow-x:auto}
+.cont{font:700 12px JetBrains Mono,monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.colQ .mcq{margin-top:6px}
+.ctx{background:var(--teal2);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:15px}
+.opt:disabled{cursor:default;opacity:1;color:var(--ink)}
+.opt.no{opacity:.75}
+.par{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;align-items:center;margin:8px 0}
+.par label{font-weight:700;color:var(--teal)}
+.par select,.rnf select,.dec select{width:100%;font-size:15px;padding:9px 8px;border:2px solid var(--line);border-radius:8px;background:#fff;min-width:0}
+.chaveBox{text-align:center}
+.chaveG{display:flex;justify-content:center;gap:12px;margin:8px 0 10px}
+.chaveG span{display:grid;place-items:center;width:72px;height:88px;border-radius:12px;background:#16171a;color:var(--gold);font:700 48px JetBrains Mono,monospace}
+.kc{font:700 18px JetBrains Mono,monospace;background:#16171a;color:var(--gold);border-radius:6px;padding:2px 8px}
+.chaveIn{font:700 22px JetBrains Mono,monospace;letter-spacing:.3em;text-transform:uppercase;max-width:300px}
+.quadro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.rnf{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rnf h3{margin:0 0 4px;font:700 20px Fraunces,Georgia,serif;color:var(--teal)}
+.rnf label{display:block;font:700 12px JetBrains Mono,monospace;color:var(--muted);margin:10px 0 3px;text-transform:uppercase;letter-spacing:.08em}
+.dec b{display:block;margin-bottom:8px}
+.membros input{min-width:0;width:100%}
+@media (max-width:900px){header{gap:8px;padding:8px 14px}header .t{font-size:16px}header .pill,header button{font-size:12px;padding:4px 10px}
+  .dupla{grid-template-columns:1fr}.dossie{position:static;max-height:none}.quadro{grid-template-columns:1fr}}
+@media (max-width:760px){
+  header .t{flex:1 0 100%} header .sp{display:none} #hEquipe{display:none}
+  .trilha{padding:8px 14px} main{padding:18px 14px 60px} h2{font-size:22px} .intro{font-size:16px}
+  .metades{grid-template-columns:1fr} .par{grid-template-columns:1fr;gap:4px}
+  .chaveG span{width:58px;height:72px;font-size:38px}
+  .rel pre{font-size:12.5px;padding:10px}
+  .colQ{order:-1}
+  .fala{padding:12px 14px;gap:10px}.fala .av{flex-basis:40px;height:40px;font-size:16px}.card{padding:16px}
+}
+.prev{font:600 13px/1.4 Inter;color:var(--teal);margin:4px 2px 0}
+.prev:empty{display:none}
+header .pill.pos{background:#1f6f6b;color:#fff}
+header .pill.pos.lider{background:#c79a2b;color:#16171a}
+.posFinal{text-align:center;font:700 26px Fraunces,Georgia,serif;color:var(--wine);margin:8px 0}
+.posFinal:empty{display:none}
+main{max-width:1180px}
+</style>
+</head>
+<body>
+<header>
+  <span class="t">Plantão PetVida</span>
+  <span class="pill" id="hEquipe">Clínica PetVida</span>
+  <span class="sp"></span>
+  <span class="pill pos" id="hPos" style="display:none"></span>
+  <span class="pill" id="hPontos">0 pontos</span>
+  <span class="pill" id="hTempo">00:00</span>
+  <button id="bSom">som: ligado</button>
+  <button id="bRe">recomeçar</button>
+</header>
+<nav class="trilha" id="trilha"></nav>
+<main id="app"></main>
+<script>
+/* ===================== Plantão PetVida: conteúdo ===================== */
+const DOSSIE_A = [
+  ['Dona Rita', 'dona da clínica', [
+    'Quando a tela de horários demora, o pessoal desiste e liga. Teve um sábado em que ela levou uns **5 segundos** e o telefone não parou. Com **até 2 segundos** ninguém reclama.',
+    'A clínica abre **das 7h às 19h, de segunda a sábado**. De madrugada ninguém agenda.',
+    'Cair um pouquinho no mês eu aguento: **meia hora no total**, dentro do horário de funcionamento. Mais que isso, eu perco banho marcado.',
+    'Eu guardo nome, telefone, endereço para o leva e traz e o **cartão** de quem paga pelo app. Se vazar cartão, eu fecho a clínica.',
+    'Se a pessoa leva **mais de 3 minutos** para marcar, ela desiste e liga.']],
+  ['Kátia', 'recepção', [
+    'Sábado, das 8h às 10h, chega a **150 pessoas** tentando agendar ao mesmo tempo. Com a filial nova, a Dona Rita espera **um terço a mais**.',
+    'Quem mais erra é cliente novo, na **primeira vez** no app. Os mais velhos, então...']],
+  ['Seu Jorge', 'tutor, 68 anos', [
+    'Meu celular é um **Android antigo** que meu neto me deu, tela pequena. Se aparece muita coisa na tela, eu desisto e ligo.']],
+];
+const DOSSIE_B = [
+  ['Relatório 1 · Teste de carga', 'tela de horários, 200 usuários simultâneos por 15 minutos',
+   'mediana (p50)  1,1 s\nmédia          1,4 s\np95            3,1 s\nmaior tempo    6,8 s\nerros          0,4%'],
+  ['Relatório 2 · Monitoramento', 'últimos 30 dias, quedas registradas',
+   'ter  03:10 a 04:40   90 min\n     (manutenção do servidor)\nsáb  09:00 a 09:20   20 min\nqui  14:00 a 14:08    8 min'],
+  ['Relatório 3 · Teste de usabilidade', 'tarefa: agendar um banho sem ajuda',
+   'participantes  5 tutores, 24 a 35 anos\naparelho       iPhone recente\nexperiência    já usavam a versão 1\ntempos         1:10  1:25  1:40\n               2:05  2:20\nconcluíram     5 de 5'],
+  ['Relatório 4 · Segurança', 'varredura e revisão de configuração',
+   'OWASP ZAP   nenhum alerta alto\npagamento   pelo gateway\nguardado    só o token e os\n            4 últimos dígitos\nsenhas      hash com bcrypt'],
+];
+
+/* cada item: en, ops (o primeiro é o certo), e (explicação), ctx opcional */
+const ITENS_A = [
+  {en:'Qual limite de tempo para a tela de horários a conversa sustenta?',
+   ops:['até 2 segundos', 'até 5 segundos', 'até meio segundo', 'o mais rápido que der'],
+   e:'O número sai da consequência: com 5 s o telefone não para, com até 2 s ninguém reclama. "O mais rápido que der" não se testa.'},
+  {en:'Quantos acessos ao mesmo tempo o teste de carga precisa simular?',
+   ops:['200', '150', '50', '1.000'],
+   e:'150 no pico de hoje, mais um terço com a filial nova: 150 + 50 = 200. Testar só com 150 ignora o que a cliente já sabe que vem.'},
+  {en:'Em que janela a disponibilidade importa para a clínica?',
+   ops:['das 7h às 19h, de segunda a sábado', '24 horas por dia, de domingo a domingo', 'só no sábado, das 8h às 10h', 'das 8h às 18h, de segunda a sexta'],
+   e:'É o horário de funcionamento. Queda de madrugada não custa agendamento, e exigir 24 h encarece o sistema sem motivo.'},
+  {en:'Como escrever o critério de disponibilidade?', ctx:'Janela: 12 h por dia × 26 dias = 312 h no mês.',
+   ops:['no máximo 30 min fora por mês, na janela (≈ 99,84%)', 'no mínimo 99% do tempo no ar, em qualquer horário do mês', 'nenhuma queda permitida, em nenhum horário do mês', 'no máximo 30 min fora por mês, contando as 24 horas'],
+   e:'Meia hora em 312 h é 0,16% fora, ou seja, cerca de 99,84% no ar. Com 99% ela aceitaria mais de 3 horas fora. "Nunca" é impossível de garantir.'},
+  {en:'Quem é o usuário de pior caso para o teste de usabilidade?',
+   ops:['tutor novo, com 60+ anos e Android antigo, no primeiro uso', 'a Kátia, que agenda pelo sistema todos os dias na recepção', 'tutor jovem, com celular novo, que já usava a versão 1', 'o desenvolvedor da tela, testando no próprio computador'],
+   e:'Kátia e Seu Jorge apontam o mesmo perfil: cliente novo, mais velho, aparelho antigo. Se ele consegue, os outros conseguem.'},
+  {en:'E qual o limite da tarefa para esse usuário?',
+   ops:['agendar um banho em até 3 minutos, sem ajuda', 'agendar com poucos cliques', 'achar o app intuitivo', 'agendar em até 10 minutos, com ajuda da recepção'],
+   e:'Dona Rita deu o número: passou de 3 minutos, a pessoa desiste e liga. "Poucos" e "intuitivo" não se medem.'},
+  {en:'Qual dado precisa da proteção mais rígida?',
+   ops:['o número do cartão de pagamento', 'o endereço usado no leva e traz', 'o nome e a raça de cada pet', 'o telefone de contato do tutor'],
+   e:'"Se vazar cartão, eu fecho a clínica." É o dado de maior dano, e por isso o critério vai ser: a PetVida nunca guarda o número do cartão.'},
+];
+const METODOS = [
+  ['Desempenho', 'teste de carga com acessos simultâneos'],
+  ['Disponibilidade', 'monitoramento contínuo com relatório mensal'],
+  ['Usabilidade', 'teste com usuários reais, cronometrado'],
+  ['Segurança', 'varredura e revisão de configuração'],
+];
+const ITENS_B = [
+  {tipo:'match', en:'Antes de ler os números: qual método verifica cada qualidade?',
+   e:'Cada qualidade tem a sua prova: carga mede tempo sob pico, monitoramento mede tempo no ar, usuário real mede facilidade, varredura e revisão de configuração medem proteção.'},
+  {en:'No Relatório 1, até quanto tempo levam 95% dos acessos?',
+   ops:['até 3,1 s (o p95)', '1,4 s (a média)', '1,1 s (a mediana)', '6,8 s (o maior tempo)'],
+   e:'O p95 diz: 95% dos acessos levaram até 3,1 s. A média de 1,4 s esconde os acessos lentos, exatamente os que fazem o tutor desistir.'},
+  {en:'No Relatório 2, quanto tempo o app ficou fora entre 7h e 19h?',
+   ops:['28 minutos', '118 minutos', '90 minutos', '20 minutos'],
+   e:'A queda das 3h10 foi de madrugada, fora dessa faixa. Sobram sábado (20) e quinta (8): 28 minutos.'},
+  {en:'O que o Relatório 3 consegue provar?',
+   ops:['só vale para tutores jovens, com iPhone, que já usavam o app', 'que qualquer tutor agenda um banho em até 2 min 20 s', 'que o app é fácil de usar para todos os perfis de cliente', 'que o tempo médio da tarefa ficou acima de 3 minutos'],
+   e:'Uma evidência só vale para quem participou do teste. Generalizar para todos os usuários é o erro mais comum ao ler relatório.'},
+  {en:'O que o Relatório 4 garante sobre o cartão?',
+   ops:['a PetVida guarda só o token e os 4 últimos dígitos', 'o sistema está totalmente protegido contra ataques', 'o número do cartão é guardado com hash, como a senha', 'a varredura sem alerta alto impede vazamento do cartão'],
+   e:'A revisão de configuração comprova um fato verificável. "Totalmente seguro" ninguém prova; varredura sem alerta alto não impede ataque.'},
+];
+
+/* final: [qualidade, [criterios], [evidencias], veredito certo] (o primeiro de cada lista é o certo) */
+const VEREDITOS = ['cumpre', 'não cumpre', 'sem prova suficiente'];
+const FINAL = [
+  ['Desempenho',
+   ['até 2 s em 95% dos acessos, com 200 simultâneos', 'até 2 s em média, com 150 acessos simultâneos', 'até 5 s em 95% dos acessos, com 200 simultâneos', 'até 2 s em 95% dos acessos, com 50 simultâneos'],
+   ['p95 de 3,1 s com 200 simultâneos', 'média de 1,4 s com 200 simultâneos', 'mediana de 1,1 s', 'erros em 0,4% dos acessos'],
+   'não cumpre', 'O critério pede 2 s para 95% dos acessos; o p95 medido foi 3,1 s. A média boa não salva.'],
+  ['Disponibilidade',
+   ['até 30 min fora por mês, das 7h às 19h, seg a sáb', '99% do tempo no ar, 24 horas por dia, todo dia', 'nenhuma queda, em nenhum horário, durante o mês', 'até 30 min fora por mês, contando as 24 horas'],
+   ['28 min fora dentro da janela', '118 min fora no mês', '90 min de manutenção de madrugada', 'nenhuma queda no sábado'],
+   'cumpre', '28 min dentro da janela, abaixo dos 30 tolerados. A manutenção de madrugada não conta.'],
+  ['Usabilidade',
+   ['tutor novo, 60+, Android antigo: agendar em até 3 min', 'qualquer tutor, em qualquer aparelho: até 3 min', 'tutor novo, 60+, Android antigo: achar o app intuitivo', 'tutor jovem com iPhone: agendar com poucos cliques'],
+   ['só tutores de 24 a 35 anos, com iPhone, que já usavam o app', '5 de 5 concluíram em até 2 min 20 s, então vale para todos', 'tempo médio de 1 min 40 s entre os 5 participantes', 'nenhum teste de usabilidade foi feito na versão 2.0'],
+   'sem prova suficiente', 'O teste foi feito, mas com o perfil errado. Para o pior caso não há evidência: é preciso repetir com tutores novos, mais velhos e com Android antigo.'],
+  ['Segurança',
+   ['a PetVida nunca guarda o número do cartão', 'o sistema deve ser seguro contra qualquer ataque', 'o número do cartão é guardado com hash forte', 'o tutor deve criar uma senha forte no cadastro'],
+   ['só o token do gateway e os 4 últimos dígitos', 'varredura sem alerta alto, então está seguro', 'senhas guardadas com hash bcrypt no banco', 'nenhum ataque registrado nos últimos 30 dias'],
+   'cumpre', 'A revisão de configuração mostra exatamente o que o critério pede: o número do cartão não fica na PetVida.'],
+];
+const DECISAO = {
+  en:'Sexta à tarde. A Dona Rita pergunta: "libero a versão 2.0 amanhã?"',
+  ops:['Segurar: corrigir a tela de horários e repetir o teste de usabilidade com o pior caso',
+       'Liberar amanhã: disponibilidade e segurança passaram, e são as mais graves',
+       'Liberar amanhã e corrigir a tela de horários na semana que vem, sem novo teste',
+       'Segurar até todos os requisitos ficarem perfeitos, sem marcar nova data'],
+  e:'Sábado é o pico: liberar com o desempenho reprovado é repetir o sábado dos 5 segundos. E "segurar sem prazo" não ajuda a cliente: a decisão boa diz o que falta e quando volta.'
+};
+
+'use strict';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const PLACAR_URL = 'https://script.google.com/macros/s/AKfycbxe6eBbYrX-2C_rExHc0P2VS97BwEMwTHz1x_Qd6THV1jRnmwjL5aYinyFKlFMWZQlr/exec';   /* URL /exec do Apps Script da planilha do placar */
+const CHAVE = 'plantao-petvida-v1';
+const TRAVA_ITEM = 20, TRAVA_FINAL = 30;
+const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+let S = carregar() || novo();
+function novo(){ return {tela:'equipe', equipe:'', metade:'', membros:[], time:[], i:0, tent:{}, pts:{}, trava:0,
+  ord:{}, sel:{}, outraChave:'', outraPts:null, fTent:0, fSel:{}, fPts:0, inicio:null, fimMetade:null, fim:null,
+  enviadoMetade:false, enviadoFinal:false, som:true}; }
+function carregar(){ try{ return JSON.parse(localStorage.getItem(CHAVE)); }catch(e){ return null; } }
+function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){} }
+const $ = (s, el=document) => el.querySelector(s);
+function h(tag, attrs={}, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (k==='class') e.className=v; else if (k==='html') e.innerHTML=v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()){ if (k==null || k===false) continue; e.append(k.nodeType ? k : document.createTextNode(k)); }
+  return e;
+}
+function md(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>'); }
+function embaralhar(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function norm(t){ return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+function hash(t){ let x=2166136261>>>0; for(const c of t){ x^=c.charCodeAt(0); x=Math.imul(x,16777619)>>>0; } return x>>>0; }
+function chaveDe(equipe, metade, pts){ let x=hash(norm(equipe)+'|'+metade+'|'+pts+'|petvida'), s='';
+  for(let i=0;i<4;i++){ s+=ALFA[x%ALFA.length]; x=(Math.floor(x/ALFA.length) ^ hash(s+i))>>>0; } return s; }
+function lerChave(equipe, metade, digitada){ const k=String(digitada||'').toUpperCase().replace(/[^A-Z]/g,'');
+  const mx = metade==='A' ? ITENS_A.length*2 : ITENS_B.length*2;
+  for(let p=0;p<=mx;p++) if(chaveDe(equipe, metade, p)===k) return p; return null; }
+const ITENS = ()=> S.metade==='A' ? ITENS_A : ITENS_B;
+const ptsMetade = ()=> Object.values(S.pts).reduce((a,b)=>a+b,0);
+const MAXA = ITENS_A.length*2, MAXB = ITENS_B.length*2, MAXF = FINAL.length*3+1;
+const MAXT = MAXA + MAXB + MAXF;
+
+let AC=null;
+function bip(ok){ if(!S.som) return;
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const notas = ok ? [523,659,784] : [330,262];
+    notas.forEach((f,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type= ok?'triangle':'square'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,AC.currentTime+i*0.09); g.gain.exponentialRampToValueAtTime(0.06,AC.currentTime+i*0.09+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+i*0.09+0.16); o.connect(g).connect(AC.destination); o.start(AC.currentTime+i*0.09); o.stop(AC.currentTime+i*0.09+0.2); });
+  }catch(e){} }
+
+/* ------------------------------------------------ envio */
+function postar(url, dado){ if(!url) return Promise.resolve(false);
+  return fetch(url,{method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(dado)}).then(()=>true).catch(()=>false); }
+function placar(etapa, extra={}){ postar(PLACAR_URL, Object.assign({tipo:'placar', equipe:S.equipe, chave:norm(S.equipe), etapa,
+  metade:S.metade, cliente:new Date().toISOString()}, extra)); }
+function planilha(lista){ return Promise.all(lista.map(d=>postar(WEBAPP_URL, d))); }
+function linha(m, atividade, acertos, total){ return { timestamp:new Date().toISOString(), nome:m.nome, matricula:m.mat,
+  disciplina:'Engenharia de Requisitos', aula:10, atividade, acertos, total, pontuacao: total? Math.round(acertos/total*100) : 0 }; }
+
+/* ------------------------------------------------ moldura */
+const TRILHA = {equipe:'Equipe', metade:'Metade', chave:'Chave', portao:'Portão', final:'Decisão', fim:'Resultado'};
+function cab(){
+  $('#hEquipe').textContent = S.equipe ? `${S.equipe}${S.metade?' · Metade '+S.metade:''}` : 'Clínica PetVida';
+  let p = S.tela==='final'||S.tela==='fim' ? ptsMetade() + (S.outraPts||0) + (S.tela==='fim'?S.fPts:0) : ptsMetade();
+  $('#hPontos').textContent = p + ' pontos';
+  $('#bSom').textContent = 'som: ' + (S.som ? 'ligado' : 'desligado');
+  const tr=$('#trilha'); tr.innerHTML=''; const ks=Object.keys(TRILHA), at=ks.indexOf(S.tela);
+  ks.forEach((k,i)=> tr.append(h('span',{class: i<at?'ok': i===at?'at':''}, k==='metade' && S.metade ? (S.metade==='A'?'Metade A · Analistas':'Metade B · Testadores') : TRILHA[k])));
+}
+setInterval(()=>{ if(!S.inicio){ $('#hTempo').textContent='00:00'; return; } const s=Math.floor(((S.fim||Date.now())-S.inicio)/1000);
+  $('#hTempo').textContent = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }, 1000);
+$('#bSom').onclick = ()=>{ S.som=!S.som; salvar(); cab(); };
+let reArm=0;
+$('#bRe').onclick = ()=>{ const b=$('#bRe');
+  if(Date.now()-reArm>4000){ reArm=Date.now(); b.textContent='clique de novo para apagar'; setTimeout(()=>{ b.textContent='recomeçar'; },4000); return; }
+  const som=S.som; S=novo(); S.som=som; salvar(); b.textContent='recomeçar'; ir('equipe'); };
+function fala(texto, quem='Dona Rita', sigla='R'){
+  return h('div',{class:'fala'}, h('div',{class:'av'}, sigla), h('div',{}, h('b',{class:'n'}, quem), h('div',{html: md(texto)})));
+}
+function ir(t){ S.tela=t; salvar(); cab(); const app=$('#app'); app.innerHTML=''; TELAS[t](app); window.scrollTo(0,0); }
+function travaBotao(btn, rotulo, ate, aoLiberar){
+  const tick=()=>{ const r=Math.ceil((ate-Date.now())/1000);
+    if(r>0){ btn.disabled=true; btn.textContent=`Travado: ${r} s`; setTimeout(tick, 250); }
+    else { btn.disabled=false; btn.textContent=rotulo; if(aoLiberar) aoLiberar(); } };
+  tick();
+}
+
+/* ------------------------------------------------ telas */
+const TELAS = {};
+
+TELAS.equipe = (app)=>{
+  app.append(h('div',{class:'kick'},'Engenharia de Requisitos · Aula 10 · Corrida em equipe'),
+    h('h1',{},'Plantão PetVida: a versão de sábado'),
+    h('p',{class:'intro', html: md('A versão 2.0 do app da PetVida deveria ir ao ar **amanhã, sábado**, o dia de maior movimento. A Dona Rita quer saber se pode liberar. A equipe se divide: a **Metade A** entrevista as pessoas e descobre os números; a **Metade B** lê os relatórios de teste. Só com as duas chaves a equipe abre a sala de decisão.')}),
+    h('div',{class:'card'}, h('b',{},'Como funciona'),
+      h('ul',{class:'lista-exp'},
+        h('li',{html: md('**Dois aparelhos por equipe**, um para cada metade, trabalhando ao mesmo tempo.')}),
+        h('li',{html: md('Cada pergunta só libera a próxima quando está certa. **Errou, trava 20 segundos.** Acertar de primeira vale 2 pontos; na segunda, 1.')}),
+        h('li',{html: md('No fim, cada metade ganha uma **chave de 4 letras**. A sala de decisão, feita pela equipe toda junta em um aparelho, pede a chave da outra metade.')}),
+        h('li',{html: md('**Vence a equipe que fechar a decisão primeiro.** O placar da sala mostra quem está na frente.')}))));
+  const nomeEq = h('input',{placeholder:'Nome da equipe (igual nos dois aparelhos)', value:S.equipe||'', class:'larga'});
+  let met = S.metade||'';
+  const cartA = h('button',{class:'metade'+(met==='A'?' sel':'')}, h('b',{},'Metade A'), h('span',{},'Analistas: a conversa com a cliente'));
+  const cartB = h('button',{class:'metade'+(met==='B'?' sel':'')}, h('b',{},'Metade B'), h('span',{},'Testadores: os relatórios de teste'));
+  cartA.onclick=()=>{ met='A'; cartA.classList.add('sel'); cartB.classList.remove('sel'); };
+  cartB.onclick=()=>{ met='B'; cartB.classList.add('sel'); cartA.classList.remove('sel'); };
+  const grade = h('div',{class:'membros'}); const linhas=[];
+  for(let i=0;i<4;i++){ const m=S.membros[i]||{};
+    const n=h('input',{placeholder:`Integrante ${i+1} desta metade: nome`, value:m.nome||''}); const mt=h('input',{placeholder:'Matrícula ou turma', value:m.mat||''});
+    linhas.push([n,mt]); grade.append(n,mt); }
+  const aviso=h('div',{class:'status'});
+  app.append(h('div',{class:'card'}, h('b',{},'1. Nome da equipe'),
+      h('p',{class:'sub'},'Digitem o mesmo nome nos dois aparelhos: a chave depende dele.'), nomeEq),
+    h('div',{class:'card'}, h('b',{},'2. Qual metade usa este aparelho?'), h('div',{class:'metades'}, cartA, cartB)),
+    h('div',{class:'card'}, h('b',{},'3. Quem está nesta metade'), h('p',{class:'sub'},'Só identificação, sem senha. A outra metade se cadastra no outro aparelho.'), grade),
+    h('div',{class:'rodape'}, h('button',{class:'btn', onclick:()=>{
+      const ms = linhas.map(([n,m])=>({nome:n.value.trim(), mat:m.value.trim()})).filter(x=>x.nome);
+      if(!norm(nomeEq.value)){ aviso.textContent='Escrevam o nome da equipe.'; return; }
+      if(!met){ aviso.textContent='Escolham a metade deste aparelho.'; return; }
+      if(!ms.length){ aviso.textContent='Preencham pelo menos um nome.'; return; }
+      S.equipe=nomeEq.value.trim(); S.metade=met; S.membros=ms; S.i=0; S.tent={}; S.pts={};
+      if(!S.inicio) S.inicio=Date.now(); salvar();
+      placar('inicio', {feito:0, de:ITENS().length, pontos:0, nomes:ms.map(m=>m.nome).join(', ')});
+      ir('metade'); }}, 'Começar'), aviso));
+};
+
+function dossie(){
+  const box = h('details',{class:'dossie', open:''});
+  if(S.metade==='A'){
+    box.append(h('summary',{},'Dossiê A · O que as pessoas disseram'));
+    DOSSIE_A.forEach(([quem, papel, falas])=>{       box.append(h('div',{class:'pessoa'}, h('div',{class:'av'}, ({'Dona Rita':'R','Kátia':'K','Seu Jorge':'J'})[quem]||quem[0]), h('div',{}, h('b',{class:'n'}, quem+' '), h('span',{class:'papel'}, papel),
+        falas.map(f=>h('p',{html: md('"'+f+'"')}))))); });
+  } else {
+    box.append(h('summary',{},'Dossiê B · Relatórios da versão 2.0'));
+    DOSSIE_B.forEach(([t, sub, txt])=> box.append(h('div',{class:'rel'}, h('b',{}, t), h('span',{class:'papel'}, sub), h('pre',{}, txt))));
+  }
+  return box;
+}
+
+TELAS.metade = (app)=>{
+  const L = ITENS(); const A = S.metade==='A';
+  app.append(h('div',{class:'kick'}, A ? 'Metade A · Analistas' : 'Metade B · Testadores'),
+    h('h2',{}, A ? 'Descubram os números na conversa' : 'Leiam o que os testes provam'));
+  const prog = h('div',{class:'prog'}); L.forEach((_,k)=> prog.append(h('span',{class: k<S.i?'ok': k===S.i?'at':''})));
+  const col = h('div',{class:'colQ'}); const grid = h('div',{class:'dupla'}, dossie(), col);
+  app.append(prog, grid);
+  const it = L[S.i]; const k = 'i'+S.i;
+  col.append(h('div',{class:'cont'}, `Pergunta ${S.i+1} de ${L.length}`));
+  const box = h('div',{class:'mcq'}); col.append(box);
+  if(it.ctx) box.append(h('div',{class:'ctx', html: md(it.ctx)}));
+  box.append(h('div',{class:'en', html: md(it.en)}));
+  const area = h('div'), rod = h('div',{class:'rodape'}); col.append(area, rod);
+  const btn = h('button',{class:'btn'}, 'Conferir');
+  let errados = S.sel[k+'x'] || [];
+
+  if(it.tipo==='match'){
+    const ordem = S.ord[k] || (S.ord[k] = embaralhar(METODOS.map((_,j)=>j)));
+    const esc = S.sel[k] || (S.sel[k] = {});
+    METODOS.forEach(([q], j)=>{ const sel=h('select',{}); sel.append(h('option',{value:''},'escolha o método'));
+      ordem.forEach(o=> sel.append(h('option',{value:String(o)}, METODOS[o][1])));
+      if(esc[j]!==undefined) sel.value=String(esc[j]);
+      sel.onchange=()=>{ esc[j]= sel.value===''?undefined:Number(sel.value); salvar(); };
+      box.append(h('div',{class:'par'}, h('label',{}, q), sel)); });
+    btn.onclick=()=>{ if(Object.values(esc).filter(v=>v!==undefined).length<METODOS.length){ area.innerHTML=''; area.append(h('div',{class:'fb no'},'Escolham um método para cada qualidade.')); return; }
+      const certos = METODOS.filter((_,j)=>esc[j]===j).length; resolver(certos===METODOS.length, `${METODOS.length-certos} método(s) no lugar errado.`); };
+  } else {
+    const ordem = S.ord[k] || (S.ord[k] = embaralhar(it.ops.map((_,j)=>j)));
+    const opts = h('div'); box.append(opts);
+    const desenhar=()=>{ opts.innerHTML=''; ordem.forEach(j=>{ let c='opt'; if(S.sel[k]===j) c+=' sel'; if(errados.includes(j)) c+=' no';
+      const b=h('button',{class:c}, it.ops[j]); if(!errados.includes(j)) b.onclick=()=>{ S.sel[k]=j; salvar(); desenhar(); }; opts.append(b); }); };
+    desenhar();
+    btn.onclick=()=>{ if(S.sel[k]===undefined){ area.innerHTML=''; area.append(h('div',{class:'fb no'},'Escolham uma opção.')); return; }
+      if(S.sel[k]!==0){ errados.push(S.sel[k]); S.sel[k+'x']=errados; delete S.sel[k]; desenhar(); }
+      resolver(S.sel[k]===0, 'Essa não é a resposta. Releiam o dossiê.'); };
+  }
+  function resolver(ok, msgErro){
+    S.tent[k]=(S.tent[k]||0)+1; area.innerHTML='';
+    if(!ok){ bip(false); S.trava=Date.now()+TRAVA_ITEM*1000; salvar(); area.append(h('div',{class:'fb no'}, msgErro));
+      travaBotao(btn,'Conferir',S.trava); return; }
+    bip(true); S.pts[k] = S.tent[k]===1 ? 2 : S.tent[k]===2 ? 1 : 0; salvar(); cab();
+    placar('progresso', {feito:S.i+1, de:L.length, pontos:ptsMetade()});
+    area.append(h('div',{class:'fb ok', html:`<b>Certo${S.pts[k]?` (+${S.pts[k]})`:''}.</b> `+md(it.e)}));
+    box.querySelectorAll('button,select').forEach(b=>{ b.disabled=true; });
+    box.querySelectorAll('.opt').forEach(b=>{ if(b.textContent===it.ops?.[0]) b.classList.add('ok'); });
+    rod.innerHTML='';
+    if(S.i+1<L.length) rod.append(h('button',{class:'btn', onclick:()=>{ S.i++; salvar(); ir('metade'); }}, 'Próxima pergunta'));
+    else rod.append(h('button',{class:'btn', onclick:()=>{ S.fimMetade=Date.now(); salvar(); ir('chave'); }}, 'Pegar a chave'));
+  }
+  rod.append(btn);
+  if(S.trava>Date.now()) travaBotao(btn,'Conferir',S.trava);
+};
+
+TELAS.chave = (app)=>{
+  const ch = chaveDe(S.equipe, S.metade, ptsMetade()); const mx = S.metade==='A'?MAXA:MAXB;
+  const st = h('div',{class:'status'});
+  app.append(h('div',{class:'kick'}, 'Metade '+S.metade+' concluída'), h('h2',{},'A chave desta metade'),
+    h('div',{class:'card chaveBox'}, h('div',{class:'chaveG'}, ch.split('').map(c=>h('span',{},c))),
+      h('div',{class:'sub'}, `${ptsMetade()} de ${mx} pontos · equipe "${S.equipe}"`)),
+    fala('Agora juntem as duas metades em **um aparelho só** e abram o portão com a chave da outra metade. Se a outra metade ainda não terminou, ajudem a pensar, mas quem toca na tela é ela.'),
+    st, h('div',{class:'rodape'}, h('button',{class:'btn', onclick:()=>ir('portao')}, 'Ir para o portão neste aparelho')));
+  if(!S.enviadoMetade){ S.enviadoMetade=true; salvar();
+    placar('metade', {feito:ITENS().length, de:ITENS().length, pontos:ptsMetade(), chaveMetade:ch});
+    planilha(S.membros.map(m=>linha(m, `Plantão PetVida · Metade ${S.metade} · equipe ${S.equipe}`, ptsMetade(), mx)))
+      .then(r=>{ st.textContent = r.every(Boolean)?'Pontos desta metade registrados na planilha.':'Não consegui registrar agora; a final tenta de novo.'; });
+  }
+};
+
+TELAS.portao = (app)=>{
+  const outra = S.metade==='A'?'B':'A';
+  app.append(h('div',{class:'kick'},'Portão da sala de decisão'), h('h2',{},'As duas chaves e a equipe completa'));
+  const inp = h('input',{class:'larga chaveIn', placeholder:`Chave da Metade ${outra} (4 letras)`, value:S.outraChave||'', maxlength:'6'});
+  const grade = h('div',{class:'membros'}); const linhas=[];
+  const todos = S.time.length ? S.time : S.membros.concat([{},{},{},{}]).slice(0, Math.max(6, S.membros.length+3));
+  todos.forEach((m,i)=>{ const n=h('input',{placeholder:`Integrante ${i+1}: nome`, value:m.nome||''}); const mt=h('input',{placeholder:'Matrícula ou turma', value:m.mat||''}); linhas.push([n,mt]); grade.append(n,mt); });
+  const aviso=h('div',{class:'status'});
+  const btn = h('button',{class:'btn'},'Abrir a sala de decisão');
+  btn.onclick=()=>{ const p = lerChave(S.equipe, outra, inp.value);
+    if(p===null){ bip(false); S.trava=Date.now()+5000; salvar(); aviso.textContent=`Chave não confere com a equipe "${S.equipe}". Confiram as letras e se o nome da equipe é o mesmo nos dois aparelhos.`; travaBotao(btn,'Abrir a sala de decisão',S.trava); return; }
+    const time = linhas.map(([n,m])=>({nome:n.value.trim(), mat:m.value.trim()})).filter(x=>x.nome);
+    if(time.length<=S.membros.length){ aviso.textContent='Acrescentem os nomes da outra metade: a nota da final vai para todos.'; return; }
+    bip(true); S.outraChave=inp.value.toUpperCase(); S.outraPts=p; S.time=time; salvar(); placar('portao', {pontos:ptsMetade()+p}); ir('final'); };
+  app.append(h('div',{class:'card'}, h('b',{},`Chave da Metade ${S.metade} (este aparelho): `), h('code',{class:'kc'}, chaveDe(S.equipe,S.metade,ptsMetade())),
+      h('p',{class:'sub'},`Digitem a chave que apareceu no aparelho da Metade ${outra}.`), inp),
+    h('div',{class:'card'}, h('b',{},'A equipe toda'), h('p',{class:'sub'},'A sala de decisão vale para todos. Completem com a outra metade.'), grade),
+    h('div',{class:'rodape'}, btn, aviso));
+  if(S.trava>Date.now()) travaBotao(btn,'Abrir a sala de decisão',S.trava);
+};
+
+TELAS.final = (app)=>{
+  app.append(h('div',{class:'kick'},'Sala de decisão · equipe completa'), h('h2',{},'Libera ou segura a versão de sábado?'),
+    fala('Juntem o que cada metade descobriu. Para cada qualidade: **o critério** que saiu da conversa, **a evidência** que saiu dos testes e **o veredito**. Errou alguma coisa, a sala trava 30 segundos e não diz onde.'));
+  const ord = S.ord.final || (S.ord.final = FINAL.map(f=>[embaralhar([0,1,2,3]), embaralhar([0,1,2,3])]));
+  const grid = h('div',{class:'quadro'});
+  const sels=[];
+  const mk=(key, ops, ordem, ph)=>{ const s=h('select',{}); s.append(h('option',{value:''}, ph)); ordem.forEach(o=>s.append(h('option',{value:String(o)}, ops[o])));
+    const pv=h('div',{class:'prev'}, S.fSel[key]!==undefined ? ops[S.fSel[key]] : '');
+    if(S.fSel[key]!==undefined) s.value=String(S.fSel[key]);
+    s.onchange=()=>{ S.fSel[key]= s.value===''?undefined:Number(s.value); pv.textContent = S.fSel[key]!==undefined ? ops[S.fSel[key]] : ''; salvar(); };
+    sels.push([key,s]); return ops.length>3 ? h('div',{}, s, pv) : s; };
+  FINAL.forEach((f,i)=>{
+    grid.append(h('div',{class:'rnf'}, h('h3',{}, f[0]),
+      h('label',{},'Critério (Metade A)'), mk(i+'c', f[1], ord[i][0], 'escolha o critério'),
+      h('label',{},'Evidência (Metade B)'), mk(i+'e', f[2], ord[i][1], 'escolha a evidência'),
+      h('label',{},'Veredito'), mk(i+'v', VEREDITOS, [0,1,2], 'escolha o veredito'))); });
+  const ordD = S.ord.dec || (S.ord.dec = embaralhar([0,1,2,3]));
+  const decBox=h('div');
+  const desD=()=>{ decBox.innerHTML=''; ordD.forEach(o=>{ const bt=h('button',{class:'opt'+(S.fSel.d===o?' sel':'')}, DECISAO.ops[o]); bt.onclick=()=>{ S.fSel.d=o; salvar(); desD(); }; decBox.append(bt); }); };
+  desD(); sels.push(['d', null]);
+  app.append(grid, h('div',{class:'card dec'}, h('b',{html: md(DECISAO.en)}), decBox));
+  const area=h('div'), btn=h('button',{class:'btn'},'Entregar a decisão');
+  btn.onclick=()=>{ const falta = sels.filter(([k])=>S.fSel[k]===undefined).length;
+    if(falta){ area.innerHTML=''; area.append(h('div',{class:'fb no'}, `Ainda faltam ${falta} escolhas.`)); return; }
+    let erros=0; FINAL.forEach((f,i)=>{ if(S.fSel[i+'c']!==0) erros++; if(S.fSel[i+'e']!==0) erros++; if(VEREDITOS[S.fSel[i+'v']]!==f[3]) erros++; }); if(S.fSel.d!==0) erros++;
+    S.fTent++; area.innerHTML='';
+    if(erros){ bip(false); S.trava=Date.now()+TRAVA_FINAL*1000; salvar(); placar('tentativa', {erros});
+      area.append(h('div',{class:'fb no', html: md(`**${erros} ${erros>1?'escolhas estão erradas':'escolha está errada'}.** A Dona Rita não aceita a decisão assim. Revejam com a metade que sabe aquela parte.`)}));
+      travaBotao(btn,'Entregar a decisão',S.trava); return; }
+    bip(true); S.fPts = Math.max(0, MAXF - 2*(S.fTent-1)); S.fim=Date.now(); salvar(); ir('fim'); };
+  app.append(area, h('div',{class:'rodape'}, btn));
+  if(S.trava>Date.now()) travaBotao(btn,'Entregar a decisão',S.trava);
+};
+
+TELAS.fim = (app)=>{
+  const pA = S.metade==='A'?ptsMetade():S.outraPts, pB = S.metade==='B'?ptsMetade():S.outraPts;
+  const tot = pA+pB+S.fPts; const seg=Math.floor((S.fim-S.inicio)/1000);
+  const st=h('div',{class:'status', style:'text-align:center;margin:10px 0'});
+  app.append(h('div',{class:'kick'},'Decisão entregue'), h('h1',{},'Equipe ' + S.equipe),
+    h('div',{class:'card', style:'text-align:center'}, h('div',{class:'grande'}, `${tot} / ${MAXT}`),
+      h('div',{style:'font:700 20px Fraunces,serif;margin-top:6px'}, `tempo: ${Math.floor(seg/60)} min ${seg%60} s`),
+      h('div',{class:'sub', style:'margin-top:6px'}, S.time.map(m=>m.nome).join(' · '))),
+    h('div',{class:'placar'}, h('div',{}, h('b',{},`${pA}/${MAXA}`),'Metade A'), h('div',{}, h('b',{},`${pB}/${MAXB}`),'Metade B'), h('div',{}, h('b',{},`${S.fPts}/${MAXF}`), `Decisão (${S.fTent} ${S.fTent>1?'tentativas':'tentativa'})`)),
+    h('div',{id:'posFinal', class:'posFinal'}), st,
+    h('div',{class:'card'}, h('b',{},'O que a equipe entregou à Dona Rita'), h('ul',{class:'lista-exp'},
+      FINAL.map(f=>h('li',{html: md(`**${f[0]}: ${f[3]}.** ${f[4]}`)})), h('li',{html: md('**Decisão:** '+DECISAO.ops[0]+'. '+DECISAO.e)}))),
+    fala('Obrigada! Agora eu sei o que falta e quando a versão volta. É isso que eu quero ver no documento de vocês: critério, evidência e decisão.'));
+  if(!S.enviadoFinal){ S.enviadoFinal=true; salvar();
+    placar('final', {pontos:tot, total:MAXT, segundos:seg, tentativas:S.fTent, nomes:S.time.map(m=>m.nome).join(', ')});
+    planilha(S.time.map(m=>linha(m, `Plantão PetVida · Final · equipe ${S.equipe} · ${Math.floor(seg/60)} min ${seg%60} s`, tot, MAXT)))
+      .then(r=>{ st.textContent = r.every(Boolean)?'Resultado enviado para o professor, uma linha por integrante.':'Não consegui enviar agora. Mostrem esta tela ao professor.'; });
+  } else st.textContent='Resultado já enviado. Mostrem esta tela ao professor se precisar.';
+  setTimeout(consultarPosicao, 2500); mostrarPosicao();
+};
+
+/* ------------------------------------------------ posição ao vivo (lê o placar) */
+let POS=null, pedidoP=0;
+function consultarPosicao(){
+  if(!PLACAR_URL || !S.equipe) return;
+  const cb='__pos'+(++pedidoP), sc=document.createElement('script');
+  window[cb]=(r)=>{ delete window[cb]; sc.remove();
+    const L=r.equipes||[], i=L.findIndex(e=>e.chave===norm(S.equipe));
+    if(i>=0){ POS={pos:i+1, de:L.length, fechadas:L.filter(e=>e.final).length}; mostrarPosicao(); } };
+  sc.onerror=()=>sc.remove();
+  sc.src=PLACAR_URL+'?callback='+cb+'&t='+Date.now(); document.body.append(sc);
+}
+function mostrarPosicao(){ const el=$('#hPos'); if(!el) return;
+  if(!POS){ el.style.display='none'; return; }
+  el.style.display=''; el.textContent=`${POS.pos}º de ${POS.de}`; el.className='pill pos'+(POS.pos===1?' lider':'');
+  const f=$('#posFinal'); if(f && S.tela==='fim') f.textContent = POS.pos===1 ? 'Vocês fecharam em 1º lugar!' : `Vocês fecharam em ${POS.pos}º lugar.`;
+}
+setInterval(consultarPosicao, 15000); setTimeout(consultarPosicao, 1500);
+
+cab(); ir(TELAS[S.tela] ? S.tela : 'equipe');
+
+</script>
+</body>
+</html>
