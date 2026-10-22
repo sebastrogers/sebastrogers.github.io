@@ -88,15 +88,7 @@ svg text{font-family:Inter,system-ui,sans-serif}
 .grande{font:700 64px Fraunces,serif;color:var(--teal);line-height:1}
 .status{font-weight:600;color:var(--teal)}
 .dicabox{background:#fff8e6;border:1px solid #e8cf8a;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:15px}
-.prancheta{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
-.prancheta .colD{position:sticky;top:104px}
-.prancheta .diag{margin-top:14px}
-.prancheta .assoc{grid-template-columns:96px 74px minmax(0,1fr) 74px 98px;font-size:14px;padding:6px 8px;gap:6px}
-.prancheta .assoc select{font-size:14px;padding:6px 4px;width:100%}
-.prancheta .chip{padding:6px 11px;font-size:14px}
 [data-c]:hover rect{fill:#fff6df}
-@media (max-width:1000px){.prancheta{grid-template-columns:1fr}.prancheta .colD{position:static}}
-main{max-width:1260px}
 @media (max-width:760px){.assoc{grid-template-columns:1fr 1fr;}.membros{grid-template-columns:1fr}h1{font-size:28px}}
 .tok{display:inline-block;border-bottom:3px dotted var(--line);padding:0 3px;cursor:pointer;border-radius:4px}
 .tok.sel{background:#fff0c2;border-bottom-color:var(--gold)}
@@ -117,6 +109,42 @@ main{max-width:1260px}
 .linha.sel{border-color:var(--gold);background:#fff6df}
 .linha.ok{border-color:var(--green);background:#eef8f1}
 .linha.no{border-color:var(--red);background:#fbefeb}
+
+main{max-width:1080px}
+.intro{font-size:18px;max-width:900px}
+.chips{gap:10px}
+.chip{border-radius:12px;line-height:1.35;max-width:100%}
+.balde .chip{display:block;margin:8px 0 0;font-size:14px;padding:8px 10px;cursor:pointer}
+.baldes{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.prancheta .slot{margin-top:6px}
+.prancheta select{white-space:normal;text-overflow:ellipsis}
+.escolha{border:2px solid var(--line);border-radius:8px;padding:9px 12px;font:600 15px/1.4 Inter;background:#fff}
+.escolha.ok{border-color:var(--green);background:#eef8f1}
+.escolha.no{border-color:var(--red);background:#fbefeb}
+.prancheta .fb{margin:6px 0 4px;font-size:14px}
+.linha{align-items:baseline}
+.linha b{padding-top:0}
+.membros input{min-width:0;width:100%}
+@media (max-width:760px){
+  header{gap:8px;padding:8px 14px}
+  header .t{font-size:16px;flex:1 0 100%}
+  header .sp{display:none}
+  header .pill,header button{font-size:12px;padding:4px 10px}
+  #hEquipe{display:none}
+  .trilha{padding:8px 14px}
+  main{padding:18px 14px 60px}
+  h2{font-size:22px}
+  .intro{font-size:16px}
+  .fala{padding:12px 14px;gap:10px}
+  .fala .av{flex-basis:40px;height:40px;font-size:16px}
+  .frase{font-size:17px;line-height:1.9;padding:6px 12px}
+  .card{padding:16px}
+  .linha{font-size:16px;padding:10px 12px}
+  .linha b{flex-basis:52px}
+}
+.prev{display:none}
+@media (max-width:760px){.prev:not(:empty){display:block;font:600 14px/1.4 Inter;color:var(--teal);background:var(--teal2);border-radius:8px;padding:6px 10px;margin-top:4px}}
+@media (max-width:900px){header{gap:8px;padding:8px 14px}header .t{font-size:16px}header .pill,header button{font-size:12px;padding:4px 10px}}
 
 </style>
 </head>
@@ -309,7 +337,7 @@ const TELAS = [];
 TELAS[0] = (app)=>{
   app.append(h('div',{class:'kick'},'Engenharia de Requisitos · Aula 10 · Atividade em equipe'),
     h('h1',{},'Ateliê de RNF: a PetVida pede qualidade'),
-    h('p',{}, 'A Dona Rita já tem o aplicativo de agendamento da PetVida funcionando no papel. Agora ela escreveu o que espera dele em **qualidade**: rápido, seguro, fácil, sempre no ar. A equipe vai transformar essas frases em **requisitos não funcionais mensuráveis**, com métrica e forma de verificar.'),
+    h('p',{class:'intro', html: md('A Dona Rita já tem o aplicativo de agendamento da PetVida funcionando no papel. Agora ela escreveu o que espera dele em **qualidade**: rápido, seguro, fácil, sempre no ar. A equipe vai transformar essas frases em **requisitos não funcionais mensuráveis**, com métrica e forma de verificar.')}),
     h('div',{class:'card'}, h('b',{},'Como funciona'),
       h('ul',{class:'lista-exp'},
         h('li',{},'Um computador por equipe. A cada estação, o mouse passa para outra pessoa; o resto discute e decide junto.'),
@@ -384,7 +412,7 @@ TELAS[3] = (app)=>{
   desenhar(); app.append(pool, baldes, area, rod);
   function conferir(){ resp.feito=true; let ok=0; ITENS.forEach((it,i)=>{ if(resp.pos[i]===it[1]) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=8);
     area.innerHTML=''; area.append(h('div',{class:'fb info'}, h('b',{},`${ok} de ${ITENS.length}. `), 'Por que cada uma vai na gaveta certa:',
-      h('ul',{class:'lista-exp'}, ITENS.map((it,i)=>h('li',{html:(resp.pos[i]===it[1]?'✔ ':'✘ ')+md(it[2])})))));
+      h('ul',{class:'lista-exp'}, ITENS.map((it,i)=>h('li',{html:(resp.pos[i]===it[1]?'✔ ':'✘ ')+'<b>'+md(it[0])+'</b>: '+md(it[2])})))));
     rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(4)},'Ir para a prancheta')); }
   if(resp.feito) conferir();
   else rod.append(comMouse(), dicaBtn(id,'Pergunte o que cada frase **mede**: tempo e capacidade (desempenho), proteção (segurança), facilidade (usabilidade), tempo no ar e recuperação (confiabilidade) ou ambiente onde roda (portabilidade).', area),
@@ -402,20 +430,24 @@ TELAS[4] = (app)=>{
     p.slots.forEach((s,j)=>{ const ops=[s[1]].concat(s[2]); const sel=h('select',{}); sel.append(h('option',{value:''},'escolha uma opção'));
       resp.ord[i][j].forEach(k=>{ const o=h('option',{value:String(k)}, ops[k]); sel.append(o); });
       const chave=i+'.'+j; if(resp.v[chave]!==undefined) sel.value=String(resp.v[chave]);
-      sel.onchange=()=>{ resp.v[chave]= sel.value===''?undefined:Number(sel.value); salvar(); };
-      if(resp.feito){ sel.disabled=true; sel.className = resp.v[chave]===0?'ok':'no'; }
-      card.append(h('label',{}, s[0]), sel);
-      if(resp.feito) card.append(h('div',{class:'fb '+(resp.v[chave]===0?'ok':'no'), html:(resp.v[chave]===0?'✔ ':'✘ ')+md(s[3])})); });
+      const pv=h('div',{class:'prev'}, resp.v[chave]!==undefined ? ops[resp.v[chave]] : '');
+      sel.onchange=()=>{ resp.v[chave]= sel.value===''?undefined:Number(sel.value); pv.textContent = resp.v[chave]!==undefined ? ops[resp.v[chave]] : ''; salvar(); };
+      const slot=h('div',{class:'slot'}, h('label',{}, s[0]));
+      if(resp.feito){ const certo=resp.v[chave]===0;
+        slot.append(h('div',{class:'escolha '+(certo?'ok':'no')}, ops[resp.v[chave]]));
+        slot.append(h('div',{class:'fb '+(certo?'ok':'no'), html:(certo?'✔ ':'✘ Resposta certa: <b>'+md(s[1])+'</b>. ')+md(s[3])})); }
+      else slot.append(sel, pv);
+      card.append(slot); });
     if(resp.feito) card.append(h('div',{class:'montada', html: '<b>RNF mensurável:</b> '+md(`${p.slots[0][1].charAt(0).toUpperCase()+p.slots[0][1].slice(1)}, o sistema deve ${p.slots[1][1]}. Verificação: ${p.slots[2][1]}.`)}));
     lista.append(card); });
   app.append(lista, area, rod);
   function conferir(){ resp.feito=true; let ok=0; PRANCHETA.forEach((p,i)=>p.slots.forEach((s,j)=>{ if(resp.v[i+'.'+j]===0) ok++; }));
     S.pts[id]=ok; salvar(); cab(); bip(ok>=9);
-    app.innerHTML=''; TELAS[4](app); setTimeout(()=>{ const a=$('#app'); const f=h('div',{class:'fb info'}, h('b',{},`${ok} de ${S.max[id]}. `), 'Estas quatro frases agora podem entrar no documento de requisitos. Guardem o formato: **contexto, critério, como verificar**.');
-      a.append(f, h('div',{class:'rodape'}, comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para a pergunta ao cliente'))); },0); }
+    app.innerHTML=''; TELAS[4](app); }
   if(!resp.feito) rod.append(comMouse(), dicaBtn(id,'A resposta boa tem **número**, **limite** ou **comportamento** que dá "passou" ou "falhou", e um teste que **qualquer pessoa repete** com o mesmo resultado.', area),
     h('button',{class:'btn', onclick:()=>{ let falta=0; PRANCHETA.forEach((p,i)=>p.slots.forEach((s,j)=>{ if(resp.v[i+'.'+j]===undefined) falta++; })); if(falta){ area.innerHTML=''; area.append(h('div',{class:'fb no'},`Ainda faltam ${falta} escolhas.`)); return; } conferir(); }},'Conferir'));
-  else { rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para a pergunta ao cliente')); }
+  else { let ok=S.pts[id]||0; area.append(h('div',{class:'fb info', html:`<b>${ok} de ${S.max[id]}.</b> `+md('Estas quatro frases agora podem entrar no documento de requisitos. Guardem o formato: **contexto, critério, como verificar**.')}));
+    rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para a pergunta ao cliente')); }
 };
 
 function blocoMCQ(lista, resp, chave, feito, redesenhar){
@@ -440,7 +472,7 @@ TELAS[5] = (app)=>{
   function desenhar(){ lista.innerHTML=''; blocoMCQ(PERGUNTAS, resp, 'q', resp.feito, desenhar).forEach(b=>lista.append(b)); }
   desenhar(); app.append(lista, area, rod);
   function conferir(){ resp.feito=true; let ok=0; PERGUNTAS.forEach((q,k)=>{ if(resp.q[k]===q.c) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=3);
-    area.innerHTML=''; area.append(h('div',{class:'fb info'}, h('b',{},`${ok} de ${PERGUNTAS.length}. `), 'Pergunta boa liga a qualidade a uma **consequência** (perder cliente, perder dinheiro, perder dado). Dela sai o número.'));
+    area.innerHTML=''; area.append(h('div',{class:'fb info', html:`<b>${ok} de ${PERGUNTAS.length}.</b> `+md('Pergunta boa liga a qualidade a uma **consequência** (perder cliente, perder dinheiro, perder dado). Dela sai o número.')}));
     rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(6)},'Ir para a caça ao defeito')); }
   if(resp.feito) conferir();
   else rod.append(comMouse(), dicaBtn(id,'Boa pergunta de requisito: **"o que acontece se...?"** e **"quando isso dói mais?"**. Preferência e opinião não geram critério.', area), h('button',{class:'btn', onclick:conferir},'Conferir'));
@@ -459,7 +491,7 @@ TELAS[6] = (app)=>{
   function conferir(){ resp.feito=true; let ok=0, falso=0; DEFEITOS.forEach((d,i)=>{ if(resp.m[i]&&d[2]) ok++; if(resp.m[i]&&!d[2]) falso++; });
     S.pts[id]=Math.max(0, ok-falso); salvar(); cab(); desenhar(); bip(ok===3&&!falso);
     area.innerHTML=''; area.append(h('div',{class:'fb '+(ok===3&&!falso?'ok':'no')}, h('b',{},`Acharam ${ok} de 3 defeitos${falso?`, com ${falso} marcação errada`:''}. `),
-      h('ul',{class:'lista-exp'}, DEFEITOS.map((d,i)=>h('li',{html:(d[2]?'<b>Defeito</b> ':'<b>Certo</b> ')+d[0]+': '+md(d[3])+(resp.m[i]?' <i>(vocês marcaram)</i>':'')})))));
+      h('ul',{class:'lista-exp'}, DEFEITOS.map((d,i)=>h('li',{html:(d[2]?'<b>Defeito</b> ':'<b>Certo</b> ')+d[0]+': '+md(d[3])+(resp.m[i]?' <i>(vocês marcaram)</i>':(d[2]?' <i>(passou sem marcar)</i>':''))})))));
     rod.innerHTML=''; rod.append(h('button',{class:'btn', onclick:()=>{ S.fim=S.fim||Date.now(); ir(7); }},'Ver o resultado da equipe')); }
   if(resp.feito) conferir();
   else rod.append(comMouse(), dicaBtn(id,'Três perguntas de revisão: **tem número ou limite? tem como verificar? descreve qualidade ou já escolhe a solução?**', area), h('button',{class:'btn', onclick:conferir},'Entregar a revisão'));
