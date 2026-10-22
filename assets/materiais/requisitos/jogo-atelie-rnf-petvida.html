@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ateliê de RNF · Clínica PetVida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3eee3;--paper:#fffdf8;--ink:#1b1c1f;--muted:#6b675d;--teal:#1f6f6b;--teal2:#e3efed;--wine:#7a2c46;--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--line:#d9d2c2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Inter,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#16171a;color:#eeeae0;display:flex;align-items:center;gap:18px;padding:10px 22px;flex-wrap:wrap}
+header .t{font:700 19px Fraunces,Georgia,serif}
+header .sp{flex:1}
+header .pill{font:600 13px JetBrains Mono,monospace;background:#2a2b30;border-radius:20px;padding:5px 12px}
+header button{background:#2a2b30;color:#eeeae0;border:0;border-radius:20px;padding:6px 12px;font:600 13px Inter;cursor:pointer}
+.trilha{display:flex;gap:6px;padding:10px 22px;background:#202126;overflow-x:auto}
+.trilha span{font:600 12px JetBrains Mono,monospace;color:#8d897d;padding:4px 10px;border-radius:14px;border:1px solid #3a3b40;white-space:nowrap}
+.trilha span.ok{color:#9fd8b5;border-color:#2f8a55}
+.trilha span.at{color:#16171a;background:var(--gold);border-color:var(--gold)}
+main{max-width:1180px;margin:0 auto;padding:26px 22px 80px}
+h1{font:700 34px/1.15 Fraunces,Georgia,serif;margin:4px 0 10px}
+h2{font:700 26px/1.2 Fraunces,Georgia,serif;margin:0 0 8px}
+.kick{font:700 13px JetBrains Mono,monospace;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0}
+.fala{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.fala .av{flex:0 0 52px;height:52px;border-radius:50%;background:var(--wine);color:#fff;display:grid;place-items:center;font:700 20px Fraunces,serif}
+.fala b.n{display:block;font:700 14px Inter;color:var(--wine)}
+.uc{font:500 16px/1.6 JetBrains Mono,monospace;background:#16171a;color:#eeeae0;border-radius:12px;padding:18px 20px;white-space:pre-wrap}
+.uc .hl{background:#c79a2b33;border-radius:4px;padding:0 2px}
+.btn{display:inline-block;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 20px;font:700 16px Inter;cursor:pointer;margin:6px 8px 6px 0}
+.btn.sec{background:#e7e1d3;color:var(--ink)}
+.btn.dica{background:#fff3d6;color:#7a5a12;border:1px solid #e8cf8a}
+.btn:disabled{opacity:.45;cursor:default}
+.rodape{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.mouse{display:inline-flex;align-items:center;gap:8px;background:var(--teal2);color:var(--teal);border-radius:20px;padding:6px 14px;font:600 14px Inter}
+input,select{font:16px Inter;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+select{padding:7px 8px;font-size:15px}
+.membros{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;max-width:720px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:#fff;border:2px solid var(--line);border-radius:22px;padding:8px 14px;font:600 15px Inter;cursor:pointer;user-select:none}
+.chip.sel{border-color:var(--gold);background:#fff6df}
+.chip.ok{border-color:var(--green);background:#eef8f1}
+.chip.no{border-color:var(--red);background:#fbefeb}
+.chip small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.baldes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.balde{background:var(--paper);border:2px dashed var(--line);border-radius:14px;padding:12px;min-height:120px;cursor:pointer}
+.balde.alvo{border-color:var(--gold);background:#fffaf0}
+.balde h3{margin:0 0 6px;font:700 15px Inter;color:var(--teal)}
+.balde p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.fb{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:15px}
+.fb.ok{background:#eef8f1;border:1px solid #a9d4b7}
+.fb.no{background:#fbefeb;border:1px solid #e9b8ae}
+.fb.info{background:var(--teal2);border:1px solid #b9d6d2}
+.lista-exp{margin:8px 0 0;padding-left:18px;font-size:14px}
+.lista-exp li{margin:3px 0}
+.diag{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:12px 0}
+.diag svg{width:100%;height:auto;display:block;max-width:1000px;margin:0 auto}
+svg text{font-family:Inter,system-ui,sans-serif}
+.assoc{display:grid;grid-template-columns:110px 92px 1fr 92px 120px;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:600}
+.assoc.ok{border-color:#a9d4b7;background:#f3faf5}.assoc.no{border-color:#e9b8ae;background:#fdf4f1}
+.assoc .r{text-align:right}
+.mcq{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.mcq .en{font-weight:600;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin:6px 0;font:15px Inter;cursor:pointer}
+.opt.sel{border-color:var(--gold);background:#fff6df}
+.opt.ok{border-color:var(--green);background:#eef8f1}
+.opt.no{border-color:var(--red);background:#fbefeb}
+.cards5{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.c5{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.c5 .tx{font-weight:600;margin-bottom:8px}
+.c5 .bt{display:flex;gap:6px;flex-wrap:wrap}
+.c5 .bt button{flex:1;border:2px solid var(--line);background:#fff;border-radius:8px;padding:6px;font:600 13px Inter;cursor:pointer}
+.c5 .bt button.sel{border-color:var(--teal);background:var(--teal2);color:var(--teal)}
+.c5.ok{border-color:#a9d4b7;background:#f3faf5}.c5.no{border-color:#e9b8ae;background:#fdf4f1}
+.ordem{display:flex;flex-wrap:wrap;gap:8px}
+.ordem .chip .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;margin-right:6px}
+.hot{cursor:pointer}
+.hot rect.hb{fill:transparent;stroke:transparent;stroke-width:3;rx:6}
+.hot:hover rect.hb{stroke:#c79a2b88}
+.hot.marc rect.hb{fill:#c79a2b22;stroke:var(--gold)}
+.hot.ok rect.hb{fill:#2f8a5522;stroke:var(--green)}
+.hot.no rect.hb{fill:#c2412d22;stroke:var(--red)}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.placar div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.placar b{display:block;font:700 26px Fraunces,serif;color:var(--teal)}
+.grande{font:700 64px Fraunces,serif;color:var(--teal);line-height:1}
+.status{font-weight:600;color:var(--teal)}
+.dicabox{background:#fff8e6;border:1px solid #e8cf8a;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:15px}
+.prancheta{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+.prancheta .colD{position:sticky;top:104px}
+.prancheta .diag{margin-top:14px}
+.prancheta .assoc{grid-template-columns:96px 74px minmax(0,1fr) 74px 98px;font-size:14px;padding:6px 8px;gap:6px}
+.prancheta .assoc select{font-size:14px;padding:6px 4px;width:100%}
+.prancheta .chip{padding:6px 11px;font-size:14px}
+[data-c]:hover rect{fill:#fff6df}
+@media (max-width:1000px){.prancheta{grid-template-columns:1fr}.prancheta .colD{position:static}}
+main{max-width:1260px}
+@media (max-width:760px){.assoc{grid-template-columns:1fr 1fr;}.membros{grid-template-columns:1fr}h1{font-size:28px}}
+.tok{display:inline-block;border-bottom:3px dotted var(--line);padding:0 3px;cursor:pointer;border-radius:4px}
+.tok.sel{background:#fff0c2;border-bottom-color:var(--gold)}
+.tok.ok{background:#e3f3e9;border-bottom:3px solid var(--green)}
+.tok.no{background:#fbe3dd;border-bottom:3px solid var(--red)}
+.tok.perdi{background:#fff3d6;border-bottom:3px dashed var(--gold)}
+.frase{font:500 19px/2 Inter,sans-serif;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px 16px;margin:8px 0}
+.frase small{font:700 12px JetBrains Mono,monospace;color:var(--wine);margin-right:10px}
+.prancheta{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.prancheta .vago{font:600 16px Inter;color:var(--wine);margin-bottom:10px}
+.prancheta label{display:block;font:700 12px JetBrains Mono,monospace;color:var(--muted);margin:10px 0 3px;text-transform:uppercase;letter-spacing:.08em}
+.prancheta select{width:100%;font-size:15px;padding:9px 8px;border:2px solid var(--line);border-radius:8px;background:#fff}
+.prancheta select.ok{border-color:var(--green);background:#eef8f1}
+.prancheta select.no{border-color:var(--red);background:#fbefeb}
+.montada{font:500 16px/1.5 Inter;background:#16171a;color:#eeeae0;border-radius:10px;padding:12px 16px;margin-top:10px}
+.linha{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0;cursor:pointer;font-size:17px}
+.linha b{font:700 13px JetBrains Mono,monospace;color:var(--wine);flex:0 0 62px;padding-top:3px}
+.linha.sel{border-color:var(--gold);background:#fff6df}
+.linha.ok{border-color:var(--green);background:#eef8f1}
+.linha.no{border-color:var(--red);background:#fbefeb}
+
+</style>
+</head>
+<body>
+<header>
+  <span class="t">Ateliê de RNF</span>
+  <span class="pill" id="hEquipe">Clínica PetVida</span>
+  <span class="sp"></span>
+  <span class="pill" id="hPontos">0 pontos</span>
+  <span class="pill" id="hTempo">00:00</span>
+  <button id="bSom">som: ligado</button>
+  <button id="bRe">recomeçar</button>
+</header>
+<nav class="trilha" id="trilha"></nav>
+<main id="app"></main>
+<script>
+'use strict';
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const CHAVE = 'atelie-rnf-petvida-v1';
+const ESTACOES = ['Equipe', '1 · Briefing', '2 · Marca-texto', '3 · Classificar', '4 · Prancheta', '5 · Pergunta ao cliente', '6 · Caça ao defeito', 'Resultado'];
+
+let S = carregar() || novo();
+function novo(){ return {est:0, equipe:'', membros:[], pts:{}, max:{}, dicas:{}, inicio:null, fim:null, enviado:false, som:true, r:{}}; }
+function carregar(){ try{ return JSON.parse(localStorage.getItem(CHAVE)); }catch(e){ return null; } }
+function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){} }
+const $ = (s, el=document) => el.querySelector(s);
+function h(tag, attrs={}, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (k==='class') e.className=v; else if (k==='html') e.innerHTML=v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()){ if (k==null) continue; e.append(k.nodeType ? k : document.createTextNode(k)); }
+  return e;
+}
+function md(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>'); }
+function embaralhar(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function total(){ let p=0; for(const k in S.pts) p+=S.pts[k]; for(const k in S.dicas) p-=S.dicas[k]; return Math.max(0,p); }
+function totalMax(){ let m=0; for(const k in S.max) m+=S.max[k]; return m; }
+
+let AC=null;
+function bip(ok){
+  if(!S.som) return;
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const notas = ok ? [523,659,784] : [330,262];
+    notas.forEach((f,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type= ok?'triangle':'square'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,AC.currentTime+i*0.09); g.gain.exponentialRampToValueAtTime(0.06,AC.currentTime+i*0.09+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+i*0.09+0.16); o.connect(g).connect(AC.destination); o.start(AC.currentTime+i*0.09); o.stop(AC.currentTime+i*0.09+0.2); });
+  }catch(e){}
+}
+function cab(){
+  $('#hEquipe').textContent = S.equipe ? 'Equipe ' + S.equipe : 'Clínica PetVida';
+  $('#hPontos').textContent = total() + ' pontos';
+  $('#bSom').textContent = 'som: ' + (S.som ? 'ligado' : 'desligado');
+  if (!S.inicio) $('#hTempo').textContent = '00:00';
+  const tr = $('#trilha'); tr.innerHTML='';
+  ESTACOES.forEach((n,i)=> tr.append(h('span',{class: i<S.est ? 'ok' : i===S.est ? 'at' : ''}, n)));
+}
+setInterval(()=>{ if(!S.inicio) return; const s=Math.floor(((S.fim||Date.now())-S.inicio)/1000);
+  $('#hTempo').textContent = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }, 1000);
+$('#bSom').onclick = ()=>{ S.som=!S.som; salvar(); cab(); };
+$('#bRe').onclick = ()=>{ const som=S.som; S=novo(); S.som=som; salvar(); ir(0); };
+function comMouse(){
+  if(!S.membros.length) return null;
+  const n = S.membros[(S.est-1+S.membros.length)%S.membros.length].nome.split(' ')[0];
+  return h('span',{class:'mouse'}, 'Com o mouse agora: ' + n);
+}
+function fala(texto, quem='Dona Rita', sigla='R'){
+  return h('div',{class:'fala'}, h('div',{class:'av'}, sigla), h('div',{}, h('b',{class:'n'}, quem), h('div',{html: md(texto)})));
+}
+function dicaBtn(id, texto, area){
+  const b = h('button',{class:'btn dica'}, S.dicas[id] ? 'Dica usada (−1)' : 'Pedir dica (custa 1 ponto)');
+  if (S.dicas[id]) { b.disabled = true; area.append(h('div',{class:'dicabox', html: md(texto)})); }
+  b.onclick = ()=>{ S.dicas[id]=1; salvar(); b.disabled=true; b.textContent='Dica usada (−1)'; area.append(h('div',{class:'dicabox', html: md(texto)})); cab(); };
+  return b;
+}
+function ir(n){ S.est=n; salvar(); cab(); const app=$('#app'); app.innerHTML=''; TELAS[n](app); window.scrollTo(0,0); }
+
+/* ============================================================ conteúdo */
+const RNF_VAGOS = `RNF01  O sistema deve ser rápido.
+RNF02  O sistema deve ser seguro.
+RNF03  O sistema deve ser fácil de usar.
+RNF04  O sistema deve estar sempre disponível.`;
+
+/* 2 · marca-texto: v=true vago, v=false medido (isca) */
+const FRASES = [
+  ['RNF01', ['O sistema deve ser ', {t:'rápido', v:true}, '.']],
+  ['RNF02', ['O sistema deve ser ', {t:'seguro', v:true}, '.']],
+  ['RNF03', ['O app deve ser ', {t:'fácil de usar', v:true}, ' e ', {t:'intuitivo', v:true}, '.']],
+  ['RNF04', ['O sistema deve estar ', {t:'sempre', v:true}, ' disponível.']],
+  ['RNF05', ['O app deve ter aparência ', {t:'moderna', v:true}, ' e funcionar em ', {t:'qualquer aparelho', v:true}, '.']],
+  ['RNF06', ['A tela de horários deve carregar ', {t:'em até 2 segundos', v:false}, ' em rede ', {t:'4G', v:false}, '.']],
+  ['RNF07', ['A conta deve ficar ', {t:'bloqueada por 15 minutos', v:false}, ' após ', {t:'5 tentativas erradas', v:false}, '.']],
+  ['RNF08', ['A senha deve ser guardada com ', {t:'hash e sal', v:false}, '.']],
+];
+const EXPLICA_TOK = {
+  vagas: 'Palavra vaga: cada pessoa entende de um jeito e ninguém consegue testar. Falta um número, um limite ou um contexto.',
+  certas: 'Termo mensurável ou verificável: tem número, limite ou técnica que dá para conferir. Marcar isso tira ponto.'
+};
+
+/* 3 · classificar */
+const BALDES = [
+  ['Desempenho', 'tempo e capacidade'], ['Segurança', 'proteção de dados e acesso'], ['Usabilidade', 'facilidade e acessibilidade'],
+  ['Confiabilidade', 'no ar e recuperação'], ['Portabilidade', 'onde o sistema roda']];
+const ITENS = [
+  ['A tela de horários carrega em até 2 segundos com 4G', 0, 'Mede tempo de resposta: desempenho.'],
+  ['A senha do tutor é guardada cifrada, nunca em texto puro', 1, 'Protege um dado sensível: segurança.'],
+  ['Um tutor novo conclui um agendamento sem ajuda em até 3 minutos', 2, 'Mede a facilidade de uso por uma pessoa real: usabilidade.'],
+  ['O app fica no ar 99,5% do tempo em cada mês', 3, 'Mede o tempo em que o sistema está disponível: confiabilidade.'],
+  ['O app funciona no Android 10 ou mais novo e no iOS 15 ou mais novo', 4, 'Diz em quais ambientes o sistema roda: portabilidade.'],
+  ['O sistema atende 200 agendamentos ao mesmo tempo no sábado de manhã', 0, 'Mede capacidade sob carga: desempenho.'],
+  ['Depois de 5 senhas erradas, a conta é bloqueada por 15 minutos', 1, 'Controle de acesso contra tentativa de invasão: segurança.'],
+  ['Se o servidor cair, os dados voltam em até 1 hora, com perda máxima de 15 minutos', 3, 'Trata de recuperação após falha: confiabilidade.'],
+  ['Os botões têm texto legível e contraste mínimo de 4,5 para 1', 2, 'Acessibilidade visual faz parte da usabilidade.'],
+  ['O site abre nos 3 navegadores mais usados, na versão atual de cada um', 4, 'Define a compatibilidade com ambientes: portabilidade.'],
+];
+
+/* 4 · prancheta: [vago, [[rótulo, correta, opções..., explicação]] ] */
+const PRANCHETA = [
+  { vago: 'O sistema deve ser rápido.', slots: [
+    ['Contexto', 'na tela de horários, com o tutor em rede 4G',
+      ['em qualquer tela, com o tutor em qualquer rede', 'na tela de horários, com o tutor em rede muito veloz', 'na tela principal, quando o servidor permitir'],
+      'Contexto é onde e em que condição vale a regra. Rede 4G é o caso comum do tutor; "qualquer" e "muito veloz" escondem o pior caso.'],
+    ['Critério', 'carregar em até 2 segundos em 95% dos acessos',
+      ['carregar o mais rápido que a tecnologia permitir', 'carregar em um tempo razoável para o usuário', 'carregar em 2 segundos como tempo médio geral'],
+      'Número e proporção: 2 segundos em 95% dos acessos. Média esconde os acessos muito lentos.'],
+    ['Como verificar', 'teste de carga com 200 acessos simultâneos',
+      ['perguntar à dona da clínica se ela achou rápido', 'ler o código do servidor procurando lentidão', 'o desenvolvedor abrir a tela uma vez e anotar'],
+      'Verificar é medir com um teste repetível. Opinião e uma única tentativa não provam nada.'] ] },
+  { vago: 'O sistema deve ser seguro.', slots: [
+    ['Contexto', 'no login do tutor, pelo app e pelo site',
+      ['em todas as telas do sistema, o tempo todo', 'no login do tutor, só pelo aplicativo', 'no banco de dados, nos dados internos'],
+      'Escolha um alvo claro. O login é a porta de entrada e existe nos dois canais.'],
+    ['Critério', 'bloquear a conta 15 min após 5 senhas erradas',
+      ['usar uma proteção forte contra qualquer invasor', 'bloquear a conta quando houver alguma suspeita', 'pedir uma senha bem difícil para o tutor criar'],
+      'Critério é comportamento com número: 5 erros, 15 minutos. "Forte" e "suspeita" não dá para testar.'],
+    ['Como verificar', 'teste que erra a senha 5 vezes e vê o bloqueio',
+      ['confiar que o programador seguiu as boas práticas', 'perguntar ao tutor se ele se sente seguro no app', 'olhar a tela de login e ver se ela está bonita'],
+      'O teste reproduz o ataque e confere o resultado, sempre do mesmo jeito.'] ] },
+  { vago: 'O sistema deve ser fácil de usar.', slots: [
+    ['Contexto', 'para um tutor que nunca usou o app, no celular',
+      ['para um programador acostumado com sistemas novos', 'para qualquer pessoa, em qualquer situação de uso', 'para o tutor depois de um mês de uso do app'],
+      'Facilidade depende de quem usa. O pior caso é o novato, no aparelho que ele realmente tem.'],
+    ['Critério', 'concluir um agendamento em 3 minutos sem ajuda',
+      ['achar o app simples e agradável de usar no dia a dia', 'concluir um agendamento com poucos toques na tela', 'ter o menu organizado de um jeito bem intuitivo'],
+      'Critério é uma tarefa real com tempo: agendar em 3 minutos, sem ajuda. "Poucos" e "intuitivo" são vagos.'],
+    ['Como verificar', 'teste de usabilidade com 5 tutores, cronometrado',
+      ['conferir se o projeto segue o guia de estilo da marca', 'a equipe testar entre si antes da entrega final', 'enviar um formulário perguntando se gostaram do app'],
+      'Observar pessoas reais fazendo a tarefa, com cronômetro, é o teste de usabilidade.'] ] },
+  { vago: 'O sistema deve estar sempre disponível.', slots: [
+    ['Contexto', 'no horário de funcionamento, das 7h às 19h',
+      ['em todos os instantes do dia e da noite, sem pausa', 'apenas aos sábados, dia de maior movimento', 'quando a internet da clínica estiver funcionando'],
+      '"Sempre" não existe: defina quando a falha dói. Aqui, o horário em que a clínica agenda.'],
+    ['Critério', 'ficar no ar 99,5% do tempo em cada mês',
+      ['ficar no ar sem nenhuma queda durante o ano', 'ficar no ar o máximo de tempo possível', 'voltar rápido depois de qualquer queda'],
+      '99,5% por mês dá um orçamento de falha (cerca de 3,6 horas). "Nenhuma queda" é impossível e "máximo" não dá para medir.'],
+    ['Como verificar', 'monitoramento automático com relatório mensal',
+      ['a dona da clínica avisar quando perceber uma queda', 'testar o sistema manualmente uma vez por mês', 'revisar o código antes de cada nova versão do app'],
+      'Disponibilidade se mede o tempo todo, por monitoramento, e vira relatório.'] ] },
+];
+
+/* 5 · pergunta ao cliente */
+const PERGUNTAS = [
+  { ctx: '**Dona Rita:** "O app tem que ser rápido!"', en: 'Qual pergunta ajuda a achar o limite de tempo?',
+    ops: ['O que acontece se o tutor esperar 5 segundos pela tela?', 'A senhora prefere um app rápido ou um app muito rápido?', 'Qual linguagem de programação a senhora gostaria de usar?', 'Quanto a senhora pretende gastar por mês com servidor?'], c: 0,
+    e: 'A pergunta liga a espera a uma consequência real (desistir, ligar para a clínica). Dela sai o limite, por exemplo 2 segundos.' },
+  { ctx: '**Dona Rita:** "Tem que ser seguro, os dados são dos meus clientes."', en: 'Qual pergunta ajuda a decidir o que proteger primeiro?',
+    ops: ['Qual cor a senhora quer no botão de entrar do aplicativo?', 'Qual dado de um tutor causaria mais dano se vazasse?', 'Quantos tutores a senhora pretende cadastrar neste ano?', 'A senhora já usa algum banco de dados na clínica?'], c: 1,
+    e: 'Saber o dado de maior dano (CPF, endereço, cartão) diz onde o requisito de segurança precisa ser mais rígido.' },
+  { ctx: '**Dona Rita:** "Não pode cair, de jeito nenhum."', en: 'Qual pergunta transforma "não pode cair" em critério?',
+    ops: ['A senhora acha que o servidor atual é bom ou é ruim?', 'Quem foi o último programador que mexeu no sistema todo?', 'A senhora acredita que o app vai ter muitas quedas?', 'Em quais dias e horas uma queda custa agendamentos?'], c: 3,
+    e: 'Os dias e horários de maior prejuízo definem a janela de disponibilidade e o tamanho do problema.' },
+  { ctx: '**Dona Rita:** "Meus clientes precisam achar fácil."', en: 'Qual pergunta revela o usuário de pior caso?',
+    ops: ['Qual aplicativo de outra empresa a senhora acha mais bonito?', 'Quantos funcionários vão trabalhar com o app na clínica?', 'A senhora prefere o menu no topo ou na lateral da tela?', 'Qual tutor teria mais dificuldade: idade, aparelho, costume?'], c: 3,
+    e: 'O usuário de pior caso define o contexto do teste de usabilidade. Se ele consegue, os outros também conseguem.' },
+];
+
+/* 6 · caça ao defeito */
+const DEFEITOS = [
+  ['RNF-A', 'O sistema deve responder em até 1 segundo em 95% das buscas, medido por teste de carga.', false, 'Tem contexto, número, proporção e método de teste.'],
+  ['RNF-B', 'A tela deve ser bonita e agradável.', true, 'Subjetivo: "bonita" e "agradável" não têm métrica nem teste. Troque por critério de contraste, tempo de tarefa ou pesquisa com nota mínima.'],
+  ['RNF-C', 'O sistema deve usar MongoDB e rodar em Docker.', true, 'Descreve a solução, não a qualidade esperada. Se for restrição real do cliente, registre como restrição, com a justificativa.'],
+  ['RNF-D', 'O app deve funcionar no Android 10 ou superior, verificado em 3 aparelhos reais.', false, 'Tem ambiente, versão mínima e forma de verificar.'],
+  ['RNF-E', 'O sistema deve suportar muitos usuários simultâneos.', true, '"Muitos" é vago. Defina um número (200 ao mesmo tempo) e um comportamento (tempo de resposta mantido).'],
+  ['RNF-F', 'Os dados do tutor devem ficar cifrados no banco, conferido por revisão da configuração.', false, 'Tem alvo claro e um jeito de comprovar: revisar a configuração do banco.'],
+];
+
+const TELAS = [];
+
+TELAS[0] = (app)=>{
+  app.append(h('div',{class:'kick'},'Engenharia de Requisitos · Aula 10 · Atividade em equipe'),
+    h('h1',{},'Ateliê de RNF: a PetVida pede qualidade'),
+    h('p',{}, 'A Dona Rita já tem o aplicativo de agendamento da PetVida funcionando no papel. Agora ela escreveu o que espera dele em **qualidade**: rápido, seguro, fácil, sempre no ar. A equipe vai transformar essas frases em **requisitos não funcionais mensuráveis**, com métrica e forma de verificar.'),
+    h('div',{class:'card'}, h('b',{},'Como funciona'),
+      h('ul',{class:'lista-exp'},
+        h('li',{},'Um computador por equipe. A cada estação, o mouse passa para outra pessoa; o resto discute e decide junto.'),
+        h('li',{},'Cada estação tem um botão Conferir. Depois de conferir, a resposta trava e aparece o porquê.'),
+        h('li',{},'Dica custa 1 ponto. No fim, o resultado vai para a planilha do professor, uma linha por integrante.'),
+        h('li',{},'Tempo estimado: 50 a 60 minutos.'))));
+  const nomeEq = h('input',{placeholder:'Nome da equipe (ex.: Os Tosadores)', value:S.equipe||'', style:'width:100%;max-width:720px;margin:6px 0 12px'});
+  const grade = h('div',{class:'membros'}); const linhas=[];
+  for(let i=0;i<5;i++){ const m=S.membros[i]||{};
+    const n=h('input',{placeholder:`Integrante ${i+1}: nome`, value:m.nome||''}); const mt=h('input',{placeholder:'Matrícula ou turma', value:m.mat||''});
+    linhas.push([n,mt]); grade.append(n,mt); }
+  const aviso=h('div',{class:'status'});
+  app.append(h('div',{class:'card'}, h('b',{},'Quem está na equipe'), h('p',{style:'margin:4px 0 8px;color:#6b675d;font-size:14px'},'É só identificação, não precisa de senha. Jogando sozinho? Preencha só a primeira linha.'), nomeEq, grade,
+    h('div',{class:'rodape'}, h('button',{class:'btn', onclick:()=>{
+      const ms = linhas.map(([n,m])=>({nome:n.value.trim(), mat:m.value.trim()})).filter(x=>x.nome);
+      if(!ms.length){ aviso.textContent='Preencha pelo menos um nome.'; return; }
+      S.membros=ms; S.equipe = nomeEq.value.trim() || ms[0].nome.split(' ')[0]; if(!S.inicio) S.inicio=Date.now(); ir(1);
+    }}, 'Começar'), aviso)));
+};
+
+TELAS[1] = (app)=>{
+  app.append(h('div',{class:'kick'},'Estação 1 · Briefing'), h('h2',{},'O que a Dona Rita escreveu'),
+    fala('Pronto, já escrevi o que eu quero do aplicativo. Está tudo aqui, é só fazer. **Rápido, seguro, fácil e sempre no ar.** Tá bom, né?'),
+    h('div',{class:'uc'}, RNF_VAGOS),
+    h('div',{class:'card'}, h('b',{},'Pensem antes de seguir'),
+      h('ul',{class:'lista-exp'},
+        h('li',{html: md('Como o programador sabe quando o app está **rápido o bastante**?')}),
+        h('li',{html: md('Como o testador prova que o app está **seguro**?')}),
+        h('li',{html: md('Se a clínica e a equipe discordarem sobre **fácil**, quem decide?')}))),
+    h('div',{class:'fb info', html: md('Um requisito não funcional (RNF) descreve **o quanto** ou **como bem** o sistema faz algo: desempenho, segurança, usabilidade, confiabilidade. Para valer, precisa ser **mensurável** e **verificável**: ter um número ou limite e uma forma repetível de conferir.')}),
+    h('div',{class:'rodape'}, h('button',{class:'btn', onclick:()=>ir(2)},'Ir para o marca-texto')));
+};
+
+TELAS[2] = (app)=>{
+  const id='e2'; const todos=[]; FRASES.forEach((f,i)=>f[1].forEach((p,j)=>{ if(typeof p!=='string') todos.push(i+'.'+j); }));
+  S.max[id]=FRASES.reduce((s,f)=>s+f[1].filter(p=>typeof p!=='string'&&p.v).length,0);
+  const resp = S.r[id] || (S.r[id]={m:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 2 · Marca-texto'), h('h2',{},'Achem as palavras vagas'),
+    fala('Toquem nos trechos que **ninguém consegue testar**. Cuidado: os trechos com número ou técnica estão certos, e marcar esses tira ponto.'));
+  const lista=h('div'), area=h('div'), rod=h('div',{class:'rodape'});
+  function desenhar(){ lista.innerHTML='';
+    FRASES.forEach((f,i)=>{ const d=h('div',{class:'frase'}, h('small',{}, f[0]));
+      f[1].forEach((p,j)=>{ if(typeof p==='string'){ d.append(p); return; }
+        const k=i+'.'+j; let c='tok'; if(resp.m[k]) c+=' sel';
+        if(resp.feito){ if(p.v&&resp.m[k]) c='tok ok'; else if(!p.v&&resp.m[k]) c='tok no'; else if(p.v&&!resp.m[k]) c='tok perdi'; }
+        const t=h('span',{class:c}, p.t); if(!resp.feito) t.onclick=()=>{ resp.m[k]=!resp.m[k]; salvar(); desenhar(); }; d.append(t); });
+      lista.append(d); }); }
+  desenhar(); app.append(lista, area, rod);
+  function conferir(){ resp.feito=true; let ok=0, falso=0, perd=0;
+    FRASES.forEach((f,i)=>f[1].forEach((p,j)=>{ if(typeof p==='string') return; const m=resp.m[i+'.'+j]; if(p.v&&m) ok++; else if(p.v&&!m) perd++; else if(!p.v&&m) falso++; }));
+    S.pts[id]=Math.max(0, ok-falso); salvar(); cab(); desenhar(); bip(perd===0&&falso===0);
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(perd===0&&falso===0?'ok':'no')}, h('b',{},`Acharam ${ok} de ${S.max[id]} palavras vagas${falso?`, com ${falso} marcação errada`:''}. `),
+      h('ul',{class:'lista-exp'}, h('li',{html:'<b>Verde:</b> '+md(EXPLICA_TOK.vagas)}), h('li',{html:'<b>Amarelo:</b> vaga que ficou sem marcar.'}), h('li',{html:'<b>Vermelho:</b> '+md(EXPLICA_TOK.certas)}))));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(3)},'Ir para a classificação')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Pergunte de cada trecho: **dá para escrever um teste que dê "passou" ou "falhou"?** Se não dá, é vago.', area), h('button',{class:'btn', onclick:conferir},'Conferir'));
+};
+
+TELAS[3] = (app)=>{
+  const id='e3'; S.max[id]=ITENS.length;
+  const resp = S.r[id] || (S.r[id]={pos:{}, sel:null, ordem:embaralhar(ITENS.map((_,i)=>i)), feito:false});
+  app.append(h('div',{class:'kick'},'Estação 3 · Classificar'), h('h2',{},'Cada requisito, na sua categoria de qualidade'),
+    fala('Já separei umas frases que escrevi com número. Falta organizar em gavetas. **Toquem na frase e depois na gaveta.** Para tirar, toquem de novo na frase.'));
+  const pool=h('div',{class:'chips'}), baldes=h('div',{class:'baldes'}), area=h('div'), rod=h('div',{class:'rodape'});
+  function desenhar(){ pool.innerHTML=''; baldes.innerHTML='';
+    resp.ordem.forEach(i=>{ if(resp.pos[i]!==undefined) return; const c=h('span',{class:'chip'+(resp.sel===i?' sel':'')}, ITENS[i][0]); if(!resp.feito) c.onclick=()=>{ resp.sel = resp.sel===i?null:i; salvar(); desenhar(); }; pool.append(c); });
+    BALDES.forEach((b,k)=>{ const d=h('div',{class:'balde'+(resp.sel!==null?' alvo':'')}, h('h3',{},b[0]), h('p',{},b[1]));
+      resp.ordem.forEach(i=>{ if(resp.pos[i]!==k) return; let c='chip'; if(resp.feito) c+= ITENS[i][1]===k?' ok':' no';
+        const ch=h('span',{class:c}, ITENS[i][0]); if(!resp.feito) ch.onclick=(ev)=>{ ev.stopPropagation(); if(resp.sel!==null){ resp.pos[resp.sel]=k; resp.sel=null; } else { delete resp.pos[i]; } salvar(); desenhar(); }; d.append(ch); });
+      if(!resp.feito) d.onclick=()=>{ if(resp.sel===null) return; resp.pos[resp.sel]=k; resp.sel=null; salvar(); desenhar(); };
+      baldes.append(d); }); }
+  desenhar(); app.append(pool, baldes, area, rod);
+  function conferir(){ resp.feito=true; let ok=0; ITENS.forEach((it,i)=>{ if(resp.pos[i]===it[1]) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=8);
+    area.innerHTML=''; area.append(h('div',{class:'fb info'}, h('b',{},`${ok} de ${ITENS.length}. `), 'Por que cada uma vai na gaveta certa:',
+      h('ul',{class:'lista-exp'}, ITENS.map((it,i)=>h('li',{html:(resp.pos[i]===it[1]?'✔ ':'✘ ')+md(it[2])})))));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(4)},'Ir para a prancheta')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Pergunte o que cada frase **mede**: tempo e capacidade (desempenho), proteção (segurança), facilidade (usabilidade), tempo no ar e recuperação (confiabilidade) ou ambiente onde roda (portabilidade).', area),
+    h('button',{class:'btn', onclick:()=>{ if(Object.keys(resp.pos).length<ITENS.length){ area.innerHTML=''; area.append(h('div',{class:'fb no'},'Ainda sobram frases fora das gavetas.')); return; } conferir(); }},'Conferir'));
+};
+
+TELAS[4] = (app)=>{
+  const id='e4'; S.max[id]=PRANCHETA.length*3;
+  const resp = S.r[id] || (S.r[id]={v:{}, ord:PRANCHETA.map(p=>p.slots.map(()=>embaralhar([0,1,2,3]))), feito:false});
+  app.append(h('div',{class:'kick'},'Estação 4 · Prancheta'), h('h2',{},'Reescrevam os quatro RNF da Dona Rita'),
+    fala('Agora é a parte difícil: transformem o meu "rápido" em algo que dê para **testar**. Cada requisito tem três pedaços: **contexto**, **critério** e **como verificar**.'));
+  const lista=h('div'), area=h('div'), rod=h('div',{class:'rodape'});
+  PRANCHETA.forEach((p,i)=>{
+    const card=h('div',{class:'prancheta'}, h('div',{class:'vago'}, `Dona Rita escreveu: "${p.vago}"`));
+    p.slots.forEach((s,j)=>{ const ops=[s[1]].concat(s[2]); const sel=h('select',{}); sel.append(h('option',{value:''},'escolha uma opção'));
+      resp.ord[i][j].forEach(k=>{ const o=h('option',{value:String(k)}, ops[k]); sel.append(o); });
+      const chave=i+'.'+j; if(resp.v[chave]!==undefined) sel.value=String(resp.v[chave]);
+      sel.onchange=()=>{ resp.v[chave]= sel.value===''?undefined:Number(sel.value); salvar(); };
+      if(resp.feito){ sel.disabled=true; sel.className = resp.v[chave]===0?'ok':'no'; }
+      card.append(h('label',{}, s[0]), sel);
+      if(resp.feito) card.append(h('div',{class:'fb '+(resp.v[chave]===0?'ok':'no'), html:(resp.v[chave]===0?'✔ ':'✘ ')+md(s[3])})); });
+    if(resp.feito) card.append(h('div',{class:'montada', html: '<b>RNF mensurável:</b> '+md(`${p.slots[0][1].charAt(0).toUpperCase()+p.slots[0][1].slice(1)}, o sistema deve ${p.slots[1][1]}. Verificação: ${p.slots[2][1]}.`)}));
+    lista.append(card); });
+  app.append(lista, area, rod);
+  function conferir(){ resp.feito=true; let ok=0; PRANCHETA.forEach((p,i)=>p.slots.forEach((s,j)=>{ if(resp.v[i+'.'+j]===0) ok++; }));
+    S.pts[id]=ok; salvar(); cab(); bip(ok>=9);
+    app.innerHTML=''; TELAS[4](app); setTimeout(()=>{ const a=$('#app'); const f=h('div',{class:'fb info'}, h('b',{},`${ok} de ${S.max[id]}. `), 'Estas quatro frases agora podem entrar no documento de requisitos. Guardem o formato: **contexto, critério, como verificar**.');
+      a.append(f, h('div',{class:'rodape'}, comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para a pergunta ao cliente'))); },0); }
+  if(!resp.feito) rod.append(comMouse(), dicaBtn(id,'A resposta boa tem **número**, **limite** ou **comportamento** que dá "passou" ou "falhou", e um teste que **qualquer pessoa repete** com o mesmo resultado.', area),
+    h('button',{class:'btn', onclick:()=>{ let falta=0; PRANCHETA.forEach((p,i)=>p.slots.forEach((s,j)=>{ if(resp.v[i+'.'+j]===undefined) falta++; })); if(falta){ area.innerHTML=''; area.append(h('div',{class:'fb no'},`Ainda faltam ${falta} escolhas.`)); return; } conferir(); }},'Conferir'));
+  else { rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(5)},'Ir para a pergunta ao cliente')); }
+};
+
+function blocoMCQ(lista, resp, chave, feito, redesenhar){
+  return lista.map((q,k)=>{
+    const box=h('div',{class:'mcq'});
+    if(q.ctx) box.append(h('div',{html: md(q.ctx), style:'margin-bottom:6px'}));
+    box.append(h('div',{class:'en'}, q.en));
+    const ordem = resp['o'+chave+k] || (resp['o'+chave+k]=embaralhar([0,1,2,3]));
+    ordem.forEach(i=>{ let c='opt'; if(resp[chave][k]===i) c+=' sel'; if(feito){ if(i===q.c) c+=' ok'; else if(resp[chave][k]===i) c+=' no'; }
+      const b=h('button',{class:c}, q.ops[i]); if(!feito) b.onclick=()=>{ resp[chave][k]=i; salvar(); redesenhar(); }; box.append(b); });
+    if(feito) box.append(h('div',{class:'fb '+(resp[chave][k]===q.c?'ok':'no'), html: md(q.e)}));
+    return box;
+  });
+}
+
+TELAS[5] = (app)=>{
+  const id='e5'; S.max[id]=PERGUNTAS.length;
+  const resp = S.r[id] || (S.r[id]={q:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 5 · Pergunta ao cliente'), h('h2',{},'De onde vem o número?'),
+    fala('Vocês não podem inventar o limite. O número sai da **minha conversa com vocês**. Escolham a pergunta que me faz pensar em consequência, não em gosto.'));
+  const lista=h('div'), area=h('div'), rod=h('div',{class:'rodape'});
+  function desenhar(){ lista.innerHTML=''; blocoMCQ(PERGUNTAS, resp, 'q', resp.feito, desenhar).forEach(b=>lista.append(b)); }
+  desenhar(); app.append(lista, area, rod);
+  function conferir(){ resp.feito=true; let ok=0; PERGUNTAS.forEach((q,k)=>{ if(resp.q[k]===q.c) ok++; }); S.pts[id]=ok; salvar(); cab(); desenhar(); bip(ok>=3);
+    area.innerHTML=''; area.append(h('div',{class:'fb info'}, h('b',{},`${ok} de ${PERGUNTAS.length}. `), 'Pergunta boa liga a qualidade a uma **consequência** (perder cliente, perder dinheiro, perder dado). Dela sai o número.'));
+    rod.innerHTML=''; rod.append(comMouse(), h('button',{class:'btn', onclick:()=>ir(6)},'Ir para a caça ao defeito')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Boa pergunta de requisito: **"o que acontece se...?"** e **"quando isso dói mais?"**. Preferência e opinião não geram critério.', area), h('button',{class:'btn', onclick:conferir},'Conferir'));
+};
+
+TELAS[6] = (app)=>{
+  const id='e6'; S.max[id]=DEFEITOS.filter(d=>d[2]).length;
+  const resp = S.r[id] || (S.r[id]={m:{}, feito:false});
+  app.append(h('div',{class:'kick'},'Estação 6 · Caça ao defeito'), h('h2',{},'Revisem a lista de RNF de outra equipe'),
+    fala('Outra equipe escreveu seis RNF, e **três** têm defeito. Toquem nas linhas com problema. Cuidado: marcar uma linha boa tira ponto.'));
+  const lista=h('div'), area=h('div'), rod=h('div',{class:'rodape'});
+  function desenhar(){ lista.innerHTML='';
+    DEFEITOS.forEach((d,i)=>{ let c='linha'; if(resp.m[i]) c+=' sel'; if(resp.feito){ if(d[2]&&resp.m[i]) c='linha ok'; else if(!d[2]&&resp.m[i]) c='linha no'; }
+      const l=h('div',{class:c}, h('b',{},d[0]), h('span',{}, d[1])); if(!resp.feito) l.onclick=()=>{ resp.m[i]=!resp.m[i]; salvar(); desenhar(); }; lista.append(l); }); }
+  desenhar(); app.append(lista, area, rod);
+  function conferir(){ resp.feito=true; let ok=0, falso=0; DEFEITOS.forEach((d,i)=>{ if(resp.m[i]&&d[2]) ok++; if(resp.m[i]&&!d[2]) falso++; });
+    S.pts[id]=Math.max(0, ok-falso); salvar(); cab(); desenhar(); bip(ok===3&&!falso);
+    area.innerHTML=''; area.append(h('div',{class:'fb '+(ok===3&&!falso?'ok':'no')}, h('b',{},`Acharam ${ok} de 3 defeitos${falso?`, com ${falso} marcação errada`:''}. `),
+      h('ul',{class:'lista-exp'}, DEFEITOS.map((d,i)=>h('li',{html:(d[2]?'<b>Defeito</b> ':'<b>Certo</b> ')+d[0]+': '+md(d[3])+(resp.m[i]?' <i>(vocês marcaram)</i>':'')})))));
+    rod.innerHTML=''; rod.append(h('button',{class:'btn', onclick:()=>{ S.fim=S.fim||Date.now(); ir(7); }},'Ver o resultado da equipe')); }
+  if(resp.feito) conferir();
+  else rod.append(comMouse(), dicaBtn(id,'Três perguntas de revisão: **tem número ou limite? tem como verificar? descreve qualidade ou já escolhe a solução?**', area), h('button',{class:'btn', onclick:conferir},'Entregar a revisão'));
+};
+
+TELAS[7] = (app)=>{
+  const pts=total(), mx=totalMax(), pct= mx? Math.round(pts/mx*100):0;
+  const nomes={e2:'Marca-texto', e3:'Classificar', e4:'Prancheta', e5:'Perguntas', e6:'Defeitos'};
+  app.append(h('div',{class:'kick'},'Resultado'), h('h1',{},'Equipe ' + S.equipe),
+    h('div',{class:'card', style:'text-align:center'}, h('div',{class:'grande'}, `${pts} / ${mx}`), h('div',{style:'font:700 22px Fraunces,serif;margin-top:6px'}, pct + '% de aproveitamento'),
+      h('div',{style:'color:#6b675d;margin-top:6px'}, S.membros.map(m=>m.nome).join(' · '))),
+    h('div',{class:'placar'}, Object.keys(nomes).map(k=>h('div',{}, h('b',{}, `${S.pts[k]||0}/${S.max[k]||0}`), nomes[k]))),
+    Object.keys(S.dicas).length ? h('p',{style:'text-align:center;color:#7a5a12'}, `Dicas usadas: ${Object.keys(S.dicas).length} (−${Object.keys(S.dicas).length} pontos)`) : '');
+  const st=h('div',{class:'status', style:'text-align:center;margin:10px 0'});
+  app.append(st, fala('Obrigada, equipe! Agora façam o mesmo com os RNF do projeto de vocês: **contexto, critério e como verificar**. A lista entra no DDR como "RNF mensuráveis".'));
+  if(!S.enviado){ S.enviado=true; salvar();
+    enviarResultado(S.membros.map(m=>({ timestamp:new Date().toISOString(), nome:m.nome, matricula:m.mat,
+      disciplina:'Engenharia de Requisitos', aula:10, atividade:'Ateliê de RNF: PetVida · equipe ' + S.equipe,
+      acertos:pts, total:mx, pontuacao:pct })), st);
+  } else st.textContent='Resultado já enviado. Mostre esta tela ao professor se precisar.';
+};
+function enviarResultado(lista, st){
+  if(!WEBAPP_URL){ st.textContent='Resultado registrado só nesta tela.'; return; }
+  Promise.all(lista.map(d=> fetch(WEBAPP_URL,{method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(d)})))
+    .then(()=>{ st.textContent='Resultado enviado para o professor, uma linha por integrante.'; })
+    .catch(()=>{ st.textContent='Não consegui enviar agora. Mostre esta tela ao professor.'; });
+}
+cab(); ir(S.est||0);
+
+</script>
+</body>
+</html>

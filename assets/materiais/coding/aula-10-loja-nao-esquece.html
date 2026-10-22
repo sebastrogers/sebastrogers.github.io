@@ -748,7 +748,8 @@ function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('
   let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>12){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
  const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
   const fora=()=>slide.scrollHeight>slide.clientHeight+2||baixo(slide,box)||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.tip,.stack,.trilha,svg,p')].some(e=>baixo(slide,e));
-  while(fora()&&z>0.66){z-=0.04;box.style.zoom=z}}}
+  while(fora()&&z>0.66){z-=0.04;box.style.zoom=z}}
+ slide.querySelectorAll('.tree').forEach(t=>{if(!t.offsetParent)return;t.style.fontSize='';let f=16;while(t.scrollHeight>t.clientHeight+1&&f>9){f-=0.5;t.style.fontSize=f+'px'}})}
 function growFit(slide){if(!slide||!window.GROW)return;
  const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid,:scope>.t-row');if(!box)return;
  if(box.style.zoom&&parseFloat(box.style.zoom)<1)return;

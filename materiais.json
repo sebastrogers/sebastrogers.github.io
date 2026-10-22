@@ -1,5 +1,5 @@
 {
-  "atualizado": "20 de outubro de 2026",
+  "atualizado": "22 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -358,6 +358,14 @@
           "arquivo": "assets/materiais/cloud/loja-api-aula09-arquivos.zip",
           "data": "15/10/2026",
           "tags": "codigo lambda python chave x-api-key evento teste carga curl 429 index html zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: Armazenamento distribuído, estudo dirigido",
+          "descricao": "Estudo dirigido para replicar sozinho: durabilidade, objeto, bloco e arquivo, consistência, classes do S3 e regra de ciclo de vida, com a conta da economia e a limpeza dos recursos no console da AWS.",
+          "arquivo": "assets/materiais/cloud/aula-10-cloud-armazenamento-distribuido.html",
+          "data": "22/10/2026",
+          "tags": "armazenamento distribuido durabilidade disponibilidade zonas de disponibilidade consistencia replicacao s3 classes de armazenamento standard ia glacier ciclo de vida lifecycle custo estudo dirigido"
         }
       ]
     },
@@ -536,6 +544,22 @@
           "arquivo": "assets/materiais/requisitos/jogo-atelie-modelagem-petvida.html",
           "data": "15/10/2026",
           "tags": "jogo equipe interativo uml modelo de dominio classe atributo associacao multiplicidade generalizacao diagrama de atividades raias decisao guarda bifurcacao petvida"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: Requisitos não funcionais levados a sério",
+          "descricao": "Quatro tempos hands on: do desejo vago ao RNF mensurável, a fórmula (contexto, critério, verificação), de onde vem o número e como verificar, com o Ateliê de RNF e a revisão cruzada dos RNF do projeto.",
+          "arquivo": "assets/materiais/requisitos/aula-10-req-rnf-mensuraveis.html",
+          "data": "22/10/2026",
+          "tags": "requisitos nao funcionais rnf mensuravel verificavel iso 25010 desempenho disponibilidade seguranca usabilidade criterio verificacao ddr revisao cruzada"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Ateliê de RNF: PetVida",
+          "descricao": "Atividade em equipe em seis estações, com a Dona Rita como cliente: classificar, tornar mensurável, achar o número e escolher como verificar cada requisito não funcional.",
+          "arquivo": "assets/materiais/requisitos/jogo-atelie-rnf-petvida.html",
+          "data": "22/10/2026",
+          "tags": "jogo equipe rnf requisitos nao funcionais mensuravel criterio verificacao desempenho disponibilidade seguranca usabilidade petvida"
         }
       ]
     }

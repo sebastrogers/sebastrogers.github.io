@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Materiais didáticos das disciplinas ministradas por Sebastião Rogério: slides das aulas, roteiros práticos e cronogramas."
+    />
+    <title>Materiais didáticos | Sebastião Rogério</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Estilos específicos desta página. O resto vem do styles.css do site. */
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 26px;
+        border-bottom: 1px solid var(--line);
+      }
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 15px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .chip:hover,
+      .chip:focus-visible {
+        border-color: var(--coral);
+        color: var(--teal-dark);
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+
+      .discipline {
+        padding-top: 40px;
+      }
+      .discipline-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .discipline-head h2 {
+        font-size: clamp(1.6rem, 3vw, 2.3rem);
+      }
+      .discipline-meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .discipline-lead {
+        max-width: 760px;
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+
+      .material-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-top: 1px solid var(--line);
+      }
+      .material-card {
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        align-items: baseline;
+        gap: 16px;
+        padding: 7px 4px;
+        border-bottom: 1px solid var(--line);
+      }
+      .material-date {
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .material-main {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 14px;
+      }
+      .material-link {
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .material-link:hover,
+      .material-link:focus-visible {
+        color: var(--teal-dark);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .material-ext {
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+      .material-extra {
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 600;
+      }
+      .material-card[hidden],
+      .discipline[hidden] { display: none; }
+
+      .empty-state,
+      .load-error {
+        padding: 26px;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        text-align: center;
+        font-weight: 700;
+      }
+
+      @media (max-width: 860px) {
+        .material-card { grid-template-columns: 52px minmax(0, 1fr); gap: 12px; }
+        .filters { flex-direction: column; align-items: stretch; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" id="topo">
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="brand" href="index.html" aria-label="Ir para a página inicial">
+          <span class="brand-mark">SR</span>
+          <span>Sebastião Rogério</span>
+        </a>
+        <div class="menu" id="menu">
+          <a href="sobre.html">Sobre</a>
+          <a href="materiais.html">Materiais</a>
+          <a href="blog.html">Blog</a>
+          <a href="publicacoes.html">Publicações</a>
+          <a href="contato.html">Contato</a>
+        </div>
+        <div class="nav-tools">
+          <button class="theme-toggle" type="button" aria-label="Alternar tema claro ou escuro">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+          <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section page-hero">
+        <p class="eyebrow">Ensino</p>
+        <h1>Materiais didáticos</h1>
+      </section>
+
+      <section class="section" style="padding-top: 0" aria-label="Lista de materiais">
+        <div id="listaMateriais"></div>
+
+        <p class="empty-state" id="semResultado" hidden>
+          Nenhum material encontrado com esse filtro.
+        </p>
+        <p class="load-error" id="erroCarga" hidden>
+          Não foi possível carregar a lista de materiais. Se você abriu este arquivo
+          diretamente do computador, publique no GitHub Pages ou use um servidor local.
+        </p>
+      </section>
+
+      <section class="section content-band">
+        <div class="section-heading">
+          <p class="eyebrow">Uso e licença</p>
+          <h2>Pode usar</h2>
+        </div>
+        <div class="two-column">
+          <p>
+            Este material é disponibilizado para uso educacional. Fique à vontade para
+            baixar, imprimir, adaptar para a sua turma e compartilhar com colegas.
+          </p>
+          <p>
+            Ao reutilizar em outra disciplina ou instituição, cite a autoria e o endereço
+            desta página. Correções, sugestões e relatos de uso são bem-vindos pelo contato.
+          </p>
+        </div>
+        <a class="section-link inverted" href="contato.html">Enviar sugestão ou correção</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Sebastião Rogério. Feito para GitHub Pages.</p>
+      <a href="index.html">Início</a>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+window.__MATERIAIS__ = {
+  "atualizado": "22 de outubro de 2026",
+  "disciplinas": [
+    {
+      "id": "coding",
+      "nome": "Coding: Linguagens e Técnicas",
+      "periodo": "2026.2",
+      "dia": "Terças-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como as linguagens de programação funcionam por dentro e como se constrói software com orientação a objetos. Ao longo de 17 encontros, cada equipe leva um produto do núcleo em objetos até uma aplicação full-stack publicada.",
+      "materiais": [
+        {
+          "tipo": "Cronograma",
+          "titulo": "Cronograma do semestre 2026.2",
+          "descricao": "As 17 aulas, com tema, prática e entregável de cada uma, já no calendário avaliativo: projeto final em 17/11 e AV2 em 24/11.",
+          "arquivo": "assets/materiais/coding/cronograma-coding-2026-2.pdf",
+          "data": "12/10/2026",
+          "tags": "calendario planejamento avaliacao"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 1: Por que existem tantas linguagens",
+          "descricao": "Panorama do mercado, famílias de linguagens e como escolher uma.",
+          "arquivo": "assets/materiais/coding/aula-01-por-que-tantas-linguagens.pdf",
+          "data": "11/08/2026",
+          "tags": "slides tiobe octoverse mercado cobol historia"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 1: Ambiente, Git e o primeiro commit",
+          "descricao": "Instalar Python, VS Code e Git. Criar o repositório da equipe.",
+          "arquivo": "assets/materiais/coding/roteiro-01-ambiente-git-primeiro-commit.pdf",
+          "data": "11/08/2026",
+          "tags": "laboratorio pratica git github python instalacao"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
+          "arquivo": "assets/materiais/coding/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao plano"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Vídeos e textos sobre linguagens e paradigmas.",
+          "arquivo": "assets/materiais/coding/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video estudo dirigido"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 2: Paradigmas de programação",
+          "descricao": "Imperativo, funcional e orientado a objetos no mesmo problema.",
+          "arquivo": "assets/materiais/coding/aula-02-paradigmas-de-programacao.pdf",
+          "data": "18/08/2026",
+          "tags": "slides funcional imperativo objetos map filter reduce blub"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 2: Refatorando um relatório de vendas",
+          "descricao": "Reescrever um relatório de vendas em estilo funcional, com testes.",
+          "arquivo": "assets/materiais/coding/roteiro-02-refatoracao-procedural-funcional.pdf",
+          "data": "18/08/2026",
+          "tags": "laboratorio pratica python pytest refatoracao pipeline"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Python na prática, variáveis, tipos e coleções",
+          "descricao": "Variáveis, tipos, condicionais e coleções, com cinco práticas.",
+          "arquivo": "assets/materiais/coding/aula-03-python-na-pratica.pdf",
+          "data": "25/08/2026",
+          "tags": "slides python variaveis tipos listas tuplas dicionarios decimal git commit push pratica"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apoio: tipagem, execução e memória em profundidade",
+          "descricao": "Tipagem, execução e memória, com casos reais de falha.",
+          "arquivo": "assets/materiais/coding/aula-03-tipagem-execucao-memoria.pdf",
+          "data": "25/08/2026",
+          "tags": "apoio tipos ponto flutuante garbage collector rust ariane mars"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apoio: medindo linguagens, Python e JavaScript",
+          "descricao": "Comparação cronometrada entre Python e JavaScript.",
+          "arquivo": "assets/materiais/coding/roteiro-03-medindo-linguagens.pdf",
+          "data": "25/08/2026",
+          "tags": "laboratorio pratica benchmark decimal utf-8 encoding"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 4: Laços, funções e módulos",
+          "descricao": "Laços, funções, módulos e a primeira suíte de testes.",
+          "arquivo": "assets/materiais/coding/aula-04-lacos-funcoes-e-modulos.pdf",
+          "data": "01/09/2026",
+          "tags": "slides python for while funcao modulo pytest teste escopo"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 4: Da comanda ao módulo testado",
+          "descricao": "Transformar o código da Aula 3 em módulo testado com pytest.",
+          "arquivo": "assets/materiais/coding/roteiro-04-comanda-modulo-testado.pdf",
+          "data": "01/09/2026",
+          "tags": "laboratorio pratica python pytest funcao modulo venv git"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Projetos do VS Code: aulas 3 e 4",
+          "descricao": "Pastas prontas para o VS Code, com o código e os exercícios.",
+          "arquivo": "assets/materiais/coding/projetos-vscode-aulas-03-04.zip",
+          "data": "01/09/2026",
+          "tags": "codigo fonte vscode python pytest projeto exercicios zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 6: POO II, encapsulamento e invariantes",
+          "descricao": "Proteção de estado, properties e validação no ponto de entrada, com AV1 no mesmo encontro.",
+          "arquivo": "assets/materiais/coding/aula-06-classes-encapsulamento.pdf",
+          "data": "22/09/2026",
+          "tags": "slides encapsulamento invariante property self init classe atributo metodo av1"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Fazenda dos Paradigmas",
+          "descricao": "Jogo de fazenda em pixel art: plante, regue, colha, pesque bugs e atenda pedidos em 44 atividades que cobrem a disciplina inteira.",
+          "arquivo": "assets/materiais/coding/jogo-fazenda-dos-paradigmas.html",
+          "data": "22/09/2026",
+          "tags": "jogo revisao interativo individual fazenda pixel art personagem python poo backend api frontend javascript react git"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: Herança, composição e polimorfismo",
+          "descricao": "Quando herdar, quando compor e como um mesmo verbo ganha várias implementações, com esquemas ilustrados e a Comanda das aulas anteriores.",
+          "arquivo": "assets/materiais/coding/aula-07-heranca-composicao-polimorfismo.pdf",
+          "data": "29/09/2026",
+          "tags": "slides heranca super sobrescrita liskov composicao polimorfismo duck typing desconto comanda pytest parametrize entrega parcial"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 5: O núcleo da Comanda, do item ao desconto",
+          "descricao": "Passo a passo para montar do zero o núcleo orientado a objetos da Comanda, com esquemas, testes e o guia para adaptar ao projeto da equipe.",
+          "arquivo": "assets/materiais/coding/roteiro-05-nucleo-comanda.pdf",
+          "data": "29/09/2026",
+          "tags": "laboratorio pratica python classe heranca composicao polimorfismo pytest parametrize git entrega parcial"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: Loja de Roupas",
+          "descricao": "Revisão prática de tudo o que vimos, construindo um projeto do zero em 9 fases: Git e GitHub, coleções, funções, testes de verdade com pytest, classes, composição, herança, polimorfismo, classe abstrata e GitHub Actions. Cada conceito com um cartão Relembre.",
+          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas.pdf",
+          "data": "06/10/2026",
+          "tags": "slides revisao nivelamento loja roupas git github venv lista tupla dicionario funcao modulo pytest assert teste tdd classe init self invariante composicao encapsulamento property heranca super polimorfismo parametrize classe abstrata abc github actions ci",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: Loja de Roupas (versão interativa)",
+          "descricao": "Os mesmos slides, no navegador: mapa das fases (tecla M), código com botão de copiar, laboratório clicável e respostas reveladas aos poucos. Use as setas para navegar e F para tela cheia.",
+          "arquivo": "assets/materiais/coding/aula-08-loja-de-roupas.html",
+          "data": "06/10/2026",
+          "tags": "slides interativo html navegador revisao nivelamento loja roupas mapa fases pytest git github poo"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: A loja abre as portas, HTTP, REST e a primeira API",
+          "descricao": "Conteúdo novo, do zero: cliente e servidor, a mensagem HTTP, métodos, códigos de status, JSON e REST. Depois a Loja de Roupas vira uma API com FastAPI, recebe dados validados com Pydantic e é testada com TestClient. Com fluxogramas, passo a passo e referências.",
+          "arquivo": "assets/materiais/coding/aula-09-loja-abre-as-portas.html",
+          "data": "13/10/2026",
+          "tags": "slides interativo http rest api cliente servidor url metodo get post delete idempotencia status 200 404 422 json fastapi uvicorn docs openapi pydantic testclient pytest loja roupas",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: A loja abre as portas (PDF)",
+          "descricao": "Os mesmos slides da Aula 9 em PDF, para ler, imprimir ou baixar.",
+          "arquivo": "assets/materiais/coding/aula-09-loja-abre-as-portas.pdf",
+          "data": "13/10/2026",
+          "tags": "slides pdf http rest api fastapi pydantic testclient loja roupas"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: A loja não esquece, persistência e camadas",
+          "descricao": "Primeiro os conceitos, depois a prática: persistência, banco relacional e SQLite, SQL pelo Python, camadas (rota, serviço, repositório), ORM com SQLModel e exceções que viram 404, 409 e 422. Na prática, a Loja de Roupas ganha um CRUD gravado no banco e testado com banco em memória.",
+          "arquivo": "assets/materiais/coding/aula-10-loja-nao-esquece.html",
+          "data": "20/10/2026",
+          "tags": "slides persistencia banco de dados sqlite sql commit sql injection camadas repositorio servico orm sqlmodel sessao depends 404 409 422 crud fastapi pytest loja roupas",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: A loja não esquece (PDF)",
+          "descricao": "Os mesmos slides da Aula 10 em PDF, para ler, imprimir ou baixar.",
+          "arquivo": "assets/materiais/coding/aula-10-loja-nao-esquece.pdf",
+          "data": "20/10/2026",
+          "tags": "slides pdf persistencia sqlite camadas sqlmodel crud"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Repositório da Loja de Roupas, fase por fase",
+          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API) e etapa-13 a etapa-15 (Aula 10, banco e camadas). Travou numa fase? Baixe o .zip dela na aba Tags.",
+          "arquivo": "https://github.com/sebastrogers/loja-roupas-gabarito",
+          "data": "20/10/2026",
+          "tags": "github repositorio codigo fonte gabarito tags etapa checkpoint pytest github actions loja"
+        }
+      ]
+    },
+    {
+      "id": "cloud",
+      "nome": "Cloud Computing: Setup e Desenvolvimento",
+      "periodo": "2026.2",
+      "dia": "Quintas-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como colocar uma aplicação para funcionar na infraestrutura de um provedor de nuvem, e que decisões isso obriga a tomar. Laboratórios na AWS dentro do nível gratuito.",
+      "materiais": [
+        {
+          "tipo": "Cronograma",
+          "titulo": "Cronograma do semestre 2026.2",
+          "descricao": "Os 17 encontros, com tema, laboratório e entregáveis, já no calendário avaliativo: entrega final em 19/11 e AV2 em 26/11.",
+          "arquivo": "assets/materiais/cloud/cronograma-cloud-2026-2.pdf",
+          "data": "12/10/2026",
+          "tags": "calendario planejamento avaliacao"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
+          "arquivo": "assets/materiais/cloud/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao aws nist"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Vídeos e textos de introdução à nuvem, incluindo o curso da AWS.",
+          "arquivo": "assets/materiais/cloud/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video aws cloud practitioner nist responsabilidade compartilhada"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 1: O que é nuvem de verdade",
+          "descricao": "As cinco características do NIST e o que não é nuvem.",
+          "arquivo": "assets/materiais/cloud/aula-01-o-que-e-nuvem.pdf",
+          "data": "20/08/2026",
+          "tags": "slides nist caracteristicas modelos implantacao aws mercado"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Atividade 1: conta AWS com trava de orçamento",
+          "descricao": "Criar a conta AWS com segundo fator e alerta de orçamento.",
+          "arquivo": "assets/materiais/cloud/atividade-01-conta-aws-com-trava-de-orcamento.pdf",
+          "data": "20/08/2026",
+          "tags": "laboratorio pratica aws iam mfa budgets conta"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 2: Camadas de serviço, infraestrutura, plataforma e software",
+          "descricao": "Infraestrutura, plataforma e software, e de quem é a responsabilidade.",
+          "arquivo": "assets/materiais/cloud/aula-02-camadas-de-servico.pdf",
+          "data": "27/08/2026",
+          "tags": "slides iaas paas saas faas responsabilidade compartilhada capital one"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Por que a nuvem é barata, e quando deixa de ser",
+          "descricao": "Economia em escala, CAPEX contra OPEX e as sete estratégias de migração.",
+          "arquivo": "assets/materiais/cloud/aula-03-economia-da-nuvem.pdf",
+          "data": "03/09/2026",
+          "tags": "slides economia escala capex opex tco migracao 7 rs fatura custo"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 4: Geografia da nuvem, região, zona de disponibilidade e borda",
+          "descricao": "Onde os dados moram fisicamente, latência, soberania de dados e alta disponibilidade.",
+          "arquivo": "https://drive.google.com/file/d/1HSy-zzjxB4_pRAttU2BdblapLOtX2Kz4/view",
+          "data": "10/09/2026",
+          "tags": "slides regiao zona de disponibilidade edge borda latencia soberania de dados lgpd alta disponibilidade"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Painel AWS: A Fatura Está Correndo",
+          "descricao": "Simulação do laboratório de EC2, com medidor de custo em tempo real e as armadilhas mais comuns.",
+          "arquivo": "assets/materiais/cloud/jogo-aula-05-painel-aws.html",
+          "data": "17/09/2026",
+          "tags": "jogo simulacao interativo individual ec2 ami chave grupo de seguranca stop terminate free tier"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 6: Processar e guardar, EC2 e S3 em teoria e em cenários",
+          "descricao": "O que são o EC2 e o S3, como cada um é cobrado e qual escolher, com cenários como a Black Friday de uma loja, os exames de um hospital e o caso Netflix.",
+          "arquivo": "assets/materiais/cloud/aula-06-ec2-e-s3.pdf",
+          "data": "24/09/2026",
+          "tags": "slides ec2 s3 instancia familia spot savings plans ebs auto scaling objeto durabilidade classes glacier ciclo de vida versionamento netflix arquitetura cenarios"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro completo: da conta AWS ao site no ar",
+          "descricao": "Criar e proteger a conta, ligar um servidor EC2 e publicar o site da equipe no S3, pela interface do console ou pelo terminal do CloudShell.",
+          "arquivo": "assets/materiais/cloud/roteiro-completo-conta-ec2-s3.pdf",
+          "data": "24/09/2026",
+          "tags": "laboratorio pratica aws conta iam mfa budgets ec2 instance connect apache s3 site estatico bucket policy cloudshell cli terminal console"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: Serverless, a função como unidade de computação",
+          "descricao": "O que é uma função na nuvem, gatilhos, início a frio, cobrança por execução e quando a Lambda vale mais que um servidor, com esquemas e a arquitetura do site da equipe.",
+          "arquivo": "assets/materiais/cloud/aula-07-serverless-lambda.pdf",
+          "data": "01/10/2026",
+          "tags": "slides serverless faas lambda gatilho evento cold start inicio a frio gb segundo custo nivel gratuito function url s3 entrega parcial"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro 6: A primeira função da equipe, ligada ao site",
+          "descricao": "Criar uma função Lambda em Python, abrir uma URL pública para ela e mostrar a resposta no site do S3, pela interface do console ou pelo terminal do CloudShell.",
+          "arquivo": "assets/materiais/cloud/roteiro-06-lambda-ligada-ao-site.pdf",
+          "data": "01/10/2026",
+          "tags": "laboratorio pratica aws lambda python function url cors fetch javascript s3 cloudwatch logs cloudshell cli console relatorio de custo"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: A loja na nuvem",
+          "descricao": "Revisão prática da disciplina e conteúdo novo, em 9 fases: a vitrine da Loja de Roupas no S3, as regras numa Lambda e uma API de verdade com o API Gateway (rotas, CORS e estágios), com o custo de cada parte.",
+          "arquivo": "assets/materiais/cloud/aula-08-cloud-loja-na-nuvem.html",
+          "data": "08/10/2026",
+          "tags": "slides revisao s3 site estatico lambda json api gateway http api rota cors estagio cloudwatch custo loja roupas"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "A loja na nuvem: arquivos de cada fase",
+          "descricao": "Os arquivos prontos de cada fase da aula: a vitrine, a política do bucket, a Lambda, os eventos de teste e o site que chama a API.",
+          "arquivo": "assets/materiais/cloud/loja-na-nuvem-arquivos.zip",
+          "data": "08/10/2026",
+          "tags": "codigo lambda python index html politica bucket evento teste api gateway zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: Quem pode usar a loja, gerenciar a API",
+          "descricao": "Autenticação e autorização, chave de API, JWT, limite de uso com o balde de fichas, versões com estágios e métricas no CloudWatch, aplicados à loja-api, com telas do console e a conta de custo com e sem limite.",
+          "arquivo": "assets/materiais/cloud/aula-09-cloud-quem-pode-usar.html",
+          "data": "15/10/2026",
+          "tags": "slides interativo api gateway http api rest api chave api key autenticacao autorizacao jwt 401 403 429 throttling token bucket estagio versao cloudwatch metricas owasp custo"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Quem pode usar a loja: arquivos da aula",
+          "descricao": "A loja-api com chave e a rota nova, os eventos de teste, o script de carga para ver o 429 e o index.html mandando a chave.",
+          "arquivo": "assets/materiais/cloud/loja-api-aula09-arquivos.zip",
+          "data": "15/10/2026",
+          "tags": "codigo lambda python chave x-api-key evento teste carga curl 429 index html zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: Armazenamento distribuído, estudo dirigido",
+          "descricao": "Estudo dirigido para replicar sozinho: durabilidade, objeto, bloco e arquivo, consistência, classes do S3 e regra de ciclo de vida, com a conta da economia e a limpeza dos recursos no console da AWS.",
+          "arquivo": "assets/materiais/cloud/aula-10-cloud-armazenamento-distribuido.html",
+          "data": "22/10/2026",
+          "tags": "armazenamento distribuido durabilidade disponibilidade zonas de disponibilidade consistencia replicacao s3 classes de armazenamento standard ia glacier ciclo de vida lifecycle custo estudo dirigido"
+        }
+      ]
+    },
+    {
+      "id": "requisitos",
+      "nome": "Engenharia de Requisitos",
+      "periodo": "2026.2",
+      "dia": "Quintas-feiras",
+      "instituicao": "Faculdade SENAC Pernambuco, ADS",
+      "resumo": "Como descobrir o que um sistema precisa fazer antes de escrever código, e como registrar isso de um jeito que outra pessoa consiga verificar. Cada equipe produz um Documento de Definição de Requisitos completo.",
+      "materiais": [
+        {
+          "tipo": "Cronograma",
+          "titulo": "Cronograma do semestre 2026.2",
+          "descricao": "Os 17 encontros, com tema, laboratório e entregáveis, já no calendário avaliativo: entrega final em 19/11 e AV2 em 26/11.",
+          "arquivo": "assets/materiais/requisitos/cronograma-requisitos-2026-2.pdf",
+          "data": "12/10/2026",
+          "tags": "calendario planejamento avaliacao ddr"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Apresentação da disciplina",
+          "descricao": "O que a disciplina constrói e como funciona a avaliação.",
+          "arquivo": "assets/materiais/requisitos/apresentacao-da-disciplina.pdf",
+          "data": "13/08/2026",
+          "tags": "ementa introducao ddr elicitacao"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Material de apoio da semana 1",
+          "descricao": "Vídeos e textos de introdução a requisitos.",
+          "arquivo": "assets/materiais/requisitos/material-apoio-semana-01.pdf",
+          "data": "13/08/2026",
+          "tags": "leitura video requisito funcional nao funcional volere user stories"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 1: Por que projetos falham por requisitos",
+          "descricao": "Por que requisitos derrubam projeto, com casos reais.",
+          "arquivo": "assets/materiais/requisitos/aula-01-por-que-projetos-falham.pdf",
+          "data": "20/08/2026",
+          "tags": "slides chaos report ariane mars stakeholders moscow custo do defeito"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Atividade 1: o pedido vago",
+          "descricao": "Dinâmica do pedido vago, para a turma sentir a ambiguidade.",
+          "arquivo": "assets/materiais/requisitos/atividade-01-telefone-sem-fio.pdf",
+          "data": "20/08/2026",
+          "tags": "laboratorio dinamica ambiguidade elicitacao equipes"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 2: Atributos que caracterizam os requisitos",
+          "descricao": "Funcional, não funcional e regra de negócio. O que faz um requisito prestar.",
+          "arquivo": "assets/materiais/requisitos/aula-02-atributos-dos-requisitos.pdf",
+          "data": "27/08/2026",
+          "tags": "slides requisito funcional nao funcional regra de negocio iso 29148 gherkin criterio de aceite"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 3: Quem decide o que o sistema precisa fazer",
+          "descricao": "As fases do processo de requisitos e o papel de cada envolvido.",
+          "arquivo": "assets/materiais/requisitos/aula-03-processo-e-envolvidos.pdf",
+          "data": "03/09/2026",
+          "tags": "slides processo elicitacao analise especificacao validacao gerencia stakeholders papeis"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 4: Como descobrir o que ninguém disse ainda",
+          "descricao": "As cinco técnicas de elicitação, os vieses que arruínam uma entrevista, e o caso real do sistema de despacho de ambulâncias de Londres.",
+          "arquivo": "https://drive.google.com/file/d/1ZQfbyDFmL9c47egvKO0FIGtcKhWM0qKG/view",
+          "data": "10/09/2026",
+          "tags": "slides entrevista questionario observacao workshop prototipacao vies pergunta tendenciosa lascad londres ambulancia"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 5: Da entrevista ao backlog, escrever para quem vai construir",
+          "descricao": "O formato Como, Quero, Para, o critério INVEST e os artefatos: backlog, critério de aceite, Definition of Ready e Done.",
+          "arquivo": "https://drive.google.com/file/d/17B_y82HdOMoNyOj70ce_2FftWUWJpoI3/view",
+          "data": "17/09/2026",
+          "tags": "slides user story invest backlog criterio de aceite definition of ready done epico tarefa"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Jogos de revisão — Aulas 1 a 5",
+          "descricao": "Revisão individual e interativa de cada aula, com identificação por nome e matrícula.",
+          "arquivo": "assets/materiais/requisitos/jogos-revisao.html",
+          "data": "17/09/2026",
+          "tags": "jogo revisao interativo individual pareamento sequencia mcq defeito categorizar dossie sprint zero user stories invest"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Nexo Software: um semestre de analista",
+          "descricao": "Jogo de salas com avatar, personagens e 18 situações-problema que cobrem a disciplina inteira, do primeiro dia de projeto à defesa do documento.",
+          "arquivo": "assets/materiais/requisitos/jogo-nexo-software.html",
+          "data": "22/09/2026",
+          "tags": "jogo revisao interativo individual avatar personagens situacao problema elicitacao moscow caso de uso rastreabilidade baseline defesa ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 6: O que entra primeiro, priorizar requisitos com critério",
+          "descricao": "Por que priorizar, e quatro técnicas para decidir: MoSCoW, matriz de valor e esforço, modelo de Kano e os 100 pontos. Com a atividade de priorizar o backlog da equipe.",
+          "arquivo": "assets/materiais/requisitos/aula-06-priorizacao-de-requisitos.pdf",
+          "data": "24/09/2026",
+          "tags": "slides priorizacao moscow must should could wont valor esforco kano 100 pontos backlog criterio ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 7: O documento que outra pessoa consegue ler, DDR v1 e revisão cruzada",
+          "descricao": "As partes do DDR e de onde veio cada uma, rastreabilidade, inspeção com checklist e um exemplo completo de revisão, do DDR com defeitos à resposta da equipe autora.",
+          "arquivo": "assets/materiais/requisitos/aula-07-ddr-e-revisao-cruzada.pdf",
+          "data": "01/10/2026",
+          "tags": "slides ddr documento rastreabilidade matriz inspecao fagan revisao por pares checklist defeito gravidade entrega parcial av1"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Roteiro da revisão cruzada do DDR v1",
+          "descricao": "O que cada equipe entrega, o checklist do DDR antes da entrega, os seis passos da revisão com o tempo de cada um e a ficha do exemplo preenchida.",
+          "arquivo": "assets/materiais/requisitos/roteiro-revisao-cruzada-ddr-v1.pdf",
+          "data": "01/10/2026",
+          "tags": "laboratorio pratica revisao cruzada ddr checklist ficha defeito resposta do autor v2"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Modelo de DDR (Word para preencher)",
+          "descricao": "O documento em branco para a equipe construir o DDR: as seis seções com tabelas prontas, orientações de cada aula e o checklist de entrega.",
+          "arquivo": "assets/materiais/requisitos/modelo-ddr.docx",
+          "data": "01/10/2026",
+          "tags": "modelo template ddr documento definicao requisitos word docx preencher entrega av1"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Exemplo de DDR v1: Barbearia Navalha",
+          "descricao": "Modelo do formato da entrega, com as seis seções preenchidas. É um v1 real, com 8 defeitos deixados de propósito para treinar a revisão.",
+          "arquivo": "assets/materiais/requisitos/exemplo-ddr-v1-barbearia.pdf",
+          "data": "01/10/2026",
+          "tags": "modelo exemplo ddr barbearia interessados requisitos historias backlog matriz rastreabilidade"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Ficha de Revisão Cruzada (PDF para imprimir)",
+          "descricao": "Checklist com as 8 características e tabela para registrar os defeitos, com a coluna de resposta da equipe autora.",
+          "arquivo": "assets/materiais/requisitos/ficha-revisao-cruzada-ddr.pdf",
+          "data": "01/10/2026",
+          "tags": "ficha revisao checklist defeito gravidade imprimir"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Ficha de Revisão Cruzada (Word para preencher)",
+          "descricao": "A mesma ficha em formato editável, para preencher no computador e enviar no AVA.",
+          "arquivo": "assets/materiais/requisitos/ficha-revisao-cruzada-ddr.docx",
+          "data": "01/10/2026",
+          "tags": "ficha revisao checklist defeito editavel word docx"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 8: Do documento ao caso de uso",
+          "descricao": "Aquecimento sobre bons requisitos, a revisão cruzada do DDR v1 com tempo marcado e o conteúdo novo: casos de uso, com ator, fluxo principal, alternativos, exceções, include, extend e diagrama.",
+          "arquivo": "assets/materiais/requisitos/aula-08-req-revisao-casos-de-uso.html",
+          "data": "08/10/2026",
+          "tags": "slides revisao cruzada ddr checklist defeito caso de uso ator fluxo principal alternativo excecao include extend diagrama uml loja"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 9: Do caso de uso ao modelo, classes de domínio e atividades",
+          "descricao": "Por que modelar, a UML, como achar classes e ações no caso de uso, o modelo de domínio da loja com associações e multiplicidades, e o UC03 Finalizar compra desenhado como diagrama de atividades com raias.",
+          "arquivo": "assets/materiais/requisitos/aula-09-req-caso-de-uso-ao-modelo.html",
+          "data": "15/10/2026",
+          "tags": "slides interativo uml diagrama de classes modelo de dominio atributo associacao multiplicidade generalizacao diagrama de atividades acao decisao guarda bifurcacao raia caso de uso drawio ddr"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Ateliê de Modelagem: Clínica PetVida",
+          "descricao": "Atividade em equipe: do caso de uso de uma clínica de banho e tosa ao modelo de domínio e ao diagrama de atividades, em seis estações, com a Dona Rita como cliente.",
+          "arquivo": "assets/materiais/requisitos/jogo-atelie-modelagem-petvida.html",
+          "data": "15/10/2026",
+          "tags": "jogo equipe interativo uml modelo de dominio classe atributo associacao multiplicidade generalizacao diagrama de atividades raias decisao guarda bifurcacao petvida"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: Requisitos não funcionais levados a sério",
+          "descricao": "Quatro tempos hands on: do desejo vago ao RNF mensurável, a fórmula (contexto, critério, verificação), de onde vem o número e como verificar, com o Ateliê de RNF e a revisão cruzada dos RNF do projeto.",
+          "arquivo": "assets/materiais/requisitos/aula-10-req-rnf-mensuraveis.html",
+          "data": "22/10/2026",
+          "tags": "requisitos nao funcionais rnf mensuravel verificavel iso 25010 desempenho disponibilidade seguranca usabilidade criterio verificacao ddr revisao cruzada"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Ateliê de RNF: PetVida",
+          "descricao": "Atividade em equipe em seis estações, com a Dona Rita como cliente: classificar, tornar mensurável, achar o número e escolher como verificar cada requisito não funcional.",
+          "arquivo": "assets/materiais/requisitos/jogo-atelie-rnf-petvida.html",
+          "data": "22/10/2026",
+          "tags": "jogo equipe rnf requisitos nao funcionais mensuravel criterio verificacao desempenho disponibilidade seguranca usabilidade petvida"
+        }
+      ]
+    }
+  ]
+};
+    </script>
+    <script src="materiais.js?v=20260926b"></script>
+  </body>
+</html>
