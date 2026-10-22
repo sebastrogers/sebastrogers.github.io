@@ -548,7 +548,7 @@
         {
           "tipo": "Aula",
           "titulo": "Aula 10: Requisitos não funcionais levados a sério",
-          "descricao": "Quatro tempos hands on: do desejo vago ao RNF mensurável, a fórmula (contexto, critério, verificação), de onde vem o número e como verificar, com o Ateliê de RNF e a revisão cruzada dos RNF do projeto.",
+          "descricao": "Do desejo vago ao RNF mensurável: categorias de qualidade, a fórmula (contexto, critério, verificação), de onde vem o número e como verificar. Na prática, o Ateliê de RNF, a corrida do Plantão PetVida e os RNF do projeto entregues no Teams.",
           "arquivo": "assets/materiais/requisitos/aula-10-req-rnf-mensuraveis.html",
           "data": "22/10/2026",
           "tags": "requisitos nao funcionais rnf mensuravel verificavel iso 25010 desempenho disponibilidade seguranca usabilidade criterio verificacao ddr revisao cruzada"
