@@ -458,3 +458,53 @@ body.deck{margin:0;height:100vh;height:100dvh;overflow:hidden;background:#0d0a10
 .ceu .estrela.passo{transform:none;transition:opacity .8s}
 .pagina-aula .ceu-pagina{background:radial-gradient(120% 90% at 50% 100%,#2b1d3a 0%,#0e0b16 70%);border-radius:18px;padding:18px 12px 0;margin:18px 0 22px;overflow:hidden}
 @media screen and (max-width:760px){.ceu .estrela text{font-size:34px}}
+
+/* Lição 5: a rota Roma–Filipos, os cinco títulos e o hino na vida real */
+.rota5{width:100%;max-width:1100px;height:auto;display:block;margin:0 auto;overflow:visible}
+.rota5 .r-terra{fill:none;stroke:var(--bronze);stroke-width:8;stroke-linecap:round}
+.rota5 .r-mar{fill:none;stroke:#5b8fb0;stroke-width:6;stroke-dasharray:4 10;stroke-linecap:round}
+.rota5 .r-ponto{fill:var(--papel);stroke:var(--purpura);stroke-width:5}
+.rota5 .r-ponto.grande{fill:var(--purpura)}
+.rota5 .r-nome{font:700 22px "Atkinson Hyperlegible",sans-serif;fill:var(--tinta)}
+.rota5 .r-nome.grande{font:700 27px "Cinzel",Georgia,serif;fill:var(--purpura)}
+.rota5 .r-trecho{font:700 16px "Atkinson Hyperlegible",sans-serif;letter-spacing:.06em;fill:var(--tinta-2);text-transform:uppercase}
+.rota5 .r-trecho.mar{fill:#5b8fb0}
+.rota5 .v-linha{stroke:var(--linha,#C9D1D0);stroke-width:4;stroke-dasharray:2 9;stroke-linecap:round}
+.rota5 .v-linha.volta{stroke:var(--bronze)}
+.rota5 .seta{fill:var(--tinta-2)}
+.rota5 .v-fundo{fill:var(--papel);stroke:var(--cor,var(--purpura));stroke-width:2.5;filter:drop-shadow(0 3px 6px rgba(0,0,0,.12))}
+.rota5 .v-num{font:700 24px "Cinzel",Georgia,serif;fill:var(--cor,var(--purpura))}
+.rota5 .v-t{font:700 21px "Atkinson Hyperlegible",sans-serif;fill:var(--tinta)}
+.rota5 .v-ref{font:400 15px "Atkinson Hyperlegible",sans-serif;fill:var(--tinta-2)}
+.rota5 g.passo{transform:none;transition:opacity .6s}
+.pagina-aula .rota-pagina{margin:16px 0 22px;padding:18px 14px 8px;background:var(--papel);border-radius:18px;box-shadow:var(--sombra)}
+.tit5{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.tit5 span{display:flex;flex-direction:column;padding:10px 16px;border-radius:12px;background:var(--papel);box-shadow:var(--sombra);border-left:6px solid var(--cor,var(--purpura));font:italic 17px "Atkinson Hyperlegible",sans-serif;color:var(--tinta-2)}
+.tit5 b{font:700 21px "Atkinson Hyperlegible",sans-serif;font-style:normal;color:var(--tinta)}
+.hino-vida{display:grid;grid-template-columns:.8fr 1fr 1fr 1fr;gap:8px 10px;max-width:1160px;margin:0 auto}
+.hino-vida > div{padding:12px 16px;border-radius:10px;font:400 21px/1.32 "Atkinson Hyperlegible",sans-serif}
+.hino-vida .hv-cab{font:700 17px "Atkinson Hyperlegible",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze);padding:4px 14px;background:none}
+.hino-vida .hv-t{font:700 22px "Cinzel",Georgia,serif;color:var(--purpura);background:none;display:flex;align-items:center}
+.hino-vida .hv-c{background:var(--papel);box-shadow:var(--sombra)}
+.tabela-luz.quadro5 .tl-cab{font-size:20px}
+.tabela-luz.quadro5 .tl-cab.tl-apaga{color:var(--purpura)}
+.viagens-lista{display:none}
+@media screen and (max-width:760px) and (orientation:portrait){
+  .hino-vida{grid-template-columns:1fr 1fr;gap:6px}
+  .hino-vida .hv-cab:first-child{display:none}
+  .hino-vida .hv-t{grid-column:1 / -1;font-size:18px;padding:8px 4px 0}
+  .hino-vida > div{font-size:15px;padding:8px 10px}
+  .tit5 span{font-size:14px;padding:8px 10px}.tit5 b{font-size:16px}
+  .rota5 .r-nome{font-size:30px}.rota5 .r-nome.grande{font-size:36px}.rota5 .r-trecho{font-size:22px}
+  .rota-viagens{display:none}.viagens-lista{display:flex}.rota5 .r-trecho{display:none}
+  .hino-vida{grid-template-columns:1fr}.hino-vida .hv-cab{display:none}
+  .hino-vida .hv-c::before{content:attr(data-q);display:block;font:700 11px "Atkinson Hyperlegible",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze);margin-bottom:2px}
+}
+.viagens-lista{flex-direction:column;gap:8px;list-style:none;counter-reset:v;padding:0;margin:10px 0 0}
+.viagens-lista li{counter-increment:v;position:relative;padding:8px 12px 8px 44px;border-radius:12px;background:var(--papel);box-shadow:var(--sombra);font:700 16px/1.3 "Atkinson Hyperlegible",sans-serif;color:var(--tinta)}
+.viagens-lista li::before{content:counter(v);position:absolute;left:12px;top:8px;font:700 20px "Cinzel",Georgia,serif;color:var(--purpura)}
+.viagens-lista .vl-dir{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze)}
+.viagens-lista li.volta .vl-dir{color:var(--purpura)}
+.viagens-lista small{font-weight:400;color:var(--tinta-2)}
+.tabela-rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media screen and (max-width:760px){.pagina-aula .rota-viagens{display:none}.pagina-aula .viagens-lista{display:flex}.pagina-aula .rota5 .r-trecho{display:none}.pagina-aula .rota5 .r-nome{font-size:30px}.pagina-aula .rota5 .r-nome.grande{font-size:36px}}
