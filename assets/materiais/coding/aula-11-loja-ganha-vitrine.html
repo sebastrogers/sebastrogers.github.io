@@ -1,0 +1,918 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coding · Aula 11 · A loja ganha vitrine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--ink:#1b1c1f;--body:#3b3b3e;--mute:#7b7769;--teal:#1f6f6b;--teal2:#2b8a83;--wine:#7a2c46;
+--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--dark:#15171b;--dark2:#1e2127;--card:#fffdf8;--line:#e2dccd;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0c0e;overflow:hidden;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+#deck{position:absolute;width:1600px;height:900px;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;background:var(--bg);display:none;flex-direction:column;overflow:hidden;border-radius:4px}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.dark{background:var(--dark);color:#eeeae0}
+.kicker{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+h1{font-family:"Fraunces",Georgia,serif;font-size:96px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:1.1;font-weight:700;margin-bottom:34px;letter-spacing:-.005em}
+h3{font-family:"Fraunces",Georgia,serif;font-size:34px;margin:6px 0 14px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:rgba(31,111,107,.1);color:var(--teal);padding:1px 7px;border-radius:6px}
+.dark code{background:rgba(255,255,255,.08);color:#9fe3d9}
+b{font-weight:700}
+/* capa */
+.capa{justify-content:center;background:radial-gradient(1200px 600px at 85% 20%,#24302f 0,transparent 60%),var(--dark)}
+.capa h1{color:#fff;max-width:1250px;margin-bottom:28px}
+.capa .sub{font-size:30px;line-height:1.45;color:#cfc9bb;max-width:1100px}
+.capa-foot{position:absolute;bottom:70px;left:90px;font-size:22px;color:#8f8a7c}
+/* listas */
+.cols{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:start}
+ul.notes{list-style:none;display:flex;flex-direction:column;gap:22px}
+ul.notes li{font-size:31px;line-height:1.42;color:var(--body);padding-left:34px;position:relative}
+ul.notes li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:14px;border-radius:3px;background:var(--teal);transform:rotate(45deg)}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:46px;flex:1;min-height:0}
+.split.wide{grid-template-columns:1.6fr 1fr}
+.split:has(.has-tree){grid-template-columns:1.75fr 1fr}
+.split .left,.split .right{min-height:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+.code,.term{min-width:0;max-width:100%}.duo>*,.annot>*{min-width:0}
+.codeslide ul.notes li{font-size:27px}
+.full{flex:1;min-height:0;display:flex;flex-direction:column;gap:24px;justify-content:flex-start}
+/* código */
+.code,.term{background:#17191d;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+.code .body{display:flex;flex:1 1 auto;min-height:0;min-width:0}.code .body pre,.term pre{flex:1 1 auto;min-height:0;min-width:0}
+.tree{flex:none;width:250px;background:#1d2026;border-right:1px solid #2c3038;padding:10px 0;font:16px/1.75 Inter,system-ui,sans-serif;color:#b9bcc4;overflow:hidden}
+.tr-h{font:700 12px Inter,system-ui,sans-serif;letter-spacing:.12em;color:#8a8f99;padding:2px 14px 6px}
+.tr{padding-left:calc(14px + var(--d)*16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tr.dim{color:#6b707a}
+.tr .chev{display:inline-block;width:14px;color:#8a8f99}.tr.cur{background:#37373d;color:#fff;box-shadow:inset 2px 0 0 var(--gold)}
+.ic{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 8px 0 4px;background:#7f8590}.ic-py{background:#4b8bbe}.ic-ini,.ic-txt{background:#9a968b}.ic-yml{background:#c2412d}.ic-md{background:#5fa3d8}.ic-gitignore{background:#e06c4a}
+.annot>div{display:flex;flex-direction:column;gap:16px;min-height:0}
+.bar{display:flex;align-items:center;gap:8px;background:#0f1013;padding:10px 16px}
+.bar i{width:12px;height:12px;border-radius:50%;background:#e0574a}.bar i:nth-child(2){background:#e6b13d}.bar i:nth-child(3){background:#4cb26a}
+.fname{font-family:"JetBrains Mono",ui-monospace,monospace;color:#9a968b;font-size:17px;margin-left:12px;flex:1}
+.copy{background:transparent;border:1px solid #3a3d44;color:#c9c4b8;font-size:15px;padding:4px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2a2d33}.copy.done{border-color:#4cb26a;color:#7fe0a0}
+pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:26px;line-height:1.5;color:#e9e6dd;padding:18px 22px;overflow:hidden;white-space:pre;tab-size:4}
+pre .ln{display:block;margin:0 -22px;padding:0 22px}
+pre .ln.hl{background:rgba(199,154,43,.18);box-shadow:inset 4px 0 0 var(--gold)}
+.k{color:#ff8b7e}.s{color:#a8d98a}.c{color:#7f8590;font-style:italic}.n{color:#f2c46d}.d{color:#c49bff}.fn{color:#7cc7ff}.bi{color:#6fd4c6}.fl{color:#f2c46d}
+.term pre .ps{color:#7cc7ff;font-weight:700}.term .cmd{color:#f4f1ea}.term .ok{color:#7fe0a0;font-weight:700}.term .err{color:#ff8b7e}.term .dim{color:#7f8590}.term .warn{color:#f2c46d}.term .out{color:#d9d5ca}
+/* caixas */
+.ok-box,.sos,.tip{border-radius:14px;padding:22px 26px;font-size:26px;line-height:1.45;color:var(--body)}
+.ok-box{background:#e4f1e8;border-left:6px solid var(--green)}
+.lbl{display:block;font-size:17px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.ok-box .lbl{color:var(--green)}
+.sos{background:#f7e6df;border-left:6px solid var(--red)}.sos .lbl{color:var(--red)}.sos a code{font-size:18px;word-break:break-all}.sos .alt{display:block;margin-top:10px;font-size:20px;color:var(--mute)}
+.tip{background:#efe6cf;border-left:6px solid var(--gold)}.tip .lbl{color:#9a7414}
+/* duo e cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:0 1 auto;min-height:0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.card .tag{font-family:"JetBrains Mono",monospace;font-size:17px;letter-spacing:.12em;font-weight:700}
+.card.bad{border-color:#e9b8ae}.card.bad .tag{color:var(--red)}
+.card.good{border-color:#a9d4b7}.card.good .tag{color:var(--green)}
+.card.neutral .tag{color:var(--teal)}
+.card p{font-size:26px;line-height:1.45;color:var(--body)}
+.foot{font-size:26px;margin-top:26px;color:var(--body)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid3 .card h3{font-size:30px}
+.big-num{font-family:"Fraunces",Georgia,serif;font-size:64px;color:var(--teal);font-weight:700;line-height:1}
+/* afirmação */
+.afirma{justify-content:center}.afirma.wine{background:var(--wine);color:#fff}.afirma.teal{background:var(--teal);color:#fff}.afirma.dk{background:var(--dark);color:#fff}
+.afirma .kicker{color:#f3d58a}.afirma h2{font-size:62px;max-width:1300px}.afirma p{font-size:30px;line-height:1.45;max-width:1200px;opacity:.88}
+/* quiz */
+.reveal{align-self:flex-start;background:var(--teal);color:#fff;border:0;border-radius:10px;font-size:22px;padding:12px 22px;cursor:pointer;font-family:inherit}
+.answer{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 28px;font-size:28px;line-height:1.45;color:var(--body)}
+.answer p+p{margin-top:12px}
+/* fragmentos */
+.f{opacity:0;transform:translateY(6px);transition:all .3s}
+.f.vis{opacity:1;transform:none}
+/* svg */
+svg.flow{width:100%;height:auto;max-height:190px;flex:none}
+.sv-t{font:700 30px "Fraunces",Georgia,serif}.sv-s{font:22px "Inter",system-ui,sans-serif;fill:#555}.sv-a{font:600 20px "JetBrains Mono",monospace;fill:#7a2c46}.sv-f{font:italic 22px "Inter",system-ui;fill:#777}
+/* mapa */
+.mapa{padding:50px 70px 70px}
+.map-wrap{display:grid;grid-template-rows:1fr auto;gap:18px;height:100%}
+.map svg{width:100%;height:100%}
+.map{min-height:0}
+.map-info{display:grid;grid-template-columns:auto 1fr;column-gap:40px;align-items:end}
+.map-info .kicker{grid-column:1/3;margin-bottom:6px}
+.map-info h2{margin:0;font-size:50px;color:#fff}
+.map-info p{font-size:24px;color:#bdb8aa;line-height:1.4;grid-column:1/3;margin-top:10px;max-width:1300px}
+.goal{grid-column:2;grid-row:2;justify-self:end;background:#22262d;border:1px solid #343944;border-radius:12px;padding:14px 20px;font-size:22px;color:#e8e3d6}
+.goal span{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.12em;color:#7fe0a0;text-transform:uppercase;margin-bottom:4px}
+.m-zone{fill:#1c2026;stroke:#2a2f37;stroke-width:2}
+.m-zlab{font:700 17px "JetBrains Mono",monospace;letter-spacing:.14em;fill:#6f7480}
+.m-path{fill:none;stroke:#3b414c;stroke-width:10;stroke-linecap:round;stroke-dasharray:2 22}
+.m-done{fill:none;stroke:var(--teal2);stroke-width:10;stroke-linecap:round}
+.m-node circle,.m-node rect{stroke-width:5}
+.m-node.todo circle,.m-node.todo rect{fill:#15171b;stroke:#4a505c}
+.m-node.done circle,.m-node.done rect{fill:var(--teal);stroke:#5cc2b8}
+.m-node.cur circle,.m-node.cur rect{fill:var(--gold);stroke:#ffe2a0}
+.m-node .ring{fill:none;stroke:var(--gold);stroke-width:3;opacity:.7;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:34;opacity:.8}100%{r:58;opacity:0}}
+.m-code{font:700 22px "JetBrains Mono",monospace;fill:#fff}
+.m-node.todo .m-code{fill:#8a909c}.m-node.cur .m-code{fill:#1b1c1f}
+.m-name{font:600 21px "Inter",system-ui,sans-serif;fill:#d8d3c6}.m-node.todo .m-name{fill:#8a909c}
+.m-aula{font:16px "JetBrains Mono",monospace;fill:#7b8190}
+.m-flag{fill:#c2412d}
+/* barra inferior */
+#ui{position:fixed;right:18px;bottom:14px;display:flex;gap:8px;z-index:20;opacity:.35;transition:opacity .2s}
+#ui:hover{opacity:1}
+#ui button,#ui span{background:#24272d;color:#ddd;border:0;border-radius:8px;padding:7px 12px;font-size:13px;font-family:Inter,system-ui,sans-serif;cursor:pointer}
+#prog{position:fixed;left:0;bottom:0;height:4px;background:var(--gold);z-index:20;transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(11,12,14,.94);display:none;z-index:30;padding:4vh 5vw}
+#overlay.on{display:block}#overlay .map{height:80vh}
+#overlay .close{position:absolute;right:28px;top:20px;color:#ddd;font-size:15px;font-family:Inter,sans-serif}
+.relembre{background:#e8f0ed}
+.rl-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}.rl-top .kicker{margin:0}
+.rl-pill{font:700 16px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:var(--teal);padding:6px 14px;border-radius:30px}
+.rl-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;flex:1;min-height:0}
+.rl-left,.rl-right{display:flex;flex-direction:column;gap:22px;min-height:0;min-width:0}
+.rl-def{font-size:33px;line-height:1.42;color:var(--ink)}
+.rl-box{border-radius:14px;padding:20px 24px;font-size:25px;line-height:1.45;color:var(--body)}
+.rl-box.an{background:#fffdf8;border-left:6px solid var(--teal)}.rl-box.an .lbl{color:var(--teal)}
+.rl-box.cu{background:#f7e6df;border-left:6px solid var(--red)}.rl-box.cu .lbl{color:var(--red)}
+.timer{display:flex;flex-direction:column;align-items:center;gap:22px;background:#15171b;border-radius:22px;padding:34px 40px;color:#fff;flex:none}
+.t-dig{font:700 150px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em;line-height:1}
+.timer.fim .t-dig{color:#ff8b7e}
+.t-bar{width:100%;height:12px;background:#2a2e36;border-radius:8px;overflow:hidden}.t-bar i{display:block;height:100%;background:var(--gold);width:0}
+.t-btns{display:flex;gap:14px}.t-btns button{font:600 22px Inter,system-ui,sans-serif;padding:12px 26px;border-radius:12px;border:0;cursor:pointer;background:#2a2e36;color:#fff}.t-btns .t-go{background:var(--teal)}
+.t-row{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;flex:1;min-height:0;align-items:start}
+/* laboratório TDD */
+.lab{display:grid;grid-template-columns:330px 1fr;gap:30px;flex:1;min-height:0}
+.lab-steps{display:flex;flex-direction:column;gap:14px}
+.lab-steps button{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font-size:21px;cursor:pointer;font-family:inherit;color:var(--body);line-height:1.35}
+.lab-steps button b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.1em;margin-bottom:4px}
+.lab-steps button.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,107,.15)}
+.lab-steps .r b{color:var(--red)}.lab-steps .g b{color:var(--green)}
+.lab-view{display:flex;flex-direction:column;gap:16px;min-height:0}
+.lab-panel{display:none;flex-direction:column;gap:16px;min-height:0}.lab-panel.on{display:flex}
+.status{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:20px;padding:8px 16px;border-radius:30px;color:#fff}
+.status.red{background:var(--red)}.status.green{background:var(--green)}
+/* anotações sobre a saída */
+.annot{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;flex:1;min-height:0}
+.annot ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:18px}
+.annot ol li{counter-increment:a;font-size:27px;line-height:1.4;color:var(--body);padding-left:52px;position:relative}
+.annot ol li::before{content:counter(a);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--wine);color:#fff;font:700 19px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+table.t{border-collapse:collapse;width:100%;font-size:25px}
+table.t th{background:var(--teal);color:#fff;text-align:left;padding:12px 16px;font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+table.t td{padding:12px 16px;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+table.t tr:nth-child(even) td{background:#f8f5ee}
+
+.rl-pill.novo{background:var(--wine)}
+.codeslide pre{font-size:30px;line-height:1.42}
+.split.wide{grid-template-columns:2.2fr 1fr}.split:has(.has-tree){grid-template-columns:2.35fr 1fr}
+.codeslide ul.notes{gap:16px}.codeslide ul.notes li{font-size:24px;line-height:1.38}
+.tree{width:210px;font-size:15px}
+.rl-right .rl-box{font-size:24px}
+.fig{display:flex;flex-direction:column;gap:10px;align-items:center;margin:0}
+.fig img{width:100%;height:auto;object-fit:contain;background:#fff;border-radius:12px;border:2px solid var(--line);padding:10px}
+.fig figcaption{font-size:20px;color:var(--body);text-align:center;line-height:1.35}
+.fig figcaption span{display:block;font-size:14px;color:var(--mute);margin-top:4px}
+.fig figcaption a{color:var(--mute)}
+.figrow{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.figside{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.passos{display:grid;gap:16px}
+.pa{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:18px 18px 16px;position:relative;display:flex;flex-direction:column;gap:8px}
+.pa .n{width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+.pa b{font-size:26px;line-height:1.25}.pa span{font-size:21px;color:var(--body);line-height:1.38}
+.passos.c3 .pa:nth-child(3n)::after{display:none}
+.pa:not(:last-child)::after{content:"▶";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px}
+.pa.fim{border-color:#a9d4b7;background:#f4faf5}.pa.fim .n{background:var(--green)}
+.ref{font-size:17px!important;gap:8px!important}.ref p{line-height:1.4}.ref h3{font-size:18px!important}
+.ref a{color:var(--teal);font-family:"JetBrains Mono",monospace;font-size:14px;word-break:break-all}
+@media print{.relembre .rl-right pre{font-size:20px!important;line-height:1.35!important}.rl-right .rl-box{font-size:18px!important;padding:12px 16px}.fig img{max-height:430px}.pa b{font-size:20px}.pa span{font-size:16px}.pa{padding:12px}}
+@media print{.trilha{display:flex;align-items:flex-start}.trilha>.un{flex:1}.rl-def{font-size:28px}.rl-box{font-size:21px;padding:14px 18px}.rl-left{gap:14px}}
+.rl-grid{grid-template-columns:.72fr 1.28fr}
+.un h3{font-size:25px}.un li{font-size:19px}.un li b{font-size:16px}
+.trilha{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:stretch}
+.trilha.ag{grid-template-columns:repeat(4,1fr);gap:22px}.trilha.ag .un{padding:26px 24px}.trilha.ag h3{font-size:30px}.trilha.ag li{font-size:23px;line-height:1.35}.trilha.ag .hr{font:700 17px 'JetBrains Mono',monospace;color:var(--wine)}
+.trilha.ag ul{gap:14px;list-style:disc;padding-left:22px}
+.un{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px 18px 14px;display:flex;flex-direction:column;gap:6px}
+.un .tg{font:700 15px "JetBrains Mono",monospace;letter-spacing:.1em;color:var(--mute)}
+.un h3{font-size:23px;line-height:1.2}
+.un ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.un li{font-size:17px;line-height:1.32;color:var(--body)}
+.un li b{font-family:"JetBrains Mono",monospace;color:var(--ink);display:block;font-size:15px}
+table.t tr.hj td{background:#fbf1f4!important}table.t tr.ev td{background:#fff6dc!important}
+.slide>.full,.slide>.split,.slide>.rl-grid,.slide>.cols,.slide>.duo,.slide>.t-row{flex:0 1 auto;margin-top:auto;margin-bottom:auto}
+.un.done{border-color:#a9d4b7;background:#f4faf5}.un.done .tg{color:var(--green)}
+.un.now{border-color:var(--wine);box-shadow:0 0 0 5px rgba(122,44,70,.14)}.un.now .tg{color:var(--wine)}
+.un.todo{opacity:.72}
+.stack{display:flex;flex-direction:column;gap:6px;width:860px;flex:none}
+.ly{display:flex;align-items:center;gap:18px;border:3px solid var(--line);border-radius:16px;padding:12px 20px;background:var(--card)}
+.ly b{font-size:24px;width:290px;flex:none}.ly span{font-size:20px;color:var(--body);flex:1}.ly i{font:700 16px "JetBrains Mono",monospace;font-style:normal;text-align:right;width:120px;flex:none}
+.ly.done{border-color:#a9d4b7}.ly.done i{color:var(--green)}
+.ly.now{border-color:var(--wine);background:#fbf1f4}.ly.now i{color:var(--wine)}
+.ly.todo i{color:var(--mute)}
+.arr{text-align:center;font:700 18px "JetBrains Mono",monospace;color:var(--mute)}
+.st-row{display:flex;gap:40px;align-items:flex-start}.st-row ul.notes li{font-size:27px}
+.url-an{font:700 40px "JetBrains Mono",monospace;display:flex;flex-wrap:wrap;margin:10px 0 20px}
+.url-an span{display:flex;flex-direction:column;align-items:center;padding:0 2px}
+.url-an em{font:600 17px Inter,sans-serif;font-style:normal;margin-top:10px;padding:4px 10px;border-radius:20px;color:#fff;white-space:nowrap}
+.layers{display:flex;flex-direction:column;gap:8px;width:640px}
+.lay{border-radius:14px;padding:14px 20px;font-size:22px;color:#fff;display:flex;justify-content:space-between}
+.lay b{font-size:24px}
+.sw{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:9px;font-family:Inter,sans-serif}
+.sw h4{font:700 30px Inter,sans-serif;margin-bottom:4px}.sw h4 small{font-size:14px;background:#7d8492;color:#fff;border-radius:10px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.sw .op{display:flex;align-items:center;gap:14px;border-radius:8px;padding:10px 12px;font-size:22px}
+.sw .op b{font:700 18px "JetBrains Mono",monospace;color:#fff;border-radius:6px;padding:6px 0;width:96px;text-align:center}
+.sw .op code{font:600 22px "JetBrains Mono",monospace;background:none;color:#1b1c1f;padding:0}
+.sw .op span{color:#555}
+.sw .get{background:#ebf3fb;border:1px solid #61affe}.sw .get b{background:#61affe}
+.sw .post{background:#e8f6f0;border:1px solid #49cc90}.sw .post b{background:#49cc90}
+.sw .del{background:#fbeaea;border:1px solid #f93e3e}.sw .del b{background:#f93e3e}
+.sw .sim{font-size:13px;color:#888;text-align:right}
+.sch{background:#f7f7f7;border-radius:8px;padding:16px 20px;font:20px 'JetBrains Mono',monospace;display:flex;flex-direction:column;gap:10px}.sch>b{font-size:22px}.sch .f{display:grid;grid-template-columns:240px 1fr;padding-left:28px}.sch code{background:none;font-weight:700;color:#1b1c1f}.sch i{color:#c2412d;font-style:normal}.sch em{font-style:normal;color:#55a;font-size:17px}
+.ref{font-size:21px;line-height:1.45;color:var(--body);display:flex;flex-direction:column;gap:12px}
+.ref h3{font-size:22px;color:var(--teal);font-family:"JetBrains Mono",monospace;letter-spacing:.1em;margin-top:6px}
+.obj{counter-reset:o;list-style:none;display:flex;flex-direction:column;gap:14px}
+.obj li{counter-increment:o;font-size:27px;line-height:1.38;color:var(--body);padding-left:56px;position:relative}
+.obj li::before{content:counter(o);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+
+.tela{width:100%;height:560px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.tela-wrap{display:flex;flex-direction:column;gap:8px}.tela-wrap span{font:600 15px 'JetBrains Mono',monospace;color:var(--mute)}
+@media print{.tela{display:none}.tela-wrap::after{content:"(a página aparece aqui na versão HTML da aula)";font-size:18px;color:#777}}
+</style></head><body>
+<div id="deck"><section class="slide dark capa" data-fase=""><div class="capa-in"><div class="kicker">Coding · Aula 11 · 27 de outubro de 2026</div><h1>A loja ganha vitrine</h1><p class="sub">Entrega 1 do projeto e o começo do front-end: HTML semântico, acessibilidade e CSS com Flexbox e Grid.</p><div class="capa-foot">Faculdade Senac Pernambuco · ADS 2026.2 · Prof. Sebastião Rogério</div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 1 de 3</div><h2>O caminho até aqui</h2><div class="full"><div class="trilha"><div class="un done"><div class="tg">U1 · ✔ CONCLUÍDA</div><h3>Fundamentos</h3><ul><li><b>11/08</b> Por que tantas linguagens</li><li><b>18/08</b> Paradigmas</li><li><b>25/08</b> Tipos e coleções</li><li><b>01/09</b> Funções, módulos e testes</li></ul></div><div class="un done"><div class="tg">U2 · ✔ CONCLUÍDA</div><h3>Orientação a objetos</h3><ul><li><b>08/09</b> Classes</li><li><b>22/09</b> AV1 e encapsulamento</li><li><b>29/09</b> Herança e polimorfismo</li><li><b>06/10</b> Contratos e a Loja de Roupas</li></ul></div><div class="un done"><div class="tg">U3 · ✔ CONCLUÍDA</div><h3>Back-end e API</h3><ul><li><b>13/10</b> HTTP, REST e a primeira API</li><li><b>20/10</b> Persistência e camadas</li></ul></div><div class="un now"><div class="tg">U4 · ◀ COMEÇA HOJE</div><h3>Front-end</h3><ul><li><b>27/10</b> Hoje: ENTREGA 1, HTML e CSS</li><li><b>03/11</b> JavaScript e eventos</li><li><b>10/11</b> Integração com a API</li></ul></div><div class="un todo"><div class="tg">U5</div><h3>Entrega e avaliação</h3><ul><li><b>17/11</b> PROJETO FINAL</li><li><b>24/11</b> AV2</li><li><b>01/12</b> Framework (sem nota)</li><li><b>08/12</b> Encerramento</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 2 de 3</div><h2>A aplicação que estamos construindo, camada por camada</h2><div class="full"><div class="st-row"><div class="stack"><div class="ly now"><b>Telas no navegador</b><span>HTML e CSS hoje; JavaScript depois · Aulas 11 a 13</span><i>◀ HOJE</i></div><div class="arr">▲ fetch (Aula 13) ▼</div><div class="ly done"><b>API: HTTP + REST</b><span>a porta da loja para a rede · Aula 9</span><i>✔ pronto</i></div><div class="arr">▲ chama ▼</div><div class="ly done"><b>Serviço e repositório</b><span>as camadas entre a porta e o banco · Aula 10</span><i>✔ pronto</i></div><div class="arr">▲ usa ▼</div><div class="ly done"><b>Domínio e banco</b><span>as classes e o loja.db · Aulas 5 a 10</span><i>✔ pronto</i></div></div><div><ul class="notes"><li class="f">O <b>back-end</b> da loja está pronto: API, regras e banco.</li><li class="f">Hoje começa a camada que o cliente <b>vê</b>: as telas.</li><li class="f">Nesta aula as telas ainda são <b>estáticas</b>. Na Aula 13 elas passam a buscar os dados na API.</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 3 de 3</div><h2>O que falta: as notas fecham em 27/11</h2><div class="full"><table class="t"><tr><th>Data</th><th>Aula</th><th>Tema</th><th>O que acrescenta ao projeto</th></tr><tr class="hj"><td><b>27/10</b></td><td><b>11</b></td><td><b>ENTREGA 1 · HTML e CSS</b></td><td><b>hoje: a API é avaliada e nasce a primeira tela</b></td></tr><tr><td>03/11</td><td>12</td><td>JavaScript, DOM e eventos</td><td>as telas reagem ao usuário</td></tr><tr><td>10/11</td><td>13</td><td>Assincronismo e integração</td><td>as telas conversam com a API</td></tr><tr class="ev"><td><b>17/11</b></td><td>14</td><td><b>PROJETO FINAL</b></td><td>apresentação com demonstração: 50% do segundo processo</td></tr><tr class="ev"><td><b>24/11</b></td><td>15</td><td><b>AV2</b> e devolutiva</td><td>prova: 50% do segundo processo</td></tr><tr><td>01/12 e 08/12</td><td>16 e 17</td><td>Framework e encerramento</td><td>conteúdo complementar, sem nota</td></tr></table></div></section><section class="slide fullslide " data-fase=""><div class="kicker">O que vamos ver hoje</div><h2>A API avaliada, e a primeira tela da loja</h2><div class="full"><div class="trilha ag"><div class="un"><div class="tg">ABERTURA</div><h3>Entrega 1</h3><p class="hr">apresentação das equipes</p><ul><li>Demonstração rápida da API</li><li>Checklist da Aula 10</li></ul></div><div class="un"><div class="tg">MUNDO 1</div><h3>HTML</h3><p class="hr">teoria com exemplos</p><ul><li>A página por dentro</li><li>HTML semântico</li><li>Acessibilidade mínima</li></ul></div><div class="un"><div class="tg">MUNDO 2</div><h3>CSS</h3><p class="hr">teoria com exemplos</p><ul><li>Seletores e cascata</li><li>Modelo de caixa</li><li>Flexbox, Grid e telas pequenas</li></ul></div><div class="un"><div class="tg">MUNDO 3</div><h3>Prática na loja</h3><p class="hr">vocês seguem a aula</p><ul><li>A vitrine</li><li>O visual</li><li>O formulário de cadastro</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Entrega 1 · como vai ser</div><h2>Cada equipe mostra a API, rapidinho</h2><div class="full"><table class="t"><tr><th>Critério</th><th>O que a equipe mostra</th><th>Pontos</th></tr><tr><td>API funcionando</td><td>a página <code>/docs</code> com o CRUD do recurso principal</td><td>2</td></tr><tr><td>Dados guardados</td><td>cadastrar, reiniciar o servidor, e o dado continua lá</td><td>2</td></tr><tr><td>Camadas</td><td>rota, serviço e repositório em arquivos separados</td><td>2</td></tr><tr><td>Testes</td><td><code>pytest</code> verde e o ✓ do GitHub Actions</td><td>2</td></tr><tr><td>README</td><td>o que é o sistema e como rodar</td><td>1</td></tr><tr><td>Domínio do código</td><td>respostas às perguntas do professor</td><td>1</td></tr></table><p class="foot f">Uns 5 minutos por equipe: 3 de demonstração e 2 de perguntas. Enquanto uma apresenta, a próxima já deixa o servidor ligado.</p></div></section><section class="slide fullslide" data-fase=""><div class="kicker">Entrega 1</div><h2>Vez da equipe</h2><div class="t-row"><div class="timer" data-min="5"><div class="t-dig">05:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Abrir a <code>/docs</code> e cadastrar um item.</li><li class="">Desligar e ligar o servidor: o item continua lá.</li><li class="">Mostrar as camadas no editor.</li><li class="">Rodar o <code>pytest</code> e mostrar o Actions verde.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current=""></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Nove fases, três mundos</h2><p>Mundos 1 e 2: HTML e CSS, os conceitos, com exemplos. Mundo 3: a vitrine e o cadastro da Loja de Roupas, com checkpoints.</p></div></div></section><section class="slide dark mapa" data-fase="1-1"><div class="map-wrap"><div class="map" data-current="1-1"></div><div class="map-info"><div class="kicker">FASE 1-1 · CONTEÚDO NOVO</div><h2>A página por dentro</h2><p>O que o navegador recebe, e como transforma texto em tela.</p></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>As três linguagens do navegador</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Toda página usa até três linguagens, cada uma com um papel. <b>HTML</b> diz <b>o que</b> há na página (estrutura e significado). <b>CSS</b> diz <b>como</b> aparece. <b>JavaScript</b> diz <b>o que acontece</b> quando o usuário age.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">HTML        o quê     título, lista, botão, formulário
+CSS         como      cor, tamanho, posição, colunas
+JavaScript  quando    clicou, digitou, chegou dado
+
+hoje: HTML e CSS
+Aulas 12 e 13: JavaScript</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>Uma casa: o HTML é a planta e as paredes, o CSS é a pintura e os móveis, o JavaScript é a instalação elétrica.</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Elemento HTML</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um pedaço da página marcado por <b>tags</b>: a de abertura, o conteúdo e a de fechamento. <b>Atributos</b> dão informações extras dentro da tag de abertura. Elementos ficam <b>dentro</b> de outros, formando uma árvore.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;a href="cadastro.html"&gt;Cadastrar produto&lt;/a&gt;
+ │  └ atributo      └ conteúdo        └ fecha
+ └ tag de abertura
+
+&lt;article&gt;
+  &lt;h3&gt;Camiseta básica&lt;/h3&gt;   &lt;- dentro do article
+  &lt;p&gt;R$ 39,90&lt;/p&gt;
+&lt;/article&gt;</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Tag aberta tem que ser fechada, na ordem certa. <code>&lt;p&gt;&lt;strong&gt;oi&lt;/p&gt;&lt;/strong&gt;</code> está errado.</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>O documento HTML</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Todo arquivo HTML tem o mesmo esqueleto. O <code>head</code> traz informações <b>sobre</b> a página (título da aba, codificação, CSS). O <code>body</code> traz o que <b>aparece</b>. O <code>lang</code> diz o idioma, para leitores de tela e tradutores.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;!doctype html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport"
+        content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Vitrine · Loja de Roupas&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  ... o que aparece ...
+&lt;/body&gt;
+&lt;/html&gt;</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Sem a meta <code>viewport</code>, o celular mostra a página "de longe", minúscula. Ela entra em toda página.</div></div></div></section><section class="slide fullslide " data-fase="1-1"><div class="kicker">Fase 1-1 · Passo a passo</div><h2>Do arquivo à tela</h2><div class="full"><div class="passos c5" style="grid-template-columns:repeat(5,1fr)"><div class="pa"><div class="n">1</div><b>O navegador baixa</b><span>o arquivo index.html</span></div><div class="pa"><div class="n">2</div><b>Monta a árvore</b><span>cada elemento vira um nó: o DOM</span></div><div class="pa"><div class="n">3</div><b>Lê o CSS</b><span>e decide o estilo de cada nó</span></div><div class="pa"><div class="n">4</div><b>Calcula o layout</b><span>tamanho e posição de cada caixa</span></div><div class="pa fim"><div class="n">5</div><b>Desenha</b><span>os pixels na tela</span></div></div></div></section><section class="slide dark mapa" data-fase="1-2"><div class="map-wrap"><div class="map" data-current="1-2"></div><div class="map-info"><div class="kicker">FASE 1-2 · CONTEÚDO NOVO</div><h2>HTML semântico</h2><p>Dá para fazer tudo com div. Mas aí só os olhos entendem a página.</p></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>HTML semântico</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Usar a tag que diz <b>o que</b> o conteúdo é, e não só <b>como</b> ele fica. <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>article</code> e <code>footer</code> têm significado: o leitor de tela, o buscador e o próximo programador entendem a página sem ver.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;!-- sem semântica: tudo é div --&gt;
+&lt;div class="topo"&gt; ... &lt;/div&gt;
+&lt;div class="conteudo"&gt; ... &lt;/div&gt;
+
+&lt;!-- com semântica --&gt;
+&lt;header&gt; ... &lt;/header&gt;
+&lt;main&gt;
+  &lt;section&gt; ... &lt;/section&gt;
+&lt;/main&gt;
+&lt;footer&gt; ... &lt;/footer&gt;</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>Um livro com sumário e capítulos, comparado a um bloco de texto corrido. As duas versões têm o mesmo conteúdo, mas só a primeira dá para navegar.</div></div></div></section><section class="slide fullslide " data-fase="1-2"><div class="kicker">Fase 1-2 · Na imagem</div><h2>As regiões da vitrine da loja</h2><div class="full"><svg class="fluxo" viewBox="0 0 1000 590" style="width:100%;height:auto"><rect x="10" y="10" width="980" height="90" rx="10" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="28" y="46" class="sv-t" fill="#1f6f6b"><header></text><text x="28" y="76" class="sv-s">logo, nome da loja e o menu</text><rect x="600" y="18" width="370" height="74" rx="10" fill="#fff" stroke="#7a2c46" stroke-width="4"/><text x="618" y="54" class="sv-t" fill="#7a2c46"><nav></text><text x="618" y="84" class="sv-s">links de navegação</text><rect x="10" y="120" width="980" height="360" rx="10" fill="#fff" stroke="#3a3a3a" stroke-width="4"/><text x="28" y="156" class="sv-t" fill="#3a3a3a"><main></text><text x="28" y="186" class="sv-s">o conteúdo principal: um só por página</text><rect x="40" y="200" width="920" height="260" rx="10" fill="#fff" stroke="#c79a2b" stroke-width="4"/><text x="58" y="236" class="sv-t" fill="#c79a2b"><section></text><text x="58" y="266" class="sv-s">um grupo com título: "Produtos"</text><rect x="70" y="290" width="270" height="150" rx="10" fill="#fff" stroke="#2f8a55" stroke-width="4"/><text x="88" y="326" class="sv-t" fill="#2f8a55"><article></text><text x="88" y="356" class="sv-s">um produto</text><rect x="365" y="290" width="270" height="150" rx="10" fill="#fff" stroke="#2f8a55" stroke-width="4"/><text x="383" y="326" class="sv-t" fill="#2f8a55"><article></text><text x="383" y="356" class="sv-s">outro produto</text><rect x="660" y="290" width="270" height="150" rx="10" fill="#fff" stroke="#2f8a55" stroke-width="4"/><text x="678" y="326" class="sv-t" fill="#2f8a55"><article></text><text x="678" y="356" class="sv-s">mais um</text><rect x="10" y="500" width="980" height="80" rx="10" fill="#fff" stroke="#1f6f6b" stroke-width="4"/><text x="28" y="536" class="sv-t" fill="#1f6f6b"><footer></text><text x="28" y="566" class="sv-s">rodapé: créditos e contato</text></svg></div></section><section class="slide fullslide " data-fase="1-2"><div class="kicker">Fase 1-2 · Tabela</div><h2>Qual tag usar</h2><div class="full"><table class="t"><tr><th>Tag</th><th>Use para</th><th>Na loja</th></tr><tr><td><code>header</code></td><td>topo da página ou de uma seção</td><td>logo, nome e menu</td></tr><tr><td><code>nav</code></td><td>um grupo de links de navegação</td><td>Vitrine · Cadastrar produto</td></tr><tr><td><code>main</code></td><td>o conteúdo principal: <b>um só</b> por página</td><td>a vitrine</td></tr><tr><td><code>section</code></td><td>um grupo de conteúdo com título</td><td>"Produtos"</td></tr><tr><td><code>article</code></td><td>algo que faz sentido sozinho</td><td>cada produto</td></tr><tr><td><code>h1</code> a <code>h6</code></td><td>títulos, em ordem, sem pular nível</td><td>h1 Vitrine, h2 Produtos, h3 nome</td></tr><tr><td><code>footer</code></td><td>rodapé</td><td>créditos</td></tr><tr><td><code>div</code></td><td>agrupar só para o CSS, quando nenhuma acima serve</td><td>(quase nunca)</td></tr></table></div></section><section class="slide quiz" data-fase="1-2"><div class="kicker">Fase 1-2 · Qual tag?</div><h2>Escolha a tag mais adequada para cada caso.</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) O menu com "Vitrine" e "Cadastrar produto".</li><li class="">b) O cartão de um produto, com nome, preço e botão.</li><li class="">c) O título "Vitrine", o mais importante da página.</li><li class="">d) Um bloco só para pôr cor de fundo, sem significado.</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) nav</b>, dentro do header.</p><p><b>b) article</b>: faz sentido sozinho.</p><p><b>c) h1</b>: um por página.</p><p><b>d) div</b>: é o caso em que ela serve.</p></div></div></div></section><section class="slide dark mapa" data-fase="1-3"><div class="map-wrap"><div class="map" data-current="1-3"></div><div class="map-info"><div class="kicker">FASE 1-3 · CONTEÚDO NOVO</div><h2>Acessibilidade</h2><p>Uma página que só funciona para quem enxerga bem e usa mouse deixa clientes de fora.</p></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Acessibilidade na web</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Fazer a página funcionar para <b>todas as pessoas</b>, inclusive quem usa <b>leitor de tela</b>, só o <b>teclado</b> ou tem baixa visão. As regras estão na <b>WCAG</b>, a norma internacional do W3C. No Brasil, a Lei Brasileira de Inclusão (Lei 13.146/2015) exige sites acessíveis.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">o mínimo de toda página:
+
+✔ alt em toda imagem
+✔ label ligado a todo campo
+✔ títulos em ordem (h1, h2, h3)
+✔ contraste suficiente entre texto e fundo
+✔ dá para usar só com o teclado (Tab)</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>A rampa ao lado da escada: foi pensada para cadeirantes, e todo mundo com carrinho ou mala acaba usando.</div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>alt e label</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O <code>alt</code> é o <b>texto da imagem</b>: o leitor de tela lê em voz alta. O <code>label</code> dá <b>nome ao campo</b>: o <code>for</code> do label aponta para o <code>id</code> do campo. Clicar no rótulo também passa a selecionar o campo.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;img src="img/logo.svg"
+     alt="Logotipo da Loja de Roupas: uma camiseta"&gt;
+
+&lt;label for="preco"&gt;Preço (R$)&lt;/label&gt;
+&lt;input id="preco" name="preco" type="number"&gt;
+
+&lt;!-- imagem só decorativa: alt vazio --&gt;
+&lt;img src="enfeite.svg" alt=""&gt;</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Placeholder não substitui label: ele some quando a pessoa começa a digitar, e muitos leitores de tela não o anunciam.</div></div></div></section><section class="slide quiz" data-fase="1-3"><div class="kicker">Fase 1-3 · Diagnóstico</div><h2>O que um leitor de tela não consegue entender aqui?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">trecho.html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;img src="camiseta.jpg"&gt;
+&lt;input type="text" placeholder="Nome"&gt;
+&lt;h1&gt;Vitrine&lt;/h1&gt;
+&lt;h4&gt;Produtos&lt;/h4&gt;</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>A imagem</b> não tem <code>alt</code>: o leitor diz só "imagem" ou o nome do arquivo.</p><p><b>O campo</b> não tem <code>label</code>: o placeholder some ao digitar.</p><p><b>Os títulos</b> pulam do h1 para o h4: a estrutura fica confusa.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-1"><div class="map-wrap"><div class="map" data-current="2-1"></div><div class="map-info"><div class="kicker">FASE 2-1 · CONTEÚDO NOVO</div><h2>Seletores e cascata</h2><p>Como o CSS escolhe em quais elementos aplicar cada estilo, e quem vence quando dois discordam.</p></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Regra CSS</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma regra tem um <b>seletor</b> (em quem aplicar) e uma lista de <b>declarações</b> <code>propriedade: valor</code>. O arquivo <code>.css</code> entra na página por um <code>link</code> no <code>head</code>.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">/* elemento: todos os botões */
+button { background: #1f6f6b; color: #fff; }
+
+/* classe: quem tem class="formulario" */
+.formulario { max-width: 420px; }
+
+/* descendente: links dentro do nav */
+nav a { color: #fff; }
+
+&lt;link rel="stylesheet" href="estilo.css"&gt;</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Ponto antes do nome é <b>classe</b> (<code>.formulario</code>). Sem ponto é <b>elemento</b> (<code>button</code>). Trocar um pelo outro é o erro mais comum.</div></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Cascata e especificidade</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Quando duas regras mandam no mesmo elemento, vence a <b>mais específica</b>: id vence classe, que vence elemento. Se empatarem, vence a que vem <b>por último</b> no arquivo.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">p           { color: black; }   /* elemento: fraco */
+.preco      { color: green; }   /* classe: médio   */
+#destaque   { color: red; }     /* id: forte       */
+
+&lt;p class="preco" id="destaque"&gt;R$ 39,90&lt;/p&gt;
+&lt;!-- fica vermelho --&gt;</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>Uma ordem do gerente vale mais que um aviso no mural; entre dois avisos do mesmo nível, vale o mais recente.</div></div></div></section><section class="slide quiz" data-fase="2-1"><div class="kicker">Fase 2-1 · Quem vence?</div><h2>De que cor fica o botão?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">estilo.css</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">button { background: gray; }
+.comprar { background: green; }
+button { background: blue; }
+
+&lt;button class="comprar"&gt;Pôr no carrinho&lt;/button&gt;</pre></div></div></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>Verde.</b> A classe <code>.comprar</code> é mais específica que o elemento <code>button</code>, então vence mesmo vindo antes.</p><p>Entre as duas regras de <code>button</code>, a azul viria por último, mas nenhuma das duas vence a classe.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-2"><div class="map-wrap"><div class="map" data-current="2-2"></div><div class="map-info"><div class="kicker">FASE 2-2 · CONTEÚDO NOVO</div><h2>Modelo de caixa</h2><p>Para o CSS, todo elemento é uma caixa. Entender a caixa resolve metade dos problemas de layout.</p></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Modelo de caixa</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Todo elemento é uma caixa em camadas: o <b>conteúdo</b>, o <b>padding</b> (espaço por dentro), a <b>border</b> (a borda) e a <b>margin</b> (espaço por fora, até a próxima caixa).</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">article {
+  padding: 16px;             /* dentro  */
+  border: 1px solid #e2dccd; /* borda   */
+  border-radius: 12px;       /* cantos  */
+  margin: 0 0 20px;          /* fora    */
+}</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Por padrão, <code>width</code> mede só o conteúdo: padding e borda somam por fora. Com <code>box-sizing: border-box</code>, a largura inclui tudo. Use em todo projeto.</div></div></div></section><section class="slide fullslide " data-fase="2-2"><div class="kicker">Fase 2-2 · Na imagem</div><h2>As quatro camadas de uma caixa</h2><div class="full"><svg class="fluxo" viewBox="0 0 780 440" style="width:100%;height:auto"><rect x="10" y="10" width="760" height="420" fill="#f9e7c8" stroke="#c79a2b" stroke-width="3" stroke-dasharray="8 6"/><text x="26" y="44" class="sv-a" style="fill:#8a6a12">margin: espaço por fora</text><rect x="70" y="70" width="640" height="300" fill="#1b1c1f"/><text x="86" y="98" class="sv-a" style="fill:#fff">border: a borda</text><rect x="84" y="112" width="612" height="244" fill="#d8ece9"/><text x="100" y="140" class="sv-a" style="fill:#1f6f6b">padding: espaço por dentro</text><rect x="170" y="170" width="440" height="140" fill="#fff" stroke="#1f6f6b" stroke-width="3"/><text x="390" y="248" text-anchor="middle" class="sv-t" fill="#1f6f6b">content: o conteúdo</text></svg></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Variáveis CSS</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Valores com nome, definidos uma vez em <code>:root</code> e usados com <code>var(...)</code>. Mudar a cor da marca vira mudar <b>uma linha</b>.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">:root {
+  --verde: #1f6f6b;
+  --borda: #e2dccd;
+}
+
+header { background: var(--verde); }
+button { background: var(--verde); }
+article { border: 1px solid var(--borda); }</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>As constantes do Python (<code>FRETE_FIXO = 15.0</code>), agora no CSS.</div></div></div></section><section class="slide dark mapa" data-fase="2-3"><div class="map-wrap"><div class="map" data-current="2-3"></div><div class="map-info"><div class="kicker">FASE 2-3 · CONTEÚDO NOVO</div><h2>Flexbox e Grid</h2><p>Duas ferramentas de layout: uma para enfileirar, outra para montar grades.</p></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Flexbox</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Organiza os filhos de um elemento <b>numa direção</b>: em linha (padrão) ou em coluna. <code>gap</code> dá o espaço entre eles, <code>align-items</code> alinha no outro eixo e <code>margin-left: auto</code> empurra um item para o fim.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">header {
+  display: flex;          /* filhos lado a lado */
+  align-items: center;    /* centralizados na altura */
+  gap: 16px;
+}
+nav { margin-left: auto; }   /* menu vai para a direita */
+
+.formulario {
+  display: flex;
+  flex-direction: column; /* um embaixo do outro */
+}</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>Uma fila: todo mundo numa linha só, e você decide o espaço entre as pessoas e quem fica no fim.</div></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Grid</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Organiza os filhos em <b>linhas e colunas</b> ao mesmo tempo. <code>grid-template-columns</code> diz quantas colunas e de que largura; <code>1fr</code> é "uma fração do espaço que sobra".</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3 colunas iguais */
+  gap: 20px;
+}
+
+/* o título ocupa a linha inteira */
+section h2 { grid-column: 1 / -1; }</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>Uma prateleira com nichos do mesmo tamanho: cada produto cai no próximo nicho livre.</div></div></div></section><section class="slide fullslide " data-fase="2-3"><div class="kicker">Fase 2-3 · Comparação</div><h2>Flexbox ou Grid?</h2><div class="full"><table class="t"><tr><th></th><th>Flexbox</th><th>Grid</th></tr><tr><td>Direções</td><td>uma: linha <b>ou</b> coluna</td><td>duas: linhas <b>e</b> colunas</td></tr><tr><td>Quem manda</td><td>o tamanho do conteúdo</td><td>a grade definida no pai</td></tr><tr><td>Bom para</td><td>menu, barra do topo, botões alinhados, formulário em coluna</td><td>vitrine de cartões, painel, a página inteira</td></tr><tr><td>Na loja</td><td><code>header</code> e <code>.formulario</code></td><td>a <code>section</code> de produtos</td></tr></table><p class="foot f">Não é um ou outro: a mesma página usa os dois, cada um onde faz sentido.</p></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 11</span></div><h2>Telas pequenas (media query)</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um bloco de CSS que só vale <b>sob uma condição</b>, como a largura da tela. Assim a mesma página fica em 3 colunas no computador e em 1 no celular.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">@media (max-width: 700px) {
+  section {
+    grid-template-columns: 1fr;  /* uma coluna */
+  }
+  header { flex-wrap: wrap; }
+}</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Teste no DevTools: o ícone de celular (Ctrl+Shift+M) simula telas de vários tamanhos.</div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Hora da prática</div><h2>Agora é com vocês</h2><div class="full"><div class="passos c3" style="grid-template-columns:repeat(3,1fr)"><div class="pa"><div class="n">1</div><b>Abrir esta aula</b><span>no site, em Materiais › Coding, na Fase 3-1 (tecla M abre o mapa)</span></div><div class="pa"><div class="n">2</div><b>Partir da etapa-15</b><span>o projeto da loja da Aula 10, ou a tag pronta</span></div><div class="pa"><div class="n">3</div><b>Criar a pasta front/</b><span>as telas ficam separadas do back-end</span></div><div class="pa"><div class="n">4</div><b>Abrir no navegador</b><span>duplo clique no index.html, ou a extensão Live Server do VS Code</span></div><div class="pa fim"><div class="n">5</div><b>Rodar o pytest</b><span>o test_front.py confere estrutura e acessibilidade</span></div></div><div class="tip f"><span class="lbl">Em dupla</span>Um digita, o outro lê o slide e confere no navegador. Troquem a cada fase.</div></div></section><section class="slide dark mapa" data-fase="3-1"><div class="map-wrap"><div class="map" data-current="3-1"></div><div class="map-info"><div class="kicker">FASE 3-1 · PRÁTICA</div><h2>A vitrine</h2><p>A página principal da loja, só com HTML semântico: o mesmo catálogo da API.</p></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>front/index.html: o esqueleto e o topo</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/index.html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="2,5,9,10,12">&lt;!doctype html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Vitrine · Loja de Roupas&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;img src="img/logo.svg" alt="Logotipo da Loja de Roupas: uma camiseta" width="48" height="48"&gt;
+    &lt;p&gt;Loja de Roupas&lt;/p&gt;
+    &lt;nav aria-label="Principal"&gt;
+      &lt;a href="index.html"&gt;Vitrine&lt;/a&gt;
+      &lt;a href="cadastro.html"&gt;Cadastrar produto&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>lang</code>, <code>charset</code> e <code>viewport</code>: as três linhas de toda página.</li><li class="f">O logotipo tem <code>alt</code> que diz o que ele mostra.</li><li class="f"><code>aria-label</code> dá nome ao menu para o leitor de tela.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>front/index.html: a vitrine</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/index.html (continuação)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,2,5,8,12">  &lt;main&gt;
+    &lt;h1&gt;Vitrine&lt;/h1&gt;
+    &lt;p&gt;Promoção da semana: 10% em tudo. Frete grátis a partir de R$ 200.&lt;/p&gt;
+
+    &lt;section aria-labelledby="titulo-produtos"&gt;
+      &lt;h2 id="titulo-produtos"&gt;Produtos&lt;/h2&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Camiseta básica&lt;/h3&gt;
+        &lt;p&gt;Tamanho M · manga curta&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 39,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type="button"&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+      ...</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Um <code>h1</code>, depois <code>h2</code> e <code>h3</code>: títulos em ordem.</li><li class="f"><code>aria-labelledby</code> liga a seção ao título dela.</li><li class="f">Os três produtos são os mesmos da API. Na Aula 13, eles virão do <code>GET /produtos</code>.</li></ul></div></div></section><section class="slide fullslide " data-fase="3-1"><div class="kicker">Fase 3-1 · No navegador</div><h2>Sem CSS: feio, mas já organizado</h2><div class="full"><div class="figside"><div class="tela-wrap"><span>front/index.html, sem estilo</span><iframe class="tela" style="height:520px" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Vitrine · Loja de Roupas&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;img src=&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cGF0aCBkPSJNMjAgOCBMOCAxOCBMMTQgMjggTDIwIDI0IEwyMCA1NiBMNDQgNTYgTDQ0IDI0IEw1MCAyOCBMNTYgMTggTDQ0IDggUTMyIDE2IDIwIDggWiIKICAgICAgICBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=&quot; alt=&quot;Logotipo da Loja de Roupas: uma camiseta&quot; width=&quot;48&quot; height=&quot;48&quot;&gt;
+    &lt;p&gt;Loja de Roupas&lt;/p&gt;
+    &lt;nav aria-label=&quot;Principal&quot;&gt;
+      &lt;a href=&quot;index.html&quot;&gt;Vitrine&lt;/a&gt;
+      &lt;a href=&quot;cadastro.html&quot;&gt;Cadastrar produto&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;h1&gt;Vitrine&lt;/h1&gt;
+    &lt;p&gt;Promoção da semana: 10% em tudo. Frete grátis a partir de R$ 200.&lt;/p&gt;
+
+    &lt;section aria-labelledby=&quot;titulo-produtos&quot;&gt;
+      &lt;h2 id=&quot;titulo-produtos&quot;&gt;Produtos&lt;/h2&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Camiseta básica&lt;/h3&gt;
+        &lt;p&gt;Tamanho M · manga curta&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 39,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Calça jeans&lt;/h3&gt;
+        &lt;p&gt;Tamanho G · modelagem reta&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 129,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Moletom&lt;/h3&gt;
+        &lt;p&gt;Tamanho P&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 159,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;Loja de Roupas · projeto da disciplina de Coding · Senac 2026.2&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><ul class="notes"><li class="f">O navegador já mostra títulos maiores, listas e botões: é o estilo <b>padrão</b>.</li><li class="f">A ordem e o significado estão certos. Agora é só vestir.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>tests/test_front.py: o pytest também confere a página</h2><div class="split wide"><div class="left"><div class="code has-tree"><div class="bar"><i></i><i></i><i></i><span class="fname">tests/test_front.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><div class="tree"><div class="tr-h">LOJA-ROUPAS</div><div class="tr dim" style="--d:0"><span class="chev">›</span>.venv</div><div class="tr dir" style="--d:0"><span class="chev">›</span>.github</div><div class="tr dir" style="--d:0"><span class="chev">›</span>exemplos</div><div class="tr dir" style="--d:0"><span class="chev">›</span>front</div><div class="tr dir" style="--d:0"><span class="chev">›</span>loja</div><div class="tr dir" style="--d:0"><span class="chev">⌄</span>tests</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>__init__.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_api.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_calculos.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_carrinho.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_contrato.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_dict.py</div><div class="tr file cur" style="--d:1"><span class="ic ic-py"></span>test_front.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_heranca.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_produto.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_promocao.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_repositorio.py</div><div class="tr file" style="--d:1"><span class="ic ic-py"></span>test_servico.py</div><div class="tr file" style="--d:0"><span class="ic ic-gitignore"></span>.gitignore</div><div class="tr file" style="--d:0"><span class="ic ic-md"></span>README.md</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>api.py</div><div class="tr file" style="--d:0"><span class="ic ic-ini"></span>pytest.ini</div><div class="tr file" style="--d:0"><span class="ic ic-txt"></span>requirements.txt</div><div class="tr file" style="--d:0"><span class="ic ic-py"></span>vitrine.py</div></div><pre data-lang="python" data-hl="3,5,6,12">def test_estrutura_semantica(pagina):
+    nomes = [t for t, _ in ler(pagina)]
+    for tag in ("header", "nav", "main", "footer"):
+        assert tag in nomes, f"falta &lt;{tag}&gt;"
+    assert nomes.count("main") == 1
+    assert nomes.count("h1") == 1
+
+
+def test_toda_imagem_tem_alt(pagina):
+    for tag, atributos in ler(pagina):
+        if tag == "img":
+            assert "alt" in atributos</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O <code>HTMLParser</code> do próprio Python lê a página e lista as tags.</li><li class="f">Cada página da pasta <code>front/</code> passa pelos mesmos testes (<code>parametrize</code>).</li><li class="f">Esqueceu o <code>alt</code>? O pytest e o GitHub Actions ficam vermelhos.</li></ul></div></div></section><section class="slide check" data-fase="3-1"><div class="kicker">FASE 3-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">61 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-1: vitrine em HTML semântico"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>61 passed</b> e a vitrine abre no navegador, sem estilo.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-16.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-16.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-16</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-2"><div class="map-wrap"><div class="map" data-current="3-2"></div><div class="map-info"><div class="kicker">FASE 3-2 · PRÁTICA</div><h2>O visual</h2><p>O mesmo HTML, agora com estilo: topo com Flexbox e vitrine com Grid.</p></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No editor</div><h2>front/estilo.css: cores, caixa e o topo</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/estilo.css</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="3,11,23,31">/* Etapa 17: o visual da loja (Aula 11) */
+
+:root {
+  --verde: #1f6f6b;
+  --tinta: #1b1c1f;
+  --fundo: #f3efe6;
+  --cartao: #fffdf8;
+  --borda: #e2dccd;
+}
+
+* { box-sizing: border-box; }       /* largura inclui padding e borda */
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--fundo);
+  line-height: 1.5;
+}
+
+/* cabeçalho: logo, nome e menu numa linha só (Flexbox) */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--verde);
+  color: #fff;
+}
+header p { font-size: 1.3rem; font-weight: 700; margin: 0; }
+nav { margin-left: auto; display: flex; gap: 20px; }
+nav a { color: #fff; }</pre></div></div></div><div class="right"><ul class="notes"><li class="f">As cores ficam em variáveis, no <code>:root</code>.</li><li class="f"><code>box-sizing</code> vale para tudo (<code>*</code>).</li><li class="f">O <code>header</code> vira uma fila (Flexbox), e o menu vai para a direita.</li><li class="f">No <code>index.html</code>, acrescente no <code>head</code>: <code>&lt;link rel="stylesheet" href="estilo.css"&gt;</code>.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No editor</div><h2>front/estilo.css: a vitrine em grade</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/estilo.css (continuação)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="5,6,9,14">main { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+/* a vitrine: cartões em grade (Grid) */
+section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+section h2 { grid-column: 1 / -1; margin: 0; }
+
+article {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 16px;
+}
+article h3 { margin-top: 0; }
+
+button {
+  background: var(--verde);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+}</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>main</code> fica centralizado com largura máxima: <code>margin: 0 auto</code>.</li><li class="f">A <code>section</code> vira uma grade de 3 colunas iguais.</li><li class="f">Cada <code>article</code> é um cartão: fundo, borda, cantos e padding.</li></ul></div></div></section><section class="slide fullslide " data-fase="3-2"><div class="kicker">Fase 3-2 · No navegador</div><h2>O mesmo HTML, vestido</h2><div class="full"><div class="tela-wrap"><span>front/index.html com estilo.css</span><iframe class="tela" style="height:600px" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Vitrine · Loja de Roupas&lt;/title&gt;
+  &lt;style&gt;/* Etapa 17: o visual da loja (Aula 11) */
+
+:root {
+  --verde: #1f6f6b;
+  --tinta: #1b1c1f;
+  --fundo: #f3efe6;
+  --cartao: #fffdf8;
+  --borda: #e2dccd;
+}
+
+* { box-sizing: border-box; }       /* largura inclui padding e borda */
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--fundo);
+  line-height: 1.5;
+}
+
+/* cabeçalho: logo, nome e menu numa linha só (Flexbox) */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--verde);
+  color: #fff;
+}
+header p { font-size: 1.3rem; font-weight: 700; margin: 0; }
+nav { margin-left: auto; display: flex; gap: 20px; }
+nav a { color: #fff; }
+
+main { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+/* a vitrine: cartões em grade (Grid) */
+section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+section h2 { grid-column: 1 / -1; margin: 0; }
+
+article {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 16px;
+}
+article h3 { margin-top: 0; }
+
+button {
+  background: var(--verde);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+footer { text-align: center; padding: 24px; color: #555; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;img src=&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cGF0aCBkPSJNMjAgOCBMOCAxOCBMMTQgMjggTDIwIDI0IEwyMCA1NiBMNDQgNTYgTDQ0IDI0IEw1MCAyOCBMNTYgMTggTDQ0IDggUTMyIDE2IDIwIDggWiIKICAgICAgICBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=&quot; alt=&quot;Logotipo da Loja de Roupas: uma camiseta&quot; width=&quot;48&quot; height=&quot;48&quot;&gt;
+    &lt;p&gt;Loja de Roupas&lt;/p&gt;
+    &lt;nav aria-label=&quot;Principal&quot;&gt;
+      &lt;a href=&quot;index.html&quot;&gt;Vitrine&lt;/a&gt;
+      &lt;a href=&quot;cadastro.html&quot;&gt;Cadastrar produto&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;h1&gt;Vitrine&lt;/h1&gt;
+    &lt;p&gt;Promoção da semana: 10% em tudo. Frete grátis a partir de R$ 200.&lt;/p&gt;
+
+    &lt;section aria-labelledby=&quot;titulo-produtos&quot;&gt;
+      &lt;h2 id=&quot;titulo-produtos&quot;&gt;Produtos&lt;/h2&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Camiseta básica&lt;/h3&gt;
+        &lt;p&gt;Tamanho M · manga curta&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 39,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Calça jeans&lt;/h3&gt;
+        &lt;p&gt;Tamanho G · modelagem reta&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 129,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+
+      &lt;article&gt;
+        &lt;h3&gt;Moletom&lt;/h3&gt;
+        &lt;p&gt;Tamanho P&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;R$ 159,90&lt;/strong&gt;&lt;/p&gt;
+        &lt;button type=&quot;button&quot;&gt;Pôr no carrinho&lt;/button&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;Loja de Roupas · projeto da disciplina de Coding · Senac 2026.2&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div></div></section><section class="slide check" data-fase="3-2"><div class="kicker">FASE 3-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">61 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-2: CSS com Flexbox e Grid"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A vitrine aparece em <b>3 colunas</b>, com o topo verde e o menu à direita. O <code>pytest</code> continua com <b>61 passed</b>.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-17.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-17.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-17</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-3"><div class="map-wrap"><div class="map" data-current="3-3"></div><div class="map-info"><div class="kicker">FASE 3-3 · PRÁTICA</div><h2>Formulário</h2><p>A tela de cadastro, com os campos do POST /produtos, acessível e boa no celular.</p></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · No editor</div><h2>front/cadastro.html: o formulário</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/cadastro.html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="9,10,13,21">    &lt;form class="formulario"&gt;
+      &lt;label for="tipo"&gt;Tipo&lt;/label&gt;
+      &lt;select id="tipo" name="tipo"&gt;
+        &lt;option value="Produto"&gt;Produto&lt;/option&gt;
+        &lt;option value="Camiseta"&gt;Camiseta&lt;/option&gt;
+        &lt;option value="Calca"&gt;Calça&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;label for="nome"&gt;Nome&lt;/label&gt;
+      &lt;input id="nome" name="nome" type="text" required&gt;
+
+      &lt;label for="preco"&gt;Preço (R$)&lt;/label&gt;
+      &lt;input id="preco" name="preco" type="number" min="0.01" step="0.01" required&gt;
+
+      &lt;label for="tamanho"&gt;Tamanho&lt;/label&gt;
+      &lt;select id="tamanho" name="tamanho" required&gt;
+        &lt;option&gt;PP&lt;/option&gt;&lt;option&gt;P&lt;/option&gt;&lt;option selected&gt;M&lt;/option&gt;
+        &lt;option&gt;G&lt;/option&gt;&lt;option&gt;GG&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;button type="submit"&gt;Cadastrar&lt;/button&gt;
+    &lt;/form&gt;</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Cada <code>label for</code> aponta para o <code>id</code> do campo.</li><li class="f">Os <code>name</code> são os mesmos campos do <code>POST /produtos</code>.</li><li class="f"><code>required</code> e <code>min</code> já validam no navegador. O servidor continua validando: o navegador ajuda, não garante.</li><li class="f">O topo e o rodapé são os mesmos do <code>index.html</code>.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · No editor</div><h2>front/estilo.css: formulário e celular</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/estilo.css (final do arquivo)</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="5,19,20">/* Etapa 18: formulário e telas pequenas */
+
+.formulario {
+  display: flex;
+  flex-direction: column;     /* um campo embaixo do outro */
+  gap: 8px;
+  max-width: 420px;
+}
+.formulario input,
+.formulario select {
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+.formulario button { margin-top: 12px; align-self: flex-start; }
+
+/* celular: uma coluna de cartões e menu embaixo do nome */
+@media (max-width: 700px) {
+  section { grid-template-columns: 1fr; }
+  header { flex-wrap: wrap; }
+  nav { margin-left: 0; width: 100%; }
+}</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O formulário é uma coluna (Flexbox).</li><li class="f">Abaixo de 700 px, a vitrine vira <b>uma</b> coluna e o menu desce.</li><li class="f">Teste no DevTools com o modo celular (Ctrl+Shift+M).</li></ul></div></div></section><section class="slide fullslide " data-fase="3-3"><div class="kicker">Fase 3-3 · No navegador</div><h2>A tela de cadastro</h2><div class="full"><div class="tela-wrap"><span>front/cadastro.html</span><iframe class="tela" style="height:600px" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Cadastrar produto · Loja de Roupas&lt;/title&gt;
+  &lt;style&gt;/* Etapa 17: o visual da loja (Aula 11) */
+
+:root {
+  --verde: #1f6f6b;
+  --tinta: #1b1c1f;
+  --fundo: #f3efe6;
+  --cartao: #fffdf8;
+  --borda: #e2dccd;
+}
+
+* { box-sizing: border-box; }       /* largura inclui padding e borda */
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--tinta);
+  background: var(--fundo);
+  line-height: 1.5;
+}
+
+/* cabeçalho: logo, nome e menu numa linha só (Flexbox) */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--verde);
+  color: #fff;
+}
+header p { font-size: 1.3rem; font-weight: 700; margin: 0; }
+nav { margin-left: auto; display: flex; gap: 20px; }
+nav a { color: #fff; }
+
+main { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+/* a vitrine: cartões em grade (Grid) */
+section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+section h2 { grid-column: 1 / -1; margin: 0; }
+
+article {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 16px;
+}
+article h3 { margin-top: 0; }
+
+button {
+  background: var(--verde);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+footer { text-align: center; padding: 24px; color: #555; }
+
+/* Etapa 18: formulário e telas pequenas */
+
+.formulario {
+  display: flex;
+  flex-direction: column;     /* um campo embaixo do outro */
+  gap: 8px;
+  max-width: 420px;
+}
+.formulario input,
+.formulario select {
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+.formulario button { margin-top: 12px; align-self: flex-start; }
+
+/* celular: uma coluna de cartões e menu embaixo do nome */
+@media (max-width: 700px) {
+  section { grid-template-columns: 1fr; }
+  header { flex-wrap: wrap; }
+  nav { margin-left: 0; width: 100%; }
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;img src=&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cGF0aCBkPSJNMjAgOCBMOCAxOCBMMTQgMjggTDIwIDI0IEwyMCA1NiBMNDQgNTYgTDQ0IDI0IEw1MCAyOCBMNTYgMTggTDQ0IDggUTMyIDE2IDIwIDggWiIKICAgICAgICBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=&quot; alt=&quot;Logotipo da Loja de Roupas: uma camiseta&quot; width=&quot;48&quot; height=&quot;48&quot;&gt;
+    &lt;p&gt;Loja de Roupas&lt;/p&gt;
+    &lt;nav aria-label=&quot;Principal&quot;&gt;
+      &lt;a href=&quot;index.html&quot;&gt;Vitrine&lt;/a&gt;
+      &lt;a href=&quot;cadastro.html&quot; aria-current=&quot;page&quot;&gt;Cadastrar produto&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;h1&gt;Cadastrar produto&lt;/h1&gt;
+
+    &lt;!-- os campos são os mesmos do POST /produtos da API --&gt;
+    &lt;form class=&quot;formulario&quot;&gt;
+      &lt;label for=&quot;tipo&quot;&gt;Tipo&lt;/label&gt;
+      &lt;select id=&quot;tipo&quot; name=&quot;tipo&quot;&gt;
+        &lt;option value=&quot;Produto&quot;&gt;Produto&lt;/option&gt;
+        &lt;option value=&quot;Camiseta&quot;&gt;Camiseta&lt;/option&gt;
+        &lt;option value=&quot;Calca&quot;&gt;Calça&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;label for=&quot;nome&quot;&gt;Nome&lt;/label&gt;
+      &lt;input id=&quot;nome&quot; name=&quot;nome&quot; type=&quot;text&quot; required&gt;
+
+      &lt;label for=&quot;preco&quot;&gt;Preço (R$)&lt;/label&gt;
+      &lt;input id=&quot;preco&quot; name=&quot;preco&quot; type=&quot;number&quot; min=&quot;0.01&quot; step=&quot;0.01&quot; required&gt;
+
+      &lt;label for=&quot;tamanho&quot;&gt;Tamanho&lt;/label&gt;
+      &lt;select id=&quot;tamanho&quot; name=&quot;tamanho&quot; required&gt;
+        &lt;option&gt;PP&lt;/option&gt;&lt;option&gt;P&lt;/option&gt;&lt;option selected&gt;M&lt;/option&gt;
+        &lt;option&gt;G&lt;/option&gt;&lt;option&gt;GG&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;button type=&quot;submit&quot;&gt;Cadastrar&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;Loja de Roupas · projeto da disciplina de Coding · Senac 2026.2&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div></div></section><section class="slide fullslide " data-fase="3-3"><div class="kicker">Fase 3-3 · Passo a passo</div><h2>Conferir a página como um profissional</h2><div class="full"><div class="passos c5" style="grid-template-columns:repeat(5,1fr)"><div class="pa"><div class="n">1</div><b>Validador do W3C</b><span>validator.w3.org › Validate by File Upload: zero erros</span></div><div class="pa"><div class="n">2</div><b>DevTools › Lighthouse</b><span>marcar só "Acessibilidade" e rodar a análise</span></div><div class="pa"><div class="n">3</div><b>Meta: 90 ou mais</b><span>cada item reprovado diz o elemento e como corrigir</span></div><div class="pa"><div class="n">4</div><b>Teclado</b><span>usar só o Tab e o Enter: dá para cadastrar sem mouse?</span></div><div class="pa fim"><div class="n">5</div><b>pytest</b><span>o test_front.py confere os labels e os campos</span></div></div></div></section><section class="slide check" data-fase="3-3"><div class="kicker">FASE 3-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">66 passed</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-3: formulário acessível e responsivo"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>O <code>pytest</code> mostra <b>66 passed</b>, o validador não acusa erros e o Lighthouse dá <b>90 ou mais</b> em acessibilidade.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-18.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-18.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-18</code></span></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Laboratório da equipe</div><h2>A primeira tela do projeto de vocês</h2><div class="full"><div class="duo"><div class="card neutral"><div class="tag">O QUE FAZER</div><h3>Duas páginas em front/</h3><p>1. A <b>listagem</b> do recurso principal, com cartões em Grid. 2. O <b>formulário de cadastro</b>, com os mesmos campos do <code>POST</code> da API de vocês. Topo e rodapé iguais nas duas.</p></div><div class="card good"><div class="tag">CRITÉRIO DE PRONTO</div><h3>Para considerar entregue</h3><p>HTML semântico, <code>alt</code> e <code>label</code> em tudo, uma coluna no celular. Validador sem erros, Lighthouse 90 ou mais e o <code>test_front.py</code> passando. Push feito.</p></div></div><p class="foot f">Copiem o test_front.py da loja: ele funciona para qualquer pasta front/. O que não terminar hoje fica para casa; na Aula 12 entra o JavaScript.</p></div></section><section class="slide fullslide" data-fase=""><div class="kicker">Laboratório da equipe</div><h2>Mãos à obra</h2><div class="t-row"><div class="timer" data-min="30"><div class="t-dig">30:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Criar <code>front/index.html</code> com a listagem do recurso.</li><li class="">Criar <code>front/estilo.css</code> com o topo em Flexbox e os cartões em Grid.</li><li class="">Criar <code>front/cadastro.html</code> com os campos do POST.</li><li class="">Validador, Lighthouse e <code>pytest</code>.</li><li class="">Commit e push.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current="FIM"></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Mapa completo</h2><p>A loja ganhou vitrine e cadastro. Ainda estáticos: na Aula 12 eles reagem ao clique; na Aula 13, conversam com a API.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos agora</div><h2>A primeira tela no ar</h2><div class="full"><div class="st-row"><div class="stack"><div class="ly now"><b>Telas no navegador</b><span>HTML e CSS hoje; JavaScript depois · Aulas 11 a 13</span><i>◀ HOJE</i></div><div class="arr">▲ fetch (Aula 13) ▼</div><div class="ly done"><b>API: HTTP + REST</b><span>a porta da loja para a rede · Aula 9</span><i>✔ pronto</i></div><div class="arr">▲ chama ▼</div><div class="ly done"><b>Serviço e repositório</b><span>as camadas entre a porta e o banco · Aula 10</span><i>✔ pronto</i></div><div class="arr">▲ usa ▼</div><div class="ly done"><b>Domínio e banco</b><span>as classes e o loja.db · Aulas 5 a 10</span><i>✔ pronto</i></div></div><div><ul class="notes"><li class="f">As telas existem, mas os produtos estão <b>escritos à mão</b> no HTML.</li><li class="f">Na <b>Aula 12</b>: JavaScript, DOM e eventos. Os botões passam a responder.</li><li class="f">Na <b>Aula 13</b>: <code>fetch</code>. A vitrine busca os produtos na API.</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Fechamento</div><h2>O que cada fase construiu</h2><div class="full"><table class="t"><tr><th>Fase</th><th>Conceito</th><th>O que prova</th></tr><tr><td>1-1</td><td>HTML, CSS e JS; elemento, atributo, documento</td><td>do arquivo à tela</td></tr><tr><td>1-2</td><td>header, nav, main, section, article, footer</td><td>a tag certa para cada caso</td></tr><tr><td>1-3</td><td>acessibilidade, WCAG, alt, label</td><td>o diagnóstico do trecho</td></tr><tr><td>2-1</td><td>seletor, classe, cascata, especificidade</td><td>o botão verde</td></tr><tr><td>2-2</td><td>modelo de caixa, box-sizing, variáveis</td><td>as quatro camadas</td></tr><tr><td>2-3</td><td>Flexbox, Grid, media query</td><td>Flexbox ou Grid</td></tr><tr><td>3-1</td><td>a vitrine semântica</td><td><code>test_estrutura_semantica</code></td></tr><tr><td>3-2</td><td>o visual em Flexbox e Grid</td><td>3 colunas no computador</td></tr><tr><td>3-3</td><td>formulário acessível e responsivo</td><td>66 passed e Lighthouse 90+</td></tr></table></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para estudar</div><h2>Referências</h2><div class="full"><div class="duo"><div class="ref"><h3>BÁSICAS</h3><p>DUCKETT, J. <i>HTML e CSS: projete e construa websites</i>. Rio de Janeiro: Alta Books, 2016.</p><p>MDN WEB DOCS. <i>Estruturando a web com HTML</i>. Mozilla.<br><a href="https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/Structuring_content" target="_blank">https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/Structuring_content</a></p><p>MDN WEB DOCS. <i>O modelo de caixa</i>. Mozilla.<br><a href="https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/Styling_basics/Box_model" target="_blank">https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/Styling_basics/Box_model</a></p><p>MDN WEB DOCS. <i>Flexbox</i> e <i>Grids</i>. Mozilla.<br><a href="https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/CSS_layout" target="_blank">https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/CSS_layout</a></p></div><div class="ref"><h3>COMPLEMENTARES</h3><p>W3C. <i>Web Content Accessibility Guidelines (WCAG) 2.2</i>. 2023.<br><a href="https://www.w3.org/TR/WCAG22/" target="_blank">https://www.w3.org/TR/WCAG22/</a></p><p>BRASIL. <i>Lei nº 13.146, de 6 de julho de 2015</i> (Lei Brasileira de Inclusão), art. 63.<br><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" target="_blank">https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm</a></p><p>W3C. <i>Markup Validation Service</i>.<br><a href="https://validator.w3.org/" target="_blank">https://validator.w3.org/</a></p><p>GOOGLE. <i>Lighthouse: visão geral</i>. Chrome for Developers.<br><a href="https://developer.chrome.com/docs/lighthouse/overview" target="_blank">https://developer.chrome.com/docs/lighthouse/overview</a></p></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para deixar aberto</div><h2>Cola da aula</h2><div class="full"><div class="duo"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;header&gt; &lt;nav&gt; &lt;main&gt; &lt;section&gt; &lt;article&gt; &lt;footer&gt;
+&lt;h1&gt; um por página, títulos em ordem
+&lt;img src="..." alt="o que a imagem mostra"&gt;
+&lt;label for="x"&gt;Rótulo&lt;/label&gt;
+&lt;input id="x" name="x" required&gt;
+&lt;link rel="stylesheet" href="estilo.css"&gt;</pre></div></div><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">css</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="css" data-hl="">* { box-sizing: border-box; }
+.pai { display: flex; gap: 16px; align-items: center; }
+.pai { display: flex; flex-direction: column; }
+.grade { display: grid;
+         grid-template-columns: repeat(3, 1fr); gap: 20px; }
+@media (max-width: 700px) { .grade { grid-template-columns: 1fr; } }</pre></div></div></div></div></section></div>
+<div id="overlay"><span class="close">M ou Esc para fechar</span><div class="map"></div></div>
+<div id="prog"></div>
+<div id="ui"><button id="bMap">Mapa (M)</button><button id="bPrev">‹</button><span id="pg"></span><button id="bNext">›</button><button id="bFs">Tela cheia (F)</button></div>
+<script>window.MAPA = {"zonas": ["MUNDO 1 · HTML", "MUNDO 2 · CSS", "MUNDO 3 · PRÁTICA NA LOJA"], "fases": [["A página por dentro", "teoria"], ["HTML semântico", "teoria"], ["Acessibilidade", "teoria"], ["Seletores e cascata", "teoria"], ["Modelo de caixa", "teoria"], ["Flexbox e Grid", "teoria"], ["A vitrine", "prática"], ["O visual", "prática"], ["Formulário", "prática"]], "zbox": [[15, 60, 375], [405, 60, 370], [790, 60, 400]], "start": [40, 455], "pos": [[165, 425], [240, 295], [345, 410], [485, 300], [592, 190], [700, 300], [850, 400], [955, 300], [1090, 190]]};</script>
+<script>window.GROW=1.3;
+
+const FASES=[
+ {id:'1-1',nome:'Repositório',aula:'Roteiro 1',x:190,y:445,w:1},{id:'1-2',nome:'Vitrine',aula:'Aula 3',x:310,y:340,w:1},
+ {id:'1-3',nome:'Testes',aula:'Aula 4',x:450,y:410,w:1,boss:1},{id:'2-1',nome:'Produto',aula:'Aula 6',x:590,y:300,w:2},
+ {id:'2-2',nome:'Carrinho',aula:'Aulas 6 e 7',x:690,y:180,w:2},{id:'2-3',nome:'Herança',aula:'Aula 7',x:830,y:250,w:2,boss:1},
+ {id:'3-1',nome:'Promoções',aula:'Aula 7',x:950,y:360,w:3},{id:'3-2',nome:'Contrato',aula:'Aula 8',x:1080,y:270,w:3},
+ {id:'3-3',nome:'GitHub Actions',aula:'novo',x:1140,y:160,w:3,boss:1}];
+if(window.MAPA){window.MAPA.fases.forEach((f,i)=>{FASES[i].nome=f[0];FASES[i].aula=f[1]})}
+if(window.MAPA&&window.MAPA.pos){window.MAPA.pos.forEach((p,i)=>{FASES[i].x=p[0];FASES[i].y=p[1]})}
+const ZONAS=(window.MAPA&&window.MAPA.zonas)||['MUNDO 1 · FUNDAMENTOS','MUNDO 2 · OBJETOS','MUNDO 3 · QUALIDADE'];
+const START=(window.MAPA&&window.MAPA.start)?{x:window.MAPA.start[0],y:window.MAPA.start[1]}:{x:70,y:470};
+function catmull(pts){let d=`M${pts[0].x},${pts[0].y}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6,c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2.x},${p2.y}`}return d}
+function mapSVG(cur){
+ const idx=cur==='FIM'?FASES.length:FASES.findIndex(f=>f.id===cur);
+ const ZB=(window.MAPA&&window.MAPA.zbox)||[[30,60,500],[520,60,330],[870,40,310]];const zones=ZB.map((z,k)=>[z[0],z[1],z[2],ZONAS[k]]);
+ let g='';zones.forEach(z=>{g+=`<rect class="m-zone" x="${z[0]}" y="${z[1]}" width="${z[2]}" height="${520-z[1]}" rx="28"/><text class="m-zlab" x="${z[0]+24}" y="${z[1]+38}">${z[3]}</text>`});
+ const pts=[START,...FASES];g+=`<path class="m-path" d="${catmull(pts)}"/>`;
+ if(idx>0){const dpts=pts.slice(0,Math.min(idx,FASES.length)+1);g+=`<path class="m-done" d="${catmull(dpts)}"/>`}
+ g+=`<circle cx="${START.x}" cy="${START.y}" r="14" fill="#5cc2b8"/><text class="m-aula" x="${START.x-30}" y="${START.y+44}">início</text>`;
+ FASES.forEach((f,i)=>{const st=idx<0?'todo':i<idx?'done':i===idx?'cur':'todo';
+  let shape=f.boss?`<rect x="${f.x-30}" y="${f.y-30}" width="60" height="60" rx="10" transform="rotate(45 ${f.x} ${f.y})"/>`:`<circle cx="${f.x}" cy="${f.y}" r="30"/>`;
+  let ring=st==='cur'?`<circle class="ring" cx="${f.x}" cy="${f.y}" r="34"/>`:'';
+  let lab=st==='done'?'✓':f.id;
+  const ly=f.y+(f.y>400?-0:0);
+  g+=`<g class="m-node ${st}">${ring}${shape}<text class="m-code" x="${f.x}" y="${f.y+8}" text-anchor="middle">${lab}</text>
+   <text class="m-name" x="${f.x}" y="${f.y+66}" text-anchor="middle">${f.nome}</text><text class="m-aula" x="${f.x}" y="${f.y+90}" text-anchor="middle">${f.aula}</text></g>`});
+ const L=FASES[FASES.length-1];g+=`<line x1="${L.x+44}" y1="${L.y-10}" x2="${L.x+44}" y2="${L.y-80}" stroke="#ddd" stroke-width="4"/><path class="m-flag" d="M${L.x+46},${L.y-80} l46,14 l-46,14 z"/>`;
+ return `<svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid meet">${g}</svg>`}
+// ---------- realce de sintaxe
+const KW=new Set('False None True and as assert break class continue def elif else except finally for from global if import in is lambda not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print len sum max min list dict tuple set range isinstance super round str int float self'.split(' '));
+function hiPy(line){
+ let out='',i=0;const m=(re)=>{re.lastIndex=i;const r=re.exec(line);return r&&r.index===i?r[0]:null};
+ const reStr=/[fF]?("{3}[^]*?"{3}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/y,reCom=/#.*/y,reNum=/\d+(\.\d+)?/y,reId=/[A-Za-z_]\w*/y,reDec=/@\w+/y;
+ let prev='';
+ while(i<line.length){let t;
+  if((t=m(reCom))){out+=`<span class="c">${t}</span>`;i+=t.length;continue}
+  if((t=m(reStr))){out+=`<span class="s">${t}</span>`;i+=t.length;continue}
+  if((t=m(reDec))){out+=`<span class="d">${t}</span>`;i+=t.length;continue}
+  if((t=m(reNum))&&!/\w/.test(line[i-1]||'')){out+=`<span class="n">${t}</span>`;i+=t.length;continue}
+  if((t=m(reId))){let cls=KW.has(t)?'k':BI.has(t)?'bi':(prev==='def'||prev==='class')?'fn':'';out+=cls?`<span class="${cls}">${t}</span>`:t;prev=t;i+=t.length;continue}
+  if(line[i]!==' ')prev='';out+=line[i];i++}
+ return out}
+function tok(line,rules){let out='',i=0;while(i<line.length){let hit=false;for(const [re,cls] of rules){re.lastIndex=i;const r=re.exec(line);if(r&&r.index===i&&r[0].length){out+=cls?`<span class="${cls}">${r[0]}</span>`:r[0];i+=r[0].length;hit=true;break}}if(!hit){out+=line[i];i++}}return out}
+function hiSh(line){const m=/^(\s*)([^\s#]+)/.exec(line);if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const head=m?`${m[1]}<span class="fn">${m[2]}</span>`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/\s#.*/y,'c'],[/"[^"]*"/y,'s'],[/'[^']*'/y,'s'],[/(?<=\s)--?[\w-]+/y,'fl']])}
+function hiYml(line){if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const m=/^(\s*(?:-\s+)?)([\w-]+)(:)/.exec(line);const head=m?`${m[1]}<span class="k">${m[2]}</span>${m[3]}`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/"[^"]*"/y,'s'],[/\s#.*/y,'c']])}
+function hiMd(line){return line.replace(/^(#+.*)$/,'<span class="k">$1</span>').replace(/(`[^`]*`)/g,'<span class="s">$1</span>')}
+function parseHL(s){const set=new Set();(s||'').split(',').filter(Boolean).forEach(p=>{const [a,b]=p.split('-').map(Number);for(let k=a;k<=(b||a);k++)set.add(k)});return set}
+document.querySelectorAll('.code pre').forEach(pre=>{
+ const lang=pre.dataset.lang,hl=parseHL(pre.dataset.hl),raw=pre.textContent;pre.dataset.raw=raw;
+ const f=lang==='python'?hiPy:lang==='bash'?hiSh:lang==='yaml'?hiYml:lang==='md'?hiMd:(x=>x);
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ pre.innerHTML=raw.split('\n').map((l,i)=>`<span class="ln${hl.has(i+1)?' hl':''}">${f(esc(l))||' '}</span>`).join('')});
+// python: o realce trabalha sobre texto escapado; strings com aspas continuam válidas
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const box=b.closest('.code,.term');let txt;
+ if(box.classList.contains('term')){txt=[...box.querySelectorAll('.cmd')].map(x=>x.textContent.replace(/^\$ /,'')).join('\n')}else{txt=box.querySelector('pre').dataset.raw}
+ navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copiado';b.classList.add('done');setTimeout(()=>{b.textContent='Copiar';b.classList.remove('done')},1400)})}));
+// ---------- encaixe do código na altura disponível
+function largo(p){const pr=p.getBoundingClientRect();if(!pr.width)return false;const cs=getComputedStyle(p);const k=p.offsetWidth?pr.width/p.offsetWidth:1;const lim=pr.right-Math.max(parseFloat(cs.paddingRight),18)*k+1;
+ const w=document.createTreeWalker(p,NodeFilter.SHOW_TEXT);let n,mx=0;const r=document.createRange();while((n=w.nextNode())){if(!n.textContent.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects())mx=Math.max(mx,q.right)}return mx>lim}
+function baixo(slide,el){const r=slide.getBoundingClientRect();return el.getBoundingClientRect().bottom>r.bottom-r.height*(55/900)}
+function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);pres.forEach(p=>p.style.fontSize='');
+ const over=p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p);
+ let guard=0;while(guard<40){const slideOver=slide.scrollHeight>slide.clientHeight+2;const bad=pres.filter(p=>over(p)||slideOver);if(!bad.length)break;
+  let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>14){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
+  const fora=()=>slide.scrollHeight>slide.clientHeight+2||baixo(slide,box)||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.tip,.stack,.trilha,svg,p')].some(e=>baixo(slide,e));
+  while(fora()&&z>0.66){z-=0.04;box.style.zoom=z}}}
+function growFit(slide){if(!slide||!window.GROW)return;
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid,:scope>.t-row');if(!box)return;
+ if(box.style.zoom&&parseFloat(box.style.zoom)<1)return;
+ const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);
+ const lim=()=>{const r=slide.getBoundingClientRect();return r.bottom-r.height*(60/900)};
+ const bad=()=>slide.scrollHeight>slide.clientHeight+2||slide.scrollWidth>slide.clientWidth+2||box.getBoundingClientRect().bottom>lim()||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.rl-box,.rl-def,.tip,.ok-box,.sos,.foot,ol,p')].some(e=>e.getBoundingClientRect().bottom>lim())||pres.some(p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p))||[...box.querySelectorAll('.stack,.trilha,svg')].some(e=>baixo(slide,e));
+ let z=1;while(z<window.GROW){const n=Math.round((z+0.04)*100)/100;box.style.zoom=n;if(bad()){box.style.zoom=z===1?'':z;break}z=n}}
+// ---------- navegação
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+const deck=document.getElementById('deck');
+function scale(){const s=Math.min(innerWidth/1600,innerHeight/900);deck.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',()=>{scale();fitCode(slides[cur]);growFit(slides[cur])});scale();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{fitCode(slides[cur]);growFit(slides[cur])});
+document.querySelectorAll('.map').forEach(m=>{m.innerHTML=mapSVG(m.dataset.current||'')});
+function frags(s){return [...s.querySelectorAll('.f')]}
+function show(i,fromHash){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+ document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;document.getElementById('prog').style.width=`${(cur+1)/slides.length*100}%`;
+ if(!fromHash)history.replaceState(null,'','#'+(cur+1));requestAnimationFrame(()=>{fitCode(slides[cur]);growFit(slides[cur])})}
+function next(){const fs=frags(slides[cur]).filter(f=>!f.classList.contains('vis'));if(fs.length){fs[0].classList.add('vis');return}show(cur+1)}
+function prev(){const fs=frags(slides[cur]).filter(f=>f.classList.contains('vis'));if(fs.length){fs[fs.length-1].classList.remove('vis');return}show(cur-1)}
+function faseAtual(){for(let k=cur;k>=0;k--){if(slides[k].dataset.fase)return slides[k].dataset.fase}return ''}
+function toggleMap(){const o=document.getElementById('overlay');if(o.classList.contains('on')){o.classList.remove('on');return}
+ o.querySelector('.map').innerHTML=mapSVG(faseAtual());o.classList.add('on')}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='m'||e.key==='M')toggleMap();
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.getElementById('overlay').classList.remove('on')});
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.getElementById('bMap').onclick=toggleMap;document.getElementById('bFs').onclick=fs;
+document.getElementById('bPrev').onclick=prev;document.getElementById('bNext').onclick=next;
+document.getElementById('overlay').onclick=toggleMap;
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('.f').forEach(f=>f.classList.add('vis'))});
+document.querySelectorAll('.lab').forEach(lab=>{const bs=[...lab.querySelectorAll('.lab-steps button')],ps=[...lab.querySelectorAll('.lab-panel')];
+ bs.forEach((b,k)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));ps.forEach(x=>x.classList.remove('on'));b.classList.add('on');ps[k].classList.add('on');fitCode(lab.closest('.slide'))})});
+document.querySelectorAll('.timer').forEach(t=>{let total=+t.dataset.min*60,rest=total,id=null;const d=t.querySelector('.t-dig'),bar=t.querySelector('.t-bar i');
+ const draw=()=>{const m=Math.floor(rest/60),s=rest%60;d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');bar.style.width=(100*(total-rest)/total)+'%';t.classList.toggle('fim',rest===0)};
+ t.querySelector('.t-go').onclick=()=>{if(id){clearInterval(id);id=null;return}id=setInterval(()=>{if(rest>0){rest--;draw()}else{clearInterval(id);id=null}},1000)};
+ t.querySelector('.t-reset').onclick=()=>{clearInterval(id);id=null;rest=total;draw()};draw()});
+const h=parseInt(location.hash.slice(1));show(isNaN(h)?0:h-1,true);
+</script></body></html>

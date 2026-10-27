@@ -1,5 +1,5 @@
 {
-  "atualizado": "22 de outubro de 2026",
+  "atualizado": "27 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -206,11 +206,31 @@
           "tags": "slides pdf persistencia sqlite camadas sqlmodel crud"
         },
         {
+          "tipo": "Aula",
+          "titulo": "Aula 11: A loja ganha vitrine, HTML semântico e CSS",
+          "descricao": "Entrega 1 do projeto e o começo do front-end. Conceitos primeiro: a página por dentro, HTML semântico, acessibilidade (alt, label, WCAG), seletores e cascata, modelo de caixa, Flexbox, Grid e media query. Na prática, a vitrine e o cadastro da Loja de Roupas, conferidos com pytest, validador do W3C e Lighthouse.",
+          "arquivo": "assets/materiais/coding/aula-11-loja-ganha-vitrine.html",
+          "data": "27/10/2026",
+          "tags": "slides html semantico acessibilidade wcag alt label css seletores cascata especificidade box model flexbox grid media query responsivo lighthouse validador loja roupas entrega 1",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 11: A loja ganha vitrine (PDF)",
+          "descricao": "Os mesmos slides da Aula 11 em PDF. As telas ao vivo aparecem só na versão HTML.",
+          "arquivo": "assets/materiais/coding/aula-11-loja-ganha-vitrine.pdf",
+          "data": "27/10/2026",
+          "tags": "slides pdf html css flexbox grid acessibilidade"
+        },
+        {
           "tipo": "Projeto",
           "titulo": "Repositório da Loja de Roupas, fase por fase",
-          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API) e etapa-13 a etapa-15 (Aula 10, banco e camadas). Travou numa fase? Baixe o .zip dela na aba Tags.",
+          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API), etapa-13 a etapa-15 (Aula 10, banco e camadas) e etapa-16 a etapa-18 (Aula 11, as telas). Travou numa fase? Baixe o .zip dela na aba Tags.",
           "arquivo": "https://github.com/sebastrogers/loja-roupas-gabarito",
-          "data": "20/10/2026",
+          "data": "27/10/2026",
           "tags": "github repositorio codigo fonte gabarito tags etapa checkpoint pytest github actions loja"
         }
       ]
@@ -358,14 +378,6 @@
           "arquivo": "assets/materiais/cloud/loja-api-aula09-arquivos.zip",
           "data": "15/10/2026",
           "tags": "codigo lambda python chave x-api-key evento teste carga curl 429 index html zip"
-        },
-        {
-          "tipo": "Aula",
-          "titulo": "Aula 10: Armazenamento distribuído, estudo dirigido",
-          "descricao": "Estudo dirigido para replicar sozinho: durabilidade, objeto, bloco e arquivo, consistência, classes do S3 e regra de ciclo de vida, com a conta da economia e a limpeza dos recursos no console da AWS.",
-          "arquivo": "assets/materiais/cloud/aula-10-cloud-armazenamento-distribuido.html",
-          "data": "22/10/2026",
-          "tags": "armazenamento distribuido durabilidade disponibilidade zonas de disponibilidade consistencia replicacao s3 classes de armazenamento standard ia glacier ciclo de vida lifecycle custo estudo dirigido"
         }
       ]
     },
@@ -544,30 +556,6 @@
           "arquivo": "assets/materiais/requisitos/jogo-atelie-modelagem-petvida.html",
           "data": "15/10/2026",
           "tags": "jogo equipe interativo uml modelo de dominio classe atributo associacao multiplicidade generalizacao diagrama de atividades raias decisao guarda bifurcacao petvida"
-        },
-        {
-          "tipo": "Aula",
-          "titulo": "Aula 10: Requisitos não funcionais levados a sério",
-          "descricao": "Do desejo vago ao RNF mensurável: categorias de qualidade, a fórmula (contexto, critério, verificação), de onde vem o número e como verificar. Na prática, o Ateliê de RNF, a corrida do Plantão PetVida e os RNF do projeto entregues no Teams.",
-          "arquivo": "assets/materiais/requisitos/aula-10-req-rnf-mensuraveis.html",
-          "data": "22/10/2026",
-          "tags": "requisitos nao funcionais rnf mensuravel verificavel iso 25010 desempenho disponibilidade seguranca usabilidade criterio verificacao ddr revisao cruzada"
-        },
-        {
-          "tipo": "Jogo",
-          "titulo": "Ateliê de RNF: PetVida",
-          "descricao": "Atividade em equipe em seis estações, com a Dona Rita como cliente: classificar, tornar mensurável, achar o número e escolher como verificar cada requisito não funcional.",
-          "arquivo": "assets/materiais/requisitos/jogo-atelie-rnf-petvida.html",
-          "data": "22/10/2026",
-          "tags": "jogo equipe rnf requisitos nao funcionais mensuravel criterio verificacao desempenho disponibilidade seguranca usabilidade petvida"
-        },
-        {
-          "tipo": "Jogo",
-          "titulo": "Plantão PetVida: a versão de sábado, corrida",
-          "descricao": "Corrida entre equipes: cada equipe se divide em duas metades que trabalham em paralelo, uma na conversa com a cliente e outra nos relatórios de teste. Com as duas chaves, a equipe abre a sala de decisão. Vence quem fechar primeiro.",
-          "arquivo": "assets/materiais/requisitos/jogo-plantao-petvida.html",
-          "data": "22/10/2026",
-          "tags": "jogo corrida competicao equipe paralelo rnf criterio evidencia veredito p95 disponibilidade usabilidade pior caso decisao release placar petvida"
         }
       ]
     }
