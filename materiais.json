@@ -1,5 +1,5 @@
 {
-  "atualizado": "27 de outubro de 2026",
+  "atualizado": "29 de outubro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -378,6 +378,30 @@
           "arquivo": "assets/materiais/cloud/loja-api-aula09-arquivos.zip",
           "data": "15/10/2026",
           "tags": "codigo lambda python chave x-api-key evento teste carga curl 429 index html zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: A loja não perde arquivo, armazenamento distribuído",
+          "descricao": "Estudo dirigido: durabilidade e disponibilidade, objeto, bloco e arquivo, consistência e replicação, as classes do S3, regras de ciclo de vida e a conta da economia, com a prática no console e no CloudShell.",
+          "arquivo": "assets/materiais/cloud/aula-10-cloud-armazenamento-distribuido.html",
+          "data": "22/10/2026",
+          "tags": "slides estudo dirigido armazenamento distribuido s3 durabilidade disponibilidade zona ebs efs consistencia replicacao classes standard ia glacier ciclo de vida custo cloudshell"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 11: A loja ganha um banco, NoSQL com DynamoDB",
+          "descricao": "Retomada do armazenamento distribuído, relacional x NoSQL, partição e consistência, tabela, item e chave no DynamoDB, Query x Scan, gravação condicional, papel de execução e custo sob demanda, com a loja-api lendo e gravando na tabela.",
+          "arquivo": "assets/materiais/cloud/aula-11-cloud-loja-ganha-banco.html",
+          "data": "29/10/2026",
+          "tags": "slides nosql dynamodb tabela item chave particao consistencia query scan boto3 iam papel politica custo on-demand lambda api"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "A loja ganha um banco: arquivos da aula",
+          "descricao": "A loja-api lendo e gravando no DynamoDB, os produtos no formato do banco, o script que cria e carrega a tabela no CloudShell e a política de permissão da função.",
+          "arquivo": "assets/materiais/cloud/loja-api-aula11-arquivos.zip",
+          "data": "29/10/2026",
+          "tags": "codigo lambda python boto3 dynamodb itens json cloudshell politica iam zip"
         }
       ]
     },
@@ -556,6 +580,38 @@
           "arquivo": "assets/materiais/requisitos/jogo-atelie-modelagem-petvida.html",
           "data": "15/10/2026",
           "tags": "jogo equipe interativo uml modelo de dominio classe atributo associacao multiplicidade generalizacao diagrama de atividades raias decisao guarda bifurcacao petvida"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 10: Requisitos não funcionais levados a sério",
+          "descricao": "Funcional x não funcional, as categorias da ISO/IEC 25010, por que a média engana, a fórmula contexto, critério e verificação, de onde vem o número e os quatro métodos de verificação, com a seção de RNF mensuráveis do DDR.",
+          "arquivo": "assets/materiais/requisitos/aula-10-req-rnf-mensuraveis.html",
+          "data": "22/10/2026",
+          "tags": "slides rnf requisito nao funcional iso 25010 desempenho seguranca usabilidade confiabilidade portabilidade metrica contexto criterio verificacao teste inspecao analise demonstracao ddr"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Ateliê de RNF: PetVida",
+          "descricao": "Atividade em equipe em seis estações com a Dona Rita: do desejo vago ao requisito não funcional com contexto, critério e verificação.",
+          "arquivo": "assets/materiais/requisitos/jogo-atelie-rnf-petvida.html",
+          "data": "22/10/2026",
+          "tags": "jogo equipe interativo rnf requisito nao funcional metrica verificacao petvida"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Plantão PetVida: libera ou segura a versão?",
+          "descricao": "Corrida entre equipes em duas metades: analistas descobrem os números com a cliente, testadores leem os relatórios de teste, e a equipe decide se a versão vai ao ar.",
+          "arquivo": "assets/materiais/requisitos/jogo-plantao-petvida.html",
+          "data": "22/10/2026",
+          "tags": "jogo equipe corrida rnf teste desempenho disponibilidade seguranca usabilidade decisao petvida"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 11: Mostrar antes de construir, prototipação e validação",
+          "descricao": "Verificação x validação, técnicas de validação, protótipo descartável e evolutivo, baixa e alta fidelidade, do caso de uso às telas, sessão com usuário e registro de achados, com a prática do protótipo de papel e a seção de validação no DDR.",
+          "arquivo": "assets/materiais/requisitos/aula-11-req-mostrar-antes-de-construir.html",
+          "data": "29/10/2026",
+          "tags": "slides validacao verificacao prototipo prototipacao wireframe fidelidade storyboard teste com usuario achados ddr"
         }
       ]
     }
