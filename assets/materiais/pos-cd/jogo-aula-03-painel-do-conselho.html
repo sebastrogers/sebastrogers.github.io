@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O Painel do Conselho · Lumen Varejo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#004A8D;--navy2:#003366;--orange:#F7941D;--orange2:#B35A00;--bg:#F4F4EF;--ink:#141414;--muted:#4A4A45;--line:#DDDBD2;--ok:#1F7A4D;--bad:#B3261E}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.45}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+/* topo */
+#hud{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;border-top:6px solid var(--orange)}
+#hud .in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+#hud .brand{font-weight:800;letter-spacing:.5px}
+#hud .brand small{display:block;font-weight:600;font-size:12px;color:#BFD3EA;letter-spacing:1.5px;text-transform:uppercase}
+#hud .sp{flex:1}
+.meter{min-width:210px}
+.meter .lab{font-size:12px;color:#BFD3EA;text-transform:uppercase;letter-spacing:1.2px;display:flex;justify-content:space-between}
+.meter .bar{height:10px;background:#16467A;border-radius:6px;overflow:hidden;margin-top:4px}
+.meter .fill{height:100%;background:var(--orange);width:50%;transition:width .6s}
+.pill{background:#16467A;border-radius:20px;padding:6px 12px;font-weight:700;font-size:14px}
+.iconbtn{background:#16467A;border:0;color:#fff;border-radius:20px;padding:6px 12px;font-weight:700;font-size:14px}
+.iconbtn:focus-visible,.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+#prog{height:5px;background:#DDDBD2}#prog div{height:100%;background:var(--orange);width:0;transition:width .5s}
+main{max-width:1080px;margin:0 auto;padding:22px 18px 60px}
+/* cartões */
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:13px 22px;font-weight:700;font-size:17px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.kicker{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange2)}
+h1{font-size:34px;line-height:1.15;color:var(--navy);font-weight:800}
+h2{font-size:26px;line-height:1.2;color:var(--navy);font-weight:800}
+.muted{color:var(--muted)}
+/* login */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#003366 0%,#004A8D 60%,#0B5DA8 100%);padding:20px}
+#login .box{background:#fff;border-radius:16px;max-width:520px;width:100%;padding:34px;border-top:8px solid var(--orange)}
+#login label{display:block;font-weight:700;margin:16px 0 6px}
+#login input{width:100%;font:inherit;padding:12px 14px;border:2px solid var(--line);border-radius:8px}
+#login input:focus{outline:none;border-color:var(--navy)}
+.badge{display:inline-block;background:#E6EEF7;color:var(--navy);font-weight:700;font-size:13px;border-radius:20px;padding:5px 12px;margin-bottom:14px}
+/* mensagem */
+.msg{display:flex;gap:14px;align-items:flex-start}
+.av{width:52px;height:52px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:14px 18px;flex:1}
+.who{font-weight:800}.who span{font-weight:600;color:var(--muted);font-size:14px}
+.typing:after{content:"▍";animation:blink 1s infinite;color:var(--orange)}@keyframes blink{50%{opacity:0}}
+.chart{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:16px 0 0 66px;max-width:640px}
+.chart svg{width:100%;height:auto;display:block}
+.task{margin:18px 0 0 66px}
+.q{font-weight:700;margin-bottom:10px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:13px 16px;font-size:16.5px;display:flex;gap:12px;align-items:flex-start}
+.opt:disabled,.pbtn:disabled{color:var(--ink);opacity:1}
+.chip:disabled:not(.ok):not(.bad){color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--navy)}
+.opt .l{flex:none;width:28px;height:28px;border-radius:50%;background:#E6EEF7;color:var(--navy);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+.opt.sel{border-color:var(--navy);background:#EEF4FB}
+.opt.ok{border-color:var(--ok);background:#E8F4EE}.opt.ok .l{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:#FBECEA}.opt.bad .l{background:var(--bad);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.item{background:#fff;border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.item .t{margin-bottom:8px}
+.chip{background:#fff;border:2px solid var(--line);border-radius:20px;padding:7px 13px;font-size:15px;font-weight:600;color:var(--ink)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.chip.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.res{font-size:14.5px;margin-top:6px}
+.res.ok{color:var(--ok)}.res.bad{color:var(--bad)}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pcol h4{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.pbtn{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;font-size:15.5px}
+.pbtn.act{border-color:var(--orange);background:#FFF4E6}
+.pbtn .tag{display:inline-block;min-width:22px;text-align:center;border-radius:5px;margin-right:8px;font-weight:800;font-size:13px;padding:1px 5px;color:#fff}
+.seqi{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.seqi .n{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.seqi .tx{flex:1}
+.seqi button{border:2px solid var(--line);background:#fff;border-radius:8px;width:38px;height:34px;font-weight:800}
+.seqi.ok{border-color:var(--ok)}.seqi.bad{border-color:var(--bad)}
+.numin{display:flex;gap:10px;align-items:center}
+.numin input{font:inherit;font-size:22px;width:180px;padding:10px 12px;border:2px solid var(--line);border-radius:8px;font-family:"Roboto Mono",monospace}
+.hint{background:#FFF4E6;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:15.5px}
+.fb{margin:20px 0 0 66px;border-radius:12px;padding:18px 20px;border:2px solid}
+.fb.ok{background:#E8F4EE;border-color:var(--ok)}.fb.bad{background:#FBECEA;border-color:var(--bad)}.fb.mid{background:#FFF4E6;border-color:var(--orange)}
+.fb .h{font-weight:800;font-size:19px;margin-bottom:6px}
+.fb .said{font-style:italic;margin-top:10px;color:#222}
+.actions{margin:18px 0 0 66px;display:flex;gap:10px;flex-wrap:wrap}
+/* dia */
+.daycard{background:var(--navy);color:#fff;border-radius:16px;padding:34px;border-top:8px solid var(--orange)}
+.daycard h1{color:#fff}.daycard .kicker{color:var(--orange)}
+.daycard p{color:#D3E1F2;font-size:19px;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.stat b{display:block;font-size:44px;line-height:1;color:var(--navy);font-weight:800}
+.stat span{color:var(--muted);font-size:14px}
+.final-big{font-size:96px;font-weight:800;color:var(--navy);line-height:1}
+.status{margin-top:12px;font-weight:700}
+.email{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.email .eh{background:#F1F3F4;padding:12px 18px;border-bottom:1px solid var(--line);font-size:14.5px;color:var(--muted)}
+.email .eb{padding:20px 22px;font-size:17px}
+.email .eb p{margin-bottom:10px}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:14px 0}
+.person{display:flex;gap:10px;align-items:center;background:#F7F7F4;border-radius:10px;padding:8px 10px}
+.person .av{width:40px;height:40px;font-size:14px}
+@media (max-width:640px){
+ h1{font-size:27px}.chart,.task,.fb,.actions{margin-left:0}.av{width:42px;height:42px;font-size:15px}
+ .pairs{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.meter{min-width:150px}.final-big{font-size:72px}
+}
+</style>
+</head>
+<body>
+<section id="login">
+ <div class="box">
+  <span class="badge">MBA em Ciência de Dados e IA · Senac Pernambuco</span>
+  <p class="kicker">UC5 · Visualização de Dados e Data Storytelling</p>
+  <h1 style="margin:6px 0 10px">O Painel do Conselho: Lumen Varejo</h1>
+  <p class="muted">Quatro dias para preparar o painel que a Lumen leva ao conselho. Cada decisão sua muda a confiança da diretoria. São 17 situações, cerca de 15 minutos, sobre storytelling, indicadores, design e ética.</p>
+  <form id="fLogin" autocomplete="on">
+   <label for="nome">Seu nome completo</label>
+   <input id="nome" name="nome" required maxlength="80" placeholder="Ex.: Ana Beatriz Souza">
+   <label for="mat">Matrícula ou turma</label>
+   <input id="mat" name="mat" maxlength="40" placeholder="Ex.: MBA CD&amp;IA 2026.2">
+   <p class="muted" style="font-size:14px;margin-top:10px">É só identificação para o professor, não precisa de senha.</p>
+   <div class="row" style="margin-top:18px"><button class="btn" type="submit">Entrar na Lumen</button><button class="btn alt hidden" type="button" id="btnReset">Recomeçar do zero</button></div>
+  </form>
+ </div>
+</section>
+
+<div id="app" class="hidden">
+ <header id="hud"><div class="in">
+  <div class="brand">Lumen Varejo<small>O Painel do Conselho</small></div>
+  <div class="pill" id="hDia">Dia 1</div>
+  <div class="pill" id="hQ">1/33</div>
+  <div class="sp"></div>
+  <div class="meter" aria-label="Confiança da diretoria"><div class="lab"><span>Confiança da diretoria</span><span id="hConf">50</span></div><div class="bar"><div class="fill" id="hFill"></div></div></div>
+  <button class="iconbtn" id="btnSom" aria-pressed="true" title="Ligar ou desligar o som">Som: sim</button>
+ </div></header>
+ <div id="prog"><div id="progFill"></div></div>
+ <main id="tela"></main>
+</div>
+
+<script>
+// Conteúdo do jogo "O Painel do Conselho: Lumen Varejo" (Aula 3, UC5)
+const PERSONAGENS = {
+  helena: { nome: 'Helena Prado', cargo: 'CEO', cor: '#004A8D', ini: 'HP' },
+  rafael: { nome: 'Rafael Lins', cargo: 'Diretor de Marketing', cor: '#B35A00', ini: 'RL' },
+  bia: { nome: 'Bia Araújo', cargo: 'Analista júnior', cor: '#1F7A4D', ini: 'BA' },
+  paulo: { nome: 'Paulo Menezes', cargo: 'Compliance', cor: '#6B3FA0', ini: 'PM' },
+  carla: { nome: 'Carla Ventura', cargo: 'Diretora Financeira', cor: '#8A5A00', ini: 'CV' },
+  jornal: { nome: 'Jornal do Agreste', cargo: 'Repórter de economia', cor: '#4A4A45', ini: 'JA' },
+};
+
+const DIAS = [
+  { titulo: 'Dia 1 · A pauta do conselho', sub: 'Storytelling: público, grande ideia e ordem da fala' },
+  { titulo: 'Dia 2 · Os números certos', sub: 'Indicadores: métrica, KPI, comparação e média' },
+  { titulo: 'Dia 3 · A montagem do painel', sub: 'Design: leitura em Z, celular, título e limpeza' },
+  { titulo: 'Dia 4 · A reunião do conselho', sub: 'Ética e fala: eixo, mapa, limites e LGPD' },
+];
+
+const DESAFIOS = [
+ {
+  "dia": 0,
+  "tipo": "mcq",
+  "quem": "helena",
+  "titulo": "Antes de abrir a ferramenta",
+  "contexto": "Na segunda-feira levo o painel de vendas ao conselho. Antes de abrir qualquer ferramenta, o que você define primeiro?",
+  "opcoes": [
+   "Quem decide, o que já sabe e o que precisa fazer",
+   "Quais cores e fontes o painel vai usar no topo",
+   "Quantos gráficos cabem na tela sem rolar a página",
+   "Qual ferramenta gera o painel mais rápido hoje"
+  ],
+  "correta": 0,
+  "explicacao": "Knaflic: o primeiro passo é o público. Quem decide, o que já sabe e o que precisa fazer depois de ouvir você. Cor, layout e ferramenta vêm depois.",
+  "acerto": "Helena: \"Exato. Pense em mim e no conselho, não no software.\"",
+  "erro": "Helena: \"Ainda não sei para quem é esse painel. Comece por mim.\""
+ },
+ {
+  "dia": 0,
+  "tipo": "mcq",
+  "quem": "helena",
+  "titulo": "Uma frase para o conselho",
+  "contexto": "Preciso de uma frase só, que eu consiga repetir no conselho. Qual é a grande ideia do painel?",
+  "opcoes": [
+   "Vendas da Lumen por loja, canal e mês em 2026",
+   "Caruaru gerou metade do aumento; vale replicar",
+   "Painel completo de indicadores comerciais da rede",
+   "Análise detalhada da receita de jan a set de 2026"
+  ],
+  "correta": 1,
+  "explicacao": "A grande ideia é uma frase completa, com ponto de vista e o que está em jogo. As outras dizem apenas o assunto.",
+  "acerto": "Helena: \"Essa eu repito de cabeça.\"",
+  "erro": "Helena: \"Isso é o assunto. Qual é a conclusão?\""
+ },
+ {
+  "dia": 0,
+  "tipo": "mcq",
+  "quem": "rafael",
+  "titulo": "Cinco minutos com a CEO",
+  "contexto": "Consegui cinco minutos com a Helena antes do conselho. Como você começa a fala?",
+  "opcoes": [
+   "Pelo histórico da rede desde a primeira loja",
+   "Pela metodologia e pelas fontes dos dados",
+   "Pela recomendação, e depois mostra os números",
+   "Pelos 20 gráficos, na ordem em que foram feitos"
+  ],
+  "correta": 2,
+  "explicacao": "Situação, complicação e resolução é a ordem da descoberta. Na fala para quem decide, a resolução vem primeiro e o gráfico entra como prova.",
+  "acerto": "Rafael: \"Ela entendeu no primeiro minuto.\"",
+  "erro": "Rafael: \"Os cinco minutos acabaram antes da recomendação.\""
+ },
+ {
+  "dia": 0,
+  "tipo": "cat",
+  "quem": "bia",
+  "titulo": "Situação, complicação ou resolução?",
+  "contexto": "Estou organizando a fala do conselho. Classifique cada frase na parte da estrutura em que ela entra.",
+  "categorias": [
+   "Situação",
+   "Complicação",
+   "Resolução"
+  ],
+  "itens": [
+   {
+    "texto": "A Lumen cresceu 28% de janeiro a setembro",
+    "categoria": "Situação",
+    "explicacao": "É o contexto: o que estava acontecendo."
+   },
+   {
+    "texto": "A rede tem 12 lojas em nove estados do Nordeste",
+    "categoria": "Situação",
+    "explicacao": "Contexto que o conselho já conhece."
+   },
+   {
+    "texto": "Caruaru responde por mais da metade do aumento",
+    "categoria": "Complicação",
+    "explicacao": "Mostra que o crescimento não é parelho."
+   },
+   {
+    "texto": "Maceió e Natal encolheram no período",
+    "categoria": "Complicação",
+    "explicacao": "É o que preocupa e pede uma decisão."
+   },
+   {
+    "texto": "Estudar Caruaru e levar o modelo às outras lojas",
+    "categoria": "Resolução",
+    "explicacao": "É o que fazer: a recomendação."
+   }
+  ]
+ },
+ {
+  "dia": 1,
+  "tipo": "cat",
+  "quem": "carla",
+  "titulo": "Métrica ou KPI?",
+  "contexto": "Montei a lista de números do painel. Separe o que é só métrica do que já é KPI.",
+  "categorias": [
+   "Métrica",
+   "KPI"
+  ],
+  "itens": [
+   {
+    "texto": "Número de pedidos no mês, sem meta nem comparação",
+    "categoria": "Métrica",
+    "explicacao": "Um número solto não diz se é bom ou ruim."
+   },
+   {
+    "texto": "Receita jan–set contra 2025, acompanhada pela diretoria comercial",
+    "categoria": "KPI",
+    "explicacao": "Tem comparação e um responsável que age."
+   },
+   {
+    "texto": "Valor médio do frete por pedido",
+    "categoria": "Métrica",
+    "explicacao": "Sem meta e sem responsável, é apenas uma medida."
+   },
+   {
+    "texto": "Prazo de entrega com meta de 5 dias e dono na logística",
+    "categoria": "KPI",
+    "explicacao": "Tem meta e alguém que age quando passa do limite."
+   },
+   {
+    "texto": "Nota média dos clientes, sem referência",
+    "categoria": "Métrica",
+    "explicacao": "4,4 pode ser bom ou ruim: falta comparação."
+   }
+  ]
+ },
+ {
+  "dia": 1,
+  "tipo": "mcq",
+  "quem": "carla",
+  "titulo": "Comparar com o quê?",
+  "contexto": "Temos vendas até 30 de setembro de 2026. Para mostrar o crescimento, comparo jan–set de 2026 com qual período?",
+  "opcoes": [
+   "O ano de 2025 inteiro, de janeiro a dezembro",
+   "Jan a set de 2025, na mesma janela de tempo",
+   "Os três últimos meses de 2025, de out a dez",
+   "A média mensal dos dois anos, sem separar"
+  ],
+  "correta": 1,
+  "explicacao": "O ano anterior só vale na mesma janela. Comparar nove meses com doze faria a Lumen parecer em queda.",
+  "acerto": "Carla: \"Mesma janela. Agora o número fecha com o financeiro.\"",
+  "erro": "Carla: \"Assim parece que caímos 20%. O conselho vai entrar em pânico.\""
+ },
+ {
+  "dia": 1,
+  "tipo": "mcq",
+  "quem": "bia",
+  "titulo": "A média de 28%",
+  "contexto": "A rede cresceu 28%. Posso dizer no painel que as lojas cresceram cerca de 28%?",
+  "opcoes": [
+   "Sim, a média representa bem todas as lojas",
+   "Sim, desde que a mediana também seja 28%",
+   "Não antes de olhar a variação de cada loja",
+   "Não, porque a média só vale com 30 lojas"
+  ],
+  "correta": 2,
+  "explicacao": "Desagregue antes de concluir. Caruaru cresceu 155%; sem ela, a rede cresceu 15%; Maceió e Natal encolheram. Nenhuma loja vive a média.",
+  "acerto": "Bia: \"Abri por loja. Caruaru estava escondida na média!\"",
+  "erro": "Bia: \"Publiquei e o gerente de Maceió perguntou que crescimento era esse.\""
+ },
+ {
+  "dia": 1,
+  "tipo": "mcq",
+  "quem": "paulo",
+  "titulo": "O semáforo amarelo",
+  "contexto": "O painel mostra um círculo amarelo no prazo de entrega, sem nenhum texto. O que falta?",
+  "opcoes": [
+   "Um tom de amarelo mais forte e mais visível",
+   "Trocar o amarelo por laranja em todo o painel",
+   "Uma animação piscando quando o valor mudar",
+   "O limite escrito, o valor e o status em texto"
+  ],
+  "correta": 3,
+  "explicacao": "Cor sem regra não informa. Escreva o valor, a meta e o status (por exemplo, 5,4 dias, meta 5, Atenção), para que o painel funcione também sem cor.",
+  "acerto": "Paulo: \"Agora qualquer gerente entende, inclusive quem não distingue cores.\"",
+  "erro": "Paulo: \"Amarelo quer dizer o quê? Ninguém soube responder.\""
+ },
+ {
+  "dia": 2,
+  "tipo": "mcq",
+  "quem": "rafael",
+  "titulo": "Onde vai a recomendação?",
+  "contexto": "Estou diagramando o painel. Título e KPIs ficam no topo. Onde coloco a recomendação?",
+  "opcoes": [
+   "No canto inferior direito, fim da leitura",
+   "No rodapé à esquerda, em letra bem pequena",
+   "Numa segunda página, para não poluir a tela",
+   "No meio dos gráficos, com a mesma fonte deles"
+  ],
+  "correta": 0,
+  "explicacao": "O olho percorre a tela em Z: começa no alto à esquerda e termina embaixo à direita. A recomendação fecha a leitura ali.",
+  "acerto": "Rafael: \"Agora o painel termina numa decisão.\"",
+  "erro": "Rafael: \"A Helena nem viu a recomendação.\""
+ },
+ {
+  "dia": 2,
+  "tipo": "mcq",
+  "quem": "helena",
+  "titulo": "O painel no celular",
+  "contexto": "Vou abrir o painel no celular, no carro, a caminho do conselho. O que muda na versão de celular?",
+  "opcoes": [
+   "A mesma tela do computador, só que reduzida",
+   "Uma coluna, na ordem de leitura, poucos KPIs",
+   "Mais filtros, para eu escolher o que quero ver",
+   "Uma tabela com todos os números da rede"
+  ],
+  "correta": 1,
+  "explicacao": "No celular, o Z vira uma coluna: título, até três KPIs, um gráfico simples e a recomendação, na mesma ordem.",
+  "acerto": "Helena: \"Li tudo antes de chegar.\"",
+  "erro": "Helena: \"Não consegui ler nada na tela pequena.\""
+ },
+ {
+  "dia": 2,
+  "tipo": "mcq",
+  "quem": "bia",
+  "titulo": "O título do gráfico",
+  "contexto": "Terminei o gráfico de variação da receita por loja. Qual título eu coloco?",
+  "opcoes": [
+   "Variação da receita por loja em 2026",
+   "Gráfico de barras com a receita das lojas",
+   "Só Caruaru cresceu mais de 40% em jan–set",
+   "Lojas da Lumen: comparativo 2025 e 2026"
+  ],
+  "correta": 2,
+  "explicacao": "Título-conclusão diz o que o gráfico prova. Os outros só dizem o assunto e deixam o leitor descobrir sozinho.",
+  "acerto": "Bia: \"O título já faz metade da explicação.\"",
+  "erro": "Bia: \"A Helena perguntou: e daí?\""
+ },
+ {
+  "dia": 2,
+  "tipo": "cat",
+  "quem": "rafael",
+  "titulo": "Antes e depois",
+  "contexto": "Recebi um gráfico cheio de efeitos. Classifique cada decisão: ajuda ou atrapalha a leitura?",
+  "categorias": [
+   "Ajuda a leitura",
+   "Atrapalha a leitura"
+  ],
+  "itens": [
+   {
+    "texto": "Cinza para o contexto e laranja para o destaque",
+    "categoria": "Ajuda a leitura",
+    "explicacao": "A cor aponta onde está a mensagem."
+   },
+   {
+    "texto": "Grade escura atrás de todas as barras",
+    "categoria": "Atrapalha a leitura",
+    "explicacao": "A grade compete com o dado."
+   },
+   {
+    "texto": "Rótulo do valor direto no fim da barra",
+    "categoria": "Ajuda a leitura",
+    "explicacao": "Dispensa o leitor de ir e voltar ao eixo."
+   },
+   {
+    "texto": "Seis cores diferentes, sem significado",
+    "categoria": "Atrapalha a leitura",
+    "explicacao": "Cor sem significado distrai e confunde."
+   },
+   {
+    "texto": "Hachura e contorno grosso nas barras",
+    "categoria": "Atrapalha a leitura",
+    "explicacao": "Tinta que não é dado só pesa o gráfico."
+   },
+   {
+    "texto": "Título que diz a conclusão",
+    "categoria": "Ajuda a leitura",
+    "explicacao": "O leitor sabe o que procurar antes de olhar."
+   }
+  ]
+ },
+ {
+  "dia": 3,
+  "tipo": "mcq",
+  "quem": "paulo",
+  "titulo": "O eixo em R$ 200 mil",
+  "contexto": "Barras de receita: Salvador R$ 228 mil e Recife R$ 274 mil, com o eixo começando em R$ 200 mil. Qual é o problema?",
+  "opcoes": [
+   "Recife parece 2,6× Salvador, mas é só 20% maior",
+   "As duas barras deveriam ter a mesma cor sempre",
+   "Faltou mostrar os valores com os centavos exatos",
+   "O gráfico deveria ser de pizza com duas fatias"
+  ],
+  "correta": 0,
+  "explicacao": "Em barras, o comprimento é o valor. Acima do corte, Recife mede 74 e Salvador 28: a barra exagera a diferença. Comece o eixo em zero.",
+  "acerto": "Paulo: \"Eixo em zero. Aprovado.\"",
+  "erro": "Paulo: \"Salvador reclamou, e com razão.\""
+ },
+ {
+  "dia": 3,
+  "tipo": "mcq",
+  "quem": "jornal",
+  "titulo": "O mapa dos clientes",
+  "contexto": "Vou publicar um mapa do Nordeste pintado pela receita total da Lumen por estado do cliente. Está bom assim?",
+  "opcoes": [
+   "Sim, o total já mostra onde o cliente compra mais",
+   "Melhor normalizar por 100 mil habitantes",
+   "Melhor usar o arco-íris para destacar os estados",
+   "Sim, desde que a legenda fique no canto do mapa"
+  ],
+  "correta": 1,
+  "explicacao": "Mapa pelo total mostra, sobretudo, onde mora mais gente. Receita por 100 mil habitantes compara estados de tamanhos diferentes.",
+  "acerto": "Repórter: \"Com a normalização, o ranking mudou. Bem melhor.\"",
+  "erro": "Repórter: \"Publiquei e era só um mapa da população.\""
+ },
+ {
+  "dia": 3,
+  "tipo": "mcq",
+  "quem": "helena",
+  "titulo": "O que contraria a tese",
+  "contexto": "Na fala ao conselho, devo dizer que Maceió e Natal encolheram, mesmo que isso não ajude a recomendação?",
+  "opcoes": [
+   "Não, isso enfraquece a recomendação final",
+   "Só se o conselho perguntar diretamente",
+   "Sim, mostrar o que contraria dá confiança",
+   "Não, basta mostrar a média da rede inteira"
+  ],
+  "correta": 2,
+  "explicacao": "Esconder o que contraria a conclusão tira a confiança quando alguém descobre. Dizer os limites mostra que a análise é honesta.",
+  "acerto": "Helena: \"O conselho confiou mais porque você não escondeu nada.\"",
+  "erro": "Helena: \"Um conselheiro achou Maceió sozinho. Ficou o constrangimento.\""
+ },
+ {
+  "dia": 3,
+  "tipo": "mcq",
+  "quem": "paulo",
+  "titulo": "Os nomes dos clientes",
+  "contexto": "Um conselheiro pediu um painel com as compras de cada cliente, identificado pelo nome. O que você faz?",
+  "opcoes": [
+   "Mostra os nomes, já que o painel é interno",
+   "Mostra só os 10 clientes que mais compraram",
+   "Mostra os nomes, mas com uma fonte menor",
+   "Agrega os dados, sem identificar ninguém"
+  ],
+  "correta": 3,
+  "explicacao": "Pela LGPD (Lei Geral de Proteção de Dados), nome e histórico de compras são dados pessoais. Para decidir onde investir, o agregado basta: use só o necessário.",
+  "acerto": "Paulo: \"Agregado e suficiente. Assim passa no compliance.\"",
+  "erro": "Paulo: \"Painel interno também vaza. Não posso aprovar.\""
+ },
+ {
+  "dia": 3,
+  "tipo": "mcq",
+  "quem": "helena",
+  "titulo": "Trinta segundos",
+  "contexto": "O conselho atrasou e você tem 30 segundos. O que você diz?",
+  "opcoes": [
+   "Caruaru puxou o aumento: vamos estudá-la",
+   "A Lumen tem 12 lojas e três canais de venda",
+   "Fiz 20 gráficos, e o painel tem cinco abas",
+   "Os dados vêm do sistema de vendas da rede"
+  ],
+  "correta": 0,
+  "explicacao": "Em 30 segundos, só cabe a grande ideia com a recomendação. Contexto, método e fonte ficam para as perguntas.",
+  "acerto": "Helena: \"Aprovado. Vamos estudar Caruaru.\"",
+  "erro": "Helena: \"O tempo acabou e ninguém soube o que decidir.\""
+ }
+];
+
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzyVDcweu9eO6c8CztBCIj8y6hj1MXWVpWr0aFmXn_jrE3AYJC-BG7gc3OnsYiz6gbY/exec';
+const DISCIPLINA = 'UC5 Visualização de Dados e Data Storytelling (MBA CD&IA)';
+const AULA = 'Aula 3 · O Painel do Conselho';
+const KEY = 'senac-uc5-aula3-conselho';
+const TOTAL = DESAFIOS.length;
+
+let S = load() || { nome:'', mat:'', i:0, pontos:0, conf:50, res:[], fase:'brief', enviado:false };
+let som = (()=>{ try { return localStorage.getItem(KEY+'-som') !== '0'; } catch(e){ return true; } })();
+
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch(e){ return null; } }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+const primeiro = () => (S.nome||'').trim().split(/\s+/)[0] || 'analista';
+
+/* ---------- som ---------- */
+let AC=null;
+function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+function tom(f, t0, d, tipo='triangle', v=0.06){ const c=ac(); if(!c||!som) return; const o=c.createOscillator(), g=c.createGain(); o.type=tipo; o.frequency.value=f; g.gain.setValueAtTime(0,c.currentTime+t0); g.gain.linearRampToValueAtTime(v,c.currentTime+t0+0.01); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+t0+d); o.connect(g).connect(c.destination); o.start(c.currentTime+t0); o.stop(c.currentTime+t0+d+0.05); }
+const sfx = {
+ ok(){ tom(659,0,.12); tom(880,.1,.18); tom(1175,.2,.25); },
+ bad(){ tom(220,0,.25,'square',.04); tom(185,.15,.3,'square',.04); },
+ mid(){ tom(523,0,.15); tom(659,.12,.2); },
+ click(){ tom(1200,0,.04,'sine',.03); },
+ msg(){ tom(988,0,.06,'sine',.035); tom(1319,.07,.08,'sine',.03); },
+ dia(){ [523,659,784,1047].forEach((f,k)=>tom(f,k*.12,.3,'triangle',.05)); },
+};
+function updSom(){ const b=$('#btnSom'); b.textContent='Som: '+(som?'sim':'não'); b.setAttribute('aria-pressed', som); }
+
+/* ---------- HUD ---------- */
+function hud(){
+ const d = DESAFIOS[Math.min(S.i,TOTAL-1)];
+ $('#hDia').textContent = 'Dia ' + ((d?d.dia:4)+1) + ' de '+DIAS.length;
+ $('#hQ').textContent = Math.min(S.i+1,TOTAL) + '/' + TOTAL;
+ $('#hConf').textContent = Math.round(S.conf);
+ $('#hFill').style.width = S.conf + '%';
+ $('#hFill').style.background = S.conf>=60 ? '#F7941D' : (S.conf>=35 ? '#E5B13A' : '#E0544C');
+ $('#progFill').style.width = (S.i/TOTAL*100) + '%';
+}
+
+/* ---------- gráficos ---------- */
+const G = {
+ pizza(){
+  const v=[27,24,22,17,10], cores=['#004A8D','#F7941D','#1BAF7A','#8A8A85','#6250D6'], nomes=['Marca A','Lumen','Marca C','Marca D','Marca E'];
+  let a=-Math.PI/2, p='';
+  v.forEach((x,k)=>{ const b=a+x/100*2*Math.PI; const l=b-a>Math.PI?1:0; p+=`<path d="M150 150 L${150+130*Math.cos(a)} ${150+130*Math.sin(a)} A130 130 0 ${l} 1 ${150+130*Math.cos(b)} ${150+130*Math.sin(b)} Z" fill="${cores[k]}" stroke="#fff" stroke-width="3"/>`; a=b; });
+  const leg = nomes.map((n,k)=>`<rect x="330" y="${60+k*40}" width="22" height="22" rx="4" fill="${cores[k]}"/><text x="362" y="${77+k*40}" font-size="18" fill="#141414">${n}</text>`).join('');
+  return `<svg viewBox="0 0 520 300" role="img" aria-label="Gráfico de pizza com cinco marcas, sem valores">${p}${leg}</svg>`;
+ },
+ espaguete(){
+  const cores=['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4','#46f0f0','#f032e6','#bcf60c','#fabebe','#008080','#9a6324'];
+  let s=''; let seed=7; const r=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+  for(let k=0;k<12;k++){ let y=150+r()*60-30, pts=[]; for(let x=0;x<12;x++){ y+= (k===4 && x>6) ? -14 : (r()*24-12); pts.push(`${40+x*40},${Math.max(20,Math.min(260,y))}`);} s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${cores[k]}" stroke-width="2.5"/>`; }
+  return `<svg viewBox="0 0 520 290" role="img" aria-label="Doze linhas coloridas sobrepostas">${s}<line x1="30" y1="270" x2="500" y2="270" stroke="#8A8A85"/><text x="40" y="288" font-size="14" fill="#4A4A45">Jan</text><text x="465" y="288" font-size="14" fill="#4A4A45">Dez</text></svg>`;
+ },
+ truncado(){
+  const y=v=>260-(v-48)/4*220;
+  let t=''; [48,49,50,51,52].forEach(v=>{ t+=`<line x1="70" y1="${y(v)}" x2="470" y2="${y(v)}" stroke="#E5E3DC"/><text x="60" y="${y(v)+5}" font-size="15" text-anchor="end" fill="#4A4A45">${v}%</text>`; });
+  return `<svg viewBox="0 0 500 310" role="img" aria-label="Duas barras, eixo começando em 48 por cento">${t}<rect x="120" y="${y(50.9)}" width="120" height="${260-y(50.9)}" fill="#004A8D"/><rect x="300" y="${y(49.1)}" width="120" height="${260-y(49.1)}" fill="#F7941D"/><text x="180" y="${y(50.9)-8}" text-anchor="middle" font-size="17" font-weight="700">50,9%</text><text x="360" y="${y(49.1)-8}" text-anchor="middle" font-size="17" font-weight="700">49,1%</text><text x="180" y="290" text-anchor="middle" font-size="16">Loja Centro</text><text x="360" y="290" text-anchor="middle" font-size="16">Loja Shopping</text></svg>`;
+ },
+ invertido(){
+  const anos=[1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012];
+  const v=[640,610,590,560,540,530,560,550,540,520,521,740,825,780,720,680,690,720];
+  const x=k=>60+k*24, y=val=>30+val/900*230;
+  const pts=v.map((val,k)=>`${x(k)},${y(val)}`).join(' ');
+  let t=''; [0,200,400,600,800].forEach(val=>{ t+=`<text x="50" y="${y(val)+5}" font-size="14" text-anchor="end" fill="#4A4A45">${val}</text>`; });
+  return `<svg viewBox="0 0 500 300" role="img" aria-label="Área vermelha com eixo vertical invertido">${t}<polygon points="${x(0)},30 ${pts} ${x(17)},30" fill="#B8420F"/><polyline points="${pts}" fill="none" stroke="#7A2A08" stroke-width="3"/><line x1="${x(10)}" y1="30" x2="${x(10)}" y2="262" stroke="#141414" stroke-dasharray="6 5" stroke-width="2"/><text x="${x(10)-6}" y="250" text-anchor="end" font-size="14" font-weight="700">2005: lei aprovada</text><text x="${x(0)}" y="285" font-size="14" fill="#4A4A45">1995</text><text x="${x(10)}" y="285" font-size="14" text-anchor="middle" fill="#4A4A45">2005</text><text x="${x(17)}" y="285" font-size="14" text-anchor="end" fill="#4A4A45">2012</text><text x="250" y="18" text-anchor="middle" font-size="15" font-weight="700">Mortes por arma de fogo, Flórida (recriação)</text></svg>`;
+ },
+ datas(){
+  const d=['4/mai','5/mai','3/mai','28/abr','29/abr','30/abr','1/mai','26/abr','2/mai','27/abr'], v=[195,190,183,176,170,163,158,151,147,140];
+  let s=''; v.forEach((val,k)=>{ const h=(val-60)*1.4; s+=`<rect x="${40+k*45}" y="${250-h}" width="32" height="${h}" fill="#004A8D"/><text x="${56+k*45}" y="272" font-size="12.5" text-anchor="middle" fill="#141414">${d[k]}</text>`; });
+  return `<svg viewBox="0 0 500 290" role="img" aria-label="Barras em queda com datas no eixo horizontal">${s}<line x1="30" y1="250" x2="490" y2="250" stroke="#8A8A85"/><text x="250" y="20" text-anchor="middle" font-size="15" font-weight="700">Ocorrências por dia</text></svg>`;
+ },
+ gpt5(){
+  const b=(x,h,c,l,n)=>`<rect x="${x}" y="${250-h}" width="100" height="${h}" fill="${c}" rx="4"/><text x="${x+50}" y="${240-h}" text-anchor="middle" font-size="18" font-weight="700">${l}</text><text x="${x+50}" y="275" text-anchor="middle" font-size="15" fill="#4A4A45">${n}</text>`;
+  return `<svg viewBox="0 0 480 290" role="img" aria-label="Três barras com alturas incompatíveis com os rótulos">${b(40,190,'#8A8A85','52,8%','Versão 1')}${b(190,115,'#004A8D','69,1%','App novo')}${b(340,115,'#8A8A85','30,8%','Versão 2')}<line x1="20" y1="250" x2="460" y2="250" stroke="#8A8A85"/></svg>`;
+ },
+ empilhado(){
+  const lojas=['Caruaru','Recife','Garanhuns','Petrolina'], fis=[52,40,58,45], onl=[31,34,29,33], app=[18,25,14,22];
+  const cores=['#004A8D','#F7941D','#8A8A85'], sc=2.2; let s='';
+  lojas.forEach((n,k)=>{ const x=70+k*105; let y=270; [[fis[k],cores[0]],[onl[k],cores[1]],[app[k],cores[2]]].forEach(([v,c])=>{ const h=v*sc; y-=h; s+=`<rect x="${x}" y="${y}" width="70" height="${h}" fill="${c}" stroke="#fff" stroke-width="1.5"/>`; }); s+=`<text x="${x+35}" y="290" text-anchor="middle" font-size="14">${n}</text>`; });
+  const leg=['Loja física','Online','App'].map((n,k)=>`<rect x="${70+k*120}" y="8" width="16" height="16" rx="3" fill="${cores[k]}"/><text x="${92+k*120}" y="21" font-size="14">${n}</text>`).join('');
+  return `<svg viewBox="0 0 500 300" role="img" aria-label="Barras empilhadas de vendas por canal em quatro lojas, sem rótulos de valor">${leg}<line x1="50" y1="270" x2="490" y2="270" stroke="#8A8A85"/>${s}</svg>`;
+ },
+ arcoiris(){
+  const dias=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'], hs=['9h','12h','15h','18h','21h'];
+  const v=[[2,4,3,5,2],[2,4,3,5,2],[3,4,3,6,3],[3,5,4,6,3],[4,6,5,8,5],[6,8,10,9,6],[5,7,7,6,3]];
+  const rb=['#6a00a8','#3b4cc0','#1fa187','#7ad151','#fde725','#f89540','#d62728','#9c179e','#e31a1c','#2c7bb6','#ffff33'];
+  let s=''; v.forEach((r,i)=>{ s+=`<text x="40" y="${48+i*34}" font-size="14" text-anchor="end">${dias[i]}</text>`; r.forEach((x,j)=>{ s+=`<rect x="${50+j*80}" y="${26+i*34}" width="78" height="32" fill="${rb[x]}"/>`; }); });
+  hs.forEach((h,j)=>{ s+=`<text x="${89+j*80}" y="18" font-size="14" text-anchor="middle">${h}</text>`; });
+  return `<svg viewBox="0 0 470 270" role="img" aria-label="Mapa de calor com cores do arco-íris">${s}</svg>`;
+ },
+ semaforo(){
+  const lojas=['Caruaru','Recife','Garanhuns','Petrolina','Olinda','Arcoverde','Gravatá','Serra Talhada'], b=[1,0,1,1,0,1,0,1];
+  let s=''; lojas.forEach((n,k)=>{ const x=10+(k%4)*120, y=10+Math.floor(k/4)*90; s+=`<rect x="${x}" y="${y}" width="110" height="80" rx="8" fill="#fff" stroke="#DDDBD2"/><circle cx="${x+55}" cy="${y+32}" r="18" fill="${b[k]?'#2e9e3f':'#d13b2f'}"/><text x="${x+55}" y="${y+70}" font-size="13" text-anchor="middle">${n}</text>`; });
+  return `<svg viewBox="0 0 490 190" role="img" aria-label="Painel com círculos verdes e vermelhos, sem texto">${s}</svg>`;
+ },
+ tempo(){
+  const anos=['2014','2018','2022','2024','2025','2026'], v=[20,40,60,70,75,80];
+  const x=k=>60+k*80, y=val=>260-val*2.6;
+  let s=''; [0,20,40,60,80].forEach(val=>{ s+=`<line x1="50" y1="${y(val)}" x2="470" y2="${y(val)}" stroke="#ECEAE3"/><text x="44" y="${y(val)+5}" font-size="13" text-anchor="end">${val}</text>`; });
+  s+=`<polyline points="${v.map((val,k)=>x(k)+','+y(val)).join(' ')}" fill="none" stroke="#004A8D" stroke-width="4"/>`+v.map((val,k)=>`<circle cx="${x(k)}" cy="${y(val)}" r="5" fill="#004A8D"/><text x="${x(k)}" y="282" font-size="14" text-anchor="middle">${anos[k]}</text>`).join('');
+  return `<svg viewBox="0 0 490 295" role="img" aria-label="Linha de clientes com anos no eixo horizontal"><text x="250" y="18" text-anchor="middle" font-size="15" font-weight="700">Clientes ativos (mil)</text>${s}</svg>`;
+ },
+ acumulado(){
+  const m=[30,34,38,41,44,46,38,33,28,24,21,18]; let a=0; const c=m.map(v=>a+=v);
+  const x=k=>50+k*38, y=v=>260-v/400*230;
+  const ms=['J','F','M','A','M','J','J','A','S','O','N','D'];
+  let s=`<polyline points="${c.map((v,k)=>x(k)+','+y(v)).join(' ')}" fill="none" stroke="#004A8D" stroke-width="4"/>`+c.map((v,k)=>`<circle cx="${x(k)}" cy="${y(v)}" r="4" fill="#004A8D"/><text x="${x(k)}" y="282" font-size="13" text-anchor="middle">${ms[k]}</text>`).join('');
+  return `<svg viewBox="0 0 500 295" role="img" aria-label="Linha sempre crescente de vendas acumuladas do app"><text x="250" y="20" text-anchor="middle" font-size="15" font-weight="700">Vendas do app em 2026 (acumulado, R$ mil)</text><line x1="40" y1="260" x2="480" y2="260" stroke="#8A8A85"/>${s}</svg>`;
+ },
+ pizza115(){
+  const v=[45,38,32], cores=['#004A8D','#F7941D','#8A8A85'], nomes=['Loja física 45%','Site 38%','App 32%']; const tot=v.reduce((a,b)=>a+b);
+  let a=-Math.PI/2, p='';
+  v.forEach((x,k)=>{ const b=a+x/tot*2*Math.PI; const l=b-a>Math.PI?1:0; p+=`<path d="M150 150 L${150+125*Math.cos(a)} ${150+125*Math.sin(a)} A125 125 0 ${l} 1 ${150+125*Math.cos(b)} ${150+125*Math.sin(b)} Z" fill="${cores[k]}" stroke="#fff" stroke-width="3"/>`; a=b; });
+  const leg=nomes.map((n,k)=>`<rect x="320" y="${90+k*44}" width="22" height="22" rx="4" fill="${cores[k]}"/><text x="352" y="${107+k*44}" font-size="19">${n}</text>`).join('');
+  return `<svg viewBox="0 0 520 300" role="img" aria-label="Pizza com três fatias rotuladas 45, 38 e 32 por cento"><text x="260" y="22" text-anchor="middle" font-size="15" font-weight="700">Canais usados pelos clientes</text>${p}${leg}</svg>`;
+ },
+ recorte(){
+  const v=[96,104,118]; const x=k=>110+k*150, y=val=>250-(val-90)/30*200;
+  let s=`<polyline points="${v.map((val,k)=>x(k)+','+y(val)).join(' ')}" fill="none" stroke="#B3261E" stroke-width="5"/>`+v.map((val,k)=>`<circle cx="${x(k)}" cy="${y(val)}" r="7" fill="#B3261E"/><text x="${x(k)}" y="${y(val)-14}" text-anchor="middle" font-size="16" font-weight="700">${val}</text><text x="${x(k)}" y="280" text-anchor="middle" font-size="15">${['Out','Nov','Dez'][k]}</text>`).join('');
+  return `<svg viewBox="0 0 500 295" role="img" aria-label="Linha subindo em três meses com o título Vendas disparam"><text x="250" y="24" text-anchor="middle" font-size="20" font-weight="800" fill="#B3261E">VENDAS DISPARAM!</text><line x1="60" y1="255" x2="460" y2="255" stroke="#8A8A85"/>${s}</svg>`;
+ },
+ icone(){
+  const p=(x,yb,s,c)=>`<g transform="translate(${x},${yb}) scale(${s})" fill="${c}"><circle cx="0" cy="-70" r="16"/><rect x="-20" y="-50" width="40" height="50" rx="10"/></g>`;
+  return `<svg viewBox="0 0 480 280" role="img" aria-label="Dois bonecos, o segundo com o dobro da altura e da largura">${p(120,240,1,'#8A8A85')}${p(330,240,2,'#004A8D')}<text x="120" y="268" text-anchor="middle" font-size="15">2025: 10 mil clientes</text><text x="330" y="268" text-anchor="middle" font-size="15">2026: 20 mil clientes</text><line x1="40" y1="242" x2="460" y2="242" stroke="#8A8A85"/></svg>`;
+ },
+};
+
+/* ---------- telas ---------- */
+function tela(html){ const t=$('#tela'); t.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
+function avatar(k){ const p=PERSONAGENS[k]; return `<div class="av" style="background:${p.cor}" aria-hidden="true">${p.ini}</div>`; }
+
+function briefing(){
+ hud();
+ const pessoas = Object.keys(PERSONAGENS).map(k=>{const p=PERSONAGENS[k]; return `<div class="person">${avatar(k)}<div><b>${p.nome}</b><br><span class="muted" style="font-size:14px">${p.cargo}</span></div></div>`;}).join('');
+ tela(`<div class="email"><div class="eh"><b>De:</b> Helena Prado, CEO &nbsp;·&nbsp; <b>Para:</b> ${esc(S.nome)} &nbsp;·&nbsp; <b>Assunto:</b> O painel do conselho</div>
+ <div class="eb"><p>Olá, ${esc(primeiro())}!</p>
+ <p>Na segunda-feira levo ao conselho o painel de vendas de janeiro a setembro. A rede cresceu, mas não sabemos bem de onde veio o crescimento nem o que fazer com ele.</p>
+ <p>Nesta semana você vai receber pedidos da equipe. Cada resposta sua aparece na barra de <b>confiança da diretoria</b>, lá em cima. No fim do dia 4, o conselho decide o que fazer com base no painel e na sua fala.</p>
+ <p>Você vai trabalhar com:</p><div class="people">${pessoas}</div>
+ <p>Boa semana,<br><b>Helena</b></p></div></div>
+ <div class="actions" style="margin-left:0"><button class="btn" id="go">Começar o dia 1</button></div>`);
+ $('#go').onclick=()=>{ S.fase='dia'; save(); render(); };
+}
+
+function telaDia(){
+ const d = DESAFIOS[S.i].dia; hud(); sfx.dia();
+ const n = DESAFIOS.filter(x=>x.dia===d).length;
+ tela(`<div class="daycard"><p class="kicker">Dia ${d+1} de ${DIAS.length}</p><h1>${DIAS[d].titulo.split('·')[1].trim()}</h1><p>${DIAS[d].sub}</p><p style="font-size:16px;margin-top:16px">${n} situações hoje.</p></div>
+ <div class="actions" style="margin-left:0"><button class="btn" id="go">Abrir a caixa de entrada</button></div>`);
+ $('#go').onclick=()=>{ S.fase='q'; save(); render(); };
+}
+
+function cabecalho(d){
+ const p=PERSONAGENS[d.quem];
+ return `<p class="kicker" style="margin-bottom:10px">${DIAS[d.dia].titulo} · ${esc(d.titulo)}</p>
+ <div class="msg">${avatar(d.quem)}<div class="bubble"><div class="who">${p.nome} <span>· ${p.cargo}</span></div><div id="txt" class="typing"></div></div></div>
+ ${d.grafico?`<div class="chart">${G[d.grafico]()}</div>`:''}`;
+}
+function digitar(texto, cb){
+ const el=$('#txt'); let k=0; sfx.msg();
+ const passo=Math.max(1,Math.round(texto.length/70));
+ const it=setInterval(()=>{ k+=passo; el.textContent=texto.slice(0,k); if(k>=texto.length){ clearInterval(it); el.classList.remove('typing'); cb&&cb(); } },14);
+ el.onclick=()=>{ k=texto.length; };
+}
+
+function desafio(){
+ const d=DESAFIOS[S.i]; hud();
+ tela(cabecalho(d)+`<div class="task hidden" id="task"></div><div id="fbwrap"></div>`);
+ digitar(d.contexto, ()=>{ $('#task').classList.remove('hidden'); MONTA[d.tipo](d); const f=$('#task').querySelector('button,input'); if(f) f.focus({preventScroll:true}); });
+}
+
+const L='ABCDE';
+const MONTA = {
+ mcq(d){
+  const ord=shuffle(d.opcoes.map((t,k)=>k));
+  $('#task').innerHTML=`<p class="q">Sua decisão:</p><div class="opts">${ord.map((k,j)=>`<button class="opt" data-k="${k}"><span class="l">${L[j]}</span><span>${esc(d.opcoes[k])}</span></button>`).join('')}</div>`;
+  $('#task').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+   const k=+b.dataset.k, certo=k===d.correta;
+   $('#task').querySelectorAll('.opt').forEach(x=>{ x.disabled=true; if(+x.dataset.k===d.correta) x.classList.add('ok'); });
+   if(!certo) b.classList.add('bad');
+   fim(d, certo?1:0, d.explicacao, certo?d.acerto:d.erro);
+  });
+ },
+ vm(d){
+  const it=d.itens.map((x,k)=>({...x,k})); const resp={};
+  $('#task').innerHTML=`<p class="q">Marque cada frase:</p>`+it.map(x=>`<div class="item" data-k="${x.k}"><div class="t">${esc(x.texto)}</div><div class="row"><button class="chip" data-v="1">Verdade</button><button class="chip" data-v="0">Mito</button></div><div class="res hidden"></div></div>`).join('')+`<button class="btn" id="conf" disabled>Confirmar</button>`;
+  $('#task').querySelectorAll('.item').forEach(el=>el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ sfx.click(); el.querySelectorAll('.chip').forEach(z=>z.classList.remove('on')); c.classList.add('on'); resp[el.dataset.k]=c.dataset.v==='1'; $('#conf').disabled=Object.keys(resp).length<it.length; }));
+  $('#conf').onclick=()=>{ let ac=0;
+   $('#task').querySelectorAll('.item').forEach(el=>{ const x=d.itens[el.dataset.k], ok=resp[el.dataset.k]===x.v; if(ok) ac++;
+    el.querySelectorAll('.chip').forEach(c=>{ c.disabled=true; if((c.dataset.v==='1')===x.v) c.classList.add('ok'); else if(c.classList.contains('on')) c.classList.add('bad'); c.classList.remove('on'); });
+    const r=el.querySelector('.res'); r.classList.remove('hidden'); r.classList.add(ok?'ok':'bad'); r.textContent=(ok?'Certo. ':'Errado. ')+x.explicacao; });
+   $('#conf').remove(); fim(d, ac/it.length, ac+' de '+it.length+' frases certas.', null);
+  };
+ },
+ cat(d){
+  const it=shuffle(d.itens.map((x,k)=>({...x,k}))); const resp={};
+  $('#task').innerHTML=`<p class="q">Classifique cada item:</p>`+it.map(x=>`<div class="item" data-k="${x.k}"><div class="t">${esc(x.texto)}</div><div class="row">${d.categorias.map(c=>`<button class="chip" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div><div class="res hidden"></div></div>`).join('')+`<button class="btn" id="conf" disabled>Confirmar</button>`;
+  $('#task').querySelectorAll('.item').forEach(el=>el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ sfx.click(); el.querySelectorAll('.chip').forEach(z=>z.classList.remove('on')); c.classList.add('on'); resp[el.dataset.k]=c.dataset.c; $('#conf').disabled=Object.keys(resp).length<it.length; }));
+  $('#conf').onclick=()=>{ let ac=0;
+   $('#task').querySelectorAll('.item').forEach(el=>{ const x=d.itens[el.dataset.k], ok=resp[el.dataset.k]===x.categoria; if(ok) ac++;
+    el.querySelectorAll('.chip').forEach(c=>{ c.disabled=true; if(c.dataset.c===x.categoria) c.classList.add('ok'); else if(c.classList.contains('on')) c.classList.add('bad'); c.classList.remove('on'); });
+    const r=el.querySelector('.res'); r.classList.remove('hidden'); r.classList.add(ok?'ok':'bad'); r.textContent=(ok?'Certo. ':'Era '+x.categoria+'. ')+x.explicacao; });
+   $('#conf').remove(); fim(d, ac/it.length, ac+' de '+it.length+' itens classificados corretamente.', null);
+  };
+ },
+ par(d){
+  const A=d.pares.map((p,k)=>({t:p.a,k})), B=shuffle(d.pares.map((p,k)=>({t:p.b,k})));
+  const cores=['#004A8D','#B35A00','#1F7A4D','#6B3FA0','#8A5A00']; const liga={}; let ativo=null;
+  $('#task').innerHTML=`<p class="q">Toque num item da esquerda e depois no par da direita.</p><div class="pairs"><div class="pcol"><h4>${esc(d.colunaA)}</h4>${A.map(x=>`<button class="pbtn" data-a="${x.k}">${esc(x.t)}</button>`).join('')}</div><div class="pcol"><h4>${esc(d.colunaB)}</h4>${B.map(x=>`<button class="pbtn" data-b="${x.k}">${esc(x.t)}</button>`).join('')}</div></div><div class="res hidden" id="pres"></div><button class="btn" id="conf" disabled style="margin-top:8px">Confirmar</button>`;
+  const pinta=()=>{ $('#task').querySelectorAll('[data-a]').forEach(b=>{ const a=b.dataset.a; b.classList.toggle('act',ativo===a); const n=Object.keys(liga).indexOf(a); b.innerHTML=(a in liga?`<span class="tag" style="background:${cores[a%5]}">${+a+1}</span>`:'')+esc(d.pares[a].a); });
+   $('#task').querySelectorAll('[data-b]').forEach(b=>{ const bk=b.dataset.b; const a=Object.keys(liga).find(x=>liga[x]===bk); b.innerHTML=(a!==undefined?`<span class="tag" style="background:${cores[a%5]}">${+a+1}</span>`:'')+esc(d.pares[bk].b); });
+   $('#conf').disabled=Object.keys(liga).length<A.length; };
+  $('#task').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{ sfx.click(); ativo=b.dataset.a; pinta(); });
+  $('#task').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{ if(ativo===null) return; sfx.click(); for(const k in liga) if(liga[k]===b.dataset.b) delete liga[k]; liga[ativo]=b.dataset.b; ativo=null; pinta(); });
+  pinta();
+  $('#conf').onclick=()=>{ let ac=0; const linhas=[];
+   for(const a in liga){ const ok=liga[a]===a; if(ok) ac++; }
+   $('#task').querySelectorAll('[data-a]').forEach(b=>{ const ok=liga[b.dataset.a]===b.dataset.a; b.style.borderColor=ok?'#1F7A4D':'#B3261E'; b.disabled=true; });
+   $('#task').querySelectorAll('[data-b]').forEach(b=>b.disabled=true);
+   const r=$('#pres'); r.classList.remove('hidden'); r.innerHTML='<b>Pares corretos:</b><br>'+d.pares.map(p=>esc(p.a)+' → '+esc(p.b)).join('<br>');
+   $('#conf').remove(); fim(d, ac/A.length, ac+' de '+A.length+' pares corretos.', null);
+  };
+ },
+ seq(d){
+  let ord=shuffle(d.itens.map((t,k)=>k)); if(ord.every((k,j)=>k===j)) ord.reverse();
+  const desenha=()=>{ $('#lista').innerHTML=ord.map((k,j)=>`<div class="seqi" data-k="${k}"><span class="n">${j+1}</span><span class="tx">${esc(d.itens[k])}</span><button aria-label="Subir" data-up="${j}">↑</button><button aria-label="Descer" data-dn="${j}">↓</button></div>`).join('');
+   $('#lista').querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{ const j=+b.dataset.up; if(j>0){ [ord[j-1],ord[j]]=[ord[j],ord[j-1]]; sfx.click(); desenha(); } });
+   $('#lista').querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{ const j=+b.dataset.dn; if(j<ord.length-1){ [ord[j+1],ord[j]]=[ord[j],ord[j+1]]; sfx.click(); desenha(); } }); };
+  $('#task').innerHTML=`<p class="q">Use as setas para ordenar:</p><div id="lista"></div><button class="btn" id="conf">Confirmar ordem</button>`;
+  desenha();
+  $('#conf').onclick=()=>{ let ac=0; ord.forEach((k,j)=>{ if(k===j) ac++; });
+   $('#lista').querySelectorAll('.seqi').forEach((el,j)=>{ el.classList.add(+el.dataset.k===j?'ok':'bad'); el.querySelectorAll('button').forEach(b=>b.disabled=true); });
+   $('#lista').insertAdjacentHTML('beforeend',`<div class="res"><b>Ordem correta:</b> ${d.itens.map((t,k)=>(k+1)+'. '+esc(t)).join(' · ')}</div>`);
+   $('#conf').remove(); fim(d, ac/ord.length, ac+' de '+ord.length+' posições corretas. '+d.explicacao, null);
+  };
+ },
+ num(d){
+  $('#task').innerHTML=`<p class="q">Faça a conta e responda:</p><div class="numin"><input id="nv" inputmode="decimal" placeholder="0" aria-label="Sua resposta"><b>${esc(d.unidade||'')}</b><button class="btn" id="conf">Confirmar</button></div><div class="hint">${esc(d.dica)}</div>`;
+  const go=()=>{ const raw=$('#nv').value.trim().replace(/\./g,'').replace(',','.'); const v=parseFloat(raw.replace('%',''));
+   if(isNaN(v)){ $('#nv').focus(); return; }
+   const ok=Math.abs(v-d.resposta)<=d.tolerancia; $('#nv').disabled=true; $('#conf').remove();
+   fim(d, ok?1:0, 'Resposta esperada: '+String(d.resposta).replace('.',',')+(d.unidade||'')+'. '+d.explicacao, null); };
+  $('#conf').onclick=go; $('#nv').onkeydown=e=>{ if(e.key==='Enter') go(); };
+ },
+};
+
+function fim(d, nota, explic, fala){
+ S.pontos+=nota; S.res[S.i]=nota;
+ const delta = nota>=0.99 ? 8 : (nota>=0.5 ? 2 : -7);
+ S.conf=Math.max(0,Math.min(100,S.conf+delta));
+ const cls = nota>=0.99 ? 'ok' : (nota>=0.5 ? 'mid' : 'bad');
+ (cls==='ok'?sfx.ok:cls==='mid'?sfx.mid:sfx.bad)();
+ const tit = cls==='ok' ? 'Decisão certeira' : (cls==='mid' ? 'Parcialmente certo' : 'Decisão equivocada');
+ if(!fala) fala = cls==='ok' ? PERSONAGENS[d.quem].nome.split(' ')[0]+': "Perfeito, obrigado(a)!"' : PERSONAGENS[d.quem].nome.split(' ')[0]+': "Vamos revisar isso juntos."';
+ S.i++; save(); hud();
+ const ultimo = S.i>=TOTAL, viraDia = !ultimo && DESAFIOS[S.i].dia!==d.dia;
+ $('#fbwrap').innerHTML=`<div class="fb ${cls}" role="status"><div class="h">${tit} · confiança ${delta>0?'+':''}${delta}</div><div>${esc(explic)}</div><div class="said">${esc(fala)}</div></div>
+ <div class="actions"><button class="btn" id="prox">${ultimo?'Ver resultado final':(viraDia?'Encerrar o dia':'Próxima mensagem')}</button></div>`;
+ $('#prox').focus({preventScroll:true});
+ $('#fbwrap').scrollIntoView({behavior:'smooth',block:'start'});
+ $('#prox').onclick=()=>{ if(ultimo){ S.fase='fim'; } else if(viraDia){ S.fase='resumo'; S.diaFim=d.dia; } save(); render(); };
+}
+
+function resumoDia(){
+ const d=S.diaFim, idx=DESAFIOS.map((x,k)=>x.dia===d?k:-1).filter(k=>k>=0);
+ const ac=idx.reduce((s,k)=>s+(S.res[k]||0),0);
+ hud();
+ tela(`<div class="daycard"><p class="kicker">Fim do dia ${d+1}</p><h1>${DIAS[d].titulo.split('·')[1].trim()}</h1><p>Você acertou ${fmt(ac)} de ${idx.length} situações hoje.</p></div>
+ <div class="stats"><div class="stat"><b>${fmt(S.pontos)}</b><span>pontos na semana</span></div><div class="stat"><b>${Math.round(S.conf)}</b><span>confiança da diretoria</span></div><div class="stat"><b>${TOTAL-S.i}</b><span>situações restantes</span></div></div>
+ <div class="actions" style="margin-left:0"><button class="btn" id="go">Ir para o dia ${d+2}</button></div>`);
+ $('#go').onclick=()=>{ S.fase='dia'; save(); render(); };
+}
+const fmt = n => (Math.round(n*10)/10).toString().replace('.',',');
+
+function cargo(p){ return p>=85?'Head de Analytics':p>=70?'Analista de dados sênior':p>=50?'Analista de dados pleno':'Analista em treinamento'; }
+function final(){
+ const pct=Math.round(S.pontos/TOTAL*100); hud(); $('#progFill').style.width='100%';
+ const porDia=DIAS.map((x,d)=>{ const idx=DESAFIOS.map((y,k)=>y.dia===d?k:-1).filter(k=>k>=0); return `<div class="stat"><b>${fmt(idx.reduce((s,k)=>s+(S.res[k]||0),0))}/${idx.length}</b><span>${x.titulo.split('·')[1].trim()}</span></div>`; }).join('');
+ const decisao = S.conf>=60 ? 'O conselho aprovou estudar o modelo de Caruaru e levá-lo às outras lojas.' : 'O conselho adiou a decisão e pediu um painel mais claro. Revise os pontos em que errou.';
+ tela(`<div class="daycard"><p class="kicker">Resultado da semana · ${esc(S.nome)}${S.mat?' · '+esc(S.mat):''}</p><h1>${cargo(pct)}</h1><p>${decisao}</p></div>
+ <div class="card" style="margin-top:18px;text-align:center"><div class="final-big">${pct}%</div><p style="font-size:20px;margin-top:8px"><b>${fmt(S.pontos)}</b> de <b>${TOTAL}</b> pontos · confiança final <b>${Math.round(S.conf)}</b></p><p class="status" id="st"></p><p class="muted" style="font-size:14px;margin-top:6px">Mostre esta tela ao professor se o envio falhar.</p></div>
+ <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">${porDia}</div>
+ <div class="actions" style="margin-left:0"><button class="btn alt" id="again">Jogar de novo</button></div>`);
+ $('#again').onclick=()=>{ if(confirm('Apagar seu progresso e recomeçar?')){ const n=S.nome,m=S.mat; S={nome:n,mat:m,i:0,pontos:0,conf:50,res:[],fase:'brief',enviado:false}; save(); render(); } };
+ if(!S.enviado){ enviar({ timestamp:new Date().toISOString(), nome:S.nome, matricula:S.mat, disciplina:DISCIPLINA, aula:AULA, acertos:Math.round(S.pontos*10)/10, total:TOTAL, pontuacao:pct }); }
+ else $('#st').textContent='Resultado já enviado ao professor.';
+}
+function enviar(dados){
+ const st=$('#st');
+ if(!WEBAPP_URL){ st.textContent='Resultado registrado só nesta tela.'; return; }
+ st.textContent='Enviando resultado ao professor...';
+ fetch(WEBAPP_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(dados)})
+  .then(()=>{ st.textContent='Resultado enviado ao professor.'; st.style.color='#1F7A4D'; S.enviado=true; save(); })
+  .catch(()=>{ st.textContent='Não consegui enviar agora. Mostre esta tela ao professor.'; st.style.color='#B3261E'; });
+}
+
+function render(){
+ if(!S.nome){ $('#login').classList.remove('hidden'); $('#app').classList.add('hidden'); return; }
+ $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+ if(S.fase==='brief') return briefing();
+ if(S.i>=TOTAL || S.fase==='fim') return final();
+ if(S.fase==='dia') return telaDia();
+ if(S.fase==='resumo') return resumoDia();
+ return desafio();
+}
+
+/* ---------- início ---------- */
+(function init(){
+ const salvo=load();
+ if(salvo && salvo.nome){ $('#nome').value=salvo.nome; $('#mat').value=salvo.mat||''; $('#btnReset').classList.remove('hidden'); S.nome=''; }
+ $('#fLogin').onsubmit=e=>{ e.preventDefault(); ac(); const nome=$('#nome').value.trim(); if(!nome) return;
+  const mat=$('#mat').value.trim();
+  if(salvo && salvo.nome===nome){ S=salvo; S.mat=mat; } else { S={nome,mat,i:0,pontos:0,conf:50,res:[],fase:'brief',enviado:false}; }
+  save(); render(); };
+ $('#btnReset').onclick=()=>{ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
+ $('#btnSom').onclick=()=>{ som=!som; try{ localStorage.setItem(KEY+'-som', som?'1':'0'); }catch(e){} updSom(); if(som) sfx.click(); };
+ updSom();
+})();
+</script>
+</body>
+</html>
