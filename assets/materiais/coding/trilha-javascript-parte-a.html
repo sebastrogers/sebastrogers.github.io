@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trilha JavaScript</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: sticky index rail on the left, lessons stacked on the right; one column under 860px.
+   Two signal colors carry the whole trail: Python blue vs JavaScript amber. */
+:root {
+  --paper: #F4F3EF;
+  --card: #FFFFFF;
+  --ink: #17191C;
+  --muted: #5F6469;
+  --line: #DEDCD5;
+  --js: #A3730A;
+  --js-soft: #F6ECD6;
+  --py: #2C5A87;
+  --py-soft: #E3EBF3;
+  --warn-soft: #FAEAE4;
+  --warn: #A33B18;
+  --code-bg: #1B1E22;
+  --code-fg: #E8E6E0;
+  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #131517;
+    --card: #1B1E21;
+    --ink: #ECEAE4;
+    --muted: #9CA1A6;
+    --line: #2E3237;
+    --js: #E0B457;
+    --js-soft: #2C2718;
+    --py: #85B4DD;
+    --py-soft: #19242E;
+    --warn-soft: #2E1D17;
+    --warn: #E09070;
+    --code-bg: #0E1012;
+    --code-fg: #E8E6E0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #131517;
+  --card: #1B1E21;
+  --ink: #ECEAE4;
+  --muted: #9CA1A6;
+  --line: #2E3237;
+  --js: #E0B457;
+  --js-soft: #2C2718;
+  --py: #85B4DD;
+  --py-soft: #19242E;
+  --warn-soft: #2E1D17;
+  --warn: #E09070;
+  --code-bg: #0E1012;
+  --code-fg: #E8E6E0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ---------- topo ---------- */
+header.hero { padding-block: 56px 36px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--js);
+  margin: 0 0 14px;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -.02em;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.lede { font-size: 18px; max-width: 62ch; color: var(--ink); margin: 0 0 22px; }
+.lede + .lede { color: var(--muted); font-size: 16px; }
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px;
+}
+.tag {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; color: var(--muted); background: var(--card);
+}
+
+/* ---------- grade ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 48px;
+  padding-block: 40px 72px;
+  align-items: start;
+}
+nav.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); min-width: 0; }
+nav.rail h2 {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 600;
+}
+nav.rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.rail a {
+  display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: baseline;
+  padding: 7px 10px; border-radius: 7px;
+  color: var(--ink); text-decoration: none; font-size: 14px; line-height: 1.35;
+  border-left: 2px solid transparent;
+}
+nav.rail a span.n { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+nav.rail a:hover { background: var(--js-soft); }
+nav.rail a:focus-visible { outline: 2px solid var(--js); outline-offset: 2px; }
+.rail-part {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--js); margin: 20px 0 10px; font-weight: 600;
+}
+
+main { min-width: 0; display: grid; gap: 56px; }
+
+/* ---------- aula ---------- */
+article.aula { scroll-margin-top: 24px; min-width: 0; }
+.aula-num {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--js); margin: 0 0 8px;
+}
+h3 {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(24px, 3.2vw, 31px); line-height: 1.15; letter-spacing: -.015em;
+  margin: 0 0 10px; text-wrap: balance;
+}
+.objetivo {
+  color: var(--muted); font-size: 15px; margin: 0 0 24px;
+  padding-left: 12px; border-left: 2px solid var(--line);
+}
+article.aula p { margin: 0 0 16px; max-width: 68ch; }
+article.aula p:last-child { margin-bottom: 0; }
+code.inline {
+  font-family: var(--mono); font-size: .88em;
+  background: var(--js-soft); color: var(--ink);
+  padding: 1px 5px; border-radius: 4px;
+}
+
+/* ---------- comparação ---------- */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 20px; }
+.pane { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); min-width: 0; }
+.pane > .label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 12px; font-weight: 600;
+}
+.pane.py > .label { background: var(--py-soft); color: var(--py); }
+.pane.js > .label { background: var(--js-soft); color: var(--js); }
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--mono); font-size: 13px; line-height: 1.62;
+  padding: 14px 16px; overflow-x: auto;
+}
+pre code { font: inherit; color: inherit; background: none; padding: 0; }
+.solo { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 20px; }
+.solo > .label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 12px; font-weight: 600; background: var(--js-soft); color: var(--js);
+}
+
+/* ---------- tabela ---------- */
+.tbl-wrap { overflow-x: auto; margin: 0 0 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+tbody tr:last-child td { border-bottom: none; }
+td.c { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+td.py-c { color: var(--py); }
+td.js-c { color: var(--js); }
+
+/* ---------- avisos ---------- */
+.callout {
+  border-radius: 10px; padding: 14px 16px; margin: 0 0 18px;
+  background: var(--warn-soft); border: 1px solid var(--line);
+}
+.callout .t {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--warn); font-weight: 600; margin: 0 0 6px;
+}
+.callout p { margin: 0; font-size: 15px; }
+.fixar {
+  border-radius: 10px; padding: 14px 16px; margin: 0;
+  background: var(--card); border: 1px dashed var(--line);
+}
+.fixar .t {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; margin: 0 0 6px;
+}
+.fixar p { margin: 0; font-size: 15px; }
+
+/* ---------- parte B ---------- */
+section.parteb {
+  border-top: 1px solid var(--line); padding-block: 40px 0; margin-top: 16px;
+}
+section.parteb h2 {
+  font-family: var(--display); font-weight: 700; font-size: 26px; margin: 0 0 8px; letter-spacing: -.015em;
+}
+section.parteb ol { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+section.parteb li {
+  display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: baseline;
+  padding: 11px 14px; border: 1px solid var(--line); border-radius: 9px; background: var(--card);
+  font-size: 15px;
+}
+section.parteb li span.n { font-family: var(--mono); font-size: 12px; color: var(--js); }
+
+footer.pe {
+  border-top: 1px solid var(--line); padding-block: 26px 48px;
+  font-size: 13px; color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; gap: 28px; }
+  nav.rail { position: static; }
+  nav.rail ol { grid-template-columns: 1fr 1fr; }
+  .compare { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  nav.rail ol { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Coding &middot; Parte A &middot; material de apoio</p>
+  <h1>Trilha JavaScript</h1>
+  <p class="lede">Do Python que você já escreve para o JavaScript, em oito passos encadeados.</p>
+  <p class="lede">Cada passo supõe o anterior. Os exemplos são os da Loja de Roupas.</p>
+  <div class="meta">
+    <span class="tag">8 passos</span>
+    <span class="tag">leitura corrida: ~1h</span>
+    <span class="tag">pré-requisito: Python básico</span>
+    <span class="tag">Parte B: o navegador</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <nav class="rail" aria-label="Índice da trilha">
+    <h2>Parte A · a linguagem</h2>
+    <ol>
+      <li><a href="#aula-01"><span class="n">01</span><span>Onde o JavaScript roda</span></a></li>
+      <li><a href="#aula-02"><span class="n">02</span><span>Variáveis: let e const</span></a></li>
+      <li><a href="#aula-03"><span class="n">03</span><span>Tipos, comparação e valores falsos</span></a></li>
+      <li><a href="#aula-04"><span class="n">04</span><span>Funções</span></a></li>
+      <li><a href="#aula-05"><span class="n">05</span><span>Arrays e objetos</span></a></li>
+      <li><a href="#aula-06"><span class="n">06</span><span>Transformar dados</span></a></li>
+      <li><a href="#aula-07"><span class="n">07</span><span>Por que existe assíncrono</span></a></li>
+      <li><a href="#aula-08"><span class="n">08</span><span>async, await e fetch na prática</span></a></li>
+    </ol>
+    <p class="rail-part">Depois</p>
+    <ol>
+      <li><a href="#parte-b"><span class="n">B</span><span>Parte B — o navegador</span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- 01 -->
+    <article class="aula" id="aula-01">
+      <p class="aula-num">01</p>
+      <h3>Onde o JavaScript roda</h3>
+
+      <p>O Python do seu projeto roda no servidor: a requisição chega, o FastAPI responde, e o usuário nunca vê esse código. O JavaScript roda do outro lado — no navegador da pessoa, na máquina dela, depois que a página já chegou. É a única linguagem que o navegador executa.</p>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python &middot; servidor</div>
+<pre><code>@app.get("/produtos")
+def listar(db: Session = Depends(get_db)):
+    return db.query(Produto).all()</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript &middot; navegador</div>
+<pre><code>const resposta = await fetch("/produtos");
+const produtos = await resposta.json();
+console.log(produtos.length);</code></pre>
+        </div>
+      </div>
+
+      <p>Os dois lados são do mesmo projeto. O Python entrega os dados; o JavaScript decide o que aparece na tela. Essa divisão é toda a Parte B desta trilha.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Todo JavaScript que você escreve chega inteiro ao navegador do usuário e pode ser lido por ele com dois cliques. Senha, token e regra que decide permissão ficam no servidor, sempre.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Abra qualquer site, pressione F12 e vá na aba Console. Digite <code class="inline">1 + 1</code> e depois <code class="inline">document.title</code>. Esse é o ambiente onde o seu código vai rodar.</p>
+      </div>
+    </article>
+
+    <!-- 02 -->
+    <article class="aula" id="aula-02">
+      <p class="aula-num">02</p>
+      <h3>Variáveis: let e const</h3>
+
+      <p>Em Python você não declara: atribui e pronto. Em JavaScript toda variável nasce com uma palavra na frente, e essa palavra decide se ela pode ser reatribuída.</p>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python</div>
+<pre><code>nome = "Ana"
+nome = "Bia"        # ok
+
+PI = 3.14           # convenção:
+PI = 3.15           # nada impede</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript</div>
+<pre><code>let nome = "Ana";
+nome = "Bia";       // ok
+
+const PI = 3.14;
+PI = 3.15;          // TypeError</code></pre>
+        </div>
+      </div>
+
+      <p>Regra prática que resolve 95% dos casos: escreva tudo com <code class="inline">const</code>. Quando o navegador reclamar porque você precisa reatribuir, troque aquela linha para <code class="inline">let</code>. Existe também <code class="inline">var</code>, de antes de 2015, com regras de escopo que confundem até quem programa há anos — não use.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p><code class="inline">const</code> trava a variável, não o conteúdo dela. Com <code class="inline">const lista = [1, 2]</code>, a linha <code class="inline">lista.push(3)</code> funciona normalmente; o que dá erro é <code class="inline">lista = [4]</code>.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Por que <code class="inline">const aluno = { nome: "Ana" }; aluno.nome = "Bia";</code> não dá erro nenhum?</p>
+      </div>
+    </article>
+
+    <!-- 03 -->
+    <article class="aula" id="aula-03">
+      <p class="aula-num">03</p>
+      <h3>Tipos, comparação e valores falsos</h3>
+
+      <p>JavaScript tem dois operadores de igualdade. Um deles converte os tipos antes de comparar e produz resultados que ninguém espera. O outro se comporta como o <code class="inline">==</code> do Python.</p>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python</div>
+<pre><code>1 == "1"      # False
+1 is None     # False
+
+None          # único "vazio"</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript</div>
+<pre><code>1 ==  "1"     // true   (converte!)
+1 === "1"     // false  (use este)
+
+null          // vazio de propósito
+undefined     // nunca recebeu valor</code></pre>
+        </div>
+      </div>
+
+      <p>Use sempre <code class="inline">===</code> e <code class="inline">!==</code>. Não existe situação na disciplina em que o <code class="inline">==</code> seja a escolha certa.</p>
+      <p><strong>Por que a linguagem converte, afinal?</strong> O JavaScript nasceu em 1995 para animar páginas e foi desenhado para não quebrar: diante de uma comparação entre tipos diferentes, ele adivinha em vez de dar erro. A escolha envelheceu mal. O <code class="inline">===</code> é o conserto, adotado depois — e o <code class="inline">==</code> nunca pôde ser removido, porque quebraria a web inteira.</p>
+
+      <p>A segunda diferença é mais sutil. Os valores considerados falsos em JavaScript são exatamente seis: <code class="inline">false</code>, <code class="inline">0</code>, <code class="inline">""</code>, <code class="inline">null</code>, <code class="inline">undefined</code> e <code class="inline">NaN</code>. Todo o resto é verdadeiro — inclusive lista vazia e objeto vazio, que em Python são falsos.</p>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>if ([]) {
+  console.log("entra aqui");   // entra! em Python, não entraria
+}
+
+const produtos = [];
+if (!produtos)            { /* nunca executa */ }
+if (produtos.length === 0) { /* este é o jeito certo */ }</code></pre>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Para saber se uma lista está vazia, teste <code class="inline">lista.length === 0</code>. O <code class="inline">if (!lista)</code> que funciona em Python nunca é verdadeiro em JavaScript.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Em JavaScript, <code class="inline">[] == false</code> vale <code class="inline">true</code>, mas <code class="inline">[] === false</code> vale <code class="inline">false</code>. Com o que você leu aqui, explique as duas linhas.</p>
+      </div>
+    </article>
+
+    <!-- 04 -->
+    <article class="aula" id="aula-04">
+      <p class="aula-num">04</p>
+      <h3>Funções</h3>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python</div>
+<pre><code>def soma(a, b):
+    return a + b
+
+dobro = lambda x: x * 2
+
+def ola(nome="turma"):
+    return f"Olá, {nome}!"</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript</div>
+<pre><code>function soma(a, b) {
+  return a + b;
+}
+
+const dobro = (x) =&gt; x * 2;
+
+const ola = (nome = "turma") =&gt;
+  `Olá, ${nome}!`;</code></pre>
+        </div>
+      </div>
+
+      <p>Três novidades de uma vez. A <strong>arrow function</strong> (<code class="inline">=&gt;</code>) é a forma curta e a mais comum hoje; sem chaves, ela já devolve o resultado, sem precisar de <code class="inline">return</code>. A <strong>template string</strong>, escrita entre crases com <code class="inline">${ }</code>, faz o papel da f-string. E função é valor: dá para guardar numa variável e passar como argumento — é disso que o passo 06 depende inteiro.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p><code class="inline">const dobro = x =&gt; { x * 2 }</code> devolve <code class="inline">undefined</code>. Assim que aparecem as chaves, o <code class="inline">return</code> volta a ser obrigatório.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Reescreva <code class="inline">lambda x, y: x &gt; y</code> como arrow function.</p>
+      </div>
+    </article>
+
+    <!-- 05 -->
+    <article class="aula" id="aula-05">
+      <p class="aula-num">05</p>
+      <h3>Arrays e objetos</h3>
+
+      <p>A lista do Python é o <strong>array</strong>; o dicionário é o <strong>objeto</strong>. A tabela abaixo cobre quase tudo o que você vai precisar:</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>O que você quer</th><th>Python</th><th>JavaScript</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>criar uma lista</td><td class="c py-c">[1, 2, 3]</td><td class="c js-c">[1, 2, 3]</td></tr>
+            <tr><td>criar um registro</td><td class="c py-c">{"nome": "Ana"}</td><td class="c js-c">{ nome: "Ana" }</td></tr>
+            <tr><td>tamanho</td><td class="c py-c">len(x)</td><td class="c js-c">x.length</td></tr>
+            <tr><td>adicionar ao fim</td><td class="c py-c">x.append(4)</td><td class="c js-c">x.push(4)</td></tr>
+            <tr><td>ler um campo</td><td class="c py-c">d["nome"]</td><td class="c js-c">d.nome</td></tr>
+            <tr><td>percorrer</td><td class="c py-c">for i in lista:</td><td class="c js-c">for (const i of lista)</td></tr>
+            <tr><td>campo ausente</td><td class="c py-c">d.get("x")</td><td class="c js-c">d.x &rarr; undefined</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Repare na linha das chaves: no objeto JavaScript, <code class="inline">nome</code> não leva aspas. E os dois se combinam exatamente como no Python — array de objetos, objeto com array dentro:</p>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const produto = {
+  nome: "Camiseta básica",
+  preco: 39.9,
+  tamanhos: []
+};
+
+produto.tamanhos.push({ tam: "M", estoque: 4 });
+
+console.log(produto.nome, produto.tamanhos.length);   // Camiseta básica 1</code></pre>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Ler uma chave que não existe devolve <code class="inline">undefined</code> em vez de levantar erro. <code class="inline">produto.prceo</code> não quebra nada: o programa segue e o bug só aparece três linhas depois, onde você menos espera.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Como você escreveria <code class="inline">{"id": 1, "nome": "Camiseta básica"}</code> em JavaScript?</p>
+      </div>
+    </article>
+
+    <!-- 06 -->
+    <article class="aula" id="aula-06">
+      <p class="aula-num">06</p>
+      <h3>Transformar dados</h3>
+
+      <p>Onde o Python usa compreensão de lista, o JavaScript chama um método passando uma função. É o uso prático do "função é valor" do passo 04.</p>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python</div>
+<pre><code>nomes = [p["nome"] for p in produtos]
+
+baratos = [p for p in produtos
+           if p["preco"] &lt; 50]
+
+total = sum(p["preco"] for p in produtos)</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript</div>
+<pre><code>const nomes = produtos.map(p =&gt; p.nome);
+
+const baratos = produtos.filter(p =&gt; p.preco &lt; 50);
+
+const total = produtos.reduce(
+  (soma, p) =&gt; soma + p.preco, 0);</code></pre>
+        </div>
+      </div>
+
+      <p><code class="inline">map</code> transforma cada item e devolve uma lista do mesmo tamanho. <code class="inline">filter</code> seleciona e devolve uma lista menor. <code class="inline">reduce</code> acumula tudo num valor só — o segundo argumento é o ponto de partida. Nenhum dos três altera a lista original.</p>
+
+      <p>O <code class="inline">sort</code> é a exceção: ele ordena a lista no lugar. Por isso o <code class="inline">[...produtos]</code> abaixo, que faz uma cópia antes de ordenar.</p>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const porNome = [...produtos].sort((a, b) =&gt; a.nome.localeCompare(b.nome));
+
+const baratosPrimeiro = [...produtos].sort((a, b) =&gt; a.preco - b.preco);
+const carosPrimeiro   = [...produtos].sort((a, b) =&gt; b.preco - a.preco);</code></pre>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p><code class="inline">[10, 9, 1].sort()</code> devolve <code class="inline">[1, 10, 9]</code>. Sem função de comparação, o <code class="inline">sort</code> ordena como se tudo fosse texto. Para números, sempre <code class="inline">.sort((a, b) =&gt; a - b)</code>.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Escreva a versão JavaScript de <code class="inline">[p for p in produtos if p["preco"] &gt; 100]</code>.</p>
+      </div>
+    </article>
+
+    <!-- 07 -->
+    <article class="aula" id="aula-07">
+      <p class="aula-num">07</p>
+      <h3>Por que existe assíncrono</h3>
+
+      <p>O JavaScript do navegador roda em <strong>uma linha só de execução</strong>. Uma fila única: cada pedaço de código roda do início ao fim antes do próximo começar. Não há duas coisas acontecendo ao mesmo tempo.</p>
+
+      <p>A consequência é direta: enquanto o seu código roda, a página <strong>não responde</strong>. Não rola, não aceita clique, não redesenha. Dá para ver isso no console:</p>
+
+      <div class="solo">
+        <div class="label">JavaScript &middot; cinco segundos de página travada</div>
+<pre><code>const fim = Date.now() + 5000;
+while (Date.now() &lt; fim) { }   // segura a fila
+
+// durante esses 5 segundos a aba fica congelada</code></pre>
+      </div>
+
+      <p>Agora leve isso para a rede. Buscar os produtos na sua API pode levar 50 milissegundos num wi-fi bom e vários segundos num 3G ruim. Se o JavaScript esperasse parado, a página inteira congelaria a cada requisição.</p>
+
+      <p>Daí a saída: <strong>pedir e seguir</strong>. O navegador tem outras partes, fora da sua linha de execução, e é ele quem cuida da espera. O seu código não espera — ele deixa dito o que fazer quando a resposta chegar, e libera a fila.</p>
+
+      <div class="compare">
+        <div class="pane py">
+          <div class="label">Python &middot; no servidor</div>
+<pre><code>r = requests.get(".../produtos")
+print(r.json())
+
+# a primeira linha bloqueia:
+# o programa para até chegar</code></pre>
+        </div>
+        <div class="pane js">
+          <div class="label">JavaScript &middot; no navegador</div>
+<pre><code>const r = await fetch("/produtos");
+console.log(await r.json());
+
+// parece igual, mas a página
+// continua respondendo</code></pre>
+        </div>
+      </div>
+
+      <p>Parecem a mesma coisa, e esse é exatamente o objetivo do <code class="inline">await</code>: ele foi criado para que código assíncrono se <strong>pareça</strong> com código sequencial. Por baixo, a função é suspensa naquela linha, a fila é devolvida ao navegador, e quando a resposta chega a função volta de onde parou.</p>
+
+      <p>Duas regras caem disso, e explicam a maioria dos erros que você vai ver:</p>
+
+      <ul>
+        <li><code class="inline">await</code> só existe dentro de uma função marcada com <code class="inline">async</code>.</li>
+        <li>Uma função <code class="inline">async</code> devolve sempre uma <em>promise</em> (promessa) — o valor que ainda vai chegar. Quem chamar também precisa de <code class="inline">await</code>, ou recebe a promessa em vez do valor.</li>
+      </ul>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p><code class="inline">await</code> dentro de um <code class="inline">forEach</code> não espera nada: o <code class="inline">forEach</code> não sabe o que é promessa e segue em frente. Para esperar item a item, use <code class="inline">for (const x of lista)</code>.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Por que travar a linha de execução por cinco segundos é muito pior no navegador do que no servidor?</p>
+      </div>
+    </article>
+
+    <!-- 08 -->
+    <article class="aula" id="aula-08">
+      <p class="aula-num">08</p>
+      <h3>async, await e fetch na prática</h3>
+
+      <p>Você já escreveu rotas <code class="inline">async</code> no FastAPI, então o raciocínio não é novo: a rede demora, e o programa não fica parado esperando. No navegador isso é visível — enquanto o dado não chega, a página precisa continuar respondendo aos cliques.</p>
+
+      <div class="solo">
+        <div class="label">JavaScript &middot; buscando dados</div>
+<pre><code>async function carregarProdutos() {
+  const resposta = await fetch("/produtos");
+
+  if (!resposta.ok) {
+    console.error("Falhou com status", resposta.status);
+    return [];
+  }
+
+  const produtos = await resposta.json();
+  return produtos;
+}</code></pre>
+      </div>
+
+      <p>São dois <code class="inline">await</code>: o primeiro espera a resposta chegar, o segundo espera o corpo virar objeto JavaScript. E há uma regra que pega todo mundo: o <code class="inline">fetch</code> só falha quando a rede falha. Um 404 ou um 500 chegam como resposta normal — por isso o teste <code class="inline">resposta.ok</code>.</p>
+
+      <div class="solo">
+        <div class="label">JavaScript &middot; enviando dados</div>
+<pre><code>await fetch("/produtos", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ nome: "Moletom", preco: 159.9, tam: "M" })
+});</code></pre>
+      </div>
+
+      <p>O corpo vai como texto: <code class="inline">JSON.stringify</code> converte o objeto em string, e o cabeçalho avisa ao FastAPI que aquilo é JSON. É o par exato do <code class="inline">resposta.json()</code>, que faz o caminho de volta.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Esquecer o <code class="inline">await</code> do <code class="inline">.json()</code> devolve uma Promise, não os dados. O sintoma é sempre o mesmo e agora você vai reconhecê-lo: <code class="inline">produtos.map is not a function</code>.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Se o <code class="inline">fetch</code> não levanta erro em um 404, o que acontece com o código que vem depois dele quando a rota não existe?</p>
+      </div>
+    </article>
+
+    <!-- parte B -->
+    <section class="parteb" id="parte-b">
+      <h2>Parte B — o navegador</h2>
+      <p>Terminada a linguagem, a segunda parte da trilha trata do que só existe no navegador: a página como objeto, os eventos e a ligação com a API que você mesmo escreveu.</p>
+      <ol>
+        <li><span class="n">01</span><span>O DOM: a página como uma árvore de objetos</span></li>
+        <li><span class="n">02</span><span>Selecionar e alterar elementos</span></li>
+        <li><span class="n">03</span><span>Eventos: clique, digitação, envio</span></li>
+        <li><span class="n">04</span><span>Formulários e validação no cliente</span></li>
+        <li><span class="n">05</span><span>Montar uma lista na tela a partir de dados</span></li>
+        <li><span class="n">06</span><span>Ligando tudo: o front-end do seu projeto</span></li>
+      </ol>
+    </section>
+
+  </main>
+</div>
+
+<footer class="pe">
+  <p>Trilha JavaScript &middot; Parte A &middot; material de apoio da disciplina de Coding &middot; CST em Análise e Desenvolvimento de Sistemas &middot; Faculdade Senac Pernambuco, Caruaru &middot; 2026.2</p>
+</footer>
+
+</div>
+</body>
+</html>

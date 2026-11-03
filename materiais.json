@@ -1,5 +1,5 @@
 {
-  "atualizado": "29 de outubro de 2026",
+  "atualizado": "3 de novembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -228,10 +228,54 @@
         {
           "tipo": "Projeto",
           "titulo": "Repositório da Loja de Roupas, fase por fase",
-          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API), etapa-13 a etapa-15 (Aula 10, banco e camadas) e etapa-16 a etapa-18 (Aula 11, as telas). Travou numa fase? Baixe o .zip dela na aba Tags.",
+          "descricao": "O projeto da loja pronto no GitHub, com uma tag por fase: etapa-01 a etapa-09 (Aula 8), etapa-10 a etapa-12 (Aula 9, a API), etapa-13 a etapa-15 (Aula 10, banco e camadas) etapa-16 a etapa-18 (Aula 11, as telas) e etapa-19 a etapa-21 (Aula 12, o comportamento). Travou numa fase? Baixe o .zip dela na aba Tags.",
           "arquivo": "https://github.com/sebastrogers/loja-roupas-gabarito",
-          "data": "27/10/2026",
+          "data": "03/11/2026",
           "tags": "github repositorio codigo fonte gabarito tags etapa checkpoint pytest github actions loja"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 12: A vitrine ganha vida, JavaScript, DOM e eventos",
+          "descricao": "A terceira linguagem do navegador. Conceitos primeiro: onde o JavaScript roda, o console, let e const, === e os valores falsos, função de seta, arrays e objetos, map, filter e sort; depois o DOM como árvore de objetos, querySelector, createElement e os eventos click, input e submit com preventDefault. Na prática, a vitrine da Loja de Roupas passa a ser desenhada por código, ganha busca que filtra e um formulário que valida.",
+          "arquivo": "assets/materiais/coding/aula-12-vitrine-ganha-vida.html",
+          "data": "03/11/2026",
+          "tags": "slides javascript js dom eventos addeventlistener queryselector createelement classlist textcontent innerhtml preventdefault submit input click let const valores falsos arrow function template string map filter sort console front-end loja roupas",
+          "extra": {
+            "rotulo": "Repositório no GitHub",
+            "url": "https://github.com/sebastrogers/loja-roupas-gabarito"
+          }
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 12: A vitrine ganha vida (PDF)",
+          "descricao": "Os mesmos slides da Aula 12 em PDF, para ler, imprimir ou baixar. O mapa de fases interativo aparece só na versão HTML.",
+          "arquivo": "assets/materiais/coding/aula-12-vitrine-ganha-vida.pdf",
+          "data": "03/11/2026",
+          "tags": "slides pdf javascript dom eventos formulario front-end"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Trilha JavaScript, Parte A: a linguagem",
+          "descricao": "Material de apoio em oito passos encadeados, para quem vem do Python: onde o JavaScript roda, let e const, === e os seis valores falsos, funções e a função de seta, arrays e objetos, map, filter e sort, por que existe assíncrono, e async, await e fetch na prática. Cada passo traz o mesmo problema nas duas linguagens, a pegadinha e uma pergunta.",
+          "arquivo": "assets/materiais/coding/trilha-javascript-parte-a.html",
+          "data": "03/11/2026",
+          "tags": "trilha apoio javascript python let const igualdade estrita valores falsos arrow function template string array objeto map filter sort reduce assincrono async await fetch promise"
+        },
+        {
+          "tipo": "Apoio",
+          "titulo": "Trilha do Navegador, Parte B: DOM, eventos e formulários",
+          "descricao": "Continuação da Parte A, em oito passos: a revisão de HTML e CSS que o resto usa, o DOM como árvore de objetos, encontrar e alterar elementos, criar elementos a partir de dados, eventos, formulários com validação e, por fim, ligar na própria API com fetch.",
+          "arquivo": "assets/materiais/coding/trilha-navegador-parte-b.html",
+          "data": "03/11/2026",
+          "tags": "trilha apoio dom eventos formularios queryselector createelement classlist preventdefault value validacao html css seletores fetch front-end"
+        },
+        {
+          "tipo": "Projeto",
+          "titulo": "Documentação do Projeto Final: o que entregar além do código",
+          "descricao": "Os quatro artefatos exigidos na entrega de 17/11: diagrama de domínio, modelo ER do banco, diagrama de arquitetura em camadas e o relatório técnico. Traz exemplos prontos de cada diagrama, o formato de entrega na pasta docs/, a tabela de erros que custam ponto, a rubrica de 10 pontos e o checklist da véspera.",
+          "arquivo": "assets/materiais/coding/documentacao-projeto-final.pdf",
+          "data": "03/11/2026",
+          "tags": "projeto final documentacao diagrama de dominio classes modelo er banco de dados arquitetura camadas relatorio tecnico rubrica entrega checklist drawio mermaid"
         }
       ]
     },

@@ -1,0 +1,527 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coding · Aula 12 · A vitrine ganha vida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--ink:#1b1c1f;--body:#3b3b3e;--mute:#7b7769;--teal:#1f6f6b;--teal2:#2b8a83;--wine:#7a2c46;
+--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--dark:#15171b;--dark2:#1e2127;--card:#fffdf8;--line:#e2dccd;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0c0e;overflow:hidden;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+#deck{position:absolute;width:1600px;height:900px;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;background:var(--bg);display:none;flex-direction:column;overflow:hidden;border-radius:4px}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.dark{background:var(--dark);color:#eeeae0}
+.kicker{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+h1{font-family:"Fraunces",Georgia,serif;font-size:96px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:1.1;font-weight:700;margin-bottom:34px;letter-spacing:-.005em}
+h3{font-family:"Fraunces",Georgia,serif;font-size:34px;margin:6px 0 14px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:rgba(31,111,107,.1);color:var(--teal);padding:1px 7px;border-radius:6px}
+.dark code{background:rgba(255,255,255,.08);color:#9fe3d9}
+b{font-weight:700}
+/* capa */
+.capa{justify-content:center;background:radial-gradient(1200px 600px at 85% 20%,#24302f 0,transparent 60%),var(--dark)}
+.capa h1{color:#fff;max-width:1250px;margin-bottom:28px}
+.capa .sub{font-size:30px;line-height:1.45;color:#cfc9bb;max-width:1100px}
+.capa-foot{position:absolute;bottom:70px;left:90px;font-size:22px;color:#8f8a7c}
+/* listas */
+.cols{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:start}
+ul.notes{list-style:none;display:flex;flex-direction:column;gap:22px}
+ul.notes li{font-size:31px;line-height:1.42;color:var(--body);padding-left:34px;position:relative}
+ul.notes li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:14px;border-radius:3px;background:var(--teal);transform:rotate(45deg)}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:46px;flex:1;min-height:0}
+.split.wide{grid-template-columns:1.6fr 1fr}
+.split:has(.has-tree){grid-template-columns:1.75fr 1fr}
+.split .left,.split .right{min-height:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+.code,.term{min-width:0;max-width:100%}.duo>*,.annot>*{min-width:0}
+.codeslide ul.notes li{font-size:27px}
+.full{flex:1;min-height:0;display:flex;flex-direction:column;gap:24px;justify-content:flex-start}
+/* código */
+.code,.term{background:#17191d;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+.code .body{display:flex;flex:1 1 auto;min-height:0;min-width:0}.code .body pre,.term pre{flex:1 1 auto;min-height:0;min-width:0}
+.tree{flex:none;width:250px;background:#1d2026;border-right:1px solid #2c3038;padding:10px 0;font:16px/1.75 Inter,system-ui,sans-serif;color:#b9bcc4;overflow:hidden}
+.tr-h{font:700 12px Inter,system-ui,sans-serif;letter-spacing:.12em;color:#8a8f99;padding:2px 14px 6px}
+.tr{padding-left:calc(14px + var(--d)*16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tr.dim{color:#6b707a}
+.tr .chev{display:inline-block;width:14px;color:#8a8f99}.tr.cur{background:#37373d;color:#fff;box-shadow:inset 2px 0 0 var(--gold)}
+.ic{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 8px 0 4px;background:#7f8590}.ic-py{background:#4b8bbe}.ic-ini,.ic-txt{background:#9a968b}.ic-yml{background:#c2412d}.ic-md{background:#5fa3d8}.ic-gitignore{background:#e06c4a}
+.annot>div{display:flex;flex-direction:column;gap:16px;min-height:0}
+.bar{display:flex;align-items:center;gap:8px;background:#0f1013;padding:10px 16px}
+.bar i{width:12px;height:12px;border-radius:50%;background:#e0574a}.bar i:nth-child(2){background:#e6b13d}.bar i:nth-child(3){background:#4cb26a}
+.fname{font-family:"JetBrains Mono",ui-monospace,monospace;color:#9a968b;font-size:17px;margin-left:12px;flex:1}
+.copy{background:transparent;border:1px solid #3a3d44;color:#c9c4b8;font-size:15px;padding:4px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2a2d33}.copy.done{border-color:#4cb26a;color:#7fe0a0}
+pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:26px;line-height:1.5;color:#e9e6dd;padding:18px 22px;overflow:hidden;white-space:pre;tab-size:4}
+pre .ln{display:block;margin:0 -22px;padding:0 22px}
+pre .ln.hl{background:rgba(199,154,43,.18);box-shadow:inset 4px 0 0 var(--gold)}
+.k{color:#ff8b7e}.s{color:#a8d98a}.c{color:#7f8590;font-style:italic}.n{color:#f2c46d}.d{color:#c49bff}.fn{color:#7cc7ff}.bi{color:#6fd4c6}.fl{color:#f2c46d}
+.term pre .ps{color:#7cc7ff;font-weight:700}.term .cmd{color:#f4f1ea}.term .ok{color:#7fe0a0;font-weight:700}.term .err{color:#ff8b7e}.term .dim{color:#7f8590}.term .warn{color:#f2c46d}.term .out{color:#d9d5ca}
+/* caixas */
+.ok-box,.sos,.tip{border-radius:14px;padding:22px 26px;font-size:26px;line-height:1.45;color:var(--body)}
+.ok-box{background:#e4f1e8;border-left:6px solid var(--green)}
+.lbl{display:block;font-size:17px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.ok-box .lbl{color:var(--green)}
+.sos{background:#f7e6df;border-left:6px solid var(--red)}.sos .lbl{color:var(--red)}.sos a code{font-size:18px;word-break:break-all}.sos .alt{display:block;margin-top:10px;font-size:20px;color:var(--mute)}
+.tip{background:#efe6cf;border-left:6px solid var(--gold)}.tip .lbl{color:#9a7414}
+/* duo e cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:0 1 auto;min-height:0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.card .tag{font-family:"JetBrains Mono",monospace;font-size:17px;letter-spacing:.12em;font-weight:700}
+.card.bad{border-color:#e9b8ae}.card.bad .tag{color:var(--red)}
+.card.good{border-color:#a9d4b7}.card.good .tag{color:var(--green)}
+.card.neutral .tag{color:var(--teal)}
+.card p{font-size:26px;line-height:1.45;color:var(--body)}
+.foot{font-size:26px;margin-top:26px;color:var(--body)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid3 .card h3{font-size:30px}
+.big-num{font-family:"Fraunces",Georgia,serif;font-size:64px;color:var(--teal);font-weight:700;line-height:1}
+/* afirmação */
+.afirma{justify-content:center}.afirma.wine{background:var(--wine);color:#fff}.afirma.teal{background:var(--teal);color:#fff}.afirma.dk{background:var(--dark);color:#fff}
+.afirma .kicker{color:#f3d58a}.afirma h2{font-size:62px;max-width:1300px}.afirma p{font-size:30px;line-height:1.45;max-width:1200px;opacity:.88}
+/* quiz */
+.reveal{align-self:flex-start;background:var(--teal);color:#fff;border:0;border-radius:10px;font-size:22px;padding:12px 22px;cursor:pointer;font-family:inherit}
+.answer{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 28px;font-size:28px;line-height:1.45;color:var(--body)}
+.answer p+p{margin-top:12px}
+/* fragmentos */
+.f{opacity:0;transform:translateY(6px);transition:all .3s}
+.f.vis{opacity:1;transform:none}
+/* svg */
+svg.flow{width:100%;height:auto;max-height:190px;flex:none}
+.sv-t{font:700 30px "Fraunces",Georgia,serif}.sv-s{font:22px "Inter",system-ui,sans-serif;fill:#555}.sv-a{font:600 20px "JetBrains Mono",monospace;fill:#7a2c46}.sv-f{font:italic 22px "Inter",system-ui;fill:#777}
+/* mapa */
+.mapa{padding:50px 70px 70px}
+.map-wrap{display:grid;grid-template-rows:1fr auto;gap:18px;height:100%}
+.map svg{width:100%;height:100%}
+.map{min-height:0}
+.map-info{display:grid;grid-template-columns:auto 1fr;column-gap:40px;align-items:end}
+.map-info .kicker{grid-column:1/3;margin-bottom:6px}
+.map-info h2{margin:0;font-size:50px;color:#fff}
+.map-info p{font-size:24px;color:#bdb8aa;line-height:1.4;grid-column:1/3;margin-top:10px;max-width:1300px}
+.goal{grid-column:2;grid-row:2;justify-self:end;background:#22262d;border:1px solid #343944;border-radius:12px;padding:14px 20px;font-size:22px;color:#e8e3d6}
+.goal span{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.12em;color:#7fe0a0;text-transform:uppercase;margin-bottom:4px}
+.m-zone{fill:#1c2026;stroke:#2a2f37;stroke-width:2}
+.m-zlab{font:700 17px "JetBrains Mono",monospace;letter-spacing:.14em;fill:#6f7480}
+.m-path{fill:none;stroke:#3b414c;stroke-width:10;stroke-linecap:round;stroke-dasharray:2 22}
+.m-done{fill:none;stroke:var(--teal2);stroke-width:10;stroke-linecap:round}
+.m-node circle,.m-node rect{stroke-width:5}
+.m-node.todo circle,.m-node.todo rect{fill:#15171b;stroke:#4a505c}
+.m-node.done circle,.m-node.done rect{fill:var(--teal);stroke:#5cc2b8}
+.m-node.cur circle,.m-node.cur rect{fill:var(--gold);stroke:#ffe2a0}
+.m-node .ring{fill:none;stroke:var(--gold);stroke-width:3;opacity:.7;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:34;opacity:.8}100%{r:58;opacity:0}}
+.m-code{font:700 22px "JetBrains Mono",monospace;fill:#fff}
+.m-node.todo .m-code{fill:#8a909c}.m-node.cur .m-code{fill:#1b1c1f}
+.m-name{font:600 21px "Inter",system-ui,sans-serif;fill:#d8d3c6}.m-node.todo .m-name{fill:#8a909c}
+.m-aula{font:16px "JetBrains Mono",monospace;fill:#7b8190}
+.m-flag{fill:#c2412d}
+/* barra inferior */
+#ui{position:fixed;right:18px;bottom:14px;display:flex;gap:8px;z-index:20;opacity:.35;transition:opacity .2s}
+#ui:hover{opacity:1}
+#ui button,#ui span{background:#24272d;color:#ddd;border:0;border-radius:8px;padding:7px 12px;font-size:13px;font-family:Inter,system-ui,sans-serif;cursor:pointer}
+#prog{position:fixed;left:0;bottom:0;height:4px;background:var(--gold);z-index:20;transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(11,12,14,.94);display:none;z-index:30;padding:4vh 5vw}
+#overlay.on{display:block}#overlay .map{height:80vh}
+#overlay .close{position:absolute;right:28px;top:20px;color:#ddd;font-size:15px;font-family:Inter,sans-serif}
+.relembre{background:#e8f0ed}
+.rl-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}.rl-top .kicker{margin:0}
+.rl-pill{font:700 16px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:var(--teal);padding:6px 14px;border-radius:30px}
+.rl-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;flex:1;min-height:0}
+.rl-left,.rl-right{display:flex;flex-direction:column;gap:22px;min-height:0;min-width:0}
+.rl-def{font-size:33px;line-height:1.42;color:var(--ink)}
+.rl-box{border-radius:14px;padding:20px 24px;font-size:25px;line-height:1.45;color:var(--body)}
+.rl-box.an{background:#fffdf8;border-left:6px solid var(--teal)}.rl-box.an .lbl{color:var(--teal)}
+.rl-box.cu{background:#f7e6df;border-left:6px solid var(--red)}.rl-box.cu .lbl{color:var(--red)}
+.timer{display:flex;flex-direction:column;align-items:center;gap:22px;background:#15171b;border-radius:22px;padding:34px 40px;color:#fff;flex:none}
+.t-dig{font:700 150px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em;line-height:1}
+.timer.fim .t-dig{color:#ff8b7e}
+.t-bar{width:100%;height:12px;background:#2a2e36;border-radius:8px;overflow:hidden}.t-bar i{display:block;height:100%;background:var(--gold);width:0}
+.t-btns{display:flex;gap:14px}.t-btns button{font:600 22px Inter,system-ui,sans-serif;padding:12px 26px;border-radius:12px;border:0;cursor:pointer;background:#2a2e36;color:#fff}.t-btns .t-go{background:var(--teal)}
+.t-row{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;flex:1;min-height:0;align-items:start}
+/* laboratório TDD */
+.lab{display:grid;grid-template-columns:330px 1fr;gap:30px;flex:1;min-height:0}
+.lab-steps{display:flex;flex-direction:column;gap:14px}
+.lab-steps button{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font-size:21px;cursor:pointer;font-family:inherit;color:var(--body);line-height:1.35}
+.lab-steps button b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.1em;margin-bottom:4px}
+.lab-steps button.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,107,.15)}
+.lab-steps .r b{color:var(--red)}.lab-steps .g b{color:var(--green)}
+.lab-view{display:flex;flex-direction:column;gap:16px;min-height:0}
+.lab-panel{display:none;flex-direction:column;gap:16px;min-height:0}.lab-panel.on{display:flex}
+.status{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:20px;padding:8px 16px;border-radius:30px;color:#fff}
+.status.red{background:var(--red)}.status.green{background:var(--green)}
+/* anotações sobre a saída */
+.annot{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;flex:1;min-height:0}
+.annot ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:18px}
+.annot ol li{counter-increment:a;font-size:27px;line-height:1.4;color:var(--body);padding-left:52px;position:relative}
+.annot ol li::before{content:counter(a);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--wine);color:#fff;font:700 19px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+table.t{border-collapse:collapse;width:100%;font-size:25px}
+table.t th{background:var(--teal);color:#fff;text-align:left;padding:12px 16px;font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+table.t td{padding:12px 16px;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+table.t tr:nth-child(even) td{background:#f8f5ee}
+
+.rl-pill.novo{background:var(--wine)}
+.codeslide pre{font-size:30px;line-height:1.42}
+.split.wide{grid-template-columns:2.2fr 1fr}.split:has(.has-tree){grid-template-columns:2.35fr 1fr}
+.codeslide ul.notes{gap:16px}.codeslide ul.notes li{font-size:24px;line-height:1.38}
+.tree{width:210px;font-size:15px}
+.rl-right .rl-box{font-size:24px}
+.fig{display:flex;flex-direction:column;gap:10px;align-items:center;margin:0}
+.fig img{width:100%;height:auto;object-fit:contain;background:#fff;border-radius:12px;border:2px solid var(--line);padding:10px}
+.fig figcaption{font-size:20px;color:var(--body);text-align:center;line-height:1.35}
+.fig figcaption span{display:block;font-size:14px;color:var(--mute);margin-top:4px}
+.fig figcaption a{color:var(--mute)}
+.figrow{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.figside{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.passos{display:grid;gap:16px}
+.pa{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:18px 18px 16px;position:relative;display:flex;flex-direction:column;gap:8px}
+.pa .n{width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+.pa b{font-size:26px;line-height:1.25}.pa span{font-size:21px;color:var(--body);line-height:1.38}
+.passos.c3 .pa:nth-child(3n)::after{display:none}
+.pa:not(:last-child)::after{content:"▶";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px}
+.pa.fim{border-color:#a9d4b7;background:#f4faf5}.pa.fim .n{background:var(--green)}
+.ref{font-size:17px!important;gap:8px!important}.ref p{line-height:1.4}.ref h3{font-size:18px!important}
+.ref a{color:var(--teal);font-family:"JetBrains Mono",monospace;font-size:14px;word-break:break-all}
+@media print{.relembre .rl-right pre{font-size:20px!important;line-height:1.35!important}.rl-right .rl-box{font-size:18px!important;padding:12px 16px}.fig img{max-height:430px}.pa b{font-size:20px}.pa span{font-size:16px}.pa{padding:12px}}
+@media print{.trilha{display:flex;align-items:flex-start}.trilha>.un{flex:1}.rl-def{font-size:28px}.rl-box{font-size:21px;padding:14px 18px}.rl-left{gap:14px}}
+.rl-grid{grid-template-columns:.72fr 1.28fr}
+.un h3{font-size:25px}.un li{font-size:19px}.un li b{font-size:16px}
+.trilha{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:stretch}
+.trilha.ag{grid-template-columns:repeat(4,1fr);gap:22px}.trilha.ag .un{padding:26px 24px}.trilha.ag h3{font-size:30px}.trilha.ag li{font-size:23px;line-height:1.35}.trilha.ag .hr{font:700 17px 'JetBrains Mono',monospace;color:var(--wine)}
+.trilha.ag ul{gap:14px;list-style:disc;padding-left:22px}
+.un{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px 18px 14px;display:flex;flex-direction:column;gap:6px}
+.un .tg{font:700 15px "JetBrains Mono",monospace;letter-spacing:.1em;color:var(--mute)}
+.un h3{font-size:23px;line-height:1.2}
+.un ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.un li{font-size:17px;line-height:1.32;color:var(--body)}
+.un li b{font-family:"JetBrains Mono",monospace;color:var(--ink);display:block;font-size:15px}
+table.t tr.hj td{background:#fbf1f4!important}table.t tr.ev td{background:#fff6dc!important}
+.slide>.full,.slide>.split,.slide>.rl-grid,.slide>.cols,.slide>.duo,.slide>.t-row{flex:0 1 auto;margin-top:auto;margin-bottom:auto}
+.un.done{border-color:#a9d4b7;background:#f4faf5}.un.done .tg{color:var(--green)}
+.un.now{border-color:var(--wine);box-shadow:0 0 0 5px rgba(122,44,70,.14)}.un.now .tg{color:var(--wine)}
+.un.todo{opacity:.72}
+.stack{display:flex;flex-direction:column;gap:6px;width:860px;flex:none}
+.ly{display:flex;align-items:center;gap:18px;border:3px solid var(--line);border-radius:16px;padding:12px 20px;background:var(--card)}
+.ly b{font-size:24px;width:290px;flex:none}.ly span{font-size:20px;color:var(--body);flex:1}.ly i{font:700 16px "JetBrains Mono",monospace;font-style:normal;text-align:right;width:120px;flex:none}
+.ly.done{border-color:#a9d4b7}.ly.done i{color:var(--green)}
+.ly.now{border-color:var(--wine);background:#fbf1f4}.ly.now i{color:var(--wine)}
+.ly.todo i{color:var(--mute)}
+.arr{text-align:center;font:700 18px "JetBrains Mono",monospace;color:var(--mute)}
+.st-row{display:flex;gap:40px;align-items:flex-start}.st-row ul.notes li{font-size:27px}
+.url-an{font:700 40px "JetBrains Mono",monospace;display:flex;flex-wrap:wrap;margin:10px 0 20px}
+.url-an span{display:flex;flex-direction:column;align-items:center;padding:0 2px}
+.url-an em{font:600 17px Inter,sans-serif;font-style:normal;margin-top:10px;padding:4px 10px;border-radius:20px;color:#fff;white-space:nowrap}
+.layers{display:flex;flex-direction:column;gap:8px;width:640px}
+.lay{border-radius:14px;padding:14px 20px;font-size:22px;color:#fff;display:flex;justify-content:space-between}
+.lay b{font-size:24px}
+.sw{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:9px;font-family:Inter,sans-serif}
+.sw h4{font:700 30px Inter,sans-serif;margin-bottom:4px}.sw h4 small{font-size:14px;background:#7d8492;color:#fff;border-radius:10px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.sw .op{display:flex;align-items:center;gap:14px;border-radius:8px;padding:10px 12px;font-size:22px}
+.sw .op b{font:700 18px "JetBrains Mono",monospace;color:#fff;border-radius:6px;padding:6px 0;width:96px;text-align:center}
+.sw .op code{font:600 22px "JetBrains Mono",monospace;background:none;color:#1b1c1f;padding:0}
+.sw .op span{color:#555}
+.sw .get{background:#ebf3fb;border:1px solid #61affe}.sw .get b{background:#61affe}
+.sw .post{background:#e8f6f0;border:1px solid #49cc90}.sw .post b{background:#49cc90}
+.sw .del{background:#fbeaea;border:1px solid #f93e3e}.sw .del b{background:#f93e3e}
+.sw .sim{font-size:13px;color:#888;text-align:right}
+.sch{background:#f7f7f7;border-radius:8px;padding:16px 20px;font:20px 'JetBrains Mono',monospace;display:flex;flex-direction:column;gap:10px}.sch>b{font-size:22px}.sch .f{display:grid;grid-template-columns:240px 1fr;padding-left:28px}.sch code{background:none;font-weight:700;color:#1b1c1f}.sch i{color:#c2412d;font-style:normal}.sch em{font-style:normal;color:#55a;font-size:17px}
+.ref{font-size:21px;line-height:1.45;color:var(--body);display:flex;flex-direction:column;gap:12px}
+.ref h3{font-size:22px;color:var(--teal);font-family:"JetBrains Mono",monospace;letter-spacing:.1em;margin-top:6px}
+.obj{counter-reset:o;list-style:none;display:flex;flex-direction:column;gap:14px}
+.obj li{counter-increment:o;font-size:27px;line-height:1.38;color:var(--body);padding-left:56px;position:relative}
+.obj li::before{content:counter(o);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+
+.tela{width:100%;height:560px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.tela-wrap{display:flex;flex-direction:column;gap:8px}.tela-wrap span{font:600 15px 'JetBrains Mono',monospace;color:var(--mute)}
+@media print{.tela{display:none}.tela-wrap::after{content:"(a página aparece aqui na versão HTML da aula)";font-size:18px;color:#777}}
+</style></head><body>
+<div id="deck"><section class="slide dark capa" data-fase=""><div class="capa-in"><div class="kicker">Coding · Aula 12 · 3 de novembro de 2026</div><h1>A vitrine ganha vida</h1><p class="sub">JavaScript no navegador: a linguagem, o DOM e os eventos. Hoje a página deixa de ser um cartaz e passa a responder a quem está do outro lado.</p><div class="capa-foot">Faculdade Senac Pernambuco · ADS 2026.2 · Prof. Sebastião Rogério</div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 1 de 3</div><h2>O caminho até aqui</h2><div class="full"><div class="trilha"><div class="un done"><div class="tg">U1 · ✔ CONCLUÍDA</div><h3>Fundamentos</h3><ul><li><b>11/08</b> Por que tantas linguagens</li><li><b>18/08</b> Paradigmas</li><li><b>25/08</b> Tipos e coleções</li><li><b>01/09</b> Funções, módulos e testes</li></ul></div><div class="un done"><div class="tg">U2 · ✔ CONCLUÍDA</div><h3>Orientação a objetos</h3><ul><li><b>08/09</b> Classes</li><li><b>22/09</b> AV1 e encapsulamento</li><li><b>29/09</b> Herança e polimorfismo</li><li><b>06/10</b> Contratos e a Loja de Roupas</li></ul></div><div class="un done"><div class="tg">U3 · ✔ CONCLUÍDA</div><h3>Back-end e API</h3><ul><li><b>13/10</b> HTTP, REST e a primeira API</li><li><b>20/10</b> Persistência e camadas</li></ul></div><div class="un now"><div class="tg">U4 · ◀ ESTAMOS AQUI</div><h3>Front-end</h3><ul><li><b>27/10</b> Entrega 1, HTML e CSS</li><li><b>03/11</b> Hoje: JavaScript, DOM e eventos</li><li><b>10/11</b> Integração com a API</li></ul></div><div class="un todo"><div class="tg">U5</div><h3>Entrega e avaliação</h3><ul><li><b>17/11</b> PROJETO FINAL</li><li><b>24/11</b> AV2</li><li><b>01/12</b> Framework (sem nota)</li><li><b>08/12</b> Encerramento</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 2 de 3</div><h2>A aplicação que estamos construindo, camada por camada</h2><div class="full"><div class="pilha"><div class="camada now"><b>Telas no navegador</b><span>HTML e CSS prontos na Aula 11; hoje o comportamento · Aulas 11 a 13</span><em>◀ HOJE</em></div><div class="seta">▲ <span>fetch (Aula 13)</span> ▼</div><div class="camada ok"><b>API: HTTP + REST</b><span>a porta da loja para a rede · Aula 9</span><em>✔ pronto</em></div><div class="seta">▲ <span>chama</span> ▼</div><div class="camada ok"><b>Serviço e repositório</b><span>as camadas entre a porta e o banco · Aula 10</span><em>✔ pronto</em></div><div class="seta">▲ <span>usa</span> ▼</div><div class="camada ok"><b>Domínio e banco</b><span>as classes e o loja.db · Aulas 5 a 10</span><em>✔ pronto</em></div></div><ul class="notes mini"><li class="">Na Aula 11 as telas nasceram <b>estáticas</b>: mostram o que está escrito no HTML e nada mais.</li><li class="">Hoje elas passam a <b>reagir</b> — clique, digitação e envio de formulário — ainda com dados de exemplo na própria página.</li><li class="">Na Aula 13 elas vão <b>buscar os dados na API</b> e a aplicação fecha de ponta a ponta.</li></ul></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 3 de 3</div><h2>O que falta: as notas fecham em 27/11</h2><div class="full"><table class="t"><tr><th>Data</th><th>Aula</th><th>Tema</th><th>O que acrescenta ao projeto</th></tr><tr><td>27/10</td><td>11</td><td>Entrega 1 · HTML e CSS</td><td>a API foi avaliada e nasceu a primeira tela</td></tr><tr class="hj"><td><b>03/11</b></td><td><b>12</b></td><td><b>JavaScript, DOM e eventos</b></td><td><b>hoje: as telas reagem ao usuário</b></td></tr><tr><td>10/11</td><td>13</td><td>Assincronismo e integração</td><td>as telas conversam com a API</td></tr><tr class="ev"><td><b>17/11</b></td><td>14</td><td><b>PROJETO FINAL</b></td><td>apresentação com demonstração e a documentação: 50% do segundo processo</td></tr><tr class="ev"><td><b>24/11</b></td><td>15</td><td><b>AV2</b> e devolutiva</td><td>prova: 50% do segundo processo</td></tr><tr><td>01/12 e 08/12</td><td>16 e 17</td><td>Framework e encerramento</td><td>conteúdo complementar, sem nota</td></tr></table></div></section><section class="slide fullslide " data-fase=""><div class="kicker">O que vamos ver hoje</div><h2>A terceira linguagem do navegador</h2><div class="full"><div class="trilha ag"><div class="un"><div class="tg">ABERTURA</div><h3>De onde viemos</h3><p class="hr">retomada da Aula 11</p><ul><li>A vitrine que vocês fizeram</li><li>O botão que não faz nada</li></ul></div><div class="un"><div class="tg">MUNDO 1</div><h3>A linguagem</h3><p class="hr">teoria com exemplos</p><ul><li>A terceira linguagem</li><li>Valores e funções</li><li>Listas e objetos</li></ul></div><div class="un"><div class="tg">MUNDO 2</div><h3>DOM e eventos</h3><p class="hr">teoria com exemplos</p><ul><li>A página é objeto</li><li>Mudar a página</li><li>Eventos</li></ul></div><div class="un"><div class="tg">MUNDO 3</div><h3>Prática na loja</h3><p class="hr">vocês seguem a aula</p><ul><li>O primeiro script</li><li>A vitrine filtra</li><li>O formulário reage</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Abertura · retomada da Aula 11</div><h2>Vocês fizeram um botão. Por que ele não faz nada?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/cadastro.html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="4">&lt;form&gt;
+  &lt;label for="nome"&gt;Nome do produto&lt;/label&gt;
+  &lt;input id="nome" name="nome" required&gt;
+  &lt;button&gt;Cadastrar&lt;/button&gt;
+&lt;/form&gt;</pre></div></div></div><div class="right"><ul class="notes"><li class="">O <b>HTML</b> criou o botão: ele existe na página.</li><li class="">O <b>CSS</b> deixou o botão apresentável: cor, tamanho, espaçamento.</li><li class="">Ninguém disse ao botão <b>o que fazer</b> — e é exatamente essa frase que falta no projeto de vocês.</li><li class="">Essa frase se escreve em <b>JavaScript</b>, e é a aula de hoje.</li><li class=""><b>Não precisa anotar sintaxe.</b> Tudo do mundo 1 está na trilha, que vocês recebem no fim da aula. Hoje o que importa é entender <b>onde o JavaScript difere do Python</b>.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current=""></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Nove fases, três mundos</h2><p>Mundos 1 e 2: a linguagem, o DOM e os eventos, com exemplos. Mundo 3: a vitrine da Loja de Roupas ganhando comportamento, fase por fase, com checkpoints.</p></div></div></section><section class="slide dark mapa" data-fase="1-1"><div class="map-wrap"><div class="map" data-current="1-1"></div><div class="map-info"><div class="kicker">FASE 1-1 · CONTEÚDO NOVO</div><h2>A terceira linguagem</h2><p>Onde o JavaScript roda, e por que ele é diferente do Python que vocês já escrevem.</p></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Onde o JavaScript roda</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O Python de vocês roda <b>no servidor</b>: a requisição chega, o FastAPI responde, e o usuário nunca vê esse código. O JavaScript roda <b>no navegador</b> da pessoa, na máquina dela, depois que a página chegou. É a única linguagem que o navegador executa.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">servidor (Python)        navegador (JavaScript)
+-----------------        ----------------------
+FastAPI, SQLAlchemy      o que acontece na tela
+as regras do negócio     clique, digitação, envio
+o banco de dados         o que aparece e some
+
+front/app.js  &lt;- o arquivo de hoje</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Todo JavaScript que vocês escrevem <b>chega inteiro ao navegador</b> e pode ser lido por qualquer um com dois cliques. Senha, token e regra de permissão ficam no servidor, sempre.</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>O console: onde o JavaScript fala com você</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O Python avisa no terminal; o JavaScript avisa no <b>console do navegador</b>. Abre com <b>F12</b> (ou Ctrl+Shift+I) na aba <i>Console</i>. É lá que aparece o que o seu <code>console.log</code> imprime e, em vermelho, todo erro do seu código. A partir de hoje ele fica aberto o tempo todo, ao lado da página.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">console do navegador</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&gt; console.log("oi")            // você manda imprimir
+oi
+
+&gt; 2 + 2                        // dá para testar na hora
+4
+
+&gt; document.querySelector("h1")
+&lt;h1&gt;Vitrine&lt;/h1&gt;
+
+✗ Uncaught TypeError: ... is null   &lt;- vermelho = bug seu</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>O console é o <code>print()</code> do navegador, e também um Python interativo: dá para digitar uma linha e ver o resultado sem salvar arquivo nenhum.</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>let e const</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Em Python você atribui e pronto. Em JavaScript toda variável nasce com uma palavra na frente, e essa palavra decide se ela pode ser <b>reatribuída</b>. Regra prática: escreva tudo com <code>const</code>; quando o navegador reclamar, troque aquela linha para <code>let</code>.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl=""># Python                   // JavaScript
+nome = "Ana"               let nome = "Ana";
+nome = "Bia"               nome = "Bia";     // ok
+
+PI = 3.14                  const PI = 3.14;
+PI = 3.15   # permitido    PI = 3.15;        // TypeError</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>const</code> trava a variável, não o conteúdo. Com <code>const lista = [1, 2]</code>, a linha <code>lista.push(3)</code> funciona; o que dá erro é <code>lista = [4]</code>.</div></div></div></section><section class="slide quiz" data-fase="1-1"><div class="kicker">Fase 1-1 · Dá erro ou não?</div><h2>Diga o que acontece em cada linha, e por quê.</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) <code>const n = 10; n = 11;</code></li><li class="">b) <code>const aluno = { nome: "Ana" }; aluno.nome = "Bia";</code></li><li class="">c) <code>let x; x = 5;</code></li><li class="">d) <code>const lista = []; lista.push("a");</code></li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) erro.</b> Reatribuir a variável é o que <code>const</code> proíbe.</p><p><b>b) funciona.</b> O objeto continua o mesmo; só um campo dentro dele mudou.</p><p><b>c) funciona.</b> <code>let</code> permite declarar agora e atribuir depois.</p><p><b>d) funciona.</b> Mesmo caso do b: a lista é a mesma, só ganhou um item.</p></div></div></div></section><section class="slide dark mapa" data-fase="1-2"><div class="map-wrap"><div class="map" data-current="1-2"></div><div class="map-info"><div class="kicker">FASE 1-2 · CONTEÚDO NOVO</div><h2>Valores e funções</h2><p>As comparações que enganam e a forma curta de escrever função.</p></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Igualdade: use sempre ===</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">JavaScript tem <b>dois</b> operadores de igualdade. O <code>==</code> converte os tipos antes de comparar e produz resultados que ninguém espera. O <code>===</code> compara tipo e valor, e é o que corresponde ao <code>==</code> do Python.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">1 ==  "1"      // true   &lt;- converteu o texto em número
+1 === "1"      // false  &lt;- use este
+
+0 == ""        // true
+null == undefined  // true
+
+null       // vazio de propósito
+undefined  // nunca recebeu valor</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Não existe caso nesta disciplina em que <code>==</code> seja a escolha certa. Use <code>===</code> e <code>!==</code> sempre.</div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Os seis valores falsos</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Em Python, lista vazia e dicionário vazio são falsos. <b>Em JavaScript não.</b> Os valores falsos são exatamente seis: <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code> e <code>NaN</code> (<i>Not a Number</i>, "não é um número": o que sobra de uma conta inválida, como <code>Number("abc")</code>). Todo o resto é verdadeiro.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">if ([]) {
+  // ENTRA AQUI. em Python, não entraria
+}
+
+const produtos = [];
+
+if (!produtos)              { }  // nunca executa
+if (produtos.length === 0)  { }  // o jeito certo</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Para saber se uma lista está vazia, teste <code>lista.length === 0</code>. O <code>if (not lista)</code> que funciona em Python vira bug silencioso aqui.</div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Função, função de seta e texto com variável</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Três novidades de uma vez. A <i>arrow function</i> (função de seta, <code>=&gt;</code>) é a forma curta e sem chaves ela já devolve o resultado. A <i>template string</i> (texto de modelo), entre crases com <code>${ }</code>, faz o papel da f-string. E <b>função é valor</b>: dá para guardar numa variável e passar como argumento — o mundo 2 inteiro depende disso.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl=""># Python                    // JavaScript
+def soma(a, b):             function soma(a, b) {
+    return a + b              return a + b;
+                            }
+
+dobro = lambda x: x * 2     const dobro = (x) =&gt; x * 2;
+
+f"R$ {p:.2f}"               `R$ ${p.toFixed(2)}`</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>const dobro = x =&gt; { x * 2 }</code> devolve <code>undefined</code>. Assim que aparecem as chaves, o <code>return</code> volta a ser obrigatório.</div></div></div></section><section class="slide quiz" data-fase="1-2"><div class="kicker">Fase 1-2 · Verdadeiro ou falso?</div><h2>O <code>if</code> entra ou não entra?</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) <code>if ("0")</code></li><li class="">b) <code>if (0)</code></li><li class="">c) <code>if ({})</code></li><li class="">d) <code>if (produtos.length)</code>, com a lista vazia</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) entra.</b> É um texto com um caractere; só o texto vazio é falso.</p><p><b>b) não entra.</b> O número zero é um dos seis falsos.</p><p><b>c) entra.</b> Objeto vazio é verdadeiro — ao contrário do Python.</p><p><b>d) não entra.</b> <code>length</code> vale <code>0</code>, que é falso. Funciona, mas prefira <code>=== 0</code>: diz o que você quer dizer.</p></div></div></div></section><section class="slide dark mapa" data-fase="1-3"><div class="map-wrap"><div class="map" data-current="1-3"></div><div class="map-info"><div class="kicker">FASE 1-3 · CONTEÚDO NOVO</div><h2>Listas e objetos</h2><p>O que corresponde à lista e ao dicionário do Python, e como percorrer sem escrever laço.</p></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Array e objeto</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">A lista do Python é o <i>array</i> (vetor); o dicionário é o <i>object</i> (objeto), com a chave escrita <b>sem aspas</b>. Os dois se combinam igual ao Python: array de objetos, objeto com array dentro. É assim que a vitrine vai guardar os produtos.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl=""># Python                      // JavaScript
+len(x)                        x.length
+x.append(4)                   x.push(4)
+d["nome"]                     d.nome
+for p in produtos:            for (const p of produtos)
+d.get("x")                    d.x   // undefined, sem erro
+
+const produtos = [
+  { nome: "Camiseta", preco: 39.9, tam: "M" },
+  { nome: "Calça",    preco: 129.0, tam: "G" }
+];</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Ler uma chave que não existe devolve <code>undefined</code> em vez de erro. <code>produto.prceo</code> não quebra nada — e o problema só aparece três linhas depois.</div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>map, filter e sort</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Onde o Python usa compreensão de lista, o JavaScript chama um <b>método passando uma função</b>. <code>map</code> transforma cada item, <code>filter</code> seleciona, <code>sort</code> ordena. É o uso prático de "função é valor".</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl=""># Python
+nomes = [p["nome"] for p in produtos]
+baratos = [p for p in produtos if p["preco"] &lt; 50]
+
+// JavaScript
+const nomes   = produtos.map(p =&gt; p.nome);
+const baratos = produtos.filter(p =&gt; p.preco &lt; 50);
+const porPreco = [...produtos].sort((a, b) =&gt; a.preco - b.preco);</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>[10, 9, 1].sort()</code> devolve <code>[1, 10, 9]</code>: sem função de comparação, <code>sort</code> ordena como texto. Para números, <code>.sort((a, b) =&gt; a - b)</code>.</div></div></div></section><section class="slide quiz" data-fase="1-3"><div class="kicker">Fase 1-3 · Traduza do Python</div><h2>Como fica em JavaScript?</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) <code>[p["nome"] for p in produtos]</code></li><li class="">b) <code>[p for p in produtos if p["tam"] == "M"]</code></li><li class="">c) <code>len(produtos)</code></li><li class="">d) ordenar os produtos do mais barato ao mais caro</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a)</b> <code>produtos.map(p =&gt; p.nome)</code></p><p><b>b)</b> <code>produtos.filter(p =&gt; p.tam === "M")</code></p><p><b>c)</b> <code>produtos.length</code></p><p><b>d)</b> <code>[...produtos].sort((a, b) =&gt; a.preco - b.preco)</code> — a cópia evita bagunçar a lista original.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-1"><div class="map-wrap"><div class="map" data-current="2-1"></div><div class="map-info"><div class="kicker">FASE 2-1 · CONTEÚDO NOVO</div><h2>A página é objeto</h2><p>O navegador transforma o seu HTML numa árvore que o programa consegue ler e alterar.</p></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>DOM: a página virou árvore de objetos</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">DOM é <i>Document Object Model</i> — Modelo de Objetos do Documento. É a tradução do HTML que vocês escreveram na Aula 11 numa árvore de objetos viva na memória do navegador. <b>Mudar o objeto muda a tela na hora</b>; o arquivo no disco continua igual.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&lt;main&gt;                          document
+  &lt;h1&gt;Vitrine&lt;/h1&gt;                └ main
+  &lt;section id="vitrine"&gt;              ├ h1   "Vitrine"
+    &lt;article class="produto"&gt;         └ section#vitrine
+      ...                                   └ article.produto
+    &lt;/article&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>O HTML é a planta da casa; o DOM é a casa construída. Você não reescreve a planta para mover um móvel — mexe na casa. Recarregar a página reconstrói tudo a partir da planta.</div></div></div></section><section class="slide fullslide " data-fase="2-1"><div class="kicker">Fase 2-1 · Passo a passo</div><h2>Do arquivo ao comportamento</h2><div class="full"><table class="t"><tr><th>#</th><th>O que acontece</th><th>Quem faz</th></tr><tr><td>1</td><td>O navegador baixa o <code>index.html</code></td><td>rede</td></tr><tr><td>2</td><td>Lê o HTML de cima para baixo e monta a árvore do DOM</td><td>navegador</td></tr><tr><td>3</td><td>Aplica o <code>estilo.css</code> a cada nó da árvore</td><td>navegador</td></tr><tr><td>4</td><td>Encontra o <code>&lt;script src="app.js"&gt;</code> e executa o arquivo</td><td>navegador</td></tr><tr class="hj"><td><b>5</b></td><td><b>O seu código encontra elementos, altera e registra o que fazer nos eventos</b></td><td><b>vocês</b></td></tr><tr><td>6</td><td>A pessoa clica, digita, envia — e o navegador chama as suas funções</td><td>usuário</td></tr></table><ul class="notes mini"><li class="">O passo 4 vem <b>depois</b> do 2: por isso o <code>&lt;script&gt;</code> vai no fim do <code>&lt;body&gt;</code>. No <code>&lt;head&gt;</code>, ele rodaria antes de os elementos existirem.</li></ul></div></section><section class="slide dark mapa" data-fase="2-2"><div class="map-wrap"><div class="map" data-current="2-2"></div><div class="map-info"><div class="kicker">FASE 2-2 · CONTEÚDO NOVO</div><h2>Mudar a página</h2><p>Encontrar um elemento, trocar o conteúdo dele e criar elementos novos a partir de dados.</p></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Encontrar: querySelector</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Dois métodos resolvem quase tudo, e a sintaxe de busca é <b>a mesma do seletor de CSS</b> que vocês aprenderam na Aula 11. <code>querySelector</code> devolve um elemento — o primeiro que casar — ou <code>null</code>. <code>querySelectorAll</code> devolve todos, numa lista.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">const titulo  = document.querySelector("h1");
+const vitrine = document.querySelector("#vitrine");
+const cards   = document.querySelectorAll(".produto");
+
+console.log(cards.length);   // quantos cartões existem
+cards.forEach(c =&gt; console.log(c.textContent));</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>É a busca do CSS, com a mesma escrita: <code>#id</code>, <code>.classe</code>, <code>tag</code>. O que muda é o que você faz depois — lá você pintava, aqui você programa.</div></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>Alterar e criar</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><code>textContent</code> troca o texto. <code>classList</code> liga e desliga classes do CSS — ou seja, o JavaScript <b>aciona o estilo</b> que já existe, em vez de escrever cor na mão. E <code>createElement</code> monta um pedaço de página a partir de dados.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">titulo.textContent = "Vitrine da Loja";
+card.classList.add("esgotado");      // liga a classe do CSS
+card.classList.remove("oculto");
+
+function montarCard(p) {
+  const art = document.createElement("article");
+  art.className = "produto";
+  art.innerHTML = `&lt;h3&gt;${p.nome}&lt;/h3&gt;&lt;p&gt;R$ ${p.preco.toFixed(2)}&lt;/p&gt;`;
+  return art;
+}
+
+vitrine.innerHTML = "";              // limpa antes de desenhar
+produtos.forEach(p =&gt; vitrine.append(montarCard(p)));</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Nunca monte <code>innerHTML</code> com algo que o usuário digitou: é a porta de entrada de código estranho na sua página. E limpar antes de desenhar evita a lista duplicada.</div></div></div></section><section class="slide quiz" data-fase="2-2"><div class="kicker">Fase 2-2 · Por que deu null?</div><h2>O código abaixo imprime <code>null</code> e depois quebra. Onde está o erro?</h2><div class="split"><div class="left"><ul class="notes"><li class=""><code>&lt;head&gt;</code></li><li class="">&nbsp;&nbsp;<code>&lt;script src="app.js"&gt;&lt;/script&gt;</code></li><li class=""><code>&lt;/head&gt;</code> &nbsp;…&nbsp; <code>&lt;section id="vitrine"&gt;</code></li><li class="">e em <code>app.js</code>: <code>document.querySelector("#vitrine").innerHTML = "";</code></li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>O script rodou antes de o elemento existir.</b></p><p>O navegador lê a página de cima para baixo: no <code>&lt;head&gt;</code>, a <code>section</code> ainda não foi criada.</p><p><b>Correção:</b> mover o <code>&lt;script&gt;</code> para o fim do <code>&lt;body&gt;</code>.</p><p>Alternativa: manter no <code>head</code> com o atributo <code>defer</code>, que adia a execução.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-3"><div class="map-wrap"><div class="map" data-current="2-3"></div><div class="map-info"><div class="kicker">FASE 2-3 · CONTEÚDO NOVO</div><h2>Eventos</h2><p>O que faz um botão deixar de ser enfeite.</p></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>addEventListener</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Um evento é algo que aconteceu na página: um clique, uma tecla, um formulário enviado. <code>addEventListener</code> (ouvinte de evento) recebe <b>o nome do evento e uma função</b>. A função não roda agora: fica guardada, e o navegador a chama quando o evento acontecer. É a <i>callback</i> (função de retorno).</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">const botao = document.querySelector("#filtrar");
+
+botao.addEventListener("click", function () {
+  console.log("alguém clicou");
+});
+
+// mesma coisa, com função de seta
+botao.addEventListener("click", () =&gt; console.log("clicou"));</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>addEventListener("click", minhaFuncao())</code> — com parênteses — executa a função na hora e registra o <b>resultado</b> dela. Passe o nome <b>sem</b> parênteses.</div></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 12</span></div><h2>click, input, submit — e o preventDefault</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Com três eventos dá para fazer o front-end inteiro do projeto. A função recebe um objeto com os dados do evento, por convenção chamado <code>e</code>: <code>e.target</code> é o elemento onde aconteceu e <code>e.target.value</code> é o que foi digitado.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">campo.addEventListener("input", (e) =&gt; {
+  console.log("digitou:", e.target.value);
+});
+
+form.addEventListener("submit", (e) =&gt; {
+  e.preventDefault();      // sem isto, a página recarrega
+  const nome = document.querySelector("#nome").value;
+  console.log({ nome });
+});</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>O comportamento padrão do formulário é <b>recarregar a página</b>, de um tempo anterior ao JavaScript. <code>preventDefault</code> diz "eu cuido disso" — sem ele, o seu código some antes de terminar.</div></div></div></section><section class="slide quiz" data-fase="2-3"><div class="kicker">Fase 2-3 · Qual evento usar?</div><h2>Escolha o evento adequado para cada caso.</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) Filtrar a vitrine enquanto a pessoa digita.</li><li class="">b) Abrir os detalhes ao tocar no cartão do produto.</li><li class="">c) Validar os campos antes de cadastrar um produto.</li><li class="">d) Avisar que o campo de preço ficou vazio, só ao sair dele.</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) input</b>: dispara a cada tecla.</p><p><b>b) click</b>: serve para toque no celular também.</p><p><b>c) submit</b> no <code>&lt;form&gt;</code>, com <code>preventDefault</code> — e não <code>click</code> no botão, que deixaria o Enter de fora.</p><p><b>d) blur</b>: dispara quando o campo perde o foco. Existem muitos outros; estes quatro cobrem o projeto.</p></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Hora da prática</div><h2>Agora é com vocês</h2><div class="full"><ul class="notes"><li class="">Abram a pasta <code>loja-roupas</code> no editor, a mesma da Aula 11.</li><li class="">Três fases, cada uma com um checkpoint: salvar, rodar o <code>pytest</code> e subir.</li><li class="">Hoje os produtos ainda ficam <b>escritos no próprio app.js</b>. Na Aula 13 eles vêm da API.</li><li class="">Travou numa fase? O slide do checkpoint tem o link da fase pronta.</li><li class=""><b>Deixem o console aberto</b> (F12) ao lado do editor: é ele que diz o que deu errado.</li><li class="">Esqueceu alguma coisa do mundo 1? A <b>trilha</b> refaz tudo em sete aulas curtas — consultem durante a prática, não decorem.</li></ul></div></section><section class="slide dark mapa" data-fase="3-1"><div class="map-wrap"><div class="map" data-current="3-1"></div><div class="map-info"><div class="kicker">FASE 3-1 · PRÁTICA</div><h2>O primeiro script</h2><p>Ligar o arquivo na página e desenhar a vitrine a partir de uma lista.</p></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>front/index.html: ligar o script</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/index.html</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,3">  &lt;section id="vitrine"&gt;&lt;/section&gt;
+
+  &lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div></div></div><div class="right"><ul class="notes"><li class="f">A <code>section</code> agora nasce <b>vazia</b>: quem põe os cartões é o JavaScript.</li><li class="f">O <code>&lt;script&gt;</code> fica na <b>última linha</b> antes do <code>&lt;/body&gt;</code>.</li><li class="f">Os cartões que vocês escreveram na Aula 11 saem do HTML — guardem um deles de modelo.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>front/app.js: a vitrine desenhada por código</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,7,18,19,23">const produtos = [
+  { nome: "Camiseta básica", preco: 39.9,  tam: "M" },
+  { nome: "Calça jeans",     preco: 129.0, tam: "G" },
+  { nome: "Moletom",         preco: 159.9, tam: "M" }
+];
+
+const vitrine = document.querySelector("#vitrine");
+
+function montarCard(p) {
+  const art = document.createElement("article");
+  art.className = "produto";
+  art.innerHTML = `&lt;h3&gt;${p.nome}&lt;/h3&gt;
+                   &lt;p&gt;R$ ${p.preco.toFixed(2)}&lt;/p&gt;
+                   &lt;p&gt;Tamanho ${p.tam}&lt;/p&gt;`;
+  return art;
+}
+
+function desenhar(lista) {
+  vitrine.innerHTML = "";
+  lista.forEach(p =&gt; vitrine.append(montarCard(p)));
+}
+
+desenhar(produtos);</pre></div></div></div><div class="right"><ul class="notes"><li class="f">A lista de produtos é o <b>dado</b>; <code>desenhar</code> é a <b>tela</b>. Separados desde já.</li><li class="f"><code>toFixed(2)</code> formata o preço com duas casas — é o <code>:.2f</code> do Python.</li><li class="f"><code>desenhar</code> sempre limpa antes: chamar de novo não duplica.</li><li class="f">O CSS da Aula 11 continua valendo: a classe <code>produto</code> é a mesma.</li></ul></div></div></section><section class="slide check" data-fase="3-1"><div class="kicker">FASE 3-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-1: vitrine desenhada por JavaScript"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A vitrine abre com os três produtos e o <b>visual da Aula 11 intacto</b>. No console do navegador (F12), nenhum erro em vermelho.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-19.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-19.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-19</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-2"><div class="map-wrap"><div class="map" data-current="3-2"></div><div class="map-info"><div class="kicker">FASE 3-2 · PRÁTICA</div><h2>A vitrine filtra</h2><p>Um campo de busca que filtra os produtos enquanto a pessoa digita.</p></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No editor</div><h2>front/app.js: filtrar enquanto digita</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="6,9,10,13">// no index.html, dentro do header:
+//   &lt;input id="busca" type="search" placeholder="Buscar produto"&gt;
+
+const busca = document.querySelector("#busca");
+
+busca.addEventListener("input", (e) =&gt; {
+  const termo = e.target.value.toLowerCase();
+
+  const achados = produtos.filter(
+    p =&gt; p.nome.toLowerCase().includes(termo)
+  );
+
+  desenhar(achados);
+});</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O evento <code>input</code> dispara a cada tecla: o filtro acontece enquanto a pessoa digita.</li><li class="f"><code>toLowerCase</code> dos dois lados faz a busca ignorar maiúsculas.</li><li class="f"><code>filter</code> devolve uma lista nova; <code>produtos</code> continua intacta — por isso dá para apagar a busca e tudo voltar.</li><li class="f">Repare: <b>a função desenhar não mudou</b>. Dado e tela separados pagam dividendo já na segunda fase.</li></ul></div></div></section><section class="slide fullslide " data-fase="3-2"><div class="kicker">Fase 3-2 · No navegador</div><h2>Conferir como um profissional</h2><div class="full"><table class="t"><tr><th>#</th><th>O que fazer</th><th>O que tem que acontecer</th></tr><tr><td>1</td><td>Digitar <code>cam</code> no campo de busca</td><td>só a camiseta fica na vitrine</td></tr><tr><td>2</td><td>Apagar tudo</td><td>os três produtos voltam</td></tr><tr><td>3</td><td>Digitar <code>CAM</code>, em maiúsculas</td><td>mesmo resultado do passo 1</td></tr><tr><td>4</td><td>Digitar <code>zzz</code></td><td>vitrine vazia, e <b>nenhum erro</b> no console</td></tr><tr><td>5</td><td>Abrir o F12 na aba Console</td><td>limpo: vermelho ali é bug seu</td></tr></table><ul class="notes mini"><li class="">O passo 4 costuma revelar o cartão duplicado de quem esqueceu o <code>vitrine.innerHTML = ""</code>.</li></ul></div></section><section class="slide check" data-fase="3-2"><div class="kicker">FASE 3-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-2: busca que filtra a vitrine"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Digitar filtra, apagar traz tudo de volta, e o console continua limpo nos cinco passos da conferência.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-20.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-20.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-20</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-3"><div class="map-wrap"><div class="map" data-current="3-3"></div><div class="map-info"><div class="kicker">FASE 3-3 · PRÁTICA</div><h2>O formulário reage</h2><p>Validar o cadastro antes de enviar — e o produto novo aparecer na vitrine.</p></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · No editor</div><h2>front/app.js: o formulário de cadastro</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="5,10,14,19,20">const form = document.querySelector("#form-produto");
+const aviso = document.querySelector("#aviso");
+
+form.addEventListener("submit", (e) =&gt; {
+  e.preventDefault();
+
+  const nome  = document.querySelector("#nome").value.trim();
+  const preco = Number(document.querySelector("#preco").value);
+
+  if (nome === "") {
+    aviso.textContent = "Informe o nome do produto.";
+    return;
+  }
+  if (!(preco &gt; 0)) {
+    aviso.textContent = "O preço precisa ser maior que zero.";
+    return;
+  }
+
+  produtos.push({ nome, preco, tam: "M" });
+  desenhar(produtos);
+  form.reset();
+  aviso.textContent = "Produto cadastrado.";
+});</pre></div></div></div><div class="right"><ul class="notes"><li class="f"><code>preventDefault</code> primeiro: sem ele a página recarrega e nada do resto roda.</li><li class="f"><code>.value</code> sempre devolve <b>texto</b>. <code>Number(...)</code> converte; <code>trim()</code> tira os espaços.</li><li class="f"><code>!(preco &gt; 0)</code> pega o vazio, o zero, o negativo e o <code>NaN</code> de uma vez.</li><li class="f"><code>{ nome, preco }</code> é atalho para <code>{ nome: nome, preco: preco }</code>.</li><li class="f">A mensagem vai para um elemento na página — <b>nunca</b> para <code>alert</code>.</li></ul></div></div></section><section class="slide check" data-fase="3-3"><div class="kicker">FASE 3-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-3: formulário com validação"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Enviar vazio mostra o aviso e <b>não recarrega</b> a página; enviar preenchido faz o produto aparecer na vitrine na hora.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-21.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-21.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-21</code></span></div></div></div></section><section class="slide fullslide" data-fase=""><div class="kicker">Laboratório da equipe</div><h2>Mãos à obra</h2><div class="t-row"><div class="timer" data-min="30"><div class="t-dig">30:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">Criar <code>front/app.js</code> e ligá-lo no fim do <code>&lt;body&gt;</code>.</li><li class="">Desenhar a listagem do recurso principal a partir de uma lista no próprio arquivo.</li><li class="">Um campo de busca que filtra com o evento <code>input</code>.</li><li class="">O formulário de cadastro validando no <code>submit</code>, com <code>preventDefault</code>.</li><li class="">Console limpo, <code>pytest</code> verde, commit e push.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current="FIM"></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Mapa completo</h2><p>Nove fases fechadas: a linguagem, o DOM, os eventos — e a vitrine da loja desenhada, filtrada e alimentada por um formulário.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Fechamento</div><h2>O que cada fase construiu</h2><div class="full"><table class="t"><tr><th>Fase</th><th>Conceito</th><th>O que prova</th></tr><tr><td>1-1</td><td>onde o JS roda; <code>let</code> e <code>const</code></td><td>dá erro ou não dá</td></tr><tr><td>1-2</td><td><code>===</code>, os seis valores falsos, função de seta</td><td>o <code>if</code> entra ou não entra</td></tr><tr><td>1-3</td><td>array, objeto, <code>map</code>, <code>filter</code>, <code>sort</code></td><td>a tradução do Python</td></tr><tr><td>2-1</td><td>o DOM como árvore de objetos</td><td>os seis passos do arquivo ao comportamento</td></tr><tr><td>2-2</td><td><code>querySelector</code>, <code>textContent</code>, <code>classList</code>, <code>createElement</code></td><td>por que deu <code>null</code></td></tr><tr><td>2-3</td><td><code>addEventListener</code>; click, input, submit, <code>preventDefault</code></td><td>qual evento usar</td></tr><tr><td>3-1</td><td>a vitrine desenhada por código</td><td>os três produtos na tela, sem HTML escrito à mão</td></tr><tr><td>3-2</td><td>filtro com <code>input</code> e <code>filter</code></td><td>os cinco passos da conferência</td></tr><tr><td>3-3</td><td>validação no <code>submit</code></td><td>o aviso aparece e a página não recarrega</td></tr></table></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos agora</div><h2>A tela responde. Falta ela conversar com a API.</h2><div class="full"><ul class="notes"><li class="">Hoje os produtos estavam <b>escritos dentro do app.js</b>: cadastrar some quando a página recarrega.</li><li class="">Na <b>Aula 13, em 10/11</b>, entra o <code>fetch</code> com <code>async</code> e <code>await</code>: a vitrine busca os produtos na API de vocês e o formulário grava no banco pelo <code>POST</code>.</li><li class="">A partir dali o projeto está fechado de ponta a ponta — e sobra tempo para a documentação do <b>Projeto Final, entrega em 17/11</b>.</li></ul></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para estudar</div><h2>Referências</h2><div class="split"><div class="left"><ul class="notes"><li class=""><b>Trilha JavaScript · Parte A</b> — sete aulas curtas refazendo o mundo 1 no seu ritmo, sempre partindo do Python. O link fica no mural da turma.</li><li class=""><b>MDN Web Docs</b>, em português — a referência da web: <code>developer.mozilla.org/pt-BR</code></li><li class=""><b>javascript.info</b> — o tutorial moderno, do básico ao avançado.</li><li class=""><b>Eloquent JavaScript</b>, de Marijn Haverbeke — gratuito; os capítulos 13 a 15 são DOM e eventos.</li></ul></div><div class="right"><ul class="notes"><li class="f">A trilha <b>não substitui a aula</b>: ela é para refazer sozinho o que discutimos aqui.</li><li class="f">Leve a trilha junto no projeto final: ela é consulta rápida.</li></ul></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para deixar aberto</div><h2>Cola da aula</h2><div class="full"><table class="t"><tr><th>Quero…</th><th>Escrevo</th></tr><tr><td>encontrar um elemento</td><td><code>document.querySelector("#id")</code></td></tr><tr><td>encontrar vários</td><td><code>document.querySelectorAll(".classe")</code></td></tr><tr><td>trocar o texto</td><td><code>el.textContent = "novo"</code></td></tr><tr><td>ligar ou desligar um estilo</td><td><code>el.classList.add("x")</code> / <code>.remove("x")</code></td></tr><tr><td>criar um elemento</td><td><code>document.createElement("article")</code></td></tr><tr><td>inserir na página</td><td><code>pai.append(filho)</code></td></tr><tr><td>limpar antes de desenhar</td><td><code>pai.innerHTML = ""</code></td></tr><tr><td>reagir ao clique</td><td><code>el.addEventListener("click", fn)</code></td></tr><tr><td>reagir à digitação</td><td><code>el.addEventListener("input", fn)</code></td></tr><tr><td>segurar o envio do formulário</td><td><code>e.preventDefault()</code></td></tr><tr><td>ler o que foi digitado</td><td><code>campo.value</code></td></tr><tr><td>filtrar uma lista</td><td><code>lista.filter(x =&gt; condição)</code></td></tr><tr><td>transformar uma lista</td><td><code>lista.map(x =&gt; novo)</code></td></tr><tr><td>ordenar por número</td><td><code>[...lista].sort((a, b) =&gt; a.n - b.n)</code></td></tr></table></div></section></div>
+<div id="overlay"><span class="close">M ou Esc para fechar</span><div class="map"></div></div>
+<div id="prog"></div>
+<div id="ui"><button id="bMap">Mapa (M)</button><button id="bPrev">‹</button><span id="pg"></span><button id="bNext">›</button><button id="bFs">Tela cheia (F)</button></div>
+<script>window.MAPA = {"zonas": ["MUNDO 1 · A LINGUAGEM", "MUNDO 2 · DOM E EVENTOS", "MUNDO 3 · PRÁTICA NA LOJA"], "fases": [["A terceira linguagem", "teoria"], ["Valores e funções", "teoria"], ["Listas e objetos", "teoria"], ["A página é objeto", "teoria"], ["Mudar a página", "teoria"], ["Eventos", "teoria"], ["O primeiro script", "prática"], ["A vitrine filtra", "prática"], ["O formulário reage", "prática"]], "zbox": [[15, 60, 375], [405, 60, 370], [790, 60, 400]], "start": [40, 455], "pos": [[165, 425], [240, 295], [345, 410], [485, 300], [592, 190], [700, 300], [850, 400], [955, 300], [1090, 190]]};</script>
+<script>window.GROW=1.3;
+
+const FASES=[
+ {id:'1-1',nome:'Repositório',aula:'Roteiro 1',x:190,y:445,w:1},{id:'1-2',nome:'Vitrine',aula:'Aula 3',x:310,y:340,w:1},
+ {id:'1-3',nome:'Testes',aula:'Aula 4',x:450,y:410,w:1,boss:1},{id:'2-1',nome:'Produto',aula:'Aula 6',x:590,y:300,w:2},
+ {id:'2-2',nome:'Carrinho',aula:'Aulas 6 e 7',x:690,y:180,w:2},{id:'2-3',nome:'Herança',aula:'Aula 7',x:830,y:250,w:2,boss:1},
+ {id:'3-1',nome:'Promoções',aula:'Aula 7',x:950,y:360,w:3},{id:'3-2',nome:'Contrato',aula:'Aula 8',x:1080,y:270,w:3},
+ {id:'3-3',nome:'GitHub Actions',aula:'novo',x:1140,y:160,w:3,boss:1}];
+if(window.MAPA){window.MAPA.fases.forEach((f,i)=>{FASES[i].nome=f[0];FASES[i].aula=f[1]})}
+if(window.MAPA&&window.MAPA.pos){window.MAPA.pos.forEach((p,i)=>{FASES[i].x=p[0];FASES[i].y=p[1]})}
+const ZONAS=(window.MAPA&&window.MAPA.zonas)||['MUNDO 1 · FUNDAMENTOS','MUNDO 2 · OBJETOS','MUNDO 3 · QUALIDADE'];
+const START=(window.MAPA&&window.MAPA.start)?{x:window.MAPA.start[0],y:window.MAPA.start[1]}:{x:70,y:470};
+function catmull(pts){let d=`M${pts[0].x},${pts[0].y}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6,c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2.x},${p2.y}`}return d}
+function mapSVG(cur){
+ const idx=cur==='FIM'?FASES.length:FASES.findIndex(f=>f.id===cur);
+ const ZB=(window.MAPA&&window.MAPA.zbox)||[[30,60,500],[520,60,330],[870,40,310]];const zones=ZB.map((z,k)=>[z[0],z[1],z[2],ZONAS[k]]);
+ let g='';zones.forEach(z=>{g+=`<rect class="m-zone" x="${z[0]}" y="${z[1]}" width="${z[2]}" height="${520-z[1]}" rx="28"/><text class="m-zlab" x="${z[0]+24}" y="${z[1]+38}">${z[3]}</text>`});
+ const pts=[START,...FASES];g+=`<path class="m-path" d="${catmull(pts)}"/>`;
+ if(idx>0){const dpts=pts.slice(0,Math.min(idx,FASES.length)+1);g+=`<path class="m-done" d="${catmull(dpts)}"/>`}
+ g+=`<circle cx="${START.x}" cy="${START.y}" r="14" fill="#5cc2b8"/><text class="m-aula" x="${START.x-30}" y="${START.y+44}">início</text>`;
+ FASES.forEach((f,i)=>{const st=idx<0?'todo':i<idx?'done':i===idx?'cur':'todo';
+  let shape=f.boss?`<rect x="${f.x-30}" y="${f.y-30}" width="60" height="60" rx="10" transform="rotate(45 ${f.x} ${f.y})"/>`:`<circle cx="${f.x}" cy="${f.y}" r="30"/>`;
+  let ring=st==='cur'?`<circle class="ring" cx="${f.x}" cy="${f.y}" r="34"/>`:'';
+  let lab=st==='done'?'✓':f.id;
+  const ly=f.y+(f.y>400?-0:0);
+  g+=`<g class="m-node ${st}">${ring}${shape}<text class="m-code" x="${f.x}" y="${f.y+8}" text-anchor="middle">${lab}</text>
+   <text class="m-name" x="${f.x}" y="${f.y+66}" text-anchor="middle">${f.nome}</text><text class="m-aula" x="${f.x}" y="${f.y+90}" text-anchor="middle">${f.aula}</text></g>`});
+ const L=FASES[FASES.length-1];g+=`<line x1="${L.x+44}" y1="${L.y-10}" x2="${L.x+44}" y2="${L.y-80}" stroke="#ddd" stroke-width="4"/><path class="m-flag" d="M${L.x+46},${L.y-80} l46,14 l-46,14 z"/>`;
+ return `<svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid meet">${g}</svg>`}
+// ---------- realce de sintaxe
+const KW=new Set('False None True and as assert break class continue def elif else except finally for from global if import in is lambda not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print len sum max min list dict tuple set range isinstance super round str int float self'.split(' '));
+function hiPy(line){
+ let out='',i=0;const m=(re)=>{re.lastIndex=i;const r=re.exec(line);return r&&r.index===i?r[0]:null};
+ const reStr=/[fF]?("{3}[^]*?"{3}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/y,reCom=/#.*/y,reNum=/\d+(\.\d+)?/y,reId=/[A-Za-z_]\w*/y,reDec=/@\w+/y;
+ let prev='';
+ while(i<line.length){let t;
+  if((t=m(reCom))){out+=`<span class="c">${t}</span>`;i+=t.length;continue}
+  if((t=m(reStr))){out+=`<span class="s">${t}</span>`;i+=t.length;continue}
+  if((t=m(reDec))){out+=`<span class="d">${t}</span>`;i+=t.length;continue}
+  if((t=m(reNum))&&!/\w/.test(line[i-1]||'')){out+=`<span class="n">${t}</span>`;i+=t.length;continue}
+  if((t=m(reId))){let cls=KW.has(t)?'k':BI.has(t)?'bi':(prev==='def'||prev==='class')?'fn':'';out+=cls?`<span class="${cls}">${t}</span>`:t;prev=t;i+=t.length;continue}
+  if(line[i]!==' ')prev='';out+=line[i];i++}
+ return out}
+function tok(line,rules){let out='',i=0;while(i<line.length){let hit=false;for(const [re,cls] of rules){re.lastIndex=i;const r=re.exec(line);if(r&&r.index===i&&r[0].length){out+=cls?`<span class="${cls}">${r[0]}</span>`:r[0];i+=r[0].length;hit=true;break}}if(!hit){out+=line[i];i++}}return out}
+function hiSh(line){const m=/^(\s*)([^\s#]+)/.exec(line);if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const head=m?`${m[1]}<span class="fn">${m[2]}</span>`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/\s#.*/y,'c'],[/"[^"]*"/y,'s'],[/'[^']*'/y,'s'],[/(?<=\s)--?[\w-]+/y,'fl']])}
+function hiYml(line){if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const m=/^(\s*(?:-\s+)?)([\w-]+)(:)/.exec(line);const head=m?`${m[1]}<span class="k">${m[2]}</span>${m[3]}`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/"[^"]*"/y,'s'],[/\s#.*/y,'c']])}
+function hiMd(line){return line.replace(/^(#+.*)$/,'<span class="k">$1</span>').replace(/(`[^`]*`)/g,'<span class="s">$1</span>')}
+function parseHL(s){const set=new Set();(s||'').split(',').filter(Boolean).forEach(p=>{const [a,b]=p.split('-').map(Number);for(let k=a;k<=(b||a);k++)set.add(k)});return set}
+document.querySelectorAll('.code pre').forEach(pre=>{
+ const lang=pre.dataset.lang,hl=parseHL(pre.dataset.hl),raw=pre.textContent;pre.dataset.raw=raw;
+ const f=lang==='python'?hiPy:lang==='bash'?hiSh:lang==='yaml'?hiYml:lang==='md'?hiMd:(x=>x);
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ pre.innerHTML=raw.split('\n').map((l,i)=>`<span class="ln${hl.has(i+1)?' hl':''}">${f(esc(l))||' '}</span>`).join('')});
+// python: o realce trabalha sobre texto escapado; strings com aspas continuam válidas
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const box=b.closest('.code,.term');let txt;
+ if(box.classList.contains('term')){txt=[...box.querySelectorAll('.cmd')].map(x=>x.textContent.replace(/^\$ /,'')).join('\n')}else{txt=box.querySelector('pre').dataset.raw}
+ navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copiado';b.classList.add('done');setTimeout(()=>{b.textContent='Copiar';b.classList.remove('done')},1400)})}));
+// ---------- encaixe do código na altura disponível
+function largo(p){const pr=p.getBoundingClientRect();if(!pr.width)return false;const cs=getComputedStyle(p);const k=p.offsetWidth?pr.width/p.offsetWidth:1;const lim=pr.right-Math.max(parseFloat(cs.paddingRight),18)*k+1;
+ const w=document.createTreeWalker(p,NodeFilter.SHOW_TEXT);let n,mx=0;const r=document.createRange();while((n=w.nextNode())){if(!n.textContent.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects())mx=Math.max(mx,q.right)}return mx>lim}
+function baixo(slide,el){const r=slide.getBoundingClientRect();return el.getBoundingClientRect().bottom>r.bottom-r.height*(55/900)}
+function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);pres.forEach(p=>p.style.fontSize='');
+ const over=p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p);
+ let guard=0;while(guard<40){const slideOver=slide.scrollHeight>slide.clientHeight+2;const bad=pres.filter(p=>over(p)||slideOver);if(!bad.length)break;
+  let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>14){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
+  const fora=()=>slide.scrollHeight>slide.clientHeight+2||baixo(slide,box)||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.tip,.stack,.trilha,svg,p')].some(e=>baixo(slide,e));
+  while(fora()&&z>0.66){z-=0.04;box.style.zoom=z}}}
+function growFit(slide){if(!slide||!window.GROW)return;
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid,:scope>.t-row');if(!box)return;
+ if(box.style.zoom&&parseFloat(box.style.zoom)<1)return;
+ const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);
+ const lim=()=>{const r=slide.getBoundingClientRect();return r.bottom-r.height*(60/900)};
+ const bad=()=>slide.scrollHeight>slide.clientHeight+2||slide.scrollWidth>slide.clientWidth+2||box.getBoundingClientRect().bottom>lim()||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.rl-box,.rl-def,.tip,.ok-box,.sos,.foot,ol,p')].some(e=>e.getBoundingClientRect().bottom>lim())||pres.some(p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p))||[...box.querySelectorAll('.stack,.trilha,svg')].some(e=>baixo(slide,e));
+ let z=1;while(z<window.GROW){const n=Math.round((z+0.04)*100)/100;box.style.zoom=n;if(bad()){box.style.zoom=z===1?'':z;break}z=n}}
+// ---------- navegação
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+const deck=document.getElementById('deck');
+function scale(){const s=Math.min(innerWidth/1600,innerHeight/900);deck.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',()=>{scale();fitCode(slides[cur]);growFit(slides[cur])});scale();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{fitCode(slides[cur]);growFit(slides[cur])});
+document.querySelectorAll('.map').forEach(m=>{m.innerHTML=mapSVG(m.dataset.current||'')});
+function frags(s){return [...s.querySelectorAll('.f')]}
+function show(i,fromHash){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+ document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;document.getElementById('prog').style.width=`${(cur+1)/slides.length*100}%`;
+ if(!fromHash){try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}requestAnimationFrame(()=>{fitCode(slides[cur]);growFit(slides[cur])})}
+function next(){const fs=frags(slides[cur]).filter(f=>!f.classList.contains('vis'));if(fs.length){fs[0].classList.add('vis');return}show(cur+1)}
+function prev(){const fs=frags(slides[cur]).filter(f=>f.classList.contains('vis'));if(fs.length){fs[fs.length-1].classList.remove('vis');return}show(cur-1)}
+function faseAtual(){for(let k=cur;k>=0;k--){if(slides[k].dataset.fase)return slides[k].dataset.fase}return ''}
+function toggleMap(){const o=document.getElementById('overlay');if(o.classList.contains('on')){o.classList.remove('on');return}
+ o.querySelector('.map').innerHTML=mapSVG(faseAtual());o.classList.add('on')}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='m'||e.key==='M')toggleMap();
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.getElementById('overlay').classList.remove('on')});
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.getElementById('bMap').onclick=toggleMap;document.getElementById('bFs').onclick=fs;
+document.getElementById('bPrev').onclick=prev;document.getElementById('bNext').onclick=next;
+document.getElementById('overlay').onclick=toggleMap;
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('.f').forEach(f=>f.classList.add('vis'))});
+document.querySelectorAll('.lab').forEach(lab=>{const bs=[...lab.querySelectorAll('.lab-steps button')],ps=[...lab.querySelectorAll('.lab-panel')];
+ bs.forEach((b,k)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));ps.forEach(x=>x.classList.remove('on'));b.classList.add('on');ps[k].classList.add('on');fitCode(lab.closest('.slide'))})});
+document.querySelectorAll('.timer').forEach(t=>{let total=+t.dataset.min*60,rest=total,id=null;const d=t.querySelector('.t-dig'),bar=t.querySelector('.t-bar i');
+ const draw=()=>{const m=Math.floor(rest/60),s=rest%60;d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');bar.style.width=(100*(total-rest)/total)+'%';t.classList.toggle('fim',rest===0)};
+ t.querySelector('.t-go').onclick=()=>{if(id){clearInterval(id);id=null;return}id=setInterval(()=>{if(rest>0){rest--;draw()}else{clearInterval(id);id=null}},1000)};
+ t.querySelector('.t-reset').onclick=()=>{clearInterval(id);id=null;rest=total;draw()};draw()});
+let h=NaN;try{h=parseInt(location.hash.slice(1))}catch(e){}show(isNaN(h)?0:h-1,true);
+</script></body></html>

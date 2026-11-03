@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trilha do Navegador</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: sticky index rail on the left, lessons stacked on the right; one column under 860px.
+   Two signal colors carry the whole trail: Python blue vs JavaScript amber. */
+:root {
+  --paper: #F4F3EF;
+  --card: #FFFFFF;
+  --ink: #17191C;
+  --muted: #5F6469;
+  --line: #DEDCD5;
+  --js: #A3730A;
+  --js-soft: #F6ECD6;
+  --py: #2C5A87;
+  --py-soft: #E3EBF3;
+  --warn-soft: #FAEAE4;
+  --warn: #A33B18;
+  --code-bg: #1B1E22;
+  --code-fg: #E8E6E0;
+  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #131517;
+    --card: #1B1E21;
+    --ink: #ECEAE4;
+    --muted: #9CA1A6;
+    --line: #2E3237;
+    --js: #E0B457;
+    --js-soft: #2C2718;
+    --py: #85B4DD;
+    --py-soft: #19242E;
+    --warn-soft: #2E1D17;
+    --warn: #E09070;
+    --code-bg: #0E1012;
+    --code-fg: #E8E6E0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #131517;
+  --card: #1B1E21;
+  --ink: #ECEAE4;
+  --muted: #9CA1A6;
+  --line: #2E3237;
+  --js: #E0B457;
+  --js-soft: #2C2718;
+  --py: #85B4DD;
+  --py-soft: #19242E;
+  --warn-soft: #2E1D17;
+  --warn: #E09070;
+  --code-bg: #0E1012;
+  --code-fg: #E8E6E0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ---------- topo ---------- */
+header.hero { padding-block: 56px 36px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--js);
+  margin: 0 0 14px;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -.02em;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.lede { font-size: 18px; max-width: 62ch; color: var(--ink); margin: 0 0 22px; }
+.lede + .lede { color: var(--muted); font-size: 16px; }
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px;
+}
+.tag {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; color: var(--muted); background: var(--card);
+}
+
+/* ---------- grade ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 48px;
+  padding-block: 40px 72px;
+  align-items: start;
+}
+nav.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); min-width: 0; }
+nav.rail h2 {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 600;
+}
+nav.rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.rail a {
+  display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: baseline;
+  padding: 7px 10px; border-radius: 7px;
+  color: var(--ink); text-decoration: none; font-size: 14px; line-height: 1.35;
+  border-left: 2px solid transparent;
+}
+nav.rail a span.n { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+nav.rail a:hover { background: var(--js-soft); }
+nav.rail a:focus-visible { outline: 2px solid var(--js); outline-offset: 2px; }
+.rail-part {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--js); margin: 20px 0 10px; font-weight: 600;
+}
+
+main { min-width: 0; display: grid; gap: 56px; }
+
+/* ---------- aula ---------- */
+article.aula { scroll-margin-top: 24px; min-width: 0; }
+.aula-num {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--js); margin: 0 0 8px;
+}
+h3 {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(24px, 3.2vw, 31px); line-height: 1.15; letter-spacing: -.015em;
+  margin: 0 0 10px; text-wrap: balance;
+}
+.objetivo {
+  color: var(--muted); font-size: 15px; margin: 0 0 24px;
+  padding-left: 12px; border-left: 2px solid var(--line);
+}
+article.aula p { margin: 0 0 16px; max-width: 68ch; }
+article.aula p:last-child { margin-bottom: 0; }
+code.inline {
+  font-family: var(--mono); font-size: .88em;
+  background: var(--js-soft); color: var(--ink);
+  padding: 1px 5px; border-radius: 4px;
+}
+
+/* ---------- comparação ---------- */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 20px; }
+.pane { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); min-width: 0; }
+.pane > .label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 12px; font-weight: 600;
+}
+.pane.py > .label, .pane.a > .label { background: var(--py-soft); color: var(--py); }
+.pane.js > .label, .pane.b > .label { background: var(--js-soft); color: var(--js); }
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--mono); font-size: 13px; line-height: 1.62;
+  padding: 14px 16px; overflow-x: auto;
+}
+pre code { font: inherit; color: inherit; background: none; padding: 0; }
+.solo { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 20px; }
+.solo > .label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 12px; font-weight: 600; background: var(--js-soft); color: var(--js);
+}
+
+/* ---------- tabela ---------- */
+.tbl-wrap { overflow-x: auto; margin: 0 0 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+tbody tr:last-child td { border-bottom: none; }
+td.c { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+td.py-c { color: var(--py); }
+td.js-c { color: var(--js); }
+
+/* ---------- avisos ---------- */
+.callout {
+  border-radius: 10px; padding: 14px 16px; margin: 0 0 18px;
+  background: var(--warn-soft); border: 1px solid var(--line);
+}
+.callout .t {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--warn); font-weight: 600; margin: 0 0 6px;
+}
+.callout p { margin: 0; font-size: 15px; }
+.fixar {
+  border-radius: 10px; padding: 14px 16px; margin: 0;
+  background: var(--card); border: 1px dashed var(--line);
+}
+.fixar .t {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; margin: 0 0 6px;
+}
+.fixar p { margin: 0; font-size: 15px; }
+
+/* ---------- parte B ---------- */
+section.parteb {
+  border-top: 1px solid var(--line); padding-block: 40px 0; margin-top: 16px;
+}
+section.parteb h2 {
+  font-family: var(--display); font-weight: 700; font-size: 26px; margin: 0 0 8px; letter-spacing: -.015em;
+}
+section.parteb ol { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+section.parteb li {
+  display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: baseline;
+  padding: 11px 14px; border: 1px solid var(--line); border-radius: 9px; background: var(--card);
+  font-size: 15px;
+}
+section.parteb li span.n { font-family: var(--mono); font-size: 12px; color: var(--js); }
+
+footer.pe {
+  border-top: 1px solid var(--line); padding-block: 26px 48px;
+  font-size: 13px; color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; gap: 28px; }
+  nav.rail { position: static; }
+  nav.rail ol { grid-template-columns: 1fr 1fr; }
+  .compare { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  nav.rail ol { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Coding &middot; Parte B &middot; material de apoio</p>
+  <h1>Trilha do Navegador</h1>
+  <p class="lede">O que só existe no navegador: a página como objeto, os eventos e a ligação com a sua API — em oito passos encadeados.</p>
+  <p class="lede">O passo 00 é a revisão de HTML e CSS que o resto usa. Cada passo supõe o anterior. Os exemplos são os da Loja de Roupas.</p>
+  <div class="meta">
+    <span class="tag">8 passos</span>
+    <span class="tag">leitura corrida: ~1h10</span>
+    <span class="tag">pré-requisito: Parte A</span>
+    <span class="tag">termina no fetch</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <nav class="rail" aria-label="Índice da trilha">
+    <h2>Parte B · o navegador</h2>
+    <ol>
+      <li><a href="#aula-00"><span class="n">00</span><span>A base: HTML e CSS</span></a></li>
+      <li><a href="#aula-01"><span class="n">01</span><span>O DOM: a página como objeto</span></a></li>
+      <li><a href="#aula-02"><span class="n">02</span><span>Encontrar elementos</span></a></li>
+      <li><a href="#aula-03"><span class="n">03</span><span>Alterar a página</span></a></li>
+      <li><a href="#aula-04"><span class="n">04</span><span>Criar elementos a partir de dados</span></a></li>
+      <li><a href="#aula-05"><span class="n">05</span><span>Eventos</span></a></li>
+      <li><a href="#aula-06"><span class="n">06</span><span>Formulários</span></a></li>
+      <li><a href="#aula-07"><span class="n">07</span><span>Ligar na sua API</span></a></li>
+    </ol>
+    <p class="rail-part">Depois</p>
+    <ol>
+      <li><a href="#fechamento"><span class="n">→</span><span>No seu projeto final</span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- 00 -->
+    <article class="aula" id="aula-00">
+      <p class="aula-num">00 &middot; base</p>
+      <h3>A base: HTML e CSS, só o necessário</h3>
+
+      <p>HTML e CSS têm muita coisa. Para programar a página, você precisa de três ideias: as tags dizem <strong>o que</strong> cada pedaço é, o <code class="inline">id</code> e a <code class="inline">class</code> dão <strong>nome</strong> aos pedaços, e o CSS encontra esses nomes com <strong>seletores</strong>.</p>
+
+      <div class="compare">
+        <div class="pane a">
+          <div class="label">HTML &middot; dando nome às coisas</div>
+<pre><code>&lt;main&gt;
+  &lt;h1&gt;Vitrine&lt;/h1&gt;
+
+  &lt;input id="busca" type="search"&gt;
+
+  &lt;section id="vitrine"&gt;
+    &lt;article class="produto"&gt;...&lt;/article&gt;
+    &lt;article class="produto"&gt;...&lt;/article&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+        </div>
+        <div class="pane b">
+          <div class="label">CSS &middot; encontrando pelos nomes</div>
+<pre><code>h1          { font-size: 2rem; }   /* pela tag  */
+#vitrine    { display: grid; }     /* pelo id   */
+.produto    { padding: 12px; }     /* pela classe */
+
+#vitrine .produto h3 { margin: 0; }
+/* dentro de #vitrine, nos .produto, os h3 */</code></pre>
+        </div>
+      </div>
+
+      <p><strong>É aqui que a trilha engata.</strong> O seletor que você escreveu no CSS é exatamente o texto que o JavaScript vai receber para achar o elemento:</p>
+
+      <div class="solo">
+        <div class="label">A mesma escrita, nos dois lugares</div>
+<pre><code>/* CSS */            #vitrine { display: grid; }
+
+// JavaScript        document.querySelector("#vitrine")</code></pre>
+      </div>
+
+      <p>Ou seja: você já sabe buscar elementos. Só falta a outra metade — o que fazer depois de achar.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>O que você quer nomear</th><th>Use</th><th>Por quê</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>um elemento único na página</td><td class="c js-c">id="vitrine"</td><td>só pode existir um por página</td></tr>
+            <tr><td>vários elementos do mesmo tipo</td><td class="c js-c">class="produto"</td><td>pode repetir à vontade</td></tr>
+            <tr><td>o que o pedaço significa</td><td class="c py-c">header, nav, main, section, article, footer</td><td>leitor de tela e buscador entendem</td></tr>
+            <tr><td>um agrupamento sem significado</td><td class="c py-c">div</td><td>último recurso, só para layout</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>O <code class="inline">id</code> é único por página. Se você repetir <code class="inline">id="produto"</code> em dez cartões, o <code class="inline">querySelector("#produto")</code> devolve só o primeiro e ignora os outros nove — sem erro nenhum. Cartão repetido é <code class="inline">class</code>, sempre.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Abra o HTML do seu projeto. Qual <code class="inline">id</code> tem o elemento que vai receber a listagem? Se não tiver nenhum, dê um agora — você vai precisar dele no passo 02.</p>
+      </div>
+    </article>
+
+    <!-- 01 -->
+    <article class="aula" id="aula-01">
+      <p class="aula-num">01</p>
+      <h3>O DOM: a página como objeto</h3>
+
+      <p>O arquivo <code class="inline">.html</code> é texto. O navegador lê esse texto de cima para baixo e monta, na memória, uma árvore de objetos: o <strong>DOM</strong> — <em>Document Object Model</em>, Modelo de Objetos do Documento. É essa árvore que aparece na tela, não o arquivo.</p>
+
+      <div class="compare">
+        <div class="pane a">
+          <div class="label">O que você escreveu</div>
+<pre><code>&lt;main&gt;
+  &lt;h1&gt;Vitrine&lt;/h1&gt;
+  &lt;section id="vitrine"&gt;
+    &lt;article class="produto"&gt;
+      &lt;h3&gt;Camiseta&lt;/h3&gt;
+    &lt;/article&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+        </div>
+        <div class="pane b">
+          <div class="label">O que o navegador montou</div>
+<pre><code>document
+  └ main
+      ├ h1              "Vitrine"
+      └ section#vitrine
+          └ article.produto
+              └ h3      "Camiseta"</code></pre>
+        </div>
+      </div>
+
+      <p>Cada tag virou um <strong>nó</strong> com propriedades que o JavaScript lê e troca. E a consequência que muda tudo: <strong>mudar o objeto muda a tela na hora</strong>. Não existe "salvar" nem "recarregar" para a mudança aparecer.</p>
+
+      <p>O arquivo no disco continua exatamente como estava. Por isso recarregar a página desfaz tudo o que o seu código fez: o navegador joga a árvore fora e monta outra a partir do HTML original.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Como a árvore é montada de cima para baixo, um <code class="inline">&lt;script&gt;</code> no <code class="inline">&lt;head&gt;</code> roda <strong>antes</strong> de os elementos existirem — e não acha nada. O <code class="inline">&lt;script&gt;</code> vai na última linha antes do <code class="inline">&lt;/body&gt;</code>. (A alternativa é o atributo <code class="inline">defer</code>, que adia a execução.)</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Abra qualquer página, F12, aba <em>Elements</em>. O que você está vendo ali é o DOM, não o arquivo. Mude um texto por lá e veja a tela mudar; recarregue e veja voltar.</p>
+      </div>
+    </article>
+
+    <!-- 02 -->
+    <article class="aula" id="aula-02">
+      <p class="aula-num">02</p>
+      <h3>Encontrar elementos</h3>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const titulo  = document.querySelector("h1");        // o primeiro h1
+const vitrine = document.querySelector("#vitrine");  // pelo id
+const cards   = document.querySelectorAll(".produto"); // todos
+
+console.log(cards.length);   // quantos achou</code></pre>
+      </div>
+
+      <p><code class="inline">querySelector</code> devolve <strong>um</strong> elemento — o primeiro que casar — ou <code class="inline">null</code> se não achar nada. <code class="inline">querySelectorAll</code> devolve <strong>todos</strong>, numa lista que se percorre com <code class="inline">forEach</code>.</p>
+
+      <div class="solo">
+        <div class="label">Percorrendo o resultado</div>
+<pre><code>cards.forEach(card =&gt; {
+  console.log(card.textContent);
+});</code></pre>
+      </div>
+
+      <p>Essa lista não é um array de verdade: tem <code class="inline">length</code> e <code class="inline">forEach</code>, mas não tem <code class="inline">map</code> nem <code class="inline">filter</code>. Quando precisar deles, converta com <code class="inline">[...cards]</code>.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>O erro mais comum de todos: <code class="inline">Cannot read properties of null</code>. Significa que o <code class="inline">querySelector</code> devolveu <code class="inline">null</code> e você tentou usar. Duas causas, nesta ordem de frequência: o script rodou antes do elemento existir, ou o seletor está escrito errado — faltou o <code class="inline">#</code>, faltou o ponto, ou o nome não bate.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>No console de uma página sua, digite <code class="inline">document.querySelector("#naoexiste")</code>. Veja que ele devolve <code class="inline">null</code> sem reclamar. O erro só aparece na linha seguinte, quando você usa o resultado.</p>
+      </div>
+    </article>
+
+    <!-- 03 -->
+    <article class="aula" id="aula-03">
+      <p class="aula-num">03</p>
+      <h3>Alterar a página</h3>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>titulo.textContent = "Vitrine da Loja";   // troca o texto
+
+card.classList.add("esgotado");           // liga a classe
+card.classList.remove("oculto");          // desliga
+card.classList.toggle("aberto");          // inverte
+
+card.dataset.id = 42;                     // guarda um dado no elemento</code></pre>
+      </div>
+
+      <p>Repare no que <strong>não</strong> está aí: nenhuma cor, nenhum tamanho. Existe <code class="inline">card.style.color = "red"</code>, e funciona, mas espalha aparência pelo JavaScript e acaba com a separação entre conteúdo, apresentação e comportamento.</p>
+
+      <p>O jeito certo é o CSS continuar dono da aparência e o JavaScript só decidir <strong>quando</strong> cada regra vale:</p>
+
+      <div class="compare">
+        <div class="pane a">
+          <div class="label">CSS &middot; define como é</div>
+<pre><code>.produto.esgotado {
+  opacity: .5;
+  filter: grayscale(1);
+}
+
+.oculto { display: none; }</code></pre>
+        </div>
+        <div class="pane b">
+          <div class="label">JavaScript &middot; decide quando</div>
+<pre><code>if (produto.estoque === 0) {
+  card.classList.add("esgotado");
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Existe também o <code class="inline">innerHTML</code>, que aceita HTML em texto e é muito prático — você vai usá-lo no passo seguinte. Mas <strong>nunca</strong> monte <code class="inline">innerHTML</code> com algo que o usuário digitou: é assim que código estranho entra na sua página. Para texto digitado, use <code class="inline">textContent</code>, que trata tudo como texto puro.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Qual a diferença prática entre <code class="inline">el.textContent = "&lt;b&gt;oi&lt;/b&gt;"</code> e <code class="inline">el.innerHTML = "&lt;b&gt;oi&lt;/b&gt;"</code>? Teste no console.</p>
+      </div>
+    </article>
+
+    <!-- 04 -->
+    <article class="aula" id="aula-04">
+      <p class="aula-num">04</p>
+      <h3>Criar elementos a partir de dados</h3>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const produtos = [
+  { nome: "Camiseta", preco: 39.9 },
+  { nome: "Calça",    preco: 129.0 }
+];
+
+const vitrine = document.querySelector("#vitrine");
+
+function montarCard(p) {
+  const art = document.createElement("article");
+  art.className = "produto";
+  art.innerHTML = `&lt;h3&gt;${p.nome}&lt;/h3&gt;&lt;p&gt;R$ ${p.preco.toFixed(2)}&lt;/p&gt;`;
+  return art;
+}
+
+function desenhar(lista) {
+  vitrine.innerHTML = "";                          // limpa
+  lista.forEach(p =&gt; vitrine.append(montarCard(p))); // desenha
+}
+
+desenhar(produtos);</code></pre>
+      </div>
+
+      <p>Três decisões nesse código, e as três valem para sempre:</p>
+
+      <ol>
+        <li><strong>Dado e tela separados.</strong> <code class="inline">produtos</code> é o dado; <code class="inline">desenhar</code> é a tela. Quando chegar o filtro, você chama <code class="inline">desenhar(outraLista)</code> e nada mais muda.</li>
+        <li><strong>Uma função por cartão.</strong> <code class="inline">montarCard</code> recebe um objeto e devolve um elemento. Fácil de ler, fácil de mudar.</li>
+        <li><strong>Limpar antes de desenhar.</strong> Sem o <code class="inline">innerHTML = ""</code>, cada chamada acrescenta em vez de substituir.</li>
+      </ol>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>A lista duplicada é o bug clássico deste passo: você filtra, os resultados aparecem <em>embaixo</em> dos antigos, e o total só cresce. É sempre o <code class="inline">innerHTML = ""</code> que ficou de fora.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p><code class="inline">toFixed(2)</code> formata o preço com duas casas. Qual é o equivalente disso no Python?</p>
+      </div>
+    </article>
+
+    <!-- 05 -->
+    <article class="aula" id="aula-05">
+      <p class="aula-num">05</p>
+      <h3>Eventos</h3>
+
+      <p>Um evento é algo que aconteceu na página: um clique, uma tecla, um formulário enviado. Você não fica esperando por ele. Você <strong>deixa uma função guardada</strong> e o navegador a chama quando a hora chegar.</p>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const botao = document.querySelector("#filtrar");
+
+botao.addEventListener("click", function () {
+  console.log("alguém clicou");
+});
+
+// com função de seta, igual:
+botao.addEventListener("click", () =&gt; console.log("clicou"));</code></pre>
+      </div>
+
+      <p>A função que você entrega é a <em>callback</em> (função de retorno). É o uso prático daquilo que a Parte A repete: <strong>função é valor</strong>, dá para passar como argumento.</p>
+
+      <p><strong>Repare no que se inverteu.</strong> No Python que você escreveu, o seu código chama as funções: você manda, a linguagem obedece. Aqui é o contrário — você <em>entrega</em> a função ao navegador, e é ele quem chama, quando e se o evento acontecer. Você não sabe quando, nem se vai acontecer.</p>
+
+      <p>Esse é o modelo de toda interface gráfica, em qualquer linguagem: o programa não corre do início ao fim: ele carrega, registra o que sabe fazer, e fica parado esperando. Daí em diante só existe reação. Entender isso vale mais do que decorar a lista de eventos.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Evento</th><th>Dispara quando</th><th>Use para</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="c js-c">click</td><td>clique ou toque</td><td>botões, cartões, links de ação</td></tr>
+            <tr><td class="c js-c">input</td><td>a cada tecla digitada</td><td>busca que filtra enquanto digita</td></tr>
+            <tr><td class="c js-c">submit</td><td>envio do formulário</td><td>cadastrar, salvar, entrar</td></tr>
+            <tr><td class="c js-c">change</td><td>seleção mudou</td><td>select, checkbox, radio</td></tr>
+            <tr><td class="c js-c">blur</td><td>o campo perdeu o foco</td><td>validar um campo ao sair dele</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>A função recebe um objeto com os dados do evento, por convenção chamado <code class="inline">e</code>: <code class="inline">e.target</code> é o elemento onde aconteceu, e <code class="inline">e.target.value</code> é o que foi digitado.</p>
+
+      <div class="solo">
+        <div class="label">Filtrando enquanto digita</div>
+<pre><code>busca.addEventListener("input", (e) =&gt; {
+  const termo = e.target.value.toLowerCase();
+  const achados = produtos.filter(
+    p =&gt; p.nome.toLowerCase().includes(termo)
+  );
+  desenhar(achados);
+});</code></pre>
+      </div>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p><code class="inline">addEventListener("click", buscar())</code> — com parênteses — executa a função <strong>na hora</strong> e registra o resultado dela, que normalmente é <code class="inline">undefined</code>. O sintoma é o código rodar sozinho ao carregar a página e o clique não fazer nada. Passe o nome sem parênteses.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Para um botão "Cadastrar" dentro de um <code class="inline">&lt;form&gt;</code>, por que <code class="inline">submit</code> no formulário é melhor do que <code class="inline">click</code> no botão?</p>
+      </div>
+    </article>
+
+    <!-- 06 -->
+    <article class="aula" id="aula-06">
+      <p class="aula-num">06</p>
+      <h3>Formulários</h3>
+
+      <div class="solo">
+        <div class="label">JavaScript</div>
+<pre><code>const form  = document.querySelector("#form-produto");
+const aviso = document.querySelector("#aviso");
+
+form.addEventListener("submit", (e) =&gt; {
+  e.preventDefault();            // sem isto, a página recarrega
+
+  const nome  = document.querySelector("#nome").value.trim();
+  const preco = Number(document.querySelector("#preco").value);
+
+  if (nome === "") {
+    aviso.textContent = "Informe o nome do produto.";
+    return;
+  }
+  if (!(preco &gt; 0)) {
+    aviso.textContent = "O preço precisa ser maior que zero.";
+    return;
+  }
+
+  produtos.push({ nome, preco });
+  desenhar(produtos);
+  form.reset();
+  aviso.textContent = "Produto cadastrado.";
+});</code></pre>
+      </div>
+
+      <p>Quatro coisas acontecendo aí:</p>
+
+      <ul>
+        <li><strong><code class="inline">preventDefault</code> vem primeiro.</strong> O comportamento padrão de um formulário é anterior ao JavaScript: o navegador empacota os campos e pede uma página nova. Sem segurar isso, o resto do seu código some junto com a página.</li>
+        <li><strong><code class="inline">.value</code> é sempre texto.</strong> Mesmo num <code class="inline">input type="number"</code>. <code class="inline">Number(...)</code> converte; <code class="inline">trim()</code> tira os espaços das pontas.</li>
+        <li><strong>A validação sai cedo.</strong> Cada <code class="inline">return</code> interrompe ali mesmo — o mesmo padrão de guarda que você usa nas rotas do FastAPI.</li>
+        <li><strong>O aviso vai para a página.</strong> Um elemento reservado para isso, nunca <code class="inline">alert</code>, que trava o navegador e ninguém mais usa.</li>
+      </ul>
+
+      <p>Repare no truque de <code class="inline">!(preco &gt; 0)</code>: ele pega de uma vez o campo vazio, o zero, o negativo e o <code class="inline">NaN</code> de quem digitou letra. Escrever <code class="inline">preco &lt;= 0</code> deixaria o <code class="inline">NaN</code> passar, porque toda comparação com <code class="inline">NaN</code> é falsa.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Validação no navegador é conveniência, não segurança. Qualquer pessoa manda uma requisição direto na sua API sem passar pela tela. <strong>A validação que vale é a do servidor</strong> — a que você já escreveu em Python. Esta aqui existe só para a pessoa não descobrir o erro depois de esperar a resposta.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Tire o <code class="inline">e.preventDefault()</code> do seu formulário e envie. O que acontece com a página, e por que o <code class="inline">console.log</code> some do console?</p>
+      </div>
+    </article>
+
+    <!-- 07 -->
+    <article class="aula" id="aula-07">
+      <p class="aula-num">07</p>
+      <h3>Ligar na sua API</h3>
+
+      <p>Até agora os produtos estavam escritos dentro do <code class="inline">app.js</code>: cadastrar some quando a página recarrega. A API que você escreveu resolve isso, e o <code class="inline">fetch</code> é a ponte.</p>
+
+      <div class="solo">
+        <div class="label">Buscando dados</div>
+<pre><code>async function carregarProdutos() {
+  const resposta = await fetch("/produtos");
+
+  if (!resposta.ok) {              // 404 e 500 chegam por aqui
+    console.error("Falhou:", resposta.status);
+    return [];
+  }
+  return await resposta.json();    // o segundo await
+}
+
+async function mostrar() {
+  const produtos = await carregarProdutos();
+  desenhar(produtos);              // a mesma função do passo 04
+}</code></pre>
+      </div>
+
+      <p>São <strong>dois</strong> <code class="inline">await</code>: o primeiro espera a resposta chegar, o segundo espera o corpo virar objeto JavaScript. E uma regra que pega todo mundo: o <code class="inline">fetch</code> só rejeita quando a <em>rede</em> falha. Um 404 ou um 500 chegam como resposta normal — por isso o teste <code class="inline">resposta.ok</code>.</p>
+
+      <div class="solo">
+        <div class="label">Enviando dados</div>
+<pre><code>await fetch("/produtos", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ nome: "Camiseta", preco: 39.9 })
+});</code></pre>
+      </div>
+
+      <p><code class="inline">JSON.stringify</code> converte o objeto em texto e o cabeçalho avisa ao FastAPI que aquilo é JSON. É o par exato de <code class="inline">resposta.json()</code>, que faz o caminho de volta.</p>
+
+      <div class="callout">
+        <p class="t">Pegadinha</p>
+        <p>Esquecer o <code class="inline">await</code> do <code class="inline">.json()</code> devolve uma <em>promise</em> (promessa), não os dados. O sintoma é sempre o mesmo, e agora você vai reconhecê-lo: <code class="inline">produtos.map is not a function</code>.</p>
+      </div>
+
+      <div class="fixar">
+        <p class="t">Para fixar</p>
+        <p>Se a rota não existe e o <code class="inline">fetch</code> não levanta erro, o que acontece com as linhas seguintes do seu código?</p>
+      </div>
+    </article>
+
+    <!-- fechamento -->
+    <section class="parteb" id="fechamento">
+      <h2>No seu projeto final</h2>
+      <p>Os oito passos montam o front-end da entrega de 17/11. Na ordem:</p>
+      <ol>
+        <li><span class="n">01</span><span>Dê <code class="inline">id</code> ao container da listagem e ligue o <code class="inline">app.js</code> no fim do <code class="inline">&lt;body&gt;</code>.</span></li>
+        <li><span class="n">02</span><span>Desenhe a listagem do recurso principal com <code class="inline">createElement</code>, a partir de uma lista.</span></li>
+        <li><span class="n">03</span><span>Um campo de busca filtrando com <code class="inline">input</code> e <code class="inline">filter</code>.</span></li>
+        <li><span class="n">04</span><span>O formulário validando no <code class="inline">submit</code>, com <code class="inline">preventDefault</code>.</span></li>
+        <li><span class="n">05</span><span>Troque a lista fixa pelo <code class="inline">fetch</code> na sua API — e o projeto fecha de ponta a ponta.</span></li>
+      </ol>
+    </section>
+
+  </main>
+</div>
+
+<footer class="pe">
+  <p>Trilha do Navegador &middot; Parte B &middot; material de apoio da disciplina de Coding &middot; CST em Análise e Desenvolvimento de Sistemas &middot; Faculdade Senac Pernambuco, Caruaru &middot; 2026.2</p>
+</footer>
+
+</div>
+</body>
+</html>
