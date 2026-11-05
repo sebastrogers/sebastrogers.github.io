@@ -1,5 +1,5 @@
 {
-  "atualizado": "3 de novembro de 2026",
+  "atualizado": "5 de novembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -446,6 +446,22 @@
           "arquivo": "assets/materiais/cloud/loja-api-aula11-arquivos.zip",
           "data": "29/10/2026",
           "tags": "codigo lambda python boto3 dynamodb itens json cloudshell politica iam zip"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 12: A loja ganha rede, VPC e sub-rede pública e privada",
+          "descricao": "Defesa em camadas, VPC e blocos CIDR, sub-rede pública e privada, tabela de rotas, Internet Gateway, NAT Gateway e VPC endpoint, grupo de segurança e NACL, e o custo de cada peça. Na prática, a função loja-api vai para a sub-rede privada e alcança o DynamoDB por um gateway endpoint, sem NAT e sem custo.",
+          "arquivo": "assets/materiais/cloud/aula-12-cloud-loja-ganha-rede.html",
+          "data": "05/11/2026",
+          "tags": "slides vpc rede subrede publica privada cidr tabela de rotas internet gateway nat gateway vpc endpoint gateway endpoint security group grupo de seguranca nacl lambda vpc dynamodb custo loja"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Reboot TI: um plantão inteiro na nuvem",
+          "descricao": "Jogo em dupla, cada um no seu computador, com os dois avatares na mesma empresa de Caruaru. Abre com uma cena de abertura. Seis salas e vinte e quatro chamados da Loja de Roupas e da Clínica PetVida revisam as Aulas 1 a 12: camadas de serviço, NIST, CapEx e OpEx, zonas, EC2 e S3, Lambda, CORS, chave da API, durabilidade, classes do S3, Query e Scan, VPC, endpoint e a fatura. Algumas evidências abrem só na tela do colega, e nos desafios cada um recebe metade da pista ou precisa ordenar os passos. Dá para acenar e reagir com o avatar da dupla.",
+          "arquivo": "assets/materiais/cloud/jogo-reboot-ti.html",
+          "data": "05/11/2026",
+          "tags": "jogo dupla multiplayer revisao interativo habbo isometrico nist iaas paas saas ec2 s3 lambda api gateway cors dynamodb vpc nat endpoint fatura"
         }
       ]
     },
@@ -656,6 +672,14 @@
           "arquivo": "assets/materiais/requisitos/aula-11-req-mostrar-antes-de-construir.html",
           "data": "29/10/2026",
           "tags": "slides validacao verificacao prototipo prototipacao wireframe fidelidade storyboard teste com usuario achados ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 12: Todo requisito tem origem e prova, inspeção e rastreabilidade",
+          "descricao": "Verificação por inspeção, papéis e etapas, o checklist de defeitos (ambíguo, incompleto, inconsistente, não verificável, sem origem, solução no lugar da necessidade), a tabela de defeitos com gravidade, rastreabilidade para trás e para frente, a matriz necessidade, requisito, caso de uso, tela e teste, e casos de teste Dado, Quando, Então. Na prática, a inspeção cruzada entre equipes e a seção de rastreabilidade no DDR.",
+          "arquivo": "assets/materiais/requisitos/aula-12-req-origem-e-prova.html",
+          "data": "05/11/2026",
+          "tags": "slides inspecao fagan checklist defeito gravidade verificacao rastreabilidade matriz de rastreabilidade necessidade caso de teste aceitacao dado quando entao ddr"
         }
       ]
     }
