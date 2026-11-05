@@ -680,6 +680,14 @@
           "arquivo": "assets/materiais/requisitos/aula-12-req-origem-e-prova.html",
           "data": "05/11/2026",
           "tags": "slides inspecao fagan checklist defeito gravidade verificacao rastreabilidade matriz de rastreabilidade necessidade caso de teste aceitacao dado quando entao ddr"
+        },
+        {
+          "tipo": "Jogo",
+          "titulo": "Xaxado Software: do pedido vago à matriz",
+          "descricao": "Jogo de revisão das Aulas 1 a 12, sozinho ou em equipe de 2 a 6, cada um no seu computador e todos na mesma empresa. Abre com uma cena de abertura e acompanha um projeto inteiro, o app do São João do Pátio: do pedido vago do Seu Damião à matriz de rastreabilidade. Seis salas e vinte e quatro situações cobrem tipos de requisito, processo e interessados, elicitação, histórias e INVEST, critério de aceite, MoSCoW, DDR e revisão cruzada, casos de uso, modelo de domínio, RNF mensuráveis, protótipo, inspeção e rastreabilidade. Cada sala tem um caso grande com a evidência dividida entre a equipe.",
+          "arquivo": "assets/materiais/requisitos/jogo-xaxado-software.html",
+          "data": "05/11/2026",
+          "tags": "jogo equipe multiplayer revisao interativo isometrico avatar sao joao requisitos stakeholders elicitacao user story invest moscow ddr caso de uso uml rnf iso 25010 prototipo inspecao rastreabilidade"
         }
       ]
     }
