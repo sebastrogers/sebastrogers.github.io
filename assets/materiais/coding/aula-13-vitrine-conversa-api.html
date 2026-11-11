@@ -1,0 +1,547 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coding · Aula 13 · A vitrine conversa com a API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--ink:#1b1c1f;--body:#3b3b3e;--mute:#7b7769;--teal:#1f6f6b;--teal2:#2b8a83;--wine:#7a2c46;
+--gold:#c79a2b;--red:#c2412d;--green:#2f8a55;--dark:#15171b;--dark2:#1e2127;--card:#fffdf8;--line:#e2dccd;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0c0e;overflow:hidden;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+#deck{position:absolute;width:1600px;height:900px;left:50%;top:50%;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:70px 90px 80px;background:var(--bg);display:none;flex-direction:column;overflow:hidden;border-radius:4px}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.dark{background:var(--dark);color:#eeeae0}
+.kicker{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+h1{font-family:"Fraunces",Georgia,serif;font-size:96px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:1.1;font-weight:700;margin-bottom:34px;letter-spacing:-.005em}
+h3{font-family:"Fraunces",Georgia,serif;font-size:34px;margin:6px 0 14px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:rgba(31,111,107,.1);color:var(--teal);padding:1px 7px;border-radius:6px}
+.dark code{background:rgba(255,255,255,.08);color:#9fe3d9}
+b{font-weight:700}
+/* capa */
+.capa{justify-content:center;background:radial-gradient(1200px 600px at 85% 20%,#24302f 0,transparent 60%),var(--dark)}
+.capa h1{color:#fff;max-width:1250px;margin-bottom:28px}
+.capa .sub{font-size:30px;line-height:1.45;color:#cfc9bb;max-width:1100px}
+.capa-foot{position:absolute;bottom:70px;left:90px;font-size:22px;color:#8f8a7c}
+/* listas */
+.cols{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:start}
+ul.notes{list-style:none;display:flex;flex-direction:column;gap:22px}
+ul.notes li{font-size:31px;line-height:1.42;color:var(--body);padding-left:34px;position:relative}
+ul.notes li::before{content:"";position:absolute;left:0;top:15px;width:14px;height:14px;border-radius:3px;background:var(--teal);transform:rotate(45deg)}
+.split{display:grid;grid-template-columns:1.25fr 1fr;gap:46px;flex:1;min-height:0}
+.split.wide{grid-template-columns:1.6fr 1fr}
+.split:has(.has-tree){grid-template-columns:1.75fr 1fr}
+.split .left,.split .right{min-height:0;min-width:0;display:flex;flex-direction:column;gap:22px}
+.code,.term{min-width:0;max-width:100%}.duo>*,.annot>*{min-width:0}
+.codeslide ul.notes li{font-size:27px}
+.full{flex:1;min-height:0;display:flex;flex-direction:column;gap:24px;justify-content:flex-start}
+/* código */
+.code,.term{background:#17191d;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+.code .body{display:flex;flex:1 1 auto;min-height:0;min-width:0}.code .body pre,.term pre{flex:1 1 auto;min-height:0;min-width:0}
+.tree{flex:none;width:250px;background:#1d2026;border-right:1px solid #2c3038;padding:10px 0;font:16px/1.75 Inter,system-ui,sans-serif;color:#b9bcc4;overflow:hidden}
+.tr-h{font:700 12px Inter,system-ui,sans-serif;letter-spacing:.12em;color:#8a8f99;padding:2px 14px 6px}
+.tr{padding-left:calc(14px + var(--d)*16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tr.dim{color:#6b707a}
+.tr .chev{display:inline-block;width:14px;color:#8a8f99}.tr.cur{background:#37373d;color:#fff;box-shadow:inset 2px 0 0 var(--gold)}
+.ic{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 8px 0 4px;background:#7f8590}.ic-py{background:#4b8bbe}.ic-ini,.ic-txt{background:#9a968b}.ic-yml{background:#c2412d}.ic-md{background:#5fa3d8}.ic-gitignore{background:#e06c4a}
+.annot>div{display:flex;flex-direction:column;gap:16px;min-height:0}
+.bar{display:flex;align-items:center;gap:8px;background:#0f1013;padding:10px 16px}
+.bar i{width:12px;height:12px;border-radius:50%;background:#e0574a}.bar i:nth-child(2){background:#e6b13d}.bar i:nth-child(3){background:#4cb26a}
+.fname{font-family:"JetBrains Mono",ui-monospace,monospace;color:#9a968b;font-size:17px;margin-left:12px;flex:1}
+.copy{background:transparent;border:1px solid #3a3d44;color:#c9c4b8;font-size:15px;padding:4px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
+.copy:hover{background:#2a2d33}.copy.done{border-color:#4cb26a;color:#7fe0a0}
+pre{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:26px;line-height:1.5;color:#e9e6dd;padding:18px 22px;overflow:hidden;white-space:pre;tab-size:4}
+pre .ln{display:block;margin:0 -22px;padding:0 22px}
+pre .ln.hl{background:rgba(199,154,43,.18);box-shadow:inset 4px 0 0 var(--gold)}
+.k{color:#ff8b7e}.s{color:#a8d98a}.c{color:#7f8590;font-style:italic}.n{color:#f2c46d}.d{color:#c49bff}.fn{color:#7cc7ff}.bi{color:#6fd4c6}.fl{color:#f2c46d}
+.term pre .ps{color:#7cc7ff;font-weight:700}.term .cmd{color:#f4f1ea}.term .ok{color:#7fe0a0;font-weight:700}.term .err{color:#ff8b7e}.term .dim{color:#7f8590}.term .warn{color:#f2c46d}.term .out{color:#d9d5ca}
+/* caixas */
+.ok-box,.sos,.tip{border-radius:14px;padding:22px 26px;font-size:26px;line-height:1.45;color:var(--body)}
+.ok-box{background:#e4f1e8;border-left:6px solid var(--green)}
+.lbl{display:block;font-size:17px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.ok-box .lbl{color:var(--green)}
+.sos{background:#f7e6df;border-left:6px solid var(--red)}.sos .lbl{color:var(--red)}.sos a code{font-size:18px;word-break:break-all}.sos .alt{display:block;margin-top:10px;font-size:20px;color:var(--mute)}
+.tip{background:#efe6cf;border-left:6px solid var(--gold)}.tip .lbl{color:#9a7414}
+/* duo e cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:0 1 auto;min-height:0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.card .tag{font-family:"JetBrains Mono",monospace;font-size:17px;letter-spacing:.12em;font-weight:700}
+.card.bad{border-color:#e9b8ae}.card.bad .tag{color:var(--red)}
+.card.good{border-color:#a9d4b7}.card.good .tag{color:var(--green)}
+.card.neutral .tag{color:var(--teal)}
+.card p{font-size:26px;line-height:1.45;color:var(--body)}
+.foot{font-size:26px;margin-top:26px;color:var(--body)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid3 .card h3{font-size:30px}
+.big-num{font-family:"Fraunces",Georgia,serif;font-size:64px;color:var(--teal);font-weight:700;line-height:1}
+/* afirmação */
+.afirma{justify-content:center}.afirma.wine{background:var(--wine);color:#fff}.afirma.teal{background:var(--teal);color:#fff}.afirma.dk{background:var(--dark);color:#fff}
+.afirma .kicker{color:#f3d58a}.afirma h2{font-size:62px;max-width:1300px}.afirma p{font-size:30px;line-height:1.45;max-width:1200px;opacity:.88}
+/* quiz */
+.reveal{align-self:flex-start;background:var(--teal);color:#fff;border:0;border-radius:10px;font-size:22px;padding:12px 22px;cursor:pointer;font-family:inherit}
+.answer{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 28px;font-size:28px;line-height:1.45;color:var(--body)}
+.answer p+p{margin-top:12px}
+/* fragmentos */
+.f{opacity:0;transform:translateY(6px);transition:all .3s}
+.f.vis{opacity:1;transform:none}
+/* svg */
+svg.flow{width:100%;height:auto;max-height:190px;flex:none}
+.sv-t{font:700 30px "Fraunces",Georgia,serif}.sv-s{font:22px "Inter",system-ui,sans-serif;fill:#555}.sv-a{font:600 20px "JetBrains Mono",monospace;fill:#7a2c46}.sv-f{font:italic 22px "Inter",system-ui;fill:#777}
+/* mapa */
+.mapa{padding:50px 70px 70px}
+.map-wrap{display:grid;grid-template-rows:1fr auto;gap:18px;height:100%}
+.map svg{width:100%;height:100%}
+.map{min-height:0}
+.map-info{display:grid;grid-template-columns:auto 1fr;column-gap:40px;align-items:end}
+.map-info .kicker{grid-column:1/3;margin-bottom:6px}
+.map-info h2{margin:0;font-size:50px;color:#fff}
+.map-info p{font-size:24px;color:#bdb8aa;line-height:1.4;grid-column:1/3;margin-top:10px;max-width:1300px}
+.goal{grid-column:2;grid-row:2;justify-self:end;background:#22262d;border:1px solid #343944;border-radius:12px;padding:14px 20px;font-size:22px;color:#e8e3d6}
+.goal span{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.12em;color:#7fe0a0;text-transform:uppercase;margin-bottom:4px}
+.m-zone{fill:#1c2026;stroke:#2a2f37;stroke-width:2}
+.m-zlab{font:700 17px "JetBrains Mono",monospace;letter-spacing:.14em;fill:#6f7480}
+.m-path{fill:none;stroke:#3b414c;stroke-width:10;stroke-linecap:round;stroke-dasharray:2 22}
+.m-done{fill:none;stroke:var(--teal2);stroke-width:10;stroke-linecap:round}
+.m-node circle,.m-node rect{stroke-width:5}
+.m-node.todo circle,.m-node.todo rect{fill:#15171b;stroke:#4a505c}
+.m-node.done circle,.m-node.done rect{fill:var(--teal);stroke:#5cc2b8}
+.m-node.cur circle,.m-node.cur rect{fill:var(--gold);stroke:#ffe2a0}
+.m-node .ring{fill:none;stroke:var(--gold);stroke-width:3;opacity:.7;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{r:34;opacity:.8}100%{r:58;opacity:0}}
+.m-code{font:700 22px "JetBrains Mono",monospace;fill:#fff}
+.m-node.todo .m-code{fill:#8a909c}.m-node.cur .m-code{fill:#1b1c1f}
+.m-name{font:600 21px "Inter",system-ui,sans-serif;fill:#d8d3c6}.m-node.todo .m-name{fill:#8a909c}
+.m-aula{font:16px "JetBrains Mono",monospace;fill:#7b8190}
+.m-flag{fill:#c2412d}
+/* barra inferior */
+#ui{position:fixed;right:18px;bottom:14px;display:flex;gap:8px;z-index:20;opacity:.35;transition:opacity .2s}
+#ui:hover{opacity:1}
+#ui button,#ui span{background:#24272d;color:#ddd;border:0;border-radius:8px;padding:7px 12px;font-size:13px;font-family:Inter,system-ui,sans-serif;cursor:pointer}
+#prog{position:fixed;left:0;bottom:0;height:4px;background:var(--gold);z-index:20;transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(11,12,14,.94);display:none;z-index:30;padding:4vh 5vw}
+#overlay.on{display:block}#overlay .map{height:80vh}
+#overlay .close{position:absolute;right:28px;top:20px;color:#ddd;font-size:15px;font-family:Inter,sans-serif}
+.relembre{background:#e8f0ed}
+.rl-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}.rl-top .kicker{margin:0}
+.rl-pill{font:700 16px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:var(--teal);padding:6px 14px;border-radius:30px}
+.rl-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;flex:1;min-height:0}
+.rl-left,.rl-right{display:flex;flex-direction:column;gap:22px;min-height:0;min-width:0}
+.rl-def{font-size:33px;line-height:1.42;color:var(--ink)}
+.rl-box{border-radius:14px;padding:20px 24px;font-size:25px;line-height:1.45;color:var(--body)}
+.rl-box.an{background:#fffdf8;border-left:6px solid var(--teal)}.rl-box.an .lbl{color:var(--teal)}
+.rl-box.cu{background:#f7e6df;border-left:6px solid var(--red)}.rl-box.cu .lbl{color:var(--red)}
+.timer{display:flex;flex-direction:column;align-items:center;gap:22px;background:#15171b;border-radius:22px;padding:34px 40px;color:#fff;flex:none}
+.t-dig{font:700 150px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em;line-height:1}
+.timer.fim .t-dig{color:#ff8b7e}
+.t-bar{width:100%;height:12px;background:#2a2e36;border-radius:8px;overflow:hidden}.t-bar i{display:block;height:100%;background:var(--gold);width:0}
+.t-btns{display:flex;gap:14px}.t-btns button{font:600 22px Inter,system-ui,sans-serif;padding:12px 26px;border-radius:12px;border:0;cursor:pointer;background:#2a2e36;color:#fff}.t-btns .t-go{background:var(--teal)}
+.t-row{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;flex:1;min-height:0;align-items:start}
+/* laboratório TDD */
+.lab{display:grid;grid-template-columns:330px 1fr;gap:30px;flex:1;min-height:0}
+.lab-steps{display:flex;flex-direction:column;gap:14px}
+.lab-steps button{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font-size:21px;cursor:pointer;font-family:inherit;color:var(--body);line-height:1.35}
+.lab-steps button b{display:block;font-family:"JetBrains Mono",monospace;font-size:15px;letter-spacing:.1em;margin-bottom:4px}
+.lab-steps button.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,107,.15)}
+.lab-steps .r b{color:var(--red)}.lab-steps .g b{color:var(--green)}
+.lab-view{display:flex;flex-direction:column;gap:16px;min-height:0}
+.lab-panel{display:none;flex-direction:column;gap:16px;min-height:0}.lab-panel.on{display:flex}
+.status{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:20px;padding:8px 16px;border-radius:30px;color:#fff}
+.status.red{background:var(--red)}.status.green{background:var(--green)}
+/* anotações sobre a saída */
+.annot{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;flex:1;min-height:0}
+.annot ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:18px}
+.annot ol li{counter-increment:a;font-size:27px;line-height:1.4;color:var(--body);padding-left:52px;position:relative}
+.annot ol li::before{content:counter(a);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--wine);color:#fff;font:700 19px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+table.t{border-collapse:collapse;width:100%;font-size:25px}
+table.t th{background:var(--teal);color:#fff;text-align:left;padding:12px 16px;font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+table.t td{padding:12px 16px;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+table.t tr:nth-child(even) td{background:#f8f5ee}
+
+.rl-pill.novo{background:var(--wine)}
+.codeslide pre{font-size:30px;line-height:1.42}
+.split.wide{grid-template-columns:2.2fr 1fr}.split:has(.has-tree){grid-template-columns:2.35fr 1fr}
+.codeslide ul.notes{gap:16px}.codeslide ul.notes li{font-size:24px;line-height:1.38}
+.tree{width:210px;font-size:15px}
+.rl-right .rl-box{font-size:24px}
+.fig{display:flex;flex-direction:column;gap:10px;align-items:center;margin:0}
+.fig img{width:100%;height:auto;object-fit:contain;background:#fff;border-radius:12px;border:2px solid var(--line);padding:10px}
+.fig figcaption{font-size:20px;color:var(--body);text-align:center;line-height:1.35}
+.fig figcaption span{display:block;font-size:14px;color:var(--mute);margin-top:4px}
+.fig figcaption a{color:var(--mute)}
+.figrow{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.figside{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.passos{display:grid;gap:16px}
+.pa{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:18px 18px 16px;position:relative;display:flex;flex-direction:column;gap:8px}
+.pa .n{width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+.pa b{font-size:26px;line-height:1.25}.pa span{font-size:21px;color:var(--body);line-height:1.38}
+.passos.c3 .pa:nth-child(3n)::after{display:none}
+.pa:not(:last-child)::after{content:"▶";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px}
+.pa.fim{border-color:#a9d4b7;background:#f4faf5}.pa.fim .n{background:var(--green)}
+.ref{font-size:17px!important;gap:8px!important}.ref p{line-height:1.4}.ref h3{font-size:18px!important}
+.ref a{color:var(--teal);font-family:"JetBrains Mono",monospace;font-size:14px;word-break:break-all}
+@media print{.relembre .rl-right pre{font-size:20px!important;line-height:1.35!important}.rl-right .rl-box{font-size:18px!important;padding:12px 16px}.fig img{max-height:430px}.pa b{font-size:20px}.pa span{font-size:16px}.pa{padding:12px}}
+@media print{.trilha{display:flex;align-items:flex-start}.trilha>.un{flex:1}.rl-def{font-size:28px}.rl-box{font-size:21px;padding:14px 18px}.rl-left{gap:14px}}
+.rl-grid{grid-template-columns:.72fr 1.28fr}
+.un h3{font-size:25px}.un li{font-size:19px}.un li b{font-size:16px}
+.trilha{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:stretch}
+.trilha.ag{grid-template-columns:repeat(4,1fr);gap:22px}.trilha.ag .un{padding:26px 24px}.trilha.ag h3{font-size:30px}.trilha.ag li{font-size:23px;line-height:1.35}.trilha.ag .hr{font:700 17px 'JetBrains Mono',monospace;color:var(--wine)}
+.trilha.ag ul{gap:14px;list-style:disc;padding-left:22px}
+.un{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px 18px 14px;display:flex;flex-direction:column;gap:6px}
+.un .tg{font:700 15px "JetBrains Mono",monospace;letter-spacing:.1em;color:var(--mute)}
+.un h3{font-size:23px;line-height:1.2}
+.un ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.un li{font-size:17px;line-height:1.32;color:var(--body)}
+.un li b{font-family:"JetBrains Mono",monospace;color:var(--ink);display:block;font-size:15px}
+table.t tr.hj td{background:#fbf1f4!important}table.t tr.ev td{background:#fff6dc!important}
+.slide>.full,.slide>.split,.slide>.rl-grid,.slide>.cols,.slide>.duo,.slide>.t-row{flex:0 1 auto;margin-top:auto;margin-bottom:auto}
+.un.done{border-color:#a9d4b7;background:#f4faf5}.un.done .tg{color:var(--green)}
+.un.now{border-color:var(--wine);box-shadow:0 0 0 5px rgba(122,44,70,.14)}.un.now .tg{color:var(--wine)}
+.un.todo{opacity:.72}
+.stack{display:flex;flex-direction:column;gap:6px;width:860px;flex:none}
+.ly{display:flex;align-items:center;gap:18px;border:3px solid var(--line);border-radius:16px;padding:12px 20px;background:var(--card)}
+.ly b{font-size:24px;width:290px;flex:none}.ly span{font-size:20px;color:var(--body);flex:1}.ly i{font:700 16px "JetBrains Mono",monospace;font-style:normal;text-align:right;width:120px;flex:none}
+.ly.done{border-color:#a9d4b7}.ly.done i{color:var(--green)}
+.ly.now{border-color:var(--wine);background:#fbf1f4}.ly.now i{color:var(--wine)}
+.ly.todo i{color:var(--mute)}
+.arr{text-align:center;font:700 18px "JetBrains Mono",monospace;color:var(--mute)}
+.st-row{display:flex;gap:40px;align-items:flex-start}.st-row ul.notes li{font-size:27px}
+.url-an{font:700 40px "JetBrains Mono",monospace;display:flex;flex-wrap:wrap;margin:10px 0 20px}
+.url-an span{display:flex;flex-direction:column;align-items:center;padding:0 2px}
+.url-an em{font:600 17px Inter,sans-serif;font-style:normal;margin-top:10px;padding:4px 10px;border-radius:20px;color:#fff;white-space:nowrap}
+.layers{display:flex;flex-direction:column;gap:8px;width:640px}
+.lay{border-radius:14px;padding:14px 20px;font-size:22px;color:#fff;display:flex;justify-content:space-between}
+.lay b{font-size:24px}
+.sw{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:9px;font-family:Inter,sans-serif}
+.sw h4{font:700 30px Inter,sans-serif;margin-bottom:4px}.sw h4 small{font-size:14px;background:#7d8492;color:#fff;border-radius:10px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.sw .op{display:flex;align-items:center;gap:14px;border-radius:8px;padding:10px 12px;font-size:22px}
+.sw .op b{font:700 18px "JetBrains Mono",monospace;color:#fff;border-radius:6px;padding:6px 0;width:96px;text-align:center}
+.sw .op code{font:600 22px "JetBrains Mono",monospace;background:none;color:#1b1c1f;padding:0}
+.sw .op span{color:#555}
+.sw .get{background:#ebf3fb;border:1px solid #61affe}.sw .get b{background:#61affe}
+.sw .post{background:#e8f6f0;border:1px solid #49cc90}.sw .post b{background:#49cc90}
+.sw .del{background:#fbeaea;border:1px solid #f93e3e}.sw .del b{background:#f93e3e}
+.sw .sim{font-size:13px;color:#888;text-align:right}
+.sch{background:#f7f7f7;border-radius:8px;padding:16px 20px;font:20px 'JetBrains Mono',monospace;display:flex;flex-direction:column;gap:10px}.sch>b{font-size:22px}.sch .f{display:grid;grid-template-columns:240px 1fr;padding-left:28px}.sch code{background:none;font-weight:700;color:#1b1c1f}.sch i{color:#c2412d;font-style:normal}.sch em{font-style:normal;color:#55a;font-size:17px}
+.ref{font-size:21px;line-height:1.45;color:var(--body);display:flex;flex-direction:column;gap:12px}
+.ref h3{font-size:22px;color:var(--teal);font-family:"JetBrains Mono",monospace;letter-spacing:.1em;margin-top:6px}
+.obj{counter-reset:o;list-style:none;display:flex;flex-direction:column;gap:14px}
+.obj li{counter-increment:o;font-size:27px;line-height:1.38;color:var(--body);padding-left:56px;position:relative}
+.obj li::before{content:counter(o);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font:700 20px "JetBrains Mono",monospace;display:flex;align-items:center;justify-content:center}
+
+.tela{width:100%;height:560px;border:2px solid var(--line);border-radius:12px;background:#fff}
+.tela-wrap{display:flex;flex-direction:column;gap:8px}.tela-wrap span{font:600 15px 'JetBrains Mono',monospace;color:var(--mute)}
+@media print{.tela{display:none}.tela-wrap::after{content:"(a página aparece aqui na versão HTML da aula)";font-size:18px;color:#777}}
+</style></head><body>
+<div id="deck"><section class="slide dark capa" data-fase=""><div class="capa-in"><div class="kicker">Coding · Aula 13 · 10 de novembro de 2026</div><h1>A vitrine conversa com a API</h1><p class="sub">Assincronismo e integração: esperar sem travar a página, buscar e enviar dados com fetch, e o CORS. Hoje a tela e o servidor que vocês construíram passam a ser uma aplicação só.</p><div class="capa-foot">Faculdade Senac Pernambuco · ADS 2026.2 · Prof. Sebastião Rogério</div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 1 de 3</div><h2>O caminho até aqui</h2><div class="full"><div class="trilha"><div class="un done"><div class="tg">U1 · ✔ CONCLUÍDA</div><h3>Fundamentos</h3><ul><li><b>11/08</b> Por que tantas linguagens</li><li><b>18/08</b> Paradigmas</li><li><b>25/08</b> Tipos e coleções</li><li><b>01/09</b> Funções, módulos e testes</li></ul></div><div class="un done"><div class="tg">U2 · ✔ CONCLUÍDA</div><h3>Orientação a objetos</h3><ul><li><b>08/09</b> Classes</li><li><b>22/09</b> AV1 e encapsulamento</li><li><b>29/09</b> Herança e polimorfismo</li><li><b>06/10</b> Contratos e a Loja de Roupas</li></ul></div><div class="un done"><div class="tg">U3 · ✔ CONCLUÍDA</div><h3>Back-end e API</h3><ul><li><b>13/10</b> HTTP, REST e a primeira API</li><li><b>20/10</b> Persistência e camadas</li></ul></div><div class="un now"><div class="tg">U4 · ◀ ESTAMOS AQUI</div><h3>Front-end</h3><ul><li><b>27/10</b> Entrega 1, HTML e CSS</li><li><b>03/11</b> JavaScript, DOM e eventos</li><li><b>10/11</b> Hoje: assincronismo e integração</li></ul></div><div class="un todo"><div class="tg">U5</div><h3>Entrega e avaliação</h3><ul><li><b>17/11</b> PROJETO FINAL</li><li><b>24/11</b> AV2</li><li><b>01/12</b> Framework (sem nota)</li><li><b>08/12</b> Encerramento</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 2 de 3</div><h2>A última ligação que faltava</h2><div class="full"><div class="st-row"><div class="stack"><div class="ly done"><b>Telas no navegador</b><span>HTML e CSS na Aula 11, comportamento na Aula 12</span><i>✔ pronto</i></div><div class="arr" style="color:var(--wine)">▲ fetch: a resposta sobe · o pedido desce ▼ &nbsp;◀ HOJE</div><div class="ly done"><b>API: HTTP + REST</b><span>a porta da loja para a rede · Aula 9</span><i>✔ pronto</i></div><div class="arr">▲ chama ▼</div><div class="ly done"><b>Serviço e repositório</b><span>as camadas entre a porta e o banco · Aula 10</span><i>✔ pronto</i></div><div class="arr">▲ usa ▼</div><div class="ly done"><b>Domínio e banco</b><span>as classes e o loja.db · Aulas 5 a 10</span><i>✔ pronto</i></div></div><div><ul class="notes"><li class="f">Todas as camadas existem e funcionam <b>separadas</b>: a API responde no <code>/docs</code>, a vitrine responde ao clique.</li><li class="f">Mas a vitrine ainda mostra uma lista <b>escrita dentro do app.js</b>, e o banco nem sabe que ela existe.</li><li class="f">Hoje entra a seta do meio: a tela <b>pede</b> os dados à API e <b>envia</b> o que a pessoa cadastrou. É o que o diagrama de arquitetura da documentação do projeto final desenha.</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Onde estamos no semestre · 3 de 3</div><h2>Uma semana para o Projeto Final</h2><div class="full"><table class="t"><tr><th>Data</th><th>Aula</th><th>Tema</th><th>O que acrescenta ao projeto</th></tr><tr><td>03/11</td><td>12</td><td>JavaScript, DOM e eventos</td><td>as telas reagem ao usuário</td></tr><tr class="hj"><td><b>10/11</b></td><td><b>13</b></td><td><b>Assincronismo e integração</b></td><td><b>hoje: as telas conversam com a API</b></td></tr><tr class="ev"><td><b>17/11</b></td><td>14</td><td><b>PROJETO FINAL</b></td><td>pitch de 8 minutos com demonstração ao vivo e a documentação: 50% do segundo processo</td></tr><tr class="ev"><td><b>24/11</b></td><td>15</td><td><b>AV2</b> e devolutiva</td><td>prova: 50% do segundo processo</td></tr><tr><td>01/12 e 08/12</td><td>16 e 17</td><td>Framework e encerramento</td><td>conteúdo complementar, sem nota</td></tr></table><ul class="notes mini"><li class="">A demonstração ao vivo do dia 17 é exatamente o que vocês terminam hoje: cadastrar pela tela e o produto continuar lá depois de recarregar.</li></ul></div></section><section class="slide fullslide " data-fase=""><div class="kicker">O que vamos ver hoje</div><h2>Da tela ao banco, e de volta</h2><div class="full"><div class="trilha ag"><div class="un"><div class="tg">ABERTURA</div><h3>De onde viemos</h3><p class="hr">retomada da Aula 12</p><ul><li>O produto que some</li><li>Por que esperar é diferente</li></ul></div><div class="un"><div class="tg">MUNDO 1</div><h3>Esperar</h3><p class="hr">teoria com exemplos</p><ul><li>Esperar sem travar</li><li>Promessas</li><li>async e await</li></ul></div><div class="un"><div class="tg">MUNDO 2</div><h3>Falar com a API</h3><p class="hr">teoria com exemplos</p><ul><li>Buscar com fetch</li><li>Enviar com POST</li><li>CORS</li></ul></div><div class="un"><div class="tg">MUNDO 3</div><h3>Prática na loja</h3><p class="hr">vocês seguem a aula</p><ul><li>A vitrine da API</li><li>O cadastro grava</li><li>Carregando e erro</li></ul></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Abertura · retomada da Aula 12</div><h2>Cadastrem um produto e recarreguem a página. Cadê ele?</h2><div class="split"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js · Aula 12</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,7">const produtos = [
+  { nome: "Camiseta básica", preco: 39.9, tam: "M" },
+  { nome: "Calça jeans",     preco: 129.9, tam: "G" }
+];
+
+// no submit do formulário:
+produtos.push({ nome, preco, tam: "M" });
+desenhar(produtos);</pre></div></div></div><div class="right"><ul class="notes"><li class="">A lista mora <b>na memória do navegador</b>. Recarregar a página joga tudo fora e começa de novo do arquivo.</li><li class="">Enquanto isso, a API de vocês tem um <b>banco de verdade</b>: o <code>loja.db</code>, com <code>GET</code> e <code>POST /produtos</code> prontos desde a Aula 10.</li><li class="">Falta a tela <b>pedir</b> e <b>enviar</b> os dados para essa API. Só que pedir algo pela rede leva tempo, e o navegador não pode ficar parado esperando.</li><li class="">Por isso a aula começa por <b>como o JavaScript espera</b>, antes de falar de rede.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current=""></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Nove fases, três mundos</h2><p>Mundos 1 e 2: como o JavaScript espera e como ele conversa com a API, com exemplos. Mundo 3: a vitrine da Loja de Roupas ligada ao banco, fase por fase, com checkpoints.</p></div></div></section><section class="slide dark mapa" data-fase="1-1"><div class="map-wrap"><div class="map" data-current="1-1"></div><div class="map-info"><div class="kicker">FASE 1-1 · CONTEÚDO NOVO</div><h2>Esperar sem travar</h2><p>Por que o navegador não pode ficar parado esperando a resposta da rede.</p></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Síncrono e assíncrono</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O código que vocês escreveram até aqui é <b>síncrono</b>: uma linha só começa quando a anterior termina. Isso funciona para contas, que levam microssegundos. Um pedido pela rede leva centenas de milissegundos, às vezes segundos. Código <b>assíncrono</b> é o que dispara a tarefa demorada, <b>segue em frente</b> e trata o resultado quando ele chegar.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">síncrono                   assíncrono
+--------                   ----------
+pede o café                pede o café e pega a senha
+fica no balcão esperando   senta e conversa
+recebe e só então senta    chamam a senha: busca o café
+
+a fila trava               o salão continua andando</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>O garçom que fica parado na cozinha até o prato sair atende uma mesa por vez. O bom garçom anota, entrega na cozinha e volta ao salão; quando o prato fica pronto, ele leva.</div></div></div></section><section class="slide relembre" data-fase="1-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Uma linha de execução só</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O JavaScript da página roda numa <b>linha de execução só</b> (em inglês, <i>single thread</i>): a mesma que desenha a tela e responde ao clique. Se o código ficasse parado esperando a rede, <b>a página inteira congelaria</b>: nada de rolar, digitar ou clicar. Por isso tudo o que demora no navegador é assíncrono: o pedido fica com o navegador, e o seu código é avisado depois.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">console.log("1. pedi os produtos");
+
+setTimeout(() =&gt; {
+  console.log("3. chegaram");      // roda depois
+}, 1000);
+
+console.log("2. sigo funcionando");
+
+// no console: 1, 2 e, um segundo depois, 3</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>A ordem em que as linhas estão escritas <b>não é</b> a ordem em que elas rodam. É a primeira coisa que confunde quem vem do Python síncrono, e a causa de metade dos bugs desta aula.</div></div></div></section><section class="slide quiz" data-fase="1-1"><div class="kicker">Fase 1-1 · Em que ordem aparece?</div><h2>O que o console mostra, e em que ordem?</h2><div class="split"><div class="left"><ul class="notes"><li class=""><code>console.log("A");</code></li><li class=""><code>setTimeout(() =&gt; console.log("B"), 0);</code></li><li class=""><code>console.log("C");</code></li><li class="">Repare no zero: o <code>setTimeout</code> pede para esperar <b>0 milissegundos</b>.</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>A, C, B.</b></p><p>Mesmo com zero, a função do <code>setTimeout</code> vai para a fila e só roda quando o código atual termina.</p><p>Assíncrono não quer dizer "demorado": quer dizer "<b>depois</b>, quando a linha de execução estiver livre".</p></div></div></div></section><section class="slide dark mapa" data-fase="1-2"><div class="map-wrap"><div class="map" data-current="1-2"></div><div class="map-info"><div class="kicker">FASE 1-2 · CONTEÚDO NOVO</div><h2>Promessas</h2><p>O objeto que representa um resultado que ainda não chegou.</p></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Promise: a senha do pedido</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Uma <i>Promise</i> (promessa) é um objeto que representa um valor que <b>vai chegar depois</b>. Ela tem três estados: <b>pendente</b> (<i>pending</i>, ainda esperando), <b>cumprida</b> (<i>fulfilled</i>, chegou o valor) e <b>rejeitada</b> (<i>rejected</i>, deu erro). Toda função do navegador que conversa com a rede devolve uma promessa na hora, e o valor de verdade depois.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">console do navegador</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">&gt; const p = fetch("http://127.0.0.1:8000/produtos")
+&gt; p
+Promise {&lt;pending&gt;}        // a senha, não o café
+
+// um instante depois:
+&gt; p
+Promise {&lt;fulfilled&gt;: Response}
+
+// com a API desligada:
+Promise {&lt;rejected&gt;: TypeError: Failed to fetch}</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>A promessa é a senha do restaurante: você pega na hora, mas não dá para comer a senha. O que interessa é o que ela vira quando chamam o seu número.</div></div></div></section><section class="slide relembre" data-fase="1-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>then e catch: o jeito antigo de esperar</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Antes do <code>await</code>, esperava-se uma promessa encadeando funções: <code>then</code> (então) recebe o valor quando ela é cumprida, <code>catch</code> (pegar) recebe o erro quando ela é rejeitada. Vocês vão encontrar esse estilo em tutoriais e em código antigo, então vale reconhecer, mesmo que hoje a gente escreva de outro jeito.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">fetch("http://127.0.0.1:8000/produtos")
+  .then(resposta =&gt; resposta.json())
+  .then(produtos =&gt; console.log(produtos))
+  .catch(erro =&gt; console.log("falhou:", erro));
+
+console.log("isto aparece primeiro");</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Cada <code>then</code> recebe <b>o resultado do anterior</b>. Com três ou quatro passos a corrente vira uma escada difícil de ler, e foi isso que levou a linguagem a criar o <code>async</code> e o <code>await</code>.</div></div></div></section><section class="slide quiz" data-fase="1-2"><div class="kicker">Fase 1-2 · Qual o estado da promessa?</div><h2>Em que estado fica a promessa do <code>fetch</code> em cada caso?</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) Logo depois de chamar o <code>fetch</code>, na linha seguinte.</li><li class="">b) A API respondeu com a lista de produtos.</li><li class="">c) A API está desligada e o navegador não conseguiu conectar.</li><li class="">d) A API respondeu <b>404</b>, produto não encontrado.</li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) pendente.</b> A rede ainda não respondeu.</p><p><b>b) cumprida</b>, com a resposta dentro.</p><p><b>c) rejeitada</b>, com <code>TypeError: Failed to fetch</code>.</p><p><b>d) cumprida!</b> Para o <code>fetch</code>, a rede funcionou: houve resposta. O 404 é um assunto <b>seu</b>, e a fase 2-1 mostra como tratar.</p></div></div></div></section><section class="slide dark mapa" data-fase="1-3"><div class="map-wrap"><div class="map" data-current="1-3"></div><div class="map-info"><div class="kicker">FASE 1-3 · CONTEÚDO NOVO</div><h2>async e await</h2><p>Escrever código que espera como se fosse síncrono, sem travar a página.</p></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>async e await</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><code>await</code> (aguardar) pausa <b>só a função</b> até a promessa se resolver e entrega o valor de dentro dela. A página continua livre enquanto isso. A condição: <code>await</code> só vale dentro de uma função marcada com <code>async</code>. O resultado é um código que se lê de cima para baixo, como o Python de vocês.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,2,3">async function carregar() {
+  const resposta = await fetch(`${API}/produtos`);
+  const produtos = await resposta.json();
+  console.log(produtos);           // a lista de verdade
+}
+
+carregar();
+console.log("a página segue viva");</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>O <code>await</code> é o garçom esperando o prato <b>daquela mesa</b>. As outras mesas, isto é, os cliques, a digitação e a rolagem, continuam sendo atendidas.</div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>O await esquecido</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Sem o <code>await</code>, a variável recebe <b>a promessa</b>, e não o valor. Nada quebra na hora: o erro só aparece duas linhas depois, quando o código tenta usar uma lista que na verdade é uma senha. E toda função <code>async</code> também devolve uma promessa, então quem chama precisa de <code>await</code> se quiser o resultado.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">const resposta = fetch(`${API}/produtos`);   // faltou await
+console.log(resposta);
+// Promise {&lt;pending&gt;}
+
+const produtos = resposta.json();
+// TypeError: resposta.json is not a function
+
+// certo:
+const resposta = await fetch(`${API}/produtos`);</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Viu <code>Promise {&lt;pending&gt;}</code> no console, ou <code>is not a function</code> logo depois de um <code>fetch</code>? Procure o <code>await</code> que faltou.</div></div></div></section><section class="slide relembre" data-fase="1-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Erros com try e catch</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Dentro de uma função <code>async</code>, uma promessa rejeitada vira um <b>erro comum</b>, que se trata com <code>try</code> e <code>catch</code>, como o <code>try</code> e <code>except</code> do Python. É assim que a página mostra uma mensagem amigável em vez de ficar em branco quando a API está fora do ar.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl=""># Python                         // JavaScript
+try:                             try {
+    r = requests.get(url)          const r = await fetch(url);
+except Exception as erro:        } catch (erro) {
+    print("falhou", erro)          console.log("falhou", erro);
+                                 }</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>O <code>catch</code> só pega o que foi <b>aguardado</b> dentro do <code>try</code>. Um <code>fetch</code> sem <code>await</code> escapa do <code>try</code> e o erro aparece solto, em vermelho, no console.</div></div></div></section><section class="slide quiz" data-fase="1-3"><div class="kicker">Fase 1-3 · O que aparece no console?</div><h2>Leia o código e diga o que cada <code>console.log</code> imprime.</h2><div class="split"><div class="left"><ul class="notes"><li class=""><code>async function total() { return 42; }</code></li><li class="">a) <code>console.log(total());</code></li><li class="">b) <code>console.log(await total());</code>, dentro de outra função <code>async</code></li><li class="">c) <code>const r = fetch(url); console.log(r.ok);</code></li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a)</b> <code>Promise {&lt;fulfilled&gt;: 42}</code>. Função <code>async</code> sempre devolve uma promessa, mesmo com <code>return 42</code>.</p><p><b>b)</b> <code>42</code>. O <code>await</code> abre a promessa e entrega o valor.</p><p><b>c)</b> <code>undefined</code>. Sem <code>await</code>, <code>r</code> é a promessa, e promessa não tem <code>ok</code>. É o bug silencioso da fase.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-1"><div class="map-wrap"><div class="map" data-current="2-1"></div><div class="map-info"><div class="kicker">FASE 2-1 · CONTEÚDO NOVO</div><h2>Buscar com fetch</h2><p>O pedido GET saindo do navegador e a resposta chegando como objeto.</p></div></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>fetch: o GET do navegador</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def"><code>fetch</code> (buscar) faz um pedido HTTP e devolve uma promessa de <i>Response</i> (resposta). São <b>dois</b> <code>await</code>: o primeiro espera os cabeçalhos chegarem; o segundo, <code>resposta.json()</code>, espera o corpo e converte o JSON em array e objetos de JavaScript. É o mesmo JSON que vocês viam no <code>/docs</code> da API.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="4,6">const API = "http://127.0.0.1:8000";
+
+async function carregar() {
+  const resposta = await fetch(`${API}/produtos`);
+  console.log(resposta.status);      // 200
+  const produtos = await resposta.json();
+  console.log(produtos[0].nome);     // "Camiseta básica"
+}
+
+// com filtro, a query string da Aula 9:
+await fetch(`${API}/produtos?tamanho=M`);</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>É o mesmo pedido que o <code>TestClient</code> fazia nos testes da Aula 9: <code>cliente.get("/produtos")</code>. Só que agora quem pede é a página, no navegador da pessoa.</div></div></div></section><section class="slide fullslide " data-fase="2-1"><div class="kicker">Fase 2-1 · Passo a passo</div><h2>A viagem de um GET, da tela ao banco e de volta</h2><div class="full"><table class="t"><tr><th>#</th><th>O que acontece</th><th>Onde</th></tr><tr><td>1</td><td>A página carrega e chama <code>carregar()</code></td><td>navegador · <code>app.js</code></td></tr><tr><td>2</td><td><code>fetch</code> envia <code>GET /produtos</code> e o código fica no <code>await</code></td><td>rede</td></tr><tr><td>3</td><td>A rota do FastAPI chama o serviço, que chama o repositório</td><td>servidor · <code>api.py</code></td></tr><tr><td>4</td><td>O repositório lê a tabela <code>produto</code></td><td>banco · <code>loja.db</code></td></tr><tr><td>5</td><td>A resposta volta como JSON, com status 200</td><td>rede</td></tr><tr class="hj"><td><b>6</b></td><td><b>O <code>await</code> termina, <code>resposta.json()</code> vira array e <code>desenhar</code> monta os cartões</b></td><td><b>navegador · vocês</b></td></tr></table><ul class="notes mini"><li class="">Esta tabela é o diagrama de arquitetura em camadas da documentação do projeto final, escrito em linhas. Quem consegue explicá-la sabe defender o próprio diagrama.</li></ul></div></section><section class="slide relembre" data-fase="2-1"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>404 não é erro para o fetch</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">O <code>fetch</code> só rejeita a promessa quando <b>não houve resposta</b>: API desligada, endereço errado, sem rede. Se a API respondeu, mesmo com 404 ou 500, a promessa é cumprida. Quem decide se deu certo é você, olhando <code>resposta.ok</code>, que vale <code>true</code> para os status de 200 a 299.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="5,6">const resposta = await fetch(`${API}/produtos/99`);
+
+resposta.status    // 404
+resposta.ok        // false
+
+if (!resposta.ok) {
+  throw new Error(`a API respondeu ${resposta.status}`);
+}
+const produto = await resposta.json();</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Sem checar <code>resposta.ok</code>, o código segue feliz e tenta desenhar <code>{"detail": "produto 99 não encontrado"}</code> como se fosse um produto.</div></div></div></section><section class="slide dark mapa" data-fase="2-2"><div class="map-wrap"><div class="map" data-current="2-2"></div><div class="map-info"><div class="kicker">FASE 2-2 · CONTEÚDO NOVO</div><h2>Enviar com POST</h2><p>Mandar o que a pessoa digitou para a API gravar no banco.</p></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>POST com JSON</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Para enviar, o <code>fetch</code> recebe um segundo argumento com três coisas: o <code>method</code> (método), os <code>headers</code> (cabeçalhos) e o <code>body</code> (corpo). O cabeçalho <code>Content-Type</code> avisa que vai JSON, e <code>JSON.stringify</code> converte o objeto em texto. Os campos são <b>os mesmos</b> do <code>ProdutoEntrada</code> da API.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/cadastro.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="5,6,7">const dados = { tipo: "Produto", nome: "Boné",
+                preco: 49.9, tamanho: "G" };
+
+const resposta = await fetch(`${API}/produtos`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(dados),
+});
+
+resposta.status            // 201, Created
+const novo = await resposta.json();
+novo.id                    // o número que o banco deu</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span><code>JSON.stringify</code> é o <code>json.dumps</code> do Python; <code>resposta.json()</code> é o <code>json.loads</code>. Na rede só passa texto.</div></div></div></section><section class="slide relembre" data-fase="2-2"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Ler o erro que a API devolve</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Quando a API recusa, ela explica no corpo da resposta, no campo <code>detail</code>: foi assim que vocês escreveram os <code>exception_handler</code> da Aula 10. O front-end só precisa ler esse campo e mostrar na tela. A regra continua <b>no servidor</b>; a tela apenas avisa.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/cadastro.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="3,4">const corpo = await resposta.json();
+
+if (!resposta.ok) {
+  aviso.textContent = `Não cadastrou: ${corpo.detail}`;
+  return;
+}
+aviso.textContent = `${corpo.nome} cadastrado com o número ${corpo.id}.`;
+
+// 409: Não cadastrou: já existe um produto chamado Boné
+// 422: quando os dados não batem com o ProdutoEntrada</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span>Validar no front-end, como na Aula 12, é conforto para quem usa; validar no servidor é <b>segurança</b>. Qualquer pessoa pode chamar a API sem passar pela sua tela.</div></div></div></section><section class="slide quiz" data-fase="2-2"><div class="kicker">Fase 2-2 · Por que deu 422?</div><h2>Os quatro POSTs abaixo falham. O que está errado em cada um?</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) <code>body: dados</code>, sem <code>JSON.stringify</code></li><li class="">b) sem a linha do <code>headers</code></li><li class="">c) <code>preco: document.querySelector("#preco").value</code></li><li class="">d) <code>{ nome: "Boné", valor: 49.9, tamanho: "G" }</code></li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a)</b> O navegador manda <code>[object Object]</code> como texto. A API não consegue ler o JSON: <b>422</b>.</p><p><b>b)</b> Sem <code>Content-Type: application/json</code>, o FastAPI não trata o corpo como JSON: <b>422</b>.</p><p><b>c)</b> Funciona por sorte: <code>.value</code> é texto e o Pydantic converte <code>"49.9"</code>. Mas mande <code>Number(...)</code>: o contrato é número.</p><p><b>d)</b> O campo se chama <code>preco</code> no <code>ProdutoEntrada</code>, não <code>valor</code>. Falta o obrigatório: <b>422</b>.</p></div></div></div></section><section class="slide dark mapa" data-fase="2-3"><div class="map-wrap"><div class="map" data-current="2-3"></div><div class="map-info"><div class="kicker">FASE 2-3 · CONTEÚDO NOVO</div><h2>CORS</h2><p>Por que o navegador bloqueia a própria API de vocês, e quem libera.</p></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>Origem: protocolo, endereço e porta</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">Para o navegador, uma <b>origem</b> é a soma de protocolo, endereço e porta. Por segurança, uma página só lê respostas da <b>mesma origem</b> em que foi aberta. Na aula, as páginas rodam na porta <b>5500</b> e a API na <b>8000</b>: para o navegador, são dois sites diferentes.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">exemplo</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="">página:  http://127.0.0.1:5500/index.html
+API:     http://127.0.0.1:8000/produtos
+                         ^^^^ porta diferente = outra origem
+
+// no console, em vermelho:
+Access to fetch at 'http://127.0.0.1:8000/produtos'
+from origin 'http://127.0.0.1:5500' has been blocked
+by CORS policy: No 'Access-Control-Allow-Origin'
+header is present on the requested resource.</pre></div></div><div class="rl-box an"><span class="lbl">Pense assim</span>A regra protege o usuário: sem ela, qualquer site aberto numa aba poderia ler dados de outro site em que a pessoa está logada.</div></div></div></section><section class="slide relembre" data-fase="2-3"><div class="rl-top"><span class="rl-pill novo">CONCEITO</span><span class="kicker">Aula 13</span></div><h2>CORS: quem libera é o servidor</h2><div class="rl-grid"><div class="rl-left"><p class="rl-def">CORS é <i>Cross-Origin Resource Sharing</i>, compartilhamento de recursos entre origens. É a forma de a API dizer ao navegador quais origens podem ler as respostas dela. A liberação vai <b>no servidor</b>, com um cabeçalho na resposta; mudar o <code>fetch</code> não resolve. No FastAPI, são algumas linhas no <code>api.py</code>.</p></div><div class="rl-right"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">api.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,5,6,7,8">from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(title="Loja de Roupas", lifespan=ciclo_de_vida)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500",
+                   "http://localhost:5500"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)</pre></div></div><div class="rl-box cu"><span class="lbl">Cuidado</span><code>allow_origins=["*"]</code> faz o erro sumir, e libera a API para qualquer site da internet. Liste as origens de vocês. E <code>127.0.0.1</code> e <code>localhost</code> são origens <b>diferentes</b>: liste as duas.</div></div></div></section><section class="slide quiz" data-fase="2-3"><div class="kicker">Fase 2-3 · Bloqueia ou não?</div><h2>Com a API liberando só <code>http://127.0.0.1:5500</code>, a vitrine consegue ler os produtos?</h2><div class="split"><div class="left"><ul class="notes"><li class="">a) Página aberta em <code>http://127.0.0.1:5500</code></li><li class="">b) Página aberta em <code>http://localhost:5500</code></li><li class="">c) Página aberta com dois cliques no arquivo, <code>file:///.../index.html</code></li><li class="">d) O mesmo pedido feito no <code>/docs</code> ou pelo <code>pytest</code></li></ul></div><div class="right"><button class="reveal">Ver resposta</button><div class="answer f"><p><b>a) lê.</b> Origem listada.</p><p><b>b) bloqueia.</b> <code>localhost</code> e <code>127.0.0.1</code> são origens diferentes para o navegador.</p><p><b>c) bloqueia.</b> Arquivo aberto do disco não tem origem de rede. Rode as páginas com <code>python -m http.server 5500</code>.</p><p><b>d) funciona.</b> CORS é regra <b>do navegador</b>: o <code>/docs</code> é da mesma origem da API, e o <code>pytest</code> nem é navegador.</p></div></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Hora da prática</div><h2>Agora é com vocês: dois terminais abertos</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal 1 · a API</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>fastapi dev api.py</span>
+<span class="ok">Serving at: http://127.0.0.1:8000</span></pre></div><div class="term" style="margin-top:18px"><div class="bar"><i></i><i></i><i></i><span class="fname">terminal 2 · as páginas</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>python -m http.server 5500 --directory front</span>
+<span class="ok">Serving HTTP on 0.0.0.0 port 5500</span></pre></div></div><div class="right"><ul class="notes"><li class="">Abram a pasta <code>loja-roupas</code> no editor, a mesma da Aula 12.</li><li class="">No navegador, abram <code>http://127.0.0.1:5500</code>, e não o arquivo com dois cliques.</li><li class="">Os dois terminais ficam <b>ligados</b> a aula inteira. Fechou o da API, a vitrine para.</li><li class="">Três fases, cada uma com checkpoint: <code>pytest</code>, commit e push.</li><li class="">Deixem o console aberto (F12). Hoje também a aba <b>Rede</b> (<i>Network</i>), que mostra cada pedido e a resposta.</li></ul></div></div></section><section class="slide dark mapa" data-fase="3-1"><div class="map-wrap"><div class="map" data-current="3-1"></div><div class="map-info"><div class="kicker">FASE 3-1 · PRÁTICA</div><h2>A vitrine da API</h2><p>Trocar a lista escrita à mão pelos produtos do banco, e liberar o CORS.</p></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>front/app.js: a lista sai, o fetch entra</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="1,3,8,13,14,15">const API = "http://127.0.0.1:8000";
+
+let produtos = [];          // agora vem da API
+
+function montarCard(p) {
+  const art = document.createElement("article");
+  art.innerHTML = `&lt;h3&gt;${p.nome}&lt;/h3&gt;
+                   &lt;p&gt;Tamanho ${p.tamanho}&lt;/p&gt;
+                   &lt;p&gt;&lt;strong&gt;R$ ${p.preco.toFixed(2)}&lt;/strong&gt;&lt;/p&gt;`;
+  return art;
+}
+
+async function carregar() {
+  const resposta = await fetch(`${API}/produtos`);
+  produtos = await resposta.json();
+  desenhar(produtos);
+}
+
+carregar();     // no lugar de desenhar(produtos)</pre></div></div></div><div class="right"><ul class="notes"><li class="f">A lista escrita à mão <b>sai</b>. <code>let</code>, porque agora ela é preenchida depois.</li><li class="f">A API chama o campo de <code>tamanho</code>, e não <code>tam</code>. <b>O front segue o contrato da API</b>, nunca o contrário.</li><li class="f"><code>desenhar</code> e a busca da Aula 12 <b>não mudam</b>: a busca filtra a lista que veio do banco.</li><li class="f">Salvem e recarreguem: o console vai mostrar o erro de CORS. É esperado, e é o próximo slide.</li></ul></div></div></section><section class="slide codeslide" data-fase="3-1"><div class="kicker">Fase 3-1 · No editor</div><h2>api.py: liberar a origem das páginas</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">api.py</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="2,7,9">from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+...
+app = FastAPI(title="Loja de Roupas", lifespan=ciclo_de_vida)
+
+# as páginas rodam na porta 5500; o servidor diz quem pode chamar
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500", "http://localhost:5500"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)</pre></div></div></div><div class="right"><ul class="notes"><li class="f">O <code>fastapi dev</code> recarrega sozinho quando o <code>api.py</code> é salvo.</li><li class="f">Recarreguem a vitrine: os produtos agora vêm do <code>loja.db</code>.</li><li class="f">Na aba Rede do F12, cliquem no pedido <code>produtos</code>: o cabeçalho <code>access-control-allow-origin</code> aparece na resposta.</li><li class="f">O teste <code>tests/test_cors.py</code>, no gabarito, prova as duas coisas: a porta 5500 ganha permissão e um site estranho não.</li></ul></div></div></section><section class="slide check" data-fase="3-1"><div class="kicker">FASE 3-1 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-1: a vitrine busca os produtos na API"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>A vitrine mostra os produtos do banco. Prova: cadastrem um produto pelo <code>/docs</code>, recarreguem a vitrine, e ele aparece. Console sem vermelho.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-22.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-22.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-22</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-2"><div class="map-wrap"><div class="map" data-current="3-2"></div><div class="map-info"><div class="kicker">FASE 3-2 · PRÁTICA</div><h2>O cadastro grava</h2><p>O formulário da Aula 11 envia para a API, e o produto passa a existir de verdade.</p></div></div></section><section class="slide codeslide" data-fase="3-2"><div class="kicker">Fase 3-2 · No editor</div><h2>front/cadastro.js: do formulário ao banco</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/cadastro.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="6,10,16,17,20">const API = "http://127.0.0.1:8000";
+const form = document.querySelector("#form-produto");
+const aviso = document.querySelector("#aviso");
+const campo = (id) =&gt; document.querySelector(id).value;
+
+form.addEventListener("submit", async (e) =&gt; {
+  e.preventDefault();
+  const dados = { tipo: campo("#tipo"), nome: campo("#nome").trim(),
+                  preco: Number(campo("#preco")), tamanho: campo("#tamanho") };
+  const resposta = await fetch(`${API}/produtos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  const corpo = await resposta.json();
+  if (!resposta.ok) {
+    aviso.textContent = `Não cadastrou: ${corpo.detail}`;
+    return;
+  }
+  aviso.textContent = `${corpo.nome} cadastrado com o número ${corpo.id}.`;
+  form.reset();
+});</pre></div></div></div><div class="right"><ul class="notes"><li class="f">A função do <code>submit</code> ganhou <code>async</code>: sem ele, o <code>await</code> lá dentro é erro de sintaxe.</li><li class="f">No <code>cadastro.html</code>: <code>id="form-produto"</code> no <code>form</code>, um <code>&lt;p id="aviso" role="status"&gt;</code> depois dele e o <code>&lt;script src="cadastro.js"&gt;</code> no fim do <code>body</code>.</li><li class="f">Os quatro campos são os do <code>ProdutoEntrada</code>, e o teste da Aula 11 já vigiava isso.</li></ul></div></div></section><section class="slide fullslide " data-fase="3-2"><div class="kicker">Fase 3-2 · No navegador</div><h2>Conferir como um profissional</h2><div class="full"><table class="t"><tr><th>#</th><th>O que fazer</th><th>O que tem que acontecer</th></tr><tr><td>1</td><td>Cadastrar <b>Boné</b>, R$ 49,90, tamanho G</td><td>aviso com o número que o banco deu, e o formulário limpo</td></tr><tr><td>2</td><td>Voltar à vitrine e recarregar com F5</td><td>o Boné está lá, e continua depois de recarregar</td></tr><tr><td>3</td><td>Cadastrar Boné de novo</td><td>"Não cadastrou: já existe um produto chamado Boné", o 409 da Aula 10</td></tr><tr><td>4</td><td>Parar a API com Ctrl+C e ligar de novo</td><td>o Boné continua: está no <code>loja.db</code></td></tr><tr><td>5</td><td>Aba Rede do F12, pedido <code>produtos</code> do tipo POST</td><td>status 201 e o JSON do produto novo na resposta</td></tr></table><ul class="notes mini"><li class="">O passo 4 é a demonstração do Projeto Final: o dado sobrevive ao servidor desligar.</li></ul></div></section><section class="slide check" data-fase="3-2"><div class="kicker">FASE 3-2 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-2: o cadastro grava no banco pelo POST"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Os cinco passos da conferência funcionam: o produto cadastrado aparece na vitrine, sobrevive ao F5 e ao servidor reiniciar, e a repetição mostra o 409 na tela.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-23.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-23.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-23</code></span></div></div></div></section><section class="slide dark mapa" data-fase="3-3"><div class="map-wrap"><div class="map" data-current="3-3"></div><div class="map-info"><div class="kicker">FASE 3-3 · PRÁTICA</div><h2>Carregando e erro</h2><p>A tela diz o que está acontecendo, em vez de ficar em branco.</p></div></div></section><section class="slide codeslide" data-fase="3-3"><div class="kicker">Fase 3-3 · No editor</div><h2>front/app.js: carregando, vazio e API fora do ar</h2><div class="split wide"><div class="left"><div class="code"><div class="bar"><i></i><i></i><i></i><span class="fname">front/app.js</span><button class="copy" title="Copiar">Copiar</button></div><div class="body"><pre data-lang="text" data-hl="6,7,9,14,16,17">// no index.html, logo abaixo do h2:
+//   &lt;p id="estado" role="status"&gt;&lt;/p&gt;
+const estado = document.querySelector("#estado");
+
+async function carregar() {
+  estado.textContent = "Carregando produtos...";
+  try {
+    const resposta = await fetch(`${API}/produtos`);
+    if (!resposta.ok) {
+      throw new Error(`a API respondeu ${resposta.status}`);
+    }
+    produtos = await resposta.json();
+    desenhar(produtos);
+    estado.textContent = produtos.length === 0
+      ? "Nenhum produto cadastrado ainda." : "";
+  } catch (erro) {
+    estado.textContent = "Não foi possível falar com a API. Ela está ligada?";
+    console.error(erro);
+  }
+}</pre></div></div></div><div class="right"><ul class="notes"><li class="f">Uma tela de dados tem <b>quatro estados</b>: carregando, com dados, vazia e com erro. A tela em branco não comunica nenhum.</li><li class="f">O <code>throw</code> manda o 404 e o 500 para o mesmo <code>catch</code> da API desligada: uma mensagem só para "não deu".</li><li class="f"><code>console.error</code> guarda o detalhe técnico para vocês; a pessoa lê a frase em português.</li><li class="f">No <code>cadastro.js</code>, o mesmo <code>try</code> e <code>catch</code> em volta do <code>fetch</code>, com a mesma mensagem no <code>aviso</code>.</li></ul></div></div></section><section class="slide fullslide " data-fase="3-3"><div class="kicker">Fase 3-3 · No navegador</div><h2>Testar os quatro estados</h2><div class="full"><table class="t"><tr><th>Estado</th><th>Como provocar</th><th>O que a tela mostra</th></tr><tr><td>carregando</td><td>F12 → Rede → limitação <i>Slow 3G</i> (3G lento) e F5</td><td>"Carregando produtos..." por alguns segundos</td></tr><tr><td>com dados</td><td>o normal, com a API ligada</td><td>os cartões, e a mensagem some</td></tr><tr><td>vazia</td><td>apagar os produtos pelo <code>DELETE</code> do <code>/docs</code></td><td>"Nenhum produto cadastrado ainda."</td></tr><tr><td>erro</td><td>Ctrl+C no terminal da API e F5 na vitrine</td><td>"Não foi possível falar com a API. Ela está ligada?"</td></tr></table><ul class="notes mini"><li class="">Na apresentação do dia 17, a API pode cair no meio da demonstração. Com esta fase, a tela explica o que houve em vez de ficar em branco na frente da turma.</li></ul></div></section><section class="slide check" data-fase="3-3"><div class="kicker">FASE 3-3 · CONCLUÍDA</div><h2>Checkpoint: salvar e subir</h2><div class="split"><div class="left"><div class="term"><div class="bar"><i></i><i></i><i></i><span class="fname">checkpoint</span><button class="copy" title="Copiar comandos">Copiar</button></div><pre><span class="cmd"><span class="ps">$ </span>pytest</span>
+<span class="ok">tudo verde</span>
+<span class="cmd"><span class="ps">$ </span>git add .</span>
+<span class="cmd"><span class="ps">$ </span>git commit -m "Fase 3-3: carregando, vazio e erro na tela"</span>
+<span class="cmd"><span class="ps">$ </span>git push</span></pre></div></div><div class="right"><div class="ok-box"><span class="lbl">Confira</span>Os quatro estados aparecem como na tabela. Com a API desligada, a vitrine e o cadastro mostram a mensagem em português, e não uma tela em branco.</div><div class="sos"><span class="lbl">Travou nesta fase?</span>Baixe a fase pronta e copie os arquivos para a sua pasta:<br><a href="https://github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-24.zip" target="_blank"><code>github.com/sebastrogers/loja-roupas-gabarito/archive/refs/tags/etapa-24.zip</code></a><span class="alt">ou, no terminal: <code>git clone https://github.com/sebastrogers/loja-roupas-gabarito</code> e <code>git checkout etapa-24</code></span></div></div></div></section><section class="slide fullslide" data-fase=""><div class="kicker">Laboratório da equipe · a API de vocês</div><h2>Mãos à obra: o projeto de ponta a ponta</h2><div class="t-row"><div class="timer" data-min="40"><div class="t-dig">40:00</div><div class="t-bar"><i></i></div><div class="t-btns"><button class="t-go">Iniciar / pausar</button><button class="t-reset">Zerar</button></div></div><div><ul class="notes"><li class="">CORS liberado no <code>api.py</code> da equipe para a porta 5500.</li><li class="">A listagem vinda do <code>GET</code>, com os nomes de campo da <b>API de vocês</b>.</li><li class="">O cadastro pelo <code>POST</code>, mostrando o <code>detail</code> quando a API recusa.</li><li class="">Os quatro estados: carregando, com dados, vazia e erro.</li><li class="">Ensaio da demonstração do dia 17. Console limpo, <code>pytest</code> verde, commit e push.</li></ul></div></div></section><section class="slide dark mapa" data-fase=""><div class="map-wrap"><div class="map" data-current="FIM"></div><div class="map-info"><div class="kicker">O MAPA DE HOJE</div><h2>Mapa completo</h2><p>Nove fases fechadas: esperar sem travar, buscar, enviar e liberar o CORS, e a Loja de Roupas ligada de ponta a ponta, da tela ao banco.</p></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Fechamento</div><h2>O que cada fase construiu</h2><div class="full"><table class="t"><tr><th>Fase</th><th>Conceito</th><th>O que prova</th></tr><tr><td>1-1</td><td>síncrono, assíncrono e a linha de execução única</td><td>em que ordem aparece</td></tr><tr><td>1-2</td><td><i>Promise</i>: pendente, cumprida, rejeitada; <code>then</code> e <code>catch</code></td><td>o estado de cada promessa</td></tr><tr><td>1-3</td><td><code>async</code>, <code>await</code>, <code>try</code> e <code>catch</code></td><td>o que o console imprime</td></tr><tr><td>2-1</td><td><code>fetch</code>, <code>resposta.json()</code>, <code>resposta.ok</code></td><td>a viagem de um GET em seis passos</td></tr><tr><td>2-2</td><td>POST com <code>method</code>, <code>headers</code> e <code>JSON.stringify</code></td><td>por que deu 422</td></tr><tr><td>2-3</td><td>origem e CORS, liberados no servidor</td><td>bloqueia ou não bloqueia</td></tr><tr><td>3-1</td><td>a vitrine vinda do banco</td><td>o produto do <code>/docs</code> aparece na vitrine</td></tr><tr><td>3-2</td><td>o cadastro pelo POST</td><td>os cinco passos da conferência</td></tr><tr><td>3-3</td><td>os quatro estados da tela</td><td>a API cai e a tela explica</td></tr></table></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Próxima aula · 17/11</div><h2>Projeto Final: a aplicação de ponta a ponta, ao vivo</h2><div class="split"><div class="left"><ul class="notes"><li class="">Pitch de <b>8 minutos</b> por equipe, com <b>demonstração ao vivo</b>, seguido de revisão de código cruzada entre equipes.</li><li class="">A demonstração que convence é a desta aula: cadastrar pela tela, recarregar e mostrar que o dado continua no banco.</li><li class="">A <b>documentação</b> vai junto, na pasta <code>docs/</code> do repositório: diagrama de domínio, modelo ER, diagrama de arquitetura em camadas e relatório técnico. Push até as 18h do dia 17.</li></ul></div><div class="right"><ul class="notes"><li class="f"><b>Antes de sair hoje:</b> os dois terminais funcionando no computador de quem vai apresentar.</li><li class="f">Ensaiem com a API desligada: é o tipo de imprevisto que acontece no dia.</li><li class="f">O diagrama de arquitetura em camadas é a tabela "a viagem de um GET" desenhada. Usem a da fase 2-1 como roteiro.</li></ul></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para estudar</div><h2>Referências</h2><div class="split"><div class="left"><ul class="notes"><li class=""><b>Trilha do Navegador · Parte B</b>: DOM, eventos e formulários, no site da disciplina, para rever a base da Aula 12 antes de ligar na API.</li><li class=""><b>MDN Web Docs</b>, em português: as páginas "Usando Fetch", "async function" e "CORS". Endereço: <code>developer.mozilla.org/pt-BR</code></li><li class=""><b>javascript.info</b>: os capítulos "Promises, async/await" e "Network requests".</li><li class=""><b>Documentação do FastAPI</b>: a página "CORS (Cross-Origin Resource Sharing)", com o mesmo <code>CORSMiddleware</code> da aula.</li></ul></div><div class="right"><ul class="notes"><li class="f">O <b>gabarito</b> da Loja de Roupas tem as três fases de hoje nas etapas 22, 23 e 24.</li><li class="f">Travou na API da equipe? Comparem com o gabarito arquivo por arquivo: <code>app.js</code>, <code>cadastro.js</code> e o trecho do CORS no <code>api.py</code>.</li></ul></div></div></section><section class="slide fullslide " data-fase=""><div class="kicker">Para deixar aberto</div><h2>Cola da aula</h2><div class="full"><table class="t"><tr><th>Quero…</th><th>Escrevo</th></tr><tr><td>uma função que espera</td><td><code>async function carregar() { ... }</code></td></tr><tr><td>esperar uma promessa</td><td><code>const x = await algo();</code></td></tr><tr><td>buscar na API</td><td><code>const r = await fetch(`${API}/produtos`);</code></td></tr><tr><td>ler o JSON da resposta</td><td><code>const dados = await r.json();</code></td></tr><tr><td>saber se deu certo</td><td><code>r.ok</code> e <code>r.status</code></td></tr><tr><td>enviar um POST</td><td><code>fetch(url, { method: "POST", headers: {...}, body: ... })</code></td></tr><tr><td>avisar que vai JSON</td><td><code>headers: { "Content-Type": "application/json" }</code></td></tr><tr><td>objeto vira texto</td><td><code>JSON.stringify(dados)</code></td></tr><tr><td>tratar a API fora do ar</td><td><code>try { ... } catch (erro) { ... }</code></td></tr><tr><td>mostrar o erro da API</td><td><code>aviso.textContent = corpo.detail</code></td></tr><tr><td>liberar o CORS</td><td><code>app.add_middleware(CORSMiddleware, allow_origins=[...])</code></td></tr><tr><td>servir as páginas</td><td><code>python -m http.server 5500 --directory front</code></td></tr></table></div></section></div>
+<div id="overlay"><span class="close">M ou Esc para fechar</span><div class="map"></div></div>
+<div id="prog"></div>
+<div id="ui"><button id="bMap">Mapa (M)</button><button id="bPrev">‹</button><span id="pg"></span><button id="bNext">›</button><button id="bFs">Tela cheia (F)</button></div>
+<script>window.MAPA = {"zonas": ["MUNDO 1 · ESPERAR", "MUNDO 2 · FALAR COM A API", "MUNDO 3 · PRÁTICA NA LOJA"], "fases": [["Esperar sem travar", "teoria"], ["Promessas", "teoria"], ["async e await", "teoria"], ["Buscar com fetch", "teoria"], ["Enviar com POST", "teoria"], ["CORS", "teoria"], ["A vitrine da API", "prática"], ["O cadastro grava", "prática"], ["Carregando e erro", "prática"]], "zbox": [[15, 60, 375], [405, 60, 370], [790, 60, 400]], "start": [40, 455], "pos": [[165, 425], [240, 295], [345, 410], [485, 300], [592, 190], [700, 300], [850, 400], [955, 300], [1090, 190]]};</script>
+<script>window.GROW=1.3;
+
+const FASES=[
+ {id:'1-1',nome:'Repositório',aula:'Roteiro 1',x:190,y:445,w:1},{id:'1-2',nome:'Vitrine',aula:'Aula 3',x:310,y:340,w:1},
+ {id:'1-3',nome:'Testes',aula:'Aula 4',x:450,y:410,w:1,boss:1},{id:'2-1',nome:'Produto',aula:'Aula 6',x:590,y:300,w:2},
+ {id:'2-2',nome:'Carrinho',aula:'Aulas 6 e 7',x:690,y:180,w:2},{id:'2-3',nome:'Herança',aula:'Aula 7',x:830,y:250,w:2,boss:1},
+ {id:'3-1',nome:'Promoções',aula:'Aula 7',x:950,y:360,w:3},{id:'3-2',nome:'Contrato',aula:'Aula 8',x:1080,y:270,w:3},
+ {id:'3-3',nome:'GitHub Actions',aula:'novo',x:1140,y:160,w:3,boss:1}];
+if(window.MAPA){window.MAPA.fases.forEach((f,i)=>{FASES[i].nome=f[0];FASES[i].aula=f[1]})}
+if(window.MAPA&&window.MAPA.pos){window.MAPA.pos.forEach((p,i)=>{FASES[i].x=p[0];FASES[i].y=p[1]})}
+const ZONAS=(window.MAPA&&window.MAPA.zonas)||['MUNDO 1 · FUNDAMENTOS','MUNDO 2 · OBJETOS','MUNDO 3 · QUALIDADE'];
+const START=(window.MAPA&&window.MAPA.start)?{x:window.MAPA.start[0],y:window.MAPA.start[1]}:{x:70,y:470};
+function catmull(pts){let d=`M${pts[0].x},${pts[0].y}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ const c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6,c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2.x},${p2.y}`}return d}
+function mapSVG(cur){
+ const idx=cur==='FIM'?FASES.length:FASES.findIndex(f=>f.id===cur);
+ const ZB=(window.MAPA&&window.MAPA.zbox)||[[30,60,500],[520,60,330],[870,40,310]];const zones=ZB.map((z,k)=>[z[0],z[1],z[2],ZONAS[k]]);
+ let g='';zones.forEach(z=>{g+=`<rect class="m-zone" x="${z[0]}" y="${z[1]}" width="${z[2]}" height="${520-z[1]}" rx="28"/><text class="m-zlab" x="${z[0]+24}" y="${z[1]+38}">${z[3]}</text>`});
+ const pts=[START,...FASES];g+=`<path class="m-path" d="${catmull(pts)}"/>`;
+ if(idx>0){const dpts=pts.slice(0,Math.min(idx,FASES.length)+1);g+=`<path class="m-done" d="${catmull(dpts)}"/>`}
+ g+=`<circle cx="${START.x}" cy="${START.y}" r="14" fill="#5cc2b8"/><text class="m-aula" x="${START.x-30}" y="${START.y+44}">início</text>`;
+ FASES.forEach((f,i)=>{const st=idx<0?'todo':i<idx?'done':i===idx?'cur':'todo';
+  let shape=f.boss?`<rect x="${f.x-30}" y="${f.y-30}" width="60" height="60" rx="10" transform="rotate(45 ${f.x} ${f.y})"/>`:`<circle cx="${f.x}" cy="${f.y}" r="30"/>`;
+  let ring=st==='cur'?`<circle class="ring" cx="${f.x}" cy="${f.y}" r="34"/>`:'';
+  let lab=st==='done'?'✓':f.id;
+  const ly=f.y+(f.y>400?-0:0);
+  g+=`<g class="m-node ${st}">${ring}${shape}<text class="m-code" x="${f.x}" y="${f.y+8}" text-anchor="middle">${lab}</text>
+   <text class="m-name" x="${f.x}" y="${f.y+66}" text-anchor="middle">${f.nome}</text><text class="m-aula" x="${f.x}" y="${f.y+90}" text-anchor="middle">${f.aula}</text></g>`});
+ const L=FASES[FASES.length-1];g+=`<line x1="${L.x+44}" y1="${L.y-10}" x2="${L.x+44}" y2="${L.y-80}" stroke="#ddd" stroke-width="4"/><path class="m-flag" d="M${L.x+46},${L.y-80} l46,14 l-46,14 z"/>`;
+ return `<svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid meet">${g}</svg>`}
+// ---------- realce de sintaxe
+const KW=new Set('False None True and as assert break class continue def elif else except finally for from global if import in is lambda not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print len sum max min list dict tuple set range isinstance super round str int float self'.split(' '));
+function hiPy(line){
+ let out='',i=0;const m=(re)=>{re.lastIndex=i;const r=re.exec(line);return r&&r.index===i?r[0]:null};
+ const reStr=/[fF]?("{3}[^]*?"{3}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/y,reCom=/#.*/y,reNum=/\d+(\.\d+)?/y,reId=/[A-Za-z_]\w*/y,reDec=/@\w+/y;
+ let prev='';
+ while(i<line.length){let t;
+  if((t=m(reCom))){out+=`<span class="c">${t}</span>`;i+=t.length;continue}
+  if((t=m(reStr))){out+=`<span class="s">${t}</span>`;i+=t.length;continue}
+  if((t=m(reDec))){out+=`<span class="d">${t}</span>`;i+=t.length;continue}
+  if((t=m(reNum))&&!/\w/.test(line[i-1]||'')){out+=`<span class="n">${t}</span>`;i+=t.length;continue}
+  if((t=m(reId))){let cls=KW.has(t)?'k':BI.has(t)?'bi':(prev==='def'||prev==='class')?'fn':'';out+=cls?`<span class="${cls}">${t}</span>`:t;prev=t;i+=t.length;continue}
+  if(line[i]!==' ')prev='';out+=line[i];i++}
+ return out}
+function tok(line,rules){let out='',i=0;while(i<line.length){let hit=false;for(const [re,cls] of rules){re.lastIndex=i;const r=re.exec(line);if(r&&r.index===i&&r[0].length){out+=cls?`<span class="${cls}">${r[0]}</span>`:r[0];i+=r[0].length;hit=true;break}}if(!hit){out+=line[i];i++}}return out}
+function hiSh(line){const m=/^(\s*)([^\s#]+)/.exec(line);if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const head=m?`${m[1]}<span class="fn">${m[2]}</span>`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/\s#.*/y,'c'],[/"[^"]*"/y,'s'],[/'[^']*'/y,'s'],[/(?<=\s)--?[\w-]+/y,'fl']])}
+function hiYml(line){if(/^\s*#/.test(line))return `<span class="c">${line}</span>`;
+ const m=/^(\s*(?:-\s+)?)([\w-]+)(:)/.exec(line);const head=m?`${m[1]}<span class="k">${m[2]}</span>${m[3]}`:'';const rest=m?line.slice(m[0].length):line;
+ return head+tok(rest,[[/"[^"]*"/y,'s'],[/\s#.*/y,'c']])}
+function hiMd(line){return line.replace(/^(#+.*)$/,'<span class="k">$1</span>').replace(/(`[^`]*`)/g,'<span class="s">$1</span>')}
+function parseHL(s){const set=new Set();(s||'').split(',').filter(Boolean).forEach(p=>{const [a,b]=p.split('-').map(Number);for(let k=a;k<=(b||a);k++)set.add(k)});return set}
+document.querySelectorAll('.code pre').forEach(pre=>{
+ const lang=pre.dataset.lang,hl=parseHL(pre.dataset.hl),raw=pre.textContent;pre.dataset.raw=raw;
+ const f=lang==='python'?hiPy:lang==='bash'?hiSh:lang==='yaml'?hiYml:lang==='md'?hiMd:(x=>x);
+ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ pre.innerHTML=raw.split('\n').map((l,i)=>`<span class="ln${hl.has(i+1)?' hl':''}">${f(esc(l))||' '}</span>`).join('')});
+// python: o realce trabalha sobre texto escapado; strings com aspas continuam válidas
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const box=b.closest('.code,.term');let txt;
+ if(box.classList.contains('term')){txt=[...box.querySelectorAll('.cmd')].map(x=>x.textContent.replace(/^\$ /,'')).join('\n')}else{txt=box.querySelector('pre').dataset.raw}
+ navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copiado';b.classList.add('done');setTimeout(()=>{b.textContent='Copiar';b.classList.remove('done')},1400)})}));
+// ---------- encaixe do código na altura disponível
+function largo(p){const pr=p.getBoundingClientRect();if(!pr.width)return false;const cs=getComputedStyle(p);const k=p.offsetWidth?pr.width/p.offsetWidth:1;const lim=pr.right-Math.max(parseFloat(cs.paddingRight),18)*k+1;
+ const w=document.createTreeWalker(p,NodeFilter.SHOW_TEXT);let n,mx=0;const r=document.createRange();while((n=w.nextNode())){if(!n.textContent.trim())continue;r.selectNodeContents(n);for(const q of r.getClientRects())mx=Math.max(mx,q.right)}return mx>lim}
+function baixo(slide,el){const r=slide.getBoundingClientRect();return el.getBoundingClientRect().bottom>r.bottom-r.height*(55/900)}
+function fitCode(slide){if(!slide)return;const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);pres.forEach(p=>p.style.fontSize='');
+ const over=p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p);
+ let guard=0;while(guard<40){const slideOver=slide.scrollHeight>slide.clientHeight+2;const bad=pres.filter(p=>over(p)||slideOver);if(!bad.length)break;
+  let moved=false;bad.forEach(p=>{const fs=parseFloat(getComputedStyle(p).fontSize);if(fs>14){p.style.fontSize=(fs-1)+'px';moved=true}});if(!moved)break;guard++}
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid');if(box){box.style.zoom='';let z=1;
+  const fora=()=>slide.scrollHeight>slide.clientHeight+2||baixo(slide,box)||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.tip,.stack,.trilha,svg,p')].some(e=>baixo(slide,e));
+  while(fora()&&z>0.66){z-=0.04;box.style.zoom=z}}}
+function growFit(slide){if(!slide||!window.GROW)return;
+ const box=slide.querySelector(':scope>.full,:scope>.split,:scope>.duo,:scope>.cols,:scope>.annot,:scope>.lab,:scope>.rl-grid,:scope>.t-row');if(!box)return;
+ if(box.style.zoom&&parseFloat(box.style.zoom)<1)return;
+ const pres=[...slide.querySelectorAll('.code pre,.term pre')].filter(p=>p.offsetParent!==null);
+ const lim=()=>{const r=slide.getBoundingClientRect();return r.bottom-r.height*(60/900)};
+ const bad=()=>slide.scrollHeight>slide.clientHeight+2||slide.scrollWidth>slide.clientWidth+2||box.getBoundingClientRect().bottom>lim()||[...box.querySelectorAll('ul.notes,.card,.code,.term,table,.rl-box,.rl-def,.tip,.ok-box,.sos,.foot,ol,p')].some(e=>e.getBoundingClientRect().bottom>lim())||pres.some(p=>p.scrollHeight>p.clientHeight+2||p.scrollWidth>p.clientWidth+2||largo(p))||[...box.querySelectorAll('.stack,.trilha,svg')].some(e=>baixo(slide,e));
+ let z=1;while(z<window.GROW){const n=Math.round((z+0.04)*100)/100;box.style.zoom=n;if(bad()){box.style.zoom=z===1?'':z;break}z=n}}
+// ---------- navegação
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+const deck=document.getElementById('deck');
+function scale(){const s=Math.min(innerWidth/1600,innerHeight/900);deck.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',()=>{scale();fitCode(slides[cur]);growFit(slides[cur])});scale();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{fitCode(slides[cur]);growFit(slides[cur])});
+document.querySelectorAll('.map').forEach(m=>{m.innerHTML=mapSVG(m.dataset.current||'')});
+function frags(s){return [...s.querySelectorAll('.f')]}
+function show(i,fromHash){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+ document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;document.getElementById('prog').style.width=`${(cur+1)/slides.length*100}%`;
+ if(!fromHash){try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}requestAnimationFrame(()=>{fitCode(slides[cur]);growFit(slides[cur])})}
+function next(){const fs=frags(slides[cur]).filter(f=>!f.classList.contains('vis'));if(fs.length){fs[0].classList.add('vis');return}show(cur+1)}
+function prev(){const fs=frags(slides[cur]).filter(f=>f.classList.contains('vis'));if(fs.length){fs[fs.length-1].classList.remove('vis');return}show(cur-1)}
+function faseAtual(){for(let k=cur;k>=0;k--){if(slides[k].dataset.fase)return slides[k].dataset.fase}return ''}
+function toggleMap(){const o=document.getElementById('overlay');if(o.classList.contains('on')){o.classList.remove('on');return}
+ o.querySelector('.map').innerHTML=mapSVG(faseAtual());o.classList.add('on')}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+ else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key==='m'||e.key==='M')toggleMap();
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.getElementById('overlay').classList.remove('on')});
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+document.getElementById('bMap').onclick=toggleMap;document.getElementById('bFs').onclick=fs;
+document.getElementById('bPrev').onclick=prev;document.getElementById('bNext').onclick=next;
+document.getElementById('overlay').onclick=toggleMap;
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('.f').forEach(f=>f.classList.add('vis'))});
+document.querySelectorAll('.lab').forEach(lab=>{const bs=[...lab.querySelectorAll('.lab-steps button')],ps=[...lab.querySelectorAll('.lab-panel')];
+ bs.forEach((b,k)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('on'));ps.forEach(x=>x.classList.remove('on'));b.classList.add('on');ps[k].classList.add('on');fitCode(lab.closest('.slide'))})});
+document.querySelectorAll('.timer').forEach(t=>{let total=+t.dataset.min*60,rest=total,id=null;const d=t.querySelector('.t-dig'),bar=t.querySelector('.t-bar i');
+ const draw=()=>{const m=Math.floor(rest/60),s=rest%60;d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');bar.style.width=(100*(total-rest)/total)+'%';t.classList.toggle('fim',rest===0)};
+ t.querySelector('.t-go').onclick=()=>{if(id){clearInterval(id);id=null;return}id=setInterval(()=>{if(rest>0){rest--;draw()}else{clearInterval(id);id=null}},1000)};
+ t.querySelector('.t-reset').onclick=()=>{clearInterval(id);id=null;rest=total;draw()};draw()});
+let h=NaN;try{h=parseInt(location.hash.slice(1))}catch(e){}show(isNaN(h)?0:h-1,true);
+</script></body></html>

@@ -1,5 +1,5 @@
 {
-  "atualizado": "5 de novembro de 2026",
+  "atualizado": "10 de novembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -276,6 +276,22 @@
           "arquivo": "assets/materiais/coding/documentacao-projeto-final.pdf",
           "data": "03/11/2026",
           "tags": "projeto final documentacao diagrama de dominio classes modelo er banco de dados arquitetura camadas relatorio tecnico rubrica entrega checklist drawio mermaid"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: A vitrine conversa com a API, assincronismo e integração",
+          "descricao": "Esperar sem travar a página: Promise, async e await. Buscar e enviar dados com fetch, ler o erro que a API devolve e liberar o CORS no FastAPI. Na prática, a vitrine da Loja de Roupas ligada ao banco, o cadastro gravando pelo POST e a tela mostrando carregando, vazio e erro.",
+          "arquivo": "assets/materiais/coding/aula-13-vitrine-conversa-api.html",
+          "data": "10/11/2026",
+          "tags": "javascript async await promise fetch json post cors fastapi integracao front-end api loja de roupas"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: A vitrine conversa com a API (PDF)",
+          "descricao": "Os mesmos slides da Aula 13 em PDF, para estudar e imprimir.",
+          "arquivo": "assets/materiais/coding/aula-13-vitrine-conversa-api.pdf",
+          "data": "10/11/2026",
+          "tags": "javascript async await promise fetch cors pdf"
         }
       ]
     },
