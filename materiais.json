@@ -1,5 +1,5 @@
 {
-  "atualizado": "10 de novembro de 2026",
+  "atualizado": "12 de novembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -478,6 +478,22 @@
           "arquivo": "assets/materiais/cloud/jogo-reboot-ti.html",
           "data": "05/11/2026",
           "tags": "jogo dupla multiplayer revisao interativo habbo isometrico nist iaas paas saas ec2 s3 lambda api gateway cors dynamodb vpc nat endpoint fatura"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: A loja aguenta o pico, fila, escala e alarme",
+          "descricao": "Escalar na vertical e na horizontal, concorrência da Lambda e o teto da conta, acoplamento síncrono e o elo mais fraco, fila com produtor e consumidor, 202 Accepted, entrega pelo menos uma vez e idempotência, tempo de invisibilidade e fila de mensagens mortas, logs, métricas e alarmes. Na prática, a loja recebe pedidos por uma fila SQS, aguenta um teste de carga e avisa por e-mail quando um pedido falha.",
+          "arquivo": "assets/materiais/cloud/aula-13-cloud-loja-aguenta-pico.html",
+          "data": "12/11/2026",
+          "tags": "slides escalabilidade elasticidade concorrencia lambda throttling sqs fila dlq dead-letter queue desacoplamento idempotencia cloudwatch alarme sns observabilidade teste de carga loja"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: A loja aguenta o pico (PDF)",
+          "descricao": "Os mesmos slides da Aula 13 em PDF, para estudar e imprimir.",
+          "arquivo": "assets/materiais/cloud/aula-13-cloud-loja-aguenta-pico.pdf",
+          "data": "12/11/2026",
+          "tags": "sqs fila dlq cloudwatch alarme pdf"
         }
       ]
     },
@@ -704,6 +720,22 @@
           "arquivo": "assets/materiais/requisitos/jogo-xaxado-software.html",
           "data": "05/11/2026",
           "tags": "jogo equipe multiplayer revisao interativo isometrico avatar sao joao requisitos stakeholders elicitacao user story invest moscow ddr caso de uso uml rnf iso 25010 prototipo inspecao rastreabilidade"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: Mudar sem perder o controle, linha de base e análise de impacto",
+          "descricao": "Por que requisito muda e o escopo que escorrega, linha de base, versão e histórico de revisões, o controle de mudanças em cinco passos, a solicitação de mudança e o comitê que decide, análise de impacto pela matriz de rastreabilidade e as três respostas: aprovar, negociar ou recusar. Na prática, cada equipe recebe uma mudança no próprio projeto, analisa o impacto e escreve a seção de controle de mudanças do DDR.",
+          "arquivo": "assets/materiais/requisitos/aula-13-req-mudar-sem-perder-controle.html",
+          "data": "12/11/2026",
+          "tags": "slides gerencia de requisitos linha de base baseline controle de mudancas solicitacao de mudanca ccb analise de impacto rastreabilidade versao historico scope creep ddr"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 13: Mudar sem perder o controle (PDF)",
+          "descricao": "Os mesmos slides da Aula 13 em PDF, para estudar e imprimir.",
+          "arquivo": "assets/materiais/requisitos/aula-13-req-mudar-sem-perder-controle.pdf",
+          "data": "12/11/2026",
+          "tags": "linha de base controle de mudancas analise de impacto pdf"
         }
       ]
     }
