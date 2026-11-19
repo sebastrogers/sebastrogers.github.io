@@ -1,5 +1,5 @@
 {
-  "atualizado": "12 de novembro de 2026",
+  "atualizado": "19 de novembro de 2026",
   "disciplinas": [
     {
       "id": "coding",
@@ -494,6 +494,30 @@
           "arquivo": "assets/materiais/cloud/aula-13-cloud-loja-aguenta-pico.pdf",
           "data": "12/11/2026",
           "tags": "sqs fila dlq cloudwatch alarme pdf"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 14: Confiabilidade e concentração de risco",
+          "descricao": "A queda da AWS de outubro de 2025 lida no relatório oficial: DNS, cascata e as correções. Padrões de fila (backlog, retry com backoff e jitter, idempotência), revisão da loja da Aula 13 e uma simulação animada do pico até a queda da região. Fecha com mercado de nuvem, multicloud e lock-in, incluindo a regra europeia de troca de provedor.",
+          "arquivo": "assets/materiais/cloud/aula-14-cloud-confiabilidade-risco.html",
+          "data": "19/11/2026",
+          "tags": "slides post-mortem aws us-east-1 dns dynamodb cascata fila backlog retry backoff jitter idempotencia dlq simulacao mercado synergy flexera multicloud lock-in data act"
+        },
+        {
+          "tipo": "Aula",
+          "titulo": "Aula 14: Confiabilidade e concentração de risco (PDF)",
+          "descricao": "Os mesmos slides da Aula 14 em PDF, para estudar e imprimir.",
+          "arquivo": "assets/materiais/cloud/aula-14-cloud-confiabilidade-risco.pdf",
+          "data": "19/11/2026",
+          "tags": "post-mortem fila lock-in pdf"
+        },
+        {
+          "tipo": "Roteiro",
+          "titulo": "Atividade para casa: a loja aguenta o pico? Prove na AWS",
+          "descricao": "Em dupla, entrega até 26/11 no Teams. Parte 1: fila SQS com DLQ, função Lambda com concorrência máxima 2, teste de carga com 100 pedidos, falha provocada e alarme por e-mail, com prints e limpeza. Parte 2: matriz de lock-in dos serviços da loja e parágrafo de conclusão. Inclui critérios de avaliação e erros comuns.",
+          "arquivo": "assets/materiais/cloud/atividade-aula-14-loja-aguenta-pico.pdf",
+          "data": "19/11/2026",
+          "tags": "atividade roteiro sqs dlq lambda concorrencia cloudwatch alarme sns teste de carga lock-in matriz entrega"
         }
       ]
     },
